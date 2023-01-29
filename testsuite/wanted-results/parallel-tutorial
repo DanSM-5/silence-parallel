@@ -1302,7 +1302,7 @@ scientific publication, please cite:
 
       author       = {Tange, Ole},
       
-      year         = 2022,
+      year         = 2023,
       note         = {{GNU Parallel is a general parallelizer to run
                        multiple serial command line programs in parallel
                        without changing them.}},

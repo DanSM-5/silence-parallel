@@ -3301,10 +3301,11 @@ sub read_options() {
 	    } else {
 		@options = shift @ARGV;
 	    }
-	    my $script = Q(shift @ARGV);
+	    my $script = Q(Q(shift @ARGV));
+            my @args = map{ Q($_) } @ARGV;
 	    # exec myself to split $ARGV[0] into separate fields
 	    exec "$0 --_pipe-means-argfiles @options @parser $script ".
-		"::: @ARGV";
+                "::: @args";
 	}
     }
     if($ARGV[0] =~ / --shebang(-?wrap)? /) {
