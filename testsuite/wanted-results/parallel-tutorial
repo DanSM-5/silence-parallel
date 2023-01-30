@@ -150,7 +150,8 @@ num30000
 num8
 tsv-file.tsv
 foo
-~
+/tmp/parallel-tutorial-tmp/
+       </tmp
   my_func() {
     echo in my_func $1
   }
@@ -439,9 +440,14 @@ echo C
 1-middle
 1-end
   parallel --files echo ::: A B C
-/tmp/parallel-tutorial-tmpdir/parXXXXX.par
+/tmp/parallel-tutorial-tmp/
+       </tmp/tempfile
+/tmp/parallel-tutorial-tmp/
+       </tmp/tempfile
+/tmp/parallel-tutorial-tmp/
+       </tmp/tempfile
   parallel --tmpdir /var/tmp --files echo ::: A B C
-/var/tmp/parXXXXX.par
+/var/tmp/tempfile
   parallel --results outdir echo ::: A B C
   outdir/1/A/seq
   outdir/1/A/stderr
@@ -509,7 +515,8 @@ parallel: Warning: or increasing /proc/sys/fs/file-max
   parallel --shuf echo ::: 1 2 3 ::: a b c ::: A B C
 123 abc ABC
   seq 10 20 | parallel --tmux 'echo start {}; sleep {}; echo done {}'
-See output with: tmux -S /tmp/parallel-tutorial-tmpdir/tmsXXXXX attach
+See output with: tmux -S '/tmp/parallel-tutorial-tmp/
+       </tmp/tmsXXXXX' attach
   tmux -S /tmp/tmsXXXXX attach
 no sessions
   parallel --delay 2.5 echo Starting {}\;date ::: 1 2 3
@@ -701,6 +708,8 @@ foo
   parallel --workdir . -S $SERVER1 pwd ::: ""
   parallel --workdir ... -S $SERVER1 pwd ::: ""
 /home/parallel
+/tmp/parallel-tutorial-tmp/
+       </tmp
 /home/parallel/.TMPWORKDIR
   parallel -S $SERVER1 --sshdelay 0.2 echo ::: 1 2 3
 9
@@ -787,6 +796,7 @@ BASH_FUNC_run_test%%
 _
 mysqlrootpass
 oracle_password
+testsuitedir
 withpassword
   # The function is only copied if using Bash
   my_func2() {
@@ -1315,7 +1325,7 @@ This helps funding further development; AND IT WON'T COST YOU A CENT.
 If you pay 10000 EUR you should feel free to use GNU Parallel without citing.
 More about funding GNU Parallel and the citation notice:
 https://lists.gnu.org/archive/html/parallel/2013-11/msg00006.html
-https://www.gnu.org/software/parallel/parallel_design.html#citation-notice
+https://www.gnu.org/software/tempfileallel_design.html#citation-notice
 https:BASE64-notice-faq.txt
 If you send a copy of your published article to tange@gnu.org, it will be
 mentioned in the release notes of next version of GNU Parallel.
@@ -1330,4 +1340,10 @@ mentioned in the release notes of next version of GNU Parallel.
 echo A
 echo B
 echo C
-9
+### 3+3 .par files (from --files), 1 .tms-file from tmux attach
+A
+A
+B
+B
+C
+C

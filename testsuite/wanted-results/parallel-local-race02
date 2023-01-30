@@ -43,12 +43,6 @@ par_continuous_output	1
 par_continuous_output	1
 par_hostgroup	### --hostgroup force ncpu
 par_hostgroup	parallel
-par_hostgroup	parallel
-par_hostgroup	tange
-par_hostgroup	tange
-par_hostgroup	tange
-par_hostgroup	tange
-par_hostgroup	tange
 par_hostgroup	tange
 par_hostgroup	### --hostgroup two group arg
 par_hostgroup	parallel
@@ -70,12 +64,6 @@ par_hostgroup	tange
 par_hostgroup	tange
 par_hostgroup	### --hostgroup multiple group arg + unused group
 par_hostgroup	parallel
-par_hostgroup	parallel
-par_hostgroup	tange
-par_hostgroup	tange
-par_hostgroup	tange
-par_hostgroup	tange
-par_hostgroup	tange
 par_hostgroup	tange
 par_hostgroup	### --hostgroup two groups @
 par_hostgroup	parallel	parallel
@@ -91,10 +79,6 @@ par_hostgroup	no_group
 par_hostgroup	implicit_group
 par_hostgroup	### --hostgroup -S @group
 par_hostgroup	tange
-par_hostgroup	tange
-par_hostgroup	tange
-par_hostgroup	tcsh
-par_hostgroup	tcsh
 par_hostgroup	tcsh
 par_hostgroup	### --hostgroup -S @group1 -Sgrp2
 par_hostgroup	parallel
@@ -163,6 +147,14 @@ par_retries_bug_from_2010	4
 par_retries_bug_from_2010	4
 par_retries_bug_from_2010	4
 par_retries_bug_from_2010	2
+par_semaphore	### Test if parallel invoked as sem will run parallel --semaphore
+par_semaphore	job1a 1
+par_semaphore	job2a 2
+par_semaphore	job1b 3
+par_semaphore	job3a 4
+par_semaphore	job2b 5
+par_semaphore	job3b 6
+par_semaphore	done
 par_sql_CSV	### CSV write to the right place
 par_sql_CSV	ran OK
 par_sql_CSV	ok

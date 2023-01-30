@@ -22,9 +22,9 @@ par_retries_0() {
     echo '--retries 0 = inf'
     echo this wraps at 256 and should retry until it wraps
     tmp=$(mktemp)
-    parallel --retries 0 -u 'printf {} >> '$tmp';a=`stat -c %s '$tmp'`; echo -n " $a";  exit $a' ::: a
+    parallel --retries 0 -u 'printf {} >> '"'$tmp'"';a=`stat -c %s '"'$tmp'"'`; echo -n " $a";  exit $a' ::: a
     echo
-    rm -f $tmp
+    rm -f "$tmp"
 }
 
 par_prefix_for_L_n_N_s() {
@@ -135,7 +135,10 @@ EOF
     }
     export -f run gp oct pl py r rb sh
     
-    parallel --tag -k run  ::: gp oct pl py r rb sh
+    parallel --tag -k run  ::: gp oct pl py rb sh
+    # R fails if TMPDIR contains space
+    TMPDIR=/tmp
+    parallel --tag -k run  ::: r
 }
 
 par_pipe_regexp() {
@@ -300,8 +303,8 @@ par_tee_with_premature_close() {
     correct="$(seq 1000000 | parallel -k --tee --pipe ::: wc head tail 'sleep 1')"
     echo "$correct"
     echo 'tee without --output-error=warn-nopipe support'
-    tmpdir=$(mktemp)
-    cat > tmp/tee <<-EOF
+    tmpdir=$(mktemp -d)
+    cat > "$tmpdir"/tee <<-EOF
 	#!/usr/bin/perl
 
 	if(grep /output-error=warn-nopipe/, @ARGV) {
@@ -309,8 +312,8 @@ par_tee_with_premature_close() {
 	}
 	exec "/usr/bin/tee", @ARGV;
 	EOF
-    chmod +x tmp/tee
-    PATH=tmp:$PATH
+    chmod +x "$tmpdir"/tee
+    PATH="$tmpdir":$PATH
     # This gives incomplete output due to:
     # * tee not supporting --output-error=warn-nopipe
     # * sleep closes stdin before EOF
@@ -321,6 +324,8 @@ par_tee_with_premature_close() {
     else
 	echo OK
     fi
+    rm "$tmpdir"/tee
+    rmdir "$tmpdir"
 }
 
 par_tee_too_many_args() {

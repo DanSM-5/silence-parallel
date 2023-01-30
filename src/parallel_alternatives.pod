@@ -3790,6 +3790,72 @@ fails.
 https://github.com/aaronriekenberg/rust-parallel
 (Last checked: 2023-01)
 
+
+=head2 DIFFERENCES BETWEEN parallelium AND GNU Parallel
+
+Summary (see legend above):
+
+=over
+
+=item - I2 - - - - -
+
+=item M1 - - - - M6
+
+=item O1 - O3 - - - - N/A - -
+
+=item E1 - - E4 - - -
+
+=item - - - - - - - - -
+
+=item - -
+
+=back
+
+B<parallelium> merges standard output (stdout) and standard error
+(stderr). The maximal output of a command is 8192 bytes. Bigger output
+makes B<parallelium> go into an infinite loop.
+
+In the input file for B<parallelium> you can define a tag, so that you
+can select to run only these commands. A bit like a target in a
+Makefile.
+
+Progress is printed on standard output (stdout) prepended with '#'
+with similar information as GNU B<parallel>'s B<--bar>.
+
+=head3 EXAMPLES
+
+    $ cat testjobs.txt
+    #tag common sleeps classA
+    (sleep 4.495;echo "job 000")
+    :
+    (sleep 2.587;echo "job 016")
+    
+    #tag common sleeps classB
+    (sleep 0.218;echo "job 017")
+    :
+    (sleep 2.269;echo "job 040")
+    
+    #tag common sleeps classC
+    (sleep 2.586;echo "job 041")
+    :
+    (sleep 1.626;echo "job 099")
+    
+    #tag lasthalf, sleeps, classB
+    (sleep 1.540;echo "job 100")
+    :
+    (sleep 2.001;echo "job 199")
+
+    1$ parallelium -f testjobs.txt -l logdir -t classB,classC
+
+    1$ cat testjobs.txt |
+         parallel --plus --results logdir/testjobs.txt_{0#}.output \
+           '{= if(/^#tag /) { @tag = split/,|\s+/ }
+               (grep /^(classB|classC)$/, @tag) or skip =}'
+
+https://github.com/beomagi/parallelium
+(Last checked: 2023-01)
+
+
 =head2 Todo
 
 http://code.google.com/p/push/ (cannot compile)

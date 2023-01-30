@@ -646,15 +646,15 @@ par_shebang	pl	C
 par_shebang	py	A
 par_shebang	py	B
 par_shebang	py	C
-par_shebang	r	[1] "A"
-par_shebang	r	[1] "B"
-par_shebang	r	[1] "C"
 par_shebang	rb	["A"]
 par_shebang	rb	["B"]
 par_shebang	rb	["C"]
 par_shebang	sh	A
 par_shebang	sh	B
 par_shebang	sh	C
+par_shebang	r	[1] "A"
+par_shebang	r	[1] "B"
+par_shebang	r	[1] "C"
 par_show_limits	### Test --show-limits
 par_show_limits	Maximal size of command: 130xxx
 par_show_limits	Maximal usable size of command: 63xxx

@@ -50,8 +50,9 @@ echo '### Test --spreadstdin - this failed during devel';
 echo '### Test --spreadstdin -k'; 
   nice seq 1 1000000 | $NICEPAR -k --recend "\n" -j10 --spreadstdin gzip -9 | zcat | md5sum
 
+# --files requires TMPDIR does not contain \n
 echo '### Test --spreadstdin --files'; 
-  nice seq 1 1000000 | shuf | $NICEPAR --files --recend "\n" -j10 --spreadstdin sort -n | parallel -Xj1 sort -nm {} ";"rm {} | md5sum
+  nice seq 1 1000000 | shuf | TMPDIR=/tmp $NICEPAR --files --recend "\n" -j10 --spreadstdin sort -n | parallel -Xj1 sort -nm {} ";"rm {} | md5sum
 
 echo '### Test --tag ::: a ::: b'; 
   stdout $NICEPAR -k --tag -j1  echo stderr-{.} ">&2;" echo stdout-{} ::: a ::: b

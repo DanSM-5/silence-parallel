@@ -7,8 +7,10 @@
 TMP=/run/shm/parallel_local105
 rm -rf $TMP 2>/dev/null
 mkdir -p $TMP
-tar -C $TMP -xf input-files/random_dirs_with_newline.tar.bz2
-
+pwd=$(pwd)
+# If not run in dir parallel/testsuite: set testsuitedir to path of testsuite
+testsuitedir=${testsuitedir:-$pwd}
+tar -C $TMP -xf "$testsuitedir"/input-files/random_dirs_with_newline.tar.bz2
 cd $TMP/random_dirs_with_newline
 
 # tests if special dir names causes problems

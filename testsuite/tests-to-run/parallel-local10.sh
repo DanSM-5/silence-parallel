@@ -5,6 +5,12 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 echo '### Test with old perl libs'
+
+pwd=$(pwd)
+# If not run in dir parallel/testsuite: set testsuitedir to path of testsuite
+testsuitedir=${testsuitedir:-$pwd}
+cd "$testsuitedir"
+
 # Old libraries are put into input-files/perllib
 PERL5LIB=input-files/perllib:../input-files/perllib; export PERL5LIB
 

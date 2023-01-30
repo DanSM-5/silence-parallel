@@ -103,17 +103,17 @@ echo '### Race condition bug - 2 - would block';
   seq 1 100 | nice parallel -j100 --block 1 --recend "" --pipe cat >/dev/null
 
 echo '### Test --block size=1'; 
-  seq 1 10| parallel --block 1 --files --recend ""  --pipe sort -n | parallel -Xj1 sort -nm {} ";"rm {}
+  seq 1 10| TMPDIR=/tmp parallel --block 1 --files --recend ""  --pipe sort -n | parallel -Xj1 sort -nm {} ";"rm {}
 
 echo '### Test --block size=1M -j10 --files - more jobs than data'; 
   sort -n < /tmp/blocktest | md5sum; 
-  cat /tmp/blocktest | parallel --files --recend "\n" -j10 --pipe sort -n | parallel -Xj1 sort -nm {} ";"rm {} | md5sum
+  cat /tmp/blocktest | TMPDIR=/tmp parallel --files --recend "\n" -j10 --pipe sort -n | parallel -Xj1 sort -nm {} ";"rm {} | md5sum
 
 echo '### Test --block size=1M -j1 - more data than cpu'; 
-  cat /tmp/blocktest | parallel --files --recend "\n" -j1 --pipe sort -n | parallel -Xj1 sort -nm {} ";"rm {} | md5sum
+  cat /tmp/blocktest | TMPDIR=/tmp parallel --files --recend "\n" -j1 --pipe sort -n | parallel -Xj1 sort -nm {} ";"rm {} | md5sum
 
 echo '### Test --block size=1M -j1 - more data than cpu'; 
-  cat /tmp/blocktest | parallel --files --recend "\n" -j2 --pipe sort -n | parallel -Xj1 sort -nm {} ";"rm {} | md5sum
+  cat /tmp/blocktest | TMPDIR=/tmp parallel --files --recend "\n" -j2 --pipe sort -n | parallel -Xj1 sort -nm {} ";"rm {} | md5sum
 
 echo '### Test --pipe default settings'; 
   cat /tmp/blocktest | parallel --pipe sort | sort -n | md5sum

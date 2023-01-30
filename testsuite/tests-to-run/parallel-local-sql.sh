@@ -28,8 +28,8 @@ p_wrapper() {
     echo Exit=$?
     wait
     echo Exit=$?
-    $DEBUG && sort -u $T1 $T2;
-    rm $T1 $T2
+    $DEBUG && sort -u "$T1" "$T2";
+    rm "$T1" "$T2"
     p_showsqlresult $SERVERURL $TABLE
     $DEBUG || sql $SERVERURL "drop table $TABLE;" >/dev/null 2>/dev/null
 }
@@ -38,9 +38,9 @@ p_template() {
     (
 	# Make sure all jobs are inserted before starting a worker
 	sleep 10;
-	parallel --sqlworker $DBURL    "$@" sleep .3\;echo >$T1
+	parallel --sqlworker $DBURL    "$@" sleep .3\;echo >"$T1"
     ) &
-    parallel  --sqlandworker $DBURL "$@" sleep .3\;echo ::: {1..5} ::: {a..e} >$T2;
+    parallel  --sqlandworker $DBURL "$@" sleep .3\;echo ::: {1..5} ::: {a..e} >"$T2";
 }
 
 par_sqlandworker() {
@@ -68,35 +68,35 @@ par_sqlandworker_total_jobs() {
 }
 
 par_append_different_cmd() {
-    parallel --sqlmaster  $DBURL sleep .3\;echo ::: {1..5} ::: {a..e} >$T2;
-    parallel --sqlmaster +$DBURL sleep .3\;echo {2}-{1} ::: {11..15} ::: {A..E} >>$T2;
-    parallel --sqlworker  $DBURL >$T1
+    parallel --sqlmaster  "$DBURL" sleep .3\;echo ::: {1..5} ::: {a..e} >"$T2";
+    parallel --sqlmaster +"$DBURL" sleep .3\;echo {2}-{1} ::: {11..15} ::: {A..E} >>"$T2";
+    parallel --sqlworker  "$DBURL" >"$T1"
 }
 
 par_shuf() {
-    MD5=$(echo $SERVERURL | md5sum | perl -pe 's/(...).*/$1/')
-    T=/tmp/parallel-bug49791-$MD5
-    [ -e $T ] && rm -rf $T
-    export PARALLEL="--shuf --result $T"
+    MD5=$(echo "$SERVERURL" | md5sum | perl -pe 's/(...).*/$1/')
+    T=/tmp/parallel-bug49791-"  <$MD5"
+    [ -e "$T" ] && rm -rf "$T"
+    export PARALLEL="--shuf --result '$T'"
     parallel --sqlandworker $DBURL sleep .3\;echo \
-	     ::: {1..5} ::: {a..e} >$T2;
-    parallel --sqlworker    $DBURL >$T2 &
-    parallel --sqlworker    $DBURL >$T2 &
-    parallel --sqlworker    $DBURL >$T2 &
-    parallel --sqlworker    $DBURL >$T2 &
+	     ::: {1..5} ::: {a..e} >"$T2";
+    parallel --sqlworker    $DBURL >"$T2" &
+    parallel --sqlworker    $DBURL >"$T2" &
+    parallel --sqlworker    $DBURL >"$T2" &
+    parallel --sqlworker    $DBURL >"$T2" &
     unset PARALLEL
     wait;
     # Did it compute correctly?
-    cat $T/1/*/*/*/stdout
+    cat "$T"/1/*/*/*/stdout
     # Did it shuffle
-    SHUF=$(sql $SERVERURL "select Host,Command,V1,V2,Stdout,Stderr from $TABLE order by seq;")
-    export PARALLEL="--result $T"
-    parallel --sqlandworker $DBURL sleep .3\;echo \
-	     ::: {1..5} ::: {a..e} >$T2;
-    parallel --sqlworker    $DBURL >$T2 &
-    parallel --sqlworker    $DBURL >$T2 &
-    parallel --sqlworker    $DBURL >$T2 &
-    parallel --sqlworker    $DBURL >$T2 &
+    SHUF=$(sql "$SERVERURL" "select Host,Command,V1,V2,Stdout,Stderr from $TABLE order by seq;")
+    export PARALLEL="--result '$T'"
+    parallel --sqlandworker "$DBURL" sleep .3\;echo \
+	     ::: {1..5} ::: {a..e} >"$T2";
+    parallel --sqlworker    "$DBURL" >"$T2" &
+    parallel --sqlworker    "$DBURL" >"$T2" &
+    parallel --sqlworker    "$DBURL" >"$T2" &
+    parallel --sqlworker    "$DBURL" >"$T2" &
     unset PARALLEL
     wait;
     NOSHUF=$(sql $SERVERURL "select Host,Command,V1,V2,Stdout,Stderr from $TABLE order by seq;")
@@ -104,8 +104,8 @@ par_shuf() {
     if [ $DIFFSIZE -gt 2500 ]; then
 	echo OK: Diff bigger than 2500 char
     fi
-    [ -e $T ] && rm -rf $T
-    touch $T1
+    [ -e "$T" ] && rm -rf "$T"
+    touch "$T1"
 }
 
 par_sql_joblog() {
@@ -115,10 +115,10 @@ par_sql_joblog() {
 	perl -pe 's/\d+\.\d+/999.999/g' | sort -n &
     sleep 0.5
     T=$(mktemp)
-    parallel -k --joblog - --sqlworker $DBURL > $T
+    parallel -k --joblog - --sqlworker $DBURL > "$T"
     wait
     # Needed because of race condition
-    cat $T; rm $T
+    cat "$T"; rm "$T"
     echo '### --sqlandworker'
     parallel -k --joblog - --sqlandworker $DBURL sleep .3\;echo ::: {1..5} ::: {a..e} |
 	perl -pe 's/\d+\.\d+/999.999/g' | sort -n

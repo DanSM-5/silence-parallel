@@ -6,7 +6,7 @@
 
 par_sqlite() {
     tmp=$(mktemp -d)
-    cd $tmp
+    cd "$tmp"
     echo '### Test of sqlite'
     for CMDSQL in sqlite sqlite3 ; do
 	echo "Current command: $CMDSQL"

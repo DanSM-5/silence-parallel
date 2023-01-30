@@ -6,6 +6,17 @@
 
 # These fail regularly
 
+par_semaphore() {
+    echo '### Test if parallel invoked as sem will run parallel --semaphore'
+    sem --id as_sem -u -j2 'echo job1a 1; sleep 3; echo job1b 3'
+    sleep 0.5
+    sem --id as_sem -u -j2 'echo job2a 2; sleep 3; echo job2b 5'
+    sleep 0.5
+    sem --id as_sem -u -j2 'echo job3a 4; sleep 3; echo job3b 6'
+    sem --id as_sem --wait
+    echo done
+}
+
 ctrlz_should_suspend_children() {
     echo 'bug #46120: Suspend should suspend (at least local) children'
     echo 'it should burn 1.9 CPU seconds, but no more than that'
@@ -52,7 +63,7 @@ par_sql_CSV() {
 
 par_hostgroup() {
     echo '### --hostgroup force ncpu'
-    parallel --delay 0.1 --hgrp -S @g1/1/parallel@lo -S @g2/3/lo whoami\;sleep 0.4{} ::: {1..8} | sort
+    parallel --delay 0.1 --hgrp -S @g1/1/parallel@lo -S @g2/3/lo whoami\;sleep 0.4{} ::: {1..8} | sort -u
 
     echo '### --hostgroup two group arg'
     parallel -k --sshdelay 0.1 --hgrp -S @g1/1/parallel@lo -S @g2/3/lo whoami\;sleep 0.3{} ::: {1..8}@g1+g2 | sort
@@ -61,7 +72,7 @@ par_hostgroup() {
     parallel --delay 0.2 --hgrp -S @g1/1/parallel@lo -S @g2/3/lo whoami\;sleep 0.4{} ::: {1..8}@g2
 
     echo '### --hostgroup multiple group arg + unused group'
-    parallel --delay 0.2 --hgrp -S @g1/1/parallel@lo -S @g1/3/lo -S @g3/100/tcsh@lo whoami\;sleep 0.8{} ::: {1..8}@g1+g2 | sort
+    parallel --delay 0.2 --hgrp -S @g1/1/parallel@lo -S @g1/3/lo -S @g3/100/tcsh@lo whoami\;sleep 0.8{} ::: {1..8}@g1+g2 | sort -u
 
     echo '### --hostgroup two groups @'
     parallel -k --hgrp -S @g1/parallel@lo -S @g2/lo --tag whoami\;echo ::: parallel@g1 tange@g2
@@ -73,7 +84,7 @@ par_hostgroup() {
     parallel -k --hostgroups -S parallel@lo echo ::: no_group implicit_group@parallel@lo
 
     echo '### --hostgroup -S @group'
-    parallel -S @g1/ -S @g1/1/tcsh@lo -S @g1/1/localhost -S @g2/1/parallel@lo whoami\;true ::: {1..6} | sort
+    parallel -S @g1/ -S @g1/1/tcsh@lo -S @g1/1/localhost -S @g2/1/parallel@lo whoami\;true ::: {1..6} | sort -u
 
     echo '### --hostgroup -S @group1 -Sgrp2'
     parallel -S @g1/ -S @g2 -S @g1/1/tcsh@lo -S @g1/1/localhost -S @g2/1/parallel@lo whoami\;true ::: {1..6} | sort
@@ -155,15 +166,15 @@ par_kill_hup() {
 par_resume_failed_k() {
     echo '### bug #38299: --resume-failed -k'
     tmp=$(mktemp)
-    parallel -k --resume-failed --joblog $tmp echo job{#} val {}\;exit {} ::: 0 1 2 3 0 1
+    parallel -k --resume-failed --joblog "$tmp" echo job{#} val {}\;exit {} ::: 0 1 2 3 0 1
     echo try 2. Gives failing - not 0
-    parallel -k --resume-failed --joblog $tmp echo job{#} val {}\;exit {} ::: 0 1 2 3 0 1
+    parallel -k --resume-failed --joblog "$tmp" echo job{#} val {}\;exit {} ::: 0 1 2 3 0 1
     echo with exit 0
-    parallel -k --resume-failed --joblog $tmp echo job{#} val {}\;exit 0  ::: 0 1 2 3 0 1
+    parallel -k --resume-failed --joblog "$tmp" echo job{#} val {}\;exit 0  ::: 0 1 2 3 0 1
     sleep 0.5
     echo try 2 again. Gives empty
-    parallel -k --resume-failed --joblog $tmp echo job{#} val {}\;exit {} ::: 0 1 2 3 0 1
-    rm $tmp
+    parallel -k --resume-failed --joblog "$tmp" echo job{#} val {}\;exit {} ::: 0 1 2 3 0 1
+    rm "$tmp"
 }
 
 par_testhalt() {

@@ -22,9 +22,9 @@ par_parcat_mixing() {
     echo 'parcat output should mix: a b a b'
     mktempfifo() {
 	tmp=$(mktemp)
-	rm $tmp
-	mkfifo $tmp
-	echo $tmp
+	rm "$tmp"
+	mkfifo "$tmp"
+	echo "$tmp"
     }
     slow_output() {
 	string=$1
@@ -34,10 +34,10 @@ par_parcat_mixing() {
     }
     tmp1=$(mktempfifo)
     tmp2=$(mktempfifo)
-    slow_output a > $tmp1 &
+    slow_output a > "$tmp1" &
     sleep 1
-    slow_output b > $tmp2 &
-    parcat $tmp1 $tmp2 | tr -s ab
+    slow_output b > "$tmp2" &
+    parcat "$tmp1" "$tmp2" | tr -s ab
 }
 
 par_tmux_termination() {

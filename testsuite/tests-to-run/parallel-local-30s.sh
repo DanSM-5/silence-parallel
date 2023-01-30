@@ -307,12 +307,12 @@ par_groupby_pipepart() {
 	generator="$1"
 	colsep="$2"
 	groupby="$3"
-	tmp=`mktemp`
+	tmp=$(mktemp)
 	
 	echo "### test $generator | --colsep $colsep --groupby $groupby"
-	$generator > $tmp
+	$generator > "$tmp"
 	parallel --header 1 --pipepart -k \
-		 -a $tmp --colsep "$colsep" --groupby "$groupby" 'echo NewRec; wc'
+		 -a "$tmp" --colsep "$colsep" --groupby "$groupby" 'echo NewRec; wc'
     }
     export -f tester
     parallel --tag -k tester \
@@ -348,7 +348,7 @@ par_memory_leak() {
     export -f a_run
     echo "### Test for memory leaks"
     echo "Of 300 runs of 1 job at least one should be bigger than a 3000 job run"
-    . `which env_parallel.bash`
+    . $(which env_parallel.bash)
     parset small_max,big ::: 'seq 300 | parallel a_run 1 | jq -s max' 'a_run 3000'
     if [ $small_max -lt $big ] ; then
 	echo "Bad: Memleak likely."
@@ -571,4 +571,4 @@ par_test_ipv6_format() {
 export -f $(compgen -A function | grep par_)
 compgen -A function | grep par_ | sort |
     #    parallel --delay 0.3 --timeout 1000% -j6 --tag -k --joblog /tmp/jl-`basename $0` '{} 2>&1'
-    parallel --delay 0.3 --timeout 1000% -j6 --lb --tag -k --joblog /tmp/jl-`basename $0` '{} 2>&1'
+    parallel --delay 0.3 --timeout 3000% -j6 --lb --tag -k --joblog /tmp/jl-`basename $0` '{} 2>&1'

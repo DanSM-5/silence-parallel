@@ -159,12 +159,19 @@ sub sort_files {
     # The commands split at \n (or \0)
     # and there will be at least one for each CPU thread
     my @subopt = $opt::zero_terminated ? qw(--recend "\0") : ();
+    # $uniq is needed because @files could contain \n
+    my $uniq = join "", map { (0..9,"a".."z","A".."Z")[rand(62)] } (1..20);
     open(my $par,"-|",qw(parallel), @subopt,
 	 qw(--pipepart --block -1 --dryrun -vv sort),
-	 @Global::sortoptions, '::::', @files) || die;
-    my @cmd = merge(<$par>);
+	 @Global::sortoptions, $uniq, '::::', @files) || die;
+    # Generated commands:
+    # <file perl-catter | (sort ... $uniq )
+    # Use $uniq to split into commands
+    # (We cannot use \n because 'file' may contain newline)
+    my @cmd = map { "$_)\n" } split(/$uniq[)]\n/, join("",<$par>));
+    debug(1,@cmd);
     close $par;
-    debug(@cmd);
+    @cmd = merge(@cmd);
     # The command uses <(...) so it is incompatible with /bin/sh
     open(my $bash,"|-","bash") || die;
     print $bash @cmd;
@@ -186,7 +193,7 @@ sub sort_stdin {
     if(fork) {
     } else {
 	my @subopt = $opt::zero_terminated ? qw(--recend "\0") : ();
-	exec(qw(parallel -j), $numthreads, @subopt,
+	exec(qw(parallel -0 -j), $numthreads, @subopt,
 	     # 286k is the best mean value after testing 250..350
 	     qw(--block 286k --pipe --roundrobin cat > {} :::),@fifos);
     }

@@ -523,6 +523,27 @@ use Getopt::Long;
 use strict;
 use File::Temp qw/tempfile tempdir/;
 
+sub shell_quote($) {
+    # Quote for other shells (Bourne compatibles)
+    # Inputs:
+    #	$string = string to be quoted
+    # Returns:
+    #	$shell_quoted = string quoted as needed by the shell
+    my $s = $_[0];
+    if($s =~ /[^-_.+a-z0-9\/]/i) {
+	$s =~ s/'/'"'"'/g; # "-quote single quotes
+	$s = "'$s'";	   # '-quote entire string
+	$s =~ s/^''//;	   # Remove unneeded '' at ends
+	$s =~ s/''$//;	   # (faster than s/^''|''$//g)
+	return $s;
+    } elsif ($s eq "") {
+	return "''";
+    } else {
+	# No quoting needed
+	return $s;
+    }
+}
+
 parse_options();
 
 my $pass_through_options = (defined $::opt_p) ? join(" ",@{$::opt_p}) : "";
@@ -587,29 +608,11 @@ if($dburl{'query'}) {
     ($fh,$queryfile) = tempfile(SUFFIX => ".sql");
     print $fh $dburl{'query'},"\n";
     close $fh;
-    $batch_command = "(cat $queryfile;rm $queryfile; cat) | $batch_command";
+    my $qfile = shell_quote($queryfile);
+    $batch_command = "(cat $qfile;rm $qfile; cat) | $batch_command";
 }
 
-sub shell_quote($) {
-    # Quote for other shells (Bourne compatibles)
-    # Inputs:
-    #	$string = string to be quoted
-    # Returns:
-    #	$shell_quoted = string quoted as needed by the shell
-    my $s = $_[0];
-    if($s =~ /[^-_.+a-z0-9\/]/i) {
-	$s =~ s/'/'"'"'/g; # "-quote single quotes
-	$s = "'$s'";	   # '-quote entire string
-	$s =~ s/^''//;	   # Remove unneeded '' at ends
-	$s =~ s/''$//;	   # (faster than s/^''|''$//g)
-	return $s;
-    } elsif ($s eq "") {
-	return "''";
-    } else {
-	# No quoting needed
-	return $s;
-    }
-}
+
 
 do {
     if(@ARGV) {
@@ -776,11 +779,11 @@ sub mysql_commands {
     close $credential_fh;
 
     # Prepend with a remover of the credential tempfile
-    # -C: Compression if both ends support it
+    my $qtmp = shell_quote($tmp);
     $batch_command =
-	"((sleep 1; rm $tmp) & ".
-	"mysql --defaults-extra-file=$tmp -C $pass_through_options ".
-	"$no_headers $html $ssl $host $user $port  $database)";
+	"((sleep 1; rm $qtmp) & ".
+	"mysql --defaults-extra-file=$qtmp $pass_through_options ".
+	"$no_headers $html $ssl $host $user $port $database)";
     $interactive_command = $batch_command;
     return($batch_command,$interactive_command);
 }
@@ -1109,7 +1112,9 @@ sub get_alias {
 		  "$path/dburl.aliases", "$path/dburl.aliases.dist");
     for my $alias_file (@search) {
 	if(-r $alias_file) {
-	    push @urlalias, `cat "$alias_file"`;
+	    open(my $fh, "<", $alias_file) || die;
+	    push @urlalias, <$fh>;
+	    close $fh;
 	}
     }
     my ($alias_part,$rest) = $alias=~/(:\w*)(.*)/;

@@ -11,8 +11,13 @@ SSHLOGIN1=$SSHUSER1@$SERVER1
 echo $SSHUSER1@$SERVER1
 
 ssh $SSHLOGIN1 touch .parallel/will-cite
-scp -q .*/src/{parallel,sem,sql,niceload,env_parallel*} $SSHLOGIN1:bin/
-
+(
+    pwd=$(pwd)
+    # If not run in dir parallel/testsuite: set testsuitedir to path of testsuite
+    testsuitedir=${testsuitedir:-$pwd}
+    cd $testsuitedir 
+    scp -q "$testsuitedir"/../src/{parallel,sem,sql,niceload,env_parallel*} $SSHLOGIN1:bin/
+)
 . `which env_parallel.bash`
 env_parallel --session
 

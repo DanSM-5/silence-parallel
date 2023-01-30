@@ -9,12 +9,12 @@ par_stdin() {
     seq 10 | parallel --semaphore --id stdin wc
     seq 10 | parallel --semaphore --id stdin --fg wc
     tmp=$(mktemp)
-    seq 10 > $tmp
-    parallel -a $tmp --semaphore --id stdin wc
-    parallel -a $tmp --semaphore --id stdin --fg wc
+    seq 10 > "$tmp"
+    parallel -a "$tmp" --semaphore --id stdin wc
+    parallel -a "$tmp" --semaphore --id stdin --fg wc
     parallel --semaphore --id stdin --wait
     # Should fail: More files are not supported
-    parallel -a $tmp -a $tmp --semaphore --id stdin --fg wc
+    parallel -a "$tmp" -a "$tmp" --semaphore --id stdin --fg wc
 }
 
 par_mutex() {

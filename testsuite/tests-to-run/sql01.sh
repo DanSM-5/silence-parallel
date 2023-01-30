@@ -64,16 +64,18 @@ echo "### Test sql:sql::alias"
 sql sql:sql::sqlunittest "SELECT 'Yes it works' as 'Test sql:sql::alias';"
 
 echo "### Test --noheaders --no-headers -n"
-sql -n :sqlunittest 'select * from unittest order by id' \
-| parallel -k --colsep '\t' echo {2} {1}
-sql --noheaders :sqlunittest 'select * from unittest order by id' \
-| parallel -k --colsep '\t' echo {2} {1}
-sql --no-headers :sqlunittest 'select * from unittest order by id' \
-| parallel -k --colsep '\t' echo {2} {1}
+sql -n :sqlunittest 'select * from unittest order by id' |
+    parallel -k --colsep '\t' echo {2} {1}
+sql --noheaders :sqlunittest 'select * from unittest order by id' |
+    parallel -k --colsep '\t' echo {2} {1}
+sql --no-headers :sqlunittest 'select * from unittest order by id' |
+    parallel -k --colsep '\t' echo {2} {1}
 
 echo "### Test --sep -s";
-sql --no-headers -s : pg:/// 'select 1,2' | parallel --colsep ':' echo {2} {1}
-sql --no-headers --sep : pg:/// 'select 1,2' | parallel --colsep ':' echo {2} {1}
+sql --no-headers -s : pg:/// 'select 1,2' |
+    parallel --colsep ':' echo {2} {1}
+sql --no-headers --sep : pg:/// 'select 1,2' |
+    parallel --colsep ':' echo {2} {1}
 
 echo "### Test --passthrough -p";
 sql -p -H :sqlunittest 'select * from unittest'
@@ -101,7 +103,7 @@ sql --table-size :sqlunittest | wc -l
 
 echo "### Test --debug"
 sql --debug :sqlunittest "SELECT 'Yes it does' as 'Test if --debug works';" |
-    perl -pe 's:/tmp/sql01-tmpdir/...........sql:tmpfile:g'
+    perl -pe 's:/tmp/...........sql:tmpfile:g'
 
 echo "### Test --version -V"
 sql --version | wc

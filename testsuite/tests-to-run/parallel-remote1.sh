@@ -51,6 +51,7 @@ par_filter_hosts_no_ssh_nxserver() {
 par_controlmaster_is_faster() {
     echo '### bug #41964: --controlmaster not seems to reuse OpenSSH connections to the same host'
     echo '-M should finish first - eventhough there are 2x jobs'
+    export SSHLOGIN1=sh@lo
     (parallel -S $SSHLOGIN1 true ::: {1..20};
      echo No --controlmaster - finish last) & 
     (parallel -M -S $SSHLOGIN1 true ::: {1..40};

@@ -1,10 +1,28 @@
 #!/bin/bash
 
-# SPDX-FileCopyrightText: 2021-2022 Ole Tange, http://ole.tange.dk and Free Software and Foundation, Inc.
+# SPDX-FileCopyrightText: 2021-2023 Ole Tange, http://ole.tange.dk and Free Software and Foundation, Inc.
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 # SSH only allowed to localhost/lo
+
+
+par_ssh_cmd_with_newline() {
+    echo '### Check --ssh with \n works'
+    ssh=$(mktemp)
+    cp -a /usr/bin/ssh "$ssh"
+    parallel --ssh "'$ssh'" -S sh@lo ::: id
+}
+
+par_controlmaster() {
+    echo '### Check -M works if TMPDIR contains space'
+    (
+	seq 1 3 | parallel -j10 --retries 3 -k -M -S sh@lo echo
+	seq 1 3 | parallel -j10 --retries 3 -k -M -S sh@lo echo
+    )
+    echo Part2
+    parallel -j1 -k -M -S sh@lo echo ::: OK
+}
 
 par_autossh() {
     echo '### --ssh autossh'

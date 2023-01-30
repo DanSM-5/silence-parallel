@@ -6,7 +6,7 @@
 
 par_tmux_filter() {
     # /tmp/parallel-local7/tmsOU2Ig
-    perl -pe 's:(/tmp\S+/tms).....:$1XXXXX:;s/ p\d+/pID/;'
+    perl -pe 's:(/tmp.*/tms).....:$1XXXXX:;s/ p\d+/pID/;'
 }
 export -f par_tmux_filter
 

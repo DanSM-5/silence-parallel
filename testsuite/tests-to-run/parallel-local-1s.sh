@@ -102,7 +102,7 @@ par_compute_command_len() {
 }
 
 par_skip_first_line() {
-    tmp=$(mktemp)
+    tmp="$(mktemp)"
     (echo `seq 10000`;echo MyHeader; seq 10) |
 	parallel -k --skip-first-line --pipe --block 10 --header '1' cat
     (echo `seq 10000`;echo MyHeader; seq 10) > "$tmp"
@@ -152,21 +152,21 @@ par_uninstalled_sshpass() {
 }
 
 par_results_compress() {
-    tmpdir=$(mktemp)
+    tmpdir="$(mktemp)"
     rm -r "$tmpdir"
-    parallel --results $tmpdir --compress echo ::: 1
+    parallel --results "$tmpdir" --compress echo ::: 1
     cat "$tmpdir"/*/*/stdout | pzstd -qdc
 
     rm -r "$tmpdir"
-    parallel --results $tmpdir echo ::: 1
+    parallel --results "$tmpdir" echo ::: 1
     cat "$tmpdir"/*/*/stdout
 
     rm -r "$tmpdir"
-    parallel --results $tmpdir --compress echo ::: '  ' /
+    parallel --results "$tmpdir" --compress echo ::: '  ' /
     cat "$tmpdir"/*/*/stdout | pzstd -qdc
     
     rm -r "$tmpdir"
-    parallel --results $tmpdir echo ::: '  ' /
+    parallel --results "$tmpdir" echo ::: '  ' /
     cat "$tmpdir"/*/*/stdout
 
     rm -r "$tmpdir"
@@ -197,11 +197,15 @@ par_open_files_blocks() {
 
 par_pipe_unneeded_procs() {
     echo 'bug #34241: --pipe should not spawn unneeded processes - part 2'
+    tmp="$(mktemp -d)"
+    cd "$tmp"
     seq 500 | parallel --tmpdir . -j10 --pipe --block 1k --files wc >/dev/null
     ls *.par | wc -l; rm *.par
     seq 500 | parallel --tmpdir . -j10 --pipe --block 1k --files --dry-run wc >/dev/null
     echo No .par should exist
     stdout ls *.par
+    cd ..
+    rm -r "$tmp"
 }
 
 par_interactive() {
@@ -1065,11 +1069,11 @@ par_pipepart_block() {
 }
 
 par_block_negative_prefix() {
-    tmp=`mktemp`
-    seq 100000 > $tmp
+    tmp="$(mktemp)"
+    seq 100000 > "$tmp"
     echo '### This should generate 10*2 jobs'
-    parallel -j2 -a $tmp --pipepart --block -0.01k -k md5sum | wc
-    rm $tmp
+    parallel -j2 -a "$tmp" --pipepart --block -0.01k -k md5sum | wc
+    rm "$tmp"
 }
 
 par_sql_colsep() {

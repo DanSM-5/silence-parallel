@@ -6,7 +6,7 @@
 
 setup() {
     tmp=$(mktemp)
-    perl -pe 's/\n/\n\0/' >$tmp <<EOF
+    perl -pe 's/\n/\n\0/' >"$tmp" <<EOF
 chr1	1	Sample 1
 chr1	11	Sample 1
 chr1	111	Sample 1
@@ -67,10 +67,10 @@ EOF
 
 parsort_test() {
     echo "### parsort $@"
-    parsort "$@"   $tmp | md5sum
-    sort    "$@"   $tmp | md5sum
-    parsort "$@" < $tmp | md5sum
-    sort    "$@" < $tmp | md5sum
+    parsort "$@"   "$tmp" | md5sum
+    sort    "$@"   "$tmp" | md5sum
+    parsort "$@" < "$tmp" | md5sum
+    sort    "$@" < "$tmp" | md5sum
 }
 export -f parsort_test
 

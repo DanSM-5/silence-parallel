@@ -49,6 +49,10 @@ start_centos3() {
 start_centos3
 
 (
+    pwd=$(pwd)
+    # If not run in dir parallel/testsuite: set testsuitedir to path of testsuite
+    testsuitedir=${testsuitedir:-$pwd}
+    cd $testsuitedir 
     # Copy binaries to server
     cd testsuite/vagrant/tange/centos3/ 2>/dev/null
     cd vagrant/tange/centos3/ 2>/dev/null

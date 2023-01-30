@@ -7,6 +7,10 @@
 start_centos3() {
     stdout ping -w 1 -c 1 centos3 >/dev/null || (
 	# Vagrant does not set the IP addr
+	pwd=$(pwd)
+	# If not run in dir parallel/testsuite: set testsuitedir to path of testsuite
+	testsuitedir=${testsuitedir:-$pwd}
+	cd "$testsuitedir"
 	cd testsuite/vagrant/tange/centos3/ 2>/dev/null
 	cd vagrant/tange/centos3/ 2>/dev/null
 	cd ../vagrant/tange/centos3/ 2>/dev/null
@@ -55,6 +59,10 @@ compgen -A function | grep par_ | LC_ALL=C sort |
     perl -pe 's:/usr/bin:/bin:g;'
 
 (
+    pwd=$(pwd)
+    # If not run in dir parallel/testsuite: set testsuitedir to path of testsuite
+    testsuitedir=${testsuitedir:-$pwd}
+    cd "$testsuitedir"
     cd vagrant/tange/centos3/
     stdout vagrant suspend |
 	grep -v '==> default: Saving VM state' |

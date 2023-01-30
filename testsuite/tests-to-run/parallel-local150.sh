@@ -4,6 +4,7 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+mkdir -p tmp
 cd tmp
 
 median() { perl -e '@a=sort {$a<=>$b} <>;print $a[$#a/2]';} 

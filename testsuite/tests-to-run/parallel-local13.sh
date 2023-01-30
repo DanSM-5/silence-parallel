@@ -6,7 +6,11 @@
 
 echo '### Tests from xargs'
 
-rsync -Ha --delete input-files/xargs-inputs/ tmp/
+pwd=$(pwd)
+# If not run in dir parallel/testsuite: set testsuitedir to path of testsuite
+testsuitedir=${testsuitedir:-$pwd}
+
+rsync -Ha --delete "$testsuitedir"/input-files/xargs-inputs/ tmp/
 cd tmp
 
 PARALLEL=-j8

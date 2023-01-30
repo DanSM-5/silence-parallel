@@ -38,8 +38,8 @@ p_wrapper() {
     wait
     echo Exit=$?
     # For debugging show the tempfiles
-    $DEBUG && sort -u $T1 $T2;
-    rm $T1 $T2
+    $DEBUG && sort -u "$T1" "$T2";
+    rm "$T1" "$T2"
     p_showsqlresult $SERVERURL $TABLE
     # Drop the table if not debugging
     $DEBUG || sql $SERVERURL "drop table $TABLE;" >/dev/null 2>/dev/null
@@ -50,9 +50,9 @@ p_template() {
     (
 	# Make sure there is work to be done
 	sleep 6;
-	parallel --sqlworker $DBURL    "$@" sleep .3\;echo >$T1
+	parallel --sqlworker $DBURL    "$@" sleep .3\;echo >"$T1"
     ) &
-    parallel  --sqlandworker $DBURL "$@" sleep .3\;echo ::: {1..5} ::: {a..e} >$T2;
+    parallel  --sqlandworker $DBURL "$@" sleep .3\;echo ::: {1..5} ::: {a..e} >"$T2";
 }
 
 par_sqlandworker() {
@@ -92,9 +92,9 @@ par_sqlandworker_total_jobs() {
 }
 
 par_append() {
-    parallel --sqlmaster  $DBURL sleep .3\;echo ::: {1..5} ::: {a..e} >$T2;
-    parallel --sqlmaster +$DBURL sleep .3\;echo ::: {11..15} ::: {A..E} >>$T2;
-    parallel --sqlworker  $DBURL sleep .3\;echo >$T1
+    parallel --sqlmaster  $DBURL sleep .3\;echo ::: {1..5} ::: {a..e} >"$T2";
+    parallel --sqlmaster +$DBURL sleep .3\;echo ::: {11..15} ::: {A..E} >>"$T2";
+    parallel --sqlworker  $DBURL sleep .3\;echo >"$T1"
 }
 
 par_shuf() {
@@ -103,11 +103,11 @@ par_shuf() {
     [ -e $T ] && rm -rf $T
     export PARALLEL="--shuf --result $T"
     parallel --sqlandworker $DBURL sleep .3\;echo \
-	     ::: {1..5} ::: {a..e} >$T2;
-    parallel --sqlworker    $DBURL sleep .3\;echo >$T2 &
-    parallel --sqlworker    $DBURL sleep .3\;echo >$T2 &
-    parallel --sqlworker    $DBURL sleep .3\;echo >$T2 &
-    parallel --sqlworker    $DBURL sleep .3\;echo >$T2 &
+	     ::: {1..5} ::: {a..e} >"$T2";
+    parallel --sqlworker    $DBURL sleep .3\;echo >"$T2" &
+    parallel --sqlworker    $DBURL sleep .3\;echo >"$T2" &
+    parallel --sqlworker    $DBURL sleep .3\;echo >"$T2" &
+    parallel --sqlworker    $DBURL sleep .3\;echo >"$T2" &
     unset PARALLEL
     wait;
     # Did it compute correctly?
@@ -116,11 +116,11 @@ par_shuf() {
     SHUF=$(sql $SERVERURL "select Host,Command,V1,V2,Stdout,Stderr from $TABLE order by seq;")
     export PARALLEL="--result $T"
     parallel --sqlandworker $DBURL sleep .3\;echo \
-	     ::: {1..5} ::: {a..e} >$T2;
-    parallel --sqlworker    $DBURL sleep .3\;echo >$T2 &
-    parallel --sqlworker    $DBURL sleep .3\;echo >$T2 &
-    parallel --sqlworker    $DBURL sleep .3\;echo >$T2 &
-    parallel --sqlworker    $DBURL sleep .3\;echo >$T2 &
+	     ::: {1..5} ::: {a..e} >"$T2";
+    parallel --sqlworker    $DBURL sleep .3\;echo >"$T2" &
+    parallel --sqlworker    $DBURL sleep .3\;echo >"$T2" &
+    parallel --sqlworker    $DBURL sleep .3\;echo >"$T2" &
+    parallel --sqlworker    $DBURL sleep .3\;echo >"$T2" &
     unset PARALLEL
     wait;
     NOSHUF=$(sql $SERVERURL "select Host,Command,V1,V2,Stdout,Stderr from $TABLE order by seq;")
@@ -129,7 +129,7 @@ par_shuf() {
 	echo OK: Diff bigger than 2500 char
     fi
     [ -e $T ] && rm -rf $T
-    touch $T1
+    touch "$T1"
 }
 
 par_empty() {

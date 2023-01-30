@@ -10,7 +10,11 @@ SSHLOGIN1=$SSHUSER1@$SERVER1
 
 mkdir -p tmp
 cd tmp
-tar xjf ../input-files/testdir.tar.bz2
+pwd=$(pwd)
+# If not run in dir parallel/testsuite: set testsuitedir to path of testsuite
+testsuitedir=${testsuitedir:-$pwd}
+
+tar xjf "$testsuitedir"/input-files/testdir.tar.bz2
 #rsync -Ha --delete input-files/testdir/ tmp/
 #cd tmp
 

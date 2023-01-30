@@ -252,8 +252,8 @@ sub pipe_tee_setup() {
     #	(rm fifo2; grep 2) < fifo2
     #	(rm fifo3; grep 3) < fifo3
     # Remove the tmpfifo as soon as it is open
-    @Global::cat_prepends = map { "(rm $_;" } @fifos;
-    @Global::cat_appends = map { ") < $_" } @fifos;
+    @Global::cat_prepends = map { "(rm $_;" } shell_quote(@fifos);
+    @Global::cat_appends = map { ") < $_" } shell_quote(@fifos);
 }
 
 
@@ -578,7 +578,7 @@ sub pipe_shard_setup() {
 	# The PERL_HASH_SEED must be the same for all sharders
 	# so B::hash will return the same value for any given input
 	$ENV{'PERL_HASH_SEED'} = $$;
-	exec qw(parallel --block 100k -q --pipe -j), $njobs,
+	exec qw(parallel -0 --block 100k -q --pipe -j), $njobs,
 	    qw(--roundrobin -u perl -e), $script, ($opt::colsep || ","),
 	    $col, $perlexpr, '{}', (map { (':::+', @{$_}) } @parcatfifos);
     }
@@ -591,7 +591,9 @@ sub pipe_shard_setup() {
 	::error("'parcat' must be in path.");
 	::wait_and_exit(255);
     }
-    @Global::cat_prepends = map { "perl -e $parcat @$_ | " } @parcatfifos;
+    @Global::cat_prepends =
+	map { "perl -e $parcat ".
+		  join(" ",shell_quote(@$_))." | "} @parcatfifos;
 }
 
 sub pipe_part_files(@) {
@@ -3301,7 +3303,7 @@ sub read_options() {
 	    } else {
 		@options = shift @ARGV;
 	    }
-	    my $script = Q(Q(shift @ARGV));
+	    my $script = Q(Q(shift @ARGV)); # TODO - test if script = " "
             my @args = map{ Q($_) } @ARGV;
 	    # exec myself to split $ARGV[0] into separate fields
 	    exec "$0 --_pipe-means-argfiles @options @parser $script ".
@@ -5250,23 +5252,24 @@ sub onall($@) {
 	my $joblog = tmp_joblog($opt::joblog);
 	if($joblog) {
 	    push @joblogs, $joblog;
-	    $joblog = "--joblog $joblog";
+	    $joblog = "--joblog ".::Q($joblog);
 	}
 	my $quad = $opt::arg_file_sep || "::::";
 	# If PARALLEL_ENV is set: Pass it on
 	my $penv=$Global::parallel_env ?
 	    "PARALLEL_ENV=".Q($Global::parallel_env) :
 	    '';
+	my $qsshlogin = Q($sshlogin->string());
 	::debug("init", "$penv $0 $suboptions -j1 $joblog ",
-	    ((defined $opt::tag) ?
-	     "--tagstring ".Q($sshlogin->string()) : ""),
-	     " -S ", Q($sshlogin->string())," ",
-	     join(" ",shell_quote(@command))," $quad @argfiles\n");
+		((defined $opt::tag) ?
+		 "--tagstring ".$qsshlogin : ""),
+		" -S $qsshlogin ",
+		join(" ",shell_quote(@command,$quad,@argfiles)),"\n");
 	print $parallel_fh "$penv $0 $suboptions -j1 $joblog ",
 	    ((defined $opt::tag) ?
-	     "--tagstring ".Q($sshlogin->string()) : ""),
-	     " -S ", Q($sshlogin->string())," ",
-	     join(" ",shell_quote(@command))," $quad @argfiles\0";
+	     "--tagstring ".$qsshlogin : ""),
+	    " -S $qsshlogin ",
+	    join(" ",shell_quote(@command,$quad,@argfiles)),"\0";
     }
     close $parallel_fh;
     $Global::exitstatus = $? >> 8;
@@ -6015,10 +6018,11 @@ sub tmpname($) {
     my $name = shift;
     my($tmpname);
     if(not -w $ENV{'TMPDIR'}) {
+	my $qtmp = ::Q($ENV{'TMPDIR'});
 	if(not -e $ENV{'TMPDIR'}) {
-	    ::error("Tmpdir '$ENV{'TMPDIR'}' does not exist.","Try 'mkdir $ENV{'TMPDIR'}'");
+	    ::error("Tmpdir $qtmp does not exist.","Try: mkdir -p $qtmp");
 	} else {
-	    ::error("Tmpdir '$ENV{'TMPDIR'}' is not writable.","Try 'chmod +w $ENV{'TMPDIR'}'");
+	    ::error("Tmpdir $qtmp is not writable.","Try: chmod +w $qtmp");
 	}
 	::wait_and_exit(255);
     }
@@ -7078,6 +7082,7 @@ sub sshcmd($) {
     # [sshpass -e] ssh -p port -l user
     if($self->{'password'}) { push @local, "sshpass -e"; }
     # [ssh] -p port -l user
+    # TODO sshpass + space
     push @local, $self->{'sshcommand'};
     # [-p port] -l user
     if($self->{'port'}) { push @local, '-p',$self->{'port'}; }
@@ -7086,7 +7091,7 @@ sub sshcmd($) {
     if($opt::controlmaster) {
 	# Use control_path to make ssh faster
 	my $control_path = $self->control_path_dir()."/ssh-%r@%h:%p";
-	push @local, "-S", $control_path;
+
 	if(not $self->{'control_path'}{$control_path}++) {
 	    # Master is not running for this control_path
 	    # Start it
@@ -7094,6 +7099,7 @@ sub sshcmd($) {
 	    if($pid) {
 		$Global::sshmaster{$pid} ||= 1;
 	    } else {
+		push @local, "-S", $control_path;
 		$SIG{'TERM'} = undef;
 		# Run a sleep that outputs data, so it will discover
 		# if the ssh connection closes.
@@ -7107,6 +7113,7 @@ sub sshcmd($) {
 		     "perl", "-e", $sleep);
 	    }
 	}
+	push @local, "-S", ::Q($control_path);
     }
 
     return "@local";
@@ -7454,7 +7461,9 @@ sub swap_activity($) {
 	my $file = $self->{'swap_activity_file'};
 	my ($dummy_fh, $tmpfile) = ::tmpfile(SUFFIX => ".swp");
 	::debug("swap", "\n", $swap_activity, "\n");
-	::qqx("($swap_activity > $tmpfile && mv $tmpfile $file || rm $tmpfile &)");
+	my $qtmp = ::Q($tmpfile);
+	my $qfile = ::Q($file);
+	::qqx("($swap_activity > $qtmp && mv $qtmp $qfile || rm $qtmp &)");
     }
     return $self->{'swap_activity'};
 }
@@ -9376,7 +9385,8 @@ sub filter_through_compress($) {
 	# it is known that output file is opened,
 	# thus output file can then be removed by the decompressor.
 	# empty_input_wrapper is needed for plzip
-	my $wpid = open(my $fdw,"|-", "(echo > $comfile; ".
+	my $qcom = ::Q($comfile);
+	my $wpid = open(my $fdw,"|-", "(echo > $qcom; ".
 			empty_input_wrapper($opt::compress_program).") >".
 			::Q($self->fh($fdno,'name'))) || die $?;
 	$self->set_fh($fdno,'w',$fdw);
@@ -9855,9 +9865,9 @@ sub wrapped($) {
 	    # Prepend 'cat > $PARALLEL_TMP;'
 	    # Append 'unlink $PARALLEL_TMP without affecting $?'
 	    $command =
-		'cat > $PARALLEL_TMP;'.
+		'cat > "$PARALLEL_TMP";'.
 		$command.";". postpone_exit_and_cleanup().
-					 '$PARALLEL_TMP';
+					 '"$PARALLEL_TMP"';
 	} elsif($opt::fifo) {
 	    # Prepend fifo-wrapper. In essence:
 	    #	mkfifo {}
@@ -9867,7 +9877,7 @@ sub wrapped($) {
 	    #	wait; rm {}
 	    # without affecting $?
 	    $command = fifo_wrap(). " ".
-		$Global::shell. " ". ::Q($command). ' $PARALLEL_TMP'. ';';
+		$Global::shell. " ". ::Q($command). ' "$PARALLEL_TMP"'. ';';
 	}
 	# Wrap with ssh + tranferring of files
 	$command = $self->sshlogin_wrap($command);
@@ -10827,6 +10837,7 @@ sub interactive_start($) {
 
 {
     my $tmuxsocket;
+    my $qsocket;
 
     sub tmux_wrap($) {
 	# Wrap command with tmux for session pPID
@@ -10837,7 +10848,6 @@ sub interactive_start($) {
 	# Temporary file name. Used for fifo to communicate exit val
 	my $tmpfifo = ::tmpname("tmx");
 	$self->add_rm($tmpfifo);
-
 	if(length($tmpfifo) >=100) {
 	    ::error("tmux does not support sockets with path > 100.");
 	    ::wait_and_exit(255);
@@ -10888,36 +10898,36 @@ sub interactive_start($) {
 	$ENV{'PARALLEL_TMUX'} ||= "tmux";
 	if(not $tmuxsocket) {
 	    $tmuxsocket = ::tmpname("tms");
-	    ::debug("tmux", "Start: $ENV{'PARALLEL_TMUX'} -S $tmuxsocket attach");
+	    $qsocket = ::Q($tmuxsocket);
+	    ::debug("tmux", "Start: $ENV{'PARALLEL_TMUX'} -S $qsocket attach");
 	    if($opt::fg) {
 		if(not fork) {
 		    # Run tmux in the foreground
 		    # Wait for the socket to appear
 		    while (not -e $tmuxsocket) { }
-		    `$ENV{'PARALLEL_TMUX'} -S $tmuxsocket attach`;
+		    `$ENV{'PARALLEL_TMUX'} -S $qsocket attach`;
 		    exit;
 		}
 	    }
-	    ::status("See output with: $ENV{'PARALLEL_TMUX'} -S $tmuxsocket attach");
+	    ::status("See output with: $ENV{'PARALLEL_TMUX'} -S $qsocket attach");
 	}
-	$tmux = "sh -c '".
+	$tmux = "sh -c ".::Q(
 	    $ENV{'PARALLEL_TMUX'}.
-	    " -S $tmuxsocket new-session -s p$$ -d \"sleep .2\" >/dev/null 2>&1';" .
+	    " -S $qsocket new-session -s p$$ -d \"sleep .2\" >/dev/null 2>&1").";" .
 	    $ENV{'PARALLEL_TMUX'}.
-	    " -S $tmuxsocket new-window -t p$$ -n $title";
+	    " -S $qsocket new-window -t p$$ -n $title";
 
 	::debug("tmux", "title len:", $l_tit, " act ", $l_act, " max ",
 		$Limits::Command::line_max_len, " tot ",
 		$l_tot, "\n");
-
-	return "mkfifo $tmpfifo && $tmux ".
+	return "mkfifo ".::Q($tmpfifo)." && $tmux ".
 	    # Run in tmux
 	    ::Q
 	    (
 	     "(".$actual_command.');'.
 	     # The triple print is needed - otherwise the testsuite fails
 	     q[ perl -e 'while($t++<3){ print $ARGV[0],"\n" }' $?h/$status >> ].
-	     $tmpfifo."&".
+	     ::Q($tmpfifo)."&".
 	     "echo $title; echo \007Job finished at: `date`;sleep 10"
 	    ).
 	    # Run outside tmux
@@ -10925,7 +10935,7 @@ sub interactive_start($) {
 	    # If csh the first will be 0h, so use the second as exit value.
 	    # Otherwise just use the first value as exit value.
 	    q{; exec perl -e '$/="/";$_=<>;$c=<>;unlink $ARGV; }.
-	    q{/(\d+)h/ and exit($1);exit$c' }.$tmpfifo;
+	    q{/(\d+)h/ and exit($1);exit$c' }.::Q($tmpfifo);
     }
 }
 
@@ -12159,7 +12169,7 @@ sub slot($) {
 	    $Global::JobQueue->{'commandlinequeue'}->{'arg_queue'}->get();
 	    # $PARALLEL_TMP will point to a tempfile that will be used as {}
 	    $Global::JobQueue->{'commandlinequeue'}->{'arg_queue'}->
-		unget([Arg->new('$PARALLEL_TMP')]);
+		unget([Arg->new('"$PARALLEL_TMP"')]);
 	}
 	while (not $self->{'arg_queue'}->empty()) {
 	    $next_arg = $self->{'arg_queue'}->get();
@@ -13385,9 +13395,10 @@ sub tmux_length($) {
 	my @out;
 	for my $l (1, 2020, 16320, 30000, $len) {
 	    my $tmpfile = ::tmpname("tms");
+	    my $qtmp = ::Q($tmpfile);
 	    my $tmuxcmd = $ENV{'PARALLEL_TMUX'}.
-		" -S $tmpfile new-session -d -n echo $l".
-		("t"x$l). " && echo $l; rm -f $tmpfile";
+		" -S $qtmp new-session -d -n echo $l".
+		("t"x$l). " && echo $l; rm -f $qtmp";
 	    push @out, ::qqx($tmuxcmd);
 	    ::rm($tmpfile);
 	}

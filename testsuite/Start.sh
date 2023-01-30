@@ -16,15 +16,27 @@ export TIMEOUT=$MAX_SEC_PER_TEST
 run_once() {
     script=$1
     base=`basename "$script" .sh`
-    diff -Naur wanted-results/"$base" actual-results/"$base" >/dev/null ||
-	bash "$script" | perl -pe 's:'$HOME':~:g' > actual-results/"$base"
+    if diff -Naur wanted-results/"$base" actual-results/"$base" >/dev/null; then
+	true skip
+    else
+	(
+	    testsuitedir=$(pwd)
+	    export testsuitedir
+	    cd "$TMPDIR"
+	    bash "$testsuitedir/$script" |
+		perl -pe 's:'$HOME':~:g' > "$testsuitedir"/actual-results/"$base"
+	)
+    fi
 }
 export -f run_once
 
 run_test() {
     script="$1"
     base=`basename "$script" .sh`
-    export TMPDIR=/tmp/"$base"-tmpdir
+    # Force spaces and < into TMPDIR - this will expose bugs
+    export TMPDIR=/tmp/"$base-tmp"/'
+       <'/tmp
+    rm -rf "$TMPDIR"
     mkdir -p "$TMPDIR"
     # Clean before. May be owned by other users
     sudo rm -f /tmp/*.{tmx,pac,arg,all,log,swp,loa,ssh,df,pip,tmb,chr,tms,par} ||

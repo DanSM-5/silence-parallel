@@ -22,10 +22,10 @@ par_ll_long_followed_by_short() {
 
 par_PARALLEL_HOME_not_exist() {
     echo '### bug #62311: --pipepart + ::: fail'
-    tmp1=$(mktemp)
-    rm $tmp1
-    PARALLEL_HOME=$tmp1 parallel echo ::: OK
-    rm -r $tmp1
+    tmp1="$(mktemp)"
+    rm "$tmp1"
+    PARALLEL_HOME="$tmp1" parallel echo ::: OK
+    rm -r "$tmp1"
     echo Should warn:
     PARALLEL_HOME=/does-not-exist parallel -k echo ::: should warn
 }
@@ -38,10 +38,10 @@ par_colour_failed() {
 
 par_pipepart_triple_colon() {
     echo '### bug #62311: --pipepart + ::: fail'
-    tmp1=$(mktemp)
-    seq 3 >$tmp1
-    parallel --pipepart -a $tmp1 wc ::: a
-    rm $tmp1
+    tmp1="$(mktemp)"
+    seq 3 >"$tmp1"
+    parallel --pipepart -a "$tmp1" wc ::: a
+    rm "$tmp1"
 }
 
 par_open-tty() {
@@ -137,11 +137,11 @@ EOF
     cat <<'EOF' > "$tmp2"
     2: Job:{#} Slot:{%} All:{} Arg[1]:{1} Arg[-1]:{-1} Perl({}+4):{=$_+=4=}
 EOF
-    parallel --colsep , -j2 --cleanup --tmpl $tmp1=t1.{#} --tmpl $tmp2=t2.{%} \
+    parallel --colsep , -j2 --cleanup --tmpl "$tmp1"=t1.{#} --tmpl "$tmp2"=t2.{%} \
 	     'sleep 0.{#}; cat t1.{#} t2.{%}' ::: 1,a 1,b 2,a 2,b
     echo should give no files
     ls t[12].*
-    parallel            -j2 --cleanup --tmpl $tmp1=t1.{#} --tmpl $tmp2=t2.{%} \
+    parallel            -j2 --cleanup --tmpl "$tmp1"=t1.{#} --tmpl "$tmp2"=t2.{%} \
 	     'sleep 0.{#}; cat t1.{#} t2.{%}' ::: 1 2 ::: a b
     echo should give no files
     ls t[12].*
@@ -150,12 +150,12 @@ EOF
 par_resume_k() {
     echo '### --resume -k'
     tmp=$(mktemp)
-    parallel -k --resume --joblog $tmp echo job{}id\;exit {} ::: 0 1 2 3 0 5
+    parallel -k --resume --joblog "$tmp" echo job{}id\;exit {} ::: 0 1 2 3 0 5
     echo try 2 = nothing
-    parallel -k --resume --joblog $tmp echo job{}id\;exit {} ::: 0 1 2 3 0 5
+    parallel -k --resume --joblog "$tmp" echo job{}id\;exit {} ::: 0 1 2 3 0 5
     echo two extra
-    parallel -k --resume --joblog $tmp echo job{}id\;exit 0 ::: 0 1 2 3 0 5 6 7
-    rm -f $tmp
+    parallel -k --resume --joblog "$tmp" echo job{}id\;exit 0 ::: 0 1 2 3 0 5 6 7
+    rm -f "$tmp"
 }
 
 par_empty_string_quote() {
@@ -415,10 +415,10 @@ par_argfile() {
     echo '### Test -a and --arg-file: Read input from file instead of stdin'
 
     tmp=$(mktemp)
-    seq 1 10 >$tmp
-    parallel -k -a $tmp echo
-    parallel -k --arg-file $tmp echo
-    rm $tmp
+    seq 1 10 >"$tmp"
+    parallel -k -a "$tmp" echo
+    parallel -k --arg-file "$tmp" echo
+    rm "$tmp"
 }
 
 par_pipe_unneeded_procs() {
@@ -453,19 +453,19 @@ par_pipepart_roundrobin() {
     echo '### bug #45769: --round-robin --pipepart gives wrong results'
 
     tmp=$(mktemp)
-    seq 10000 >$tmp
-    parallel -j2 --pipepart -a $tmp --block 14 --round-robin wc | wc -l
-    rm $tmp
+    seq 10000 >"$tmp"
+    parallel -j2 --pipepart -a "$tmp" --block 14 --round-robin wc | wc -l
+    rm "$tmp"
 }
 
 par_pipepart_header() {
     echo '### bug #44614: --pipepart --header off by one'
 
     tmp=$(mktemp)
-    seq 10 >$tmp
-    parallel --pipepart -a $tmp -k --block 5 'echo foo; cat'
-    parallel --pipepart -a $tmp -k --block 2 --regexp --recend 3'\n' 'echo foo; cat'
-    rm $tmp
+    seq 10 >"$tmp"
+    parallel --pipepart -a "$tmp" -k --block 5 'echo foo; cat'
+    parallel --pipepart -a "$tmp" -k --block 2 --regexp --recend 3'\n' 'echo foo; cat'
+    rm "$tmp"
 }
 
 par_quote() {
@@ -492,9 +492,9 @@ par_read_from_stdin() {
 par_total_from_joblog() {
     echo 'bug #47086: [PATCH] Initialize total_completed from joblog'
     tmp=$(mktemp)
-    parallel -j1 --joblog $tmp --halt now,fail=1          echo '{= $_=$Global::total_completed =};exit {}' ::: 0 0 0 1 0 0
-    parallel -j1 --joblog $tmp --halt now,fail=1 --resume echo '{= $_=$Global::total_completed =};exit {}' ::: 0 0 0 1 0 0
-    rm $tmp
+    parallel -j1 --joblog "$tmp" --halt now,fail=1          echo '{= $_=$Global::total_completed =};exit {}' ::: 0 0 0 1 0 0
+    parallel -j1 --joblog "$tmp" --halt now,fail=1 --resume echo '{= $_=$Global::total_completed =};exit {}' ::: 0 0 0 1 0 0
+    rm "$tmp"
 }
 
 par_xapply() {
@@ -626,10 +626,10 @@ par_empty_line() {
 par_append_joblog() {
     echo '### can you append to a joblog using +'
     tmp=$(mktemp)
-    parallel --joblog $tmp echo ::: 1
-    parallel --joblog +$tmp echo ::: 1
-    wc -l < $tmp
-    rm $tmp
+    parallel --joblog "$tmp" echo ::: 1
+    parallel --joblog +"$tmp" echo ::: 1
+    wc -l < "$tmp"
+    rm "$tmp"
 }
 
 par_file_ending_in_newline() {
@@ -653,16 +653,16 @@ par_python_children() {
 par_pipepart_block_bigger_2G() {
     echo '### Test that --pipepart can have blocks > 2GB'
     tmp=$(mktemp)
-    echo foo >$tmp
-    parallel --pipepart -a $tmp --block 3G wc
-    rm $tmp
+    echo foo >"$tmp"
+    parallel --pipepart -a "$tmp" --block 3G wc
+    rm "$tmp"
 }
 
 par_retries_replacement_string() {
     tmp=$(mktemp)
-    parallel --retries {//} "echo {/} >>$tmp;exit {/}" ::: 1/11 2/22 3/33
-    sort $tmp
-    rm $tmp
+    parallel --retries {//} "echo {/} >>'$tmp';exit {/}" ::: 1/11 2/22 3/33
+    sort "$tmp"
+    rm "$tmp"
 }
 
 par_tee() {
@@ -693,17 +693,17 @@ par_basic_halt() {
     cpuburn=$(mktemp)
     cpuburn2=$(mktemp)
     (echo '#!/usr/bin/perl'
-     echo "eval{setpriority(0,0,9)}; while(1){}") > $cpuburn
-    chmod 700 $cpuburn
-    cp -a $cpuburn $cpuburn2
+     echo "eval{setpriority(0,0,9)}; while(1){}") > "$cpuburn"
+    chmod 700 "$cpuburn"
+    cp -a "$cpuburn" "$cpuburn2"
 
-    parallel -j4 --halt 2 ::: 'sleep 1' $cpuburn false;
-    killall $(basename $cpuburn) 2>/dev/null &&
+    parallel -0 -j4 --halt 2 ::: 'sleep 1' "'$cpuburn'" false;
+    killall $(basename "$cpuburn") 2>/dev/null &&
 	echo ERROR: cpuburn should already have been killed
-    parallel -j4 --halt -2 ::: 'sleep 1' $cpuburn2 true;
-    killall $(basename $cpuburn2) 2>/dev/null &&
+    parallel -0 -j4 --halt -2 ::: 'sleep 1' "'$cpuburn2'" true;
+    killall $(basename "$cpuburn2") 2>/dev/null &&
 	echo ERROR: cpuburn2 should already have been killed
-    rm $cpuburn $cpuburn2
+    rm "$cpuburn" "$cpuburn2"
 
     parallel --halt error echo ::: should not print
     parallel --halt soon echo ::: should not print
@@ -722,12 +722,12 @@ par_wd_3dot_local() {
     echo 'bug #45993: --wd ... should also work when run locally'
 
     (
-	parallel --wd /bi 'pwd; echo $OLDPWD; echo' ::: fail
-	parallel --wd /bin 'pwd; echo $OLDPWD; echo' ::: OK
-	parallel --wd / 'pwd; echo $OLDPWD; echo' ::: OK
-	parallel --wd /tmp 'pwd; echo $OLDPWD; echo' ::: OK
-	parallel --wd ... 'pwd; echo $OLDPWD; echo' ::: OK
-	parallel --wd . 'pwd; echo $OLDPWD; echo' ::: OK
+	parallel --wd /bi 'pwd; echo "$OLDPWD"; echo' ::: fail
+	parallel --wd /bin 'pwd; echo "$OLDPWD"; echo' ::: OK
+	parallel --wd / 'pwd; echo "$OLDPWD"; echo' ::: OK
+	parallel --wd /tmp 'pwd; echo "$OLDPWD"; echo' ::: OK
+	parallel --wd ... 'pwd; echo "$OLDPWD"; echo' ::: OK
+	parallel --wd . 'pwd; echo "$OLDPWD"; echo' ::: OK
     ) |
 	perl -pe 's:/mnt/4tb::; s:/home/tange:~:;' |
 	perl -pe 's:parallel./:parallel/:;' |
@@ -747,21 +747,24 @@ par_X_eta_div_zero() {
 
 par_parcat_args_stdin() {
     echo 'bug #51690: parcat: read args from stdin'
+    # parcat reads files line by line
+    # so this does not work if TMPDIR contains \n
+    TMPDIR='/tmp/Y/  </i'
+    mkdir -p "$TMPDIR"
     tmp1=$(mktemp)
     tmp2=$(mktemp)
-    echo OK1 > $tmp1
-    echo OK2 > $tmp2
-    (echo $tmp1
-     echo $tmp2) | parcat | sort
-    rm $tmp1 $tmp2
+    echo OK1 > "$tmp1"
+    echo OK2 > "$tmp2"
+    (echo "$tmp1"; echo "$tmp2") | parcat | sort
+    rm "$tmp1" "$tmp2"
 }
 
 par_parcat_rm() {
     echo 'bug #51691: parcat --rm remove fifo when opened'
     tmp1=$(mktemp)
-    echo OK1 > $tmp1
-    parcat --rm $tmp1
-    rm $tmp1 2>/dev/null || echo OK file removed
+    echo OK1 > "$tmp1"
+    parcat --rm "$tmp1"
+    rm "$tmp1" 2>/dev/null || echo OK file removed
 }
 
 par_linebuffer_files() {
@@ -795,10 +798,10 @@ par_blocking_redir() {
 par_pipepart_recend_recstart() {
     echo 'bug #52343: --recend/--recstart does wrong thing with --pipepart'
     tmp1=$(mktemp)
-    seq 10 > $tmp1
-    parallel -k --pipepart -a $tmp1 --recend '\n' --recstart '6' --block 1 'echo a; cat'
-    parallel -k --pipe < $tmp1 --recend '\n' --recstart '6' --block 1 'echo a; cat'
-    rm $tmp1 2>/dev/null
+    seq 10 > "$tmp1"
+    parallel -k --pipepart -a "$tmp1" --recend '\n' --recstart '6' --block 1 'echo a; cat'
+    parallel -k --pipe < "$tmp1" --recend '\n' --recstart '6' --block 1 'echo a; cat'
+    rm "$tmp1" 2>/dev/null
 }
 
 par_pipe_tag_v() {
@@ -812,11 +815,11 @@ par_pipe_tag_v() {
 par_dryrun_append_joblog() {
     echo '--dry-run should not append to joblog'
     tmp=$(mktemp)
-    parallel -k --jl $tmp echo ::: 1 2 3
-    parallel --dryrun -k --jl +$tmp echo ::: 1 2 3 4
+    parallel -k --jl "$tmp" echo ::: 1 2 3
+    parallel --dryrun -k --jl +"$tmp" echo ::: 1 2 3 4
     # Job 4 should not show up: 3 lines + header = 4
-    wc -l < $tmp
-    rm $tmp
+    wc -l < "$tmp"
+    rm "$tmp"
 }
 
 par_0_no_newline() {
@@ -869,7 +872,7 @@ par_results() {
     tmp=$(mktemp)
     parallel -k --results "$tmp"-dir echo ::: a b c
     cat "$tmp"-dir/*/*/stdout
-    rm -r $tmp "$tmp"-dir
+    rm -r "$tmp" "$tmp"-dir
 }
 
 par_results_json() {
@@ -877,7 +880,7 @@ par_results_json() {
     tmp=$(mktemp -d)
     parallel -k --results "$tmp"/foo.json seq ::: 2 3 ::: 4 5
     cat "$tmp"/foo.json | perl -pe 's/\d+\.\d{3}/9.999/g'
-    rm -r $tmp
+    rm -r "$tmp"
     parallel -k --results -.json seq ::: 2 3 ::: 4 5 |
 	perl -pe 's/\d+\.\d{3}/9.999/g'
 }
@@ -908,15 +911,15 @@ par_PARALLEL_ENV() {
     PARALLEL_ENV="v='OK as variable'" parallel {} '$v' ::: echo
     PARALLEL_ENV=$(mktemp)
     echo '### PARALLEL_ENV as file'
-    echo "v='OK as file'" > $PARALLEL_ENV
+    echo "v='OK as file'" > "$PARALLEL_ENV"
     PARALLEL_ENV="$PARALLEL_ENV" parallel {} '$v' ::: echo
     echo '### PARALLEL_ENV as fifo'
-    rm $PARALLEL_ENV
-    mkfifo $PARALLEL_ENV
+    rm "$PARALLEL_ENV"
+    mkfifo "$PARALLEL_ENV"
     # () needed to avoid [1]+  Done
-    (echo "v='OK as fifo'" > $PARALLEL_ENV &) 2>/dev/null
+    (echo "v='OK as fifo'" > "$PARALLEL_ENV" &) 2>/dev/null
     PARALLEL_ENV="$PARALLEL_ENV" parallel {} '$v' ::: echo
-    rm $PARALLEL_ENV
+    rm "$PARALLEL_ENV"
 }
 
 par_pipe_recend() {
@@ -1050,7 +1053,7 @@ par_profile() {
     parallel -J ./testprofile_local echo ::: local
     rm testprofile_local
     echo --tag > testprofile_abs
-    parallel -J `pwd`/testprofile_abs echo ::: abs
+    parallel -J "`pwd`"/testprofile_abs echo ::: abs
     rm testprofile_abs
     echo --tag > ~/.parallel/testprofile_config
     parallel -J testprofile_config echo ::: config

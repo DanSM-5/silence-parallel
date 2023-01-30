@@ -3,21 +3,24 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-find {$TMPDIR,/var/tmp,/tmp}/{fif,tms,par[^a]}* -mmin -10 2>/dev/null | parallel rm
-cd testsuite 2>/dev/null
-rm -rf tmp
-mkdir tmp
-cd tmp
+cleanup() {
+    find {"$TMPDIR",/var/tmp,/tmp}/{fif,tms,par[^a]}* -mmin -10 -print0 2>/dev/null |
+	parallel -0 rm 2>/dev/null
+}    
+
+cleanup
 touch ~/.parallel/will-cite
 echo '### test parallel_tutorial'
-rm -f /tmp/runs
 
-srcdir=$(pwd | perl -pe 's=$ENV{HOME}==')
+pwd=$(pwd)
+# If not run in dir parallel/testsuite: set testsuitedir to path of testsuite
+testsuitedir=${testsuitedir:-$pwd}
+srcdir=$(echo "$testsuitedir" | perl -pe 's=$ENV{HOME}==')
 
 export SERVER1=parallel@lo
 export SERVER2=csh@lo
 export PARALLEL=-k
-perl -ne '$/="\n\n"; /^Output/../^[^O]\S/ and next; /^  / and print;' ../../src/parallel_tutorial.pod |
+perl -ne '$/="\n\n"; /^Output/../^[^O]\S/ and next; /^  / and print;' "$testsuitedir"/../src/parallel_tutorial.pod |
   egrep -v 'curl|tty|parallel_tutorial|interactive|example.(com|net)|shellquote|works' |
   perl -pe 's/username@//;s/user@//;
             s/zenity/zenity --timeout=15/;
@@ -101,9 +104,14 @@ perl -ne '$/="\n\n"; /^Output/../^[^O]\S/ and next; /^  / and print;' ../../src/
 	    s/doi.*=.*//;
 	    s/url.*= .*doi.org.*//;
 	    s/.Feel free to use .nocite.*//;
+	    # tmpdir and files
 	    s:/tmp/parallel-tutorial-tmpdir/par-job-\S+:script:g;
 	    s:/tmp/par-job-\S+:script:g;
+	    s:par......par:tempfile:g;
+	    s:^tempfile\n::g;
 	    ' | uniq
-# 3+3 .par files (from --files), 1 .tms-file from tmux attach
-find {$TMPDIR,/var/tmp,/tmp}/{fif,tms,par[^a]}* -mmin -10 2>/dev/null | wc -l
-find {$TMPDIR,/var/tmp,/tmp}/{fif,tms,par[^a]}* -mmin -10 2>/dev/null | parallel rm
+
+echo "### 3+3 .par files (from --files), 1 .tms-file from tmux attach"
+find {"$TMPDIR",/var/tmp}/{fif,tms,par[^a]}* -mmin -10 -type f -print0 2>/dev/null |
+    parallel -0 grep . | sort
+cleanup

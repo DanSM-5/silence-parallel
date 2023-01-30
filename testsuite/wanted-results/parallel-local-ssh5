@@ -1,3 +1,5 @@
+par_ssh_cmd_with_newline	### Check --ssh with \n works
+par_ssh_cmd_with_newline	uid=1003(sh) gid=1003(sh) groups=1003(sh)
 par_pipe_retries	### bug #45025: --pipe --retries does not reschedule on other host
 par_pipe_retries	parallel: Warning: Could not figure out number of cpus on a.a (). Using 1.
 par_pipe_retries	 165668  165668 1048571
@@ -18,6 +20,15 @@ par_env_parallel_onall	Myfunc works
 par_controlmaster_eats	bug #36707: --controlmaster eats jobs
 par_controlmaster_eats	OK1
 par_controlmaster_eats	OK2
+par_controlmaster	### Check -M works if TMPDIR contains space
+par_controlmaster	1
+par_controlmaster	2
+par_controlmaster	3
+par_controlmaster	1
+par_controlmaster	2
+par_controlmaster	3
+par_controlmaster	Part2
+par_controlmaster	OK
 par_command_len_shellquote	### test quoting will not cause a crash if too long
 par_command_len_shellquote	-Slo -j10	" 1 1	      1       1       4
 par_command_len_shellquote	-Slo -j10	" 1 2	      1       1      10

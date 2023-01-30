@@ -60,6 +60,8 @@ par_pipe_unneeded_spawn() {
 
 par_files_nonall() {
     echo '### bug #40002: --files and --nonall seem not to work together:'
+    # --files does not work with TMPDIR containing \n
+    TMPDIR=/tmp
     parallel --files --nonall -S localhost true | tee >(parallel rm) | wc -l
 }
 

@@ -51,31 +51,32 @@ par_load_from_PARALLEL() {
 }
 
 par_quote_special_results() {
+    echo "### Test --results on file systems with limited UTF8 support"
     doit() {
 	mkfs=$1
 	img=$(mktemp /dev/shm/par-test-loop-XXXX.img)
 	dir=$(mktemp -d /tmp/par-test-loop-XXXX)
-	dd if=/dev/zero bs=1000k count=150 > $img
+	dd if=/dev/zero bs=1000k count=150 > "$img"
 	# Use the mkfs.$filesystem
-	$mkfs $img
-	sudo mount $img $dir -oloop,uid=`id -u` 2>/dev/null ||
-	    sudo mount $img $dir -oloop
-	cd $dir
+	$mkfs "$img"
+	sudo mount "$img" "$dir" -oloop,uid=`id -u` 2>/dev/null ||
+	    sudo mount "$img" "$dir" -oloop
+	cd "$dir"
 	sudo chown `id -u` .
-	df $dir
+	df "$dir"
 	printf "%s\0" '' +m . +_ .. +__ ,. ,.. + ++ / +z |
 	    parallel -0 --results a echo
-	find a | sort
+	(cd a/1 && find . -type d | sort | fmt -2000)
 	seq 128 | perl -ne 'printf "%c\0",$_' |
 	    parallel -0 --results b128 echo
-	find b128 | sort
+	(cd b128/1 && find . -type d | sort | fmt -2000)
 	seq 128 255 | perl -ne 'printf "%c\0",$_' |
 	    parallel -0 --results b255 echo
-	find b255 | sort
+	(cd b255/1 && find . -type d | sort | fmt -2000)
 	cd
-	sudo umount $dir
-	rm -r $dir/
-	rm $img
+	sudo umount "$dir"
+	rmdir "$dir"/
+	rm "$img"
     }
     export -f doit
     stdout parallel -k --tag --plus doit ::: \
@@ -83,7 +84,7 @@ par_quote_special_results() {
            "mkfs.reiserfs -fq" "mkfs.ntfs -F" "mkfs.xfs -f" mkfs.minix \
 	   mkfs.fat mkfs.vfat mkfs.msdos mkfs.f2fs |
 	perl -pe 's:(/dev/loop|par-test-loop)\S+:$1:g;s/ +/ /g' |
-	G -v MB/s -v UUID -v Binutils
+	G --v MB/s GB/s UUID Binutils
     # Skip:
     #   mkfs.bfs - ro
     #   mkfs.cramfs - ro
@@ -297,12 +298,13 @@ par_failing_compressor() {
 	     ,,, files --files -k \
 	     ,,, comp 'cat;true' 'cat;false' \
 	     ,,, decomp 'cat;true' 'cat;false' |
-	perl -pe 's:/par......par:/tmpfile:'
+	perl -pe 's:/.*par......par:/tmpfile:'
 }
 
 par_fifo_under_csh() {
     echo '### Test --fifo under csh'
-
+    # csh does not seem to work with TMPDIR containing \n
+    TMPDIR=/tmp
     csh -c "seq 3000000 | parallel -k --pipe --fifo 'sleep .{#};cat {}|wc -c ; false; echo \$status; false'"
     echo exit $?
 }
@@ -531,28 +533,17 @@ par_sem_2jobs() {
     echo done
 }
 
-par_semaphore() {
-    echo '### Test if parallel invoked as sem will run parallel --semaphore'
-    sem --id as_sem -u -j2 'echo job1a 1; sleep 3; echo job1b 3'
-    sleep 0.5
-    sem --id as_sem -u -j2 'echo job2a 2; sleep 3; echo job2b 5'
-    sleep 0.5
-    sem --id as_sem -u -j2 'echo job3a 4; sleep 3; echo job3b 6'
-    sem --id as_sem --wait
-    echo done
-}
-
 par_line_buffer() {
     echo "### --line-buffer"
     tmp1=$(mktemp)
     tmp2=$(mktemp)
 
-    seq 10 | parallel -j20 --line-buffer  'seq {} 10 | pv -qL 10' > $tmp1
-    seq 10 | parallel -j20                'seq {} 10 | pv -qL 10' > $tmp2
-    cat $tmp1 | wc
-    diff $tmp1 $tmp2 >/dev/null
+    seq 10 | parallel -j20 --line-buffer  'seq {} 10 | pv -qL 10' > "$tmp1"
+    seq 10 | parallel -j20                'seq {} 10 | pv -qL 10' > "$tmp2"
+    cat "$tmp1" | wc
+    diff "$tmp1" "$tmp2" >/dev/null
     echo These must diff: $?
-    rm $tmp1 $tmp2
+    rm "$tmp1" "$tmp2"
 }
 
 par_pipe_line_buffer() {
@@ -568,17 +559,19 @@ par_pipe_line_buffer() {
     }
 
     export PARALLEL="-N10 -L1 --pipe  -j20 --tagstring {#}"
-    seq 200| parallel --line-buffer pv -qL 10 > $tmp1 2> >(nowarn)
-    seq 200| parallel               pv -qL 10 > $tmp2 2> >(nowarn)
-    cat $tmp1 | wc
-    diff $tmp1 $tmp2 >/dev/null
+    seq 200| parallel --line-buffer pv -qL 10 > "$tmp1" 2> >(nowarn)
+    seq 200| parallel               pv -qL 10 > "$tmp2" 2> >(nowarn)
+    cat "$tmp1" | wc
+    diff "$tmp1" "$tmp2" >/dev/null
     echo These must diff: $?
-    rm $tmp1 $tmp2
+    rm "$tmp1" "$tmp2"
 }
 
 par_pipe_line_buffer_compress() {
     echo "### --pipe --line-buffer --compress"
-    seq 200| parallel -N10 -L1 --pipe  -j20 --line-buffer --compress --tagstring {#} pv -qL 10 | wc
+    seq 200 |
+	parallel -N10 -L1 --pipe  -j20 --line-buffer --compress --tagstring {#} pv -qL 10 |
+	wc
 }
 
 par__pipepart_spawn() {
@@ -610,9 +603,9 @@ par__pipepart_tee() {
 	    head -c 100M;
     }
     tmp=$(mktemp)
-    random100M >$tmp
+    random100M >"$tmp"
     parallel --pipepart --tee -a $tmp cat ::: {1..3} | LC_ALL=C wc -c
-    rm $tmp
+    rm "$tmp"
 }
 
 par_k() {
@@ -671,7 +664,7 @@ par_results_csv() {
     export -f doit
     parallel -k --tag doit ::: '--header :' '' \
 	::: --tag '' ::: --files '' ::: --compress '' |
-    perl -pe 's:/par......par:/tmpfile:g;s/\d+\.\d+/999.999/g'
+    perl -pe 's:/.*par......par:/tmpfile:g;s/\d+\.\d+/999.999/g'
 }
 
 par_kill_children_timeout() {
@@ -694,7 +687,7 @@ par_kill_children_timeout() {
 
 par_tmux_fg() {
     echo 'bug #50107: --tmux --fg should also write how to access it'
-    stdout parallel --tmux --fg sleep ::: 3 | perl -pe 's/.tmp\S+/tmp/'
+    stdout parallel --tmux --fg sleep ::: 3 | perl -pe 's:/tmp.*tms.....:tmpfile:'
 }
 
 
@@ -769,6 +762,6 @@ compgen -A function | grep par_ | LC_ALL=C sort |
     parallel --timeout 1000% -j10 --tag -k --joblog /tmp/jl-`basename $0` '{} 2>&1' |
     perl -pe 's/,31,0/,15,0/' |
     # Replace $PWD with . even if given as ~/...
-    perl -pe 's:~:'$HOME':g' |
-    perl -pe 's:'$PWD':.:g' |
-    perl -pe 's:'$HOME':~:g'
+    perl -pe 's:~:'"$HOME"':g' |
+    perl -pe 's:'"$PWD"':.:g' |
+    perl -pe 's:'"$HOME"':~:g'

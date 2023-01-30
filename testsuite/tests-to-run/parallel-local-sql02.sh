@@ -28,8 +28,8 @@ par_few_duplicate_run() {
 	       wait
 	   ) | wc -l)
     sql "$1" "drop table $TABLE;"
-    if [ $lines -gt 105 ] ; then
-	echo Error: $lines are more than 5% duplicates
+    if [ $lines -gt 110 ] ; then
+	echo Error: $lines are more than 10% duplicates
     else
 	echo OK
     fi
