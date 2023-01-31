@@ -6946,7 +6946,7 @@ sub new($$) {
     #	[@grp+grp]/ncpu//usr/bin/ssh user:pass@server:port
     if($s =~ s:^\@([^/]+)/?::) {
 	# Look for SSHLogin hostgroups
-	%hostgroups = map { $_ => 1 } split(/\+/, $1);
+	%hostgroups = map { $_ => 1 } split(/\+|,/, $1);
     }
     # An SSHLogin is always in the hostgroup of its "numcpu/host"
     $hostgroups{$s} = 1;
@@ -13949,7 +13949,7 @@ sub new($) {
     if($opt::hostgroups) {
 	if($orig =~ s:@(.+)::) {
 	    # We found hostgroups on the arg
-	    @hostgroups = split(/\+/, $1);
+	    @hostgroups = split(/\+|,/, $1);
 	    if(not grep { defined $Global::hostgroups{$_} } @hostgroups) {
 		# This hostgroup is not defined using -S
 		# Add it

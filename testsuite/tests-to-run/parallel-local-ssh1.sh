@@ -218,6 +218,11 @@ par_remote_nice() {
     nice -n5 parallel -S lo 'ps -l $$|field 8; true' ::: a
 }
 
+par_hgrp_agrp_comma() {
+    echo '### bug #63722: hostgroup with , breaks parser'
+    stdout parallel --hgrp ::: id@csh@lo,tcsh@lo id@csh@lo,tcsh@lo | sort
+}
+
 par_hgrp_agrp() {
     echo '### Test --hgrp {hgrp} {agrp}'
     parallel --plus --hgrp -S @b+lo/bash@lo,@c+lo/csh@lo --tag 'echo hgrp={hgrp};echo agrp={agrp}' ::: A@b+c B@b C@c D@c+b@u E |

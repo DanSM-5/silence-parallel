@@ -17,6 +17,10 @@ par_filename_colon	content-of-:
 par_files_nonall	### bug #40002: --files and --nonall seem not to work together:
 par_files_nonall	1
 par_hgrp_agrp	### Test --hgrp {hgrp} {agrp}
+par_hgrp_agrp_comma	### bug #63722: hostgroup with , breaks parser
+par_hgrp_agrp_comma	parallel: Warning: Adding hostgroups: csh@lo tcsh@lo
+par_hgrp_agrp_comma	uid=1004(csh) gid=1004(csh) groups=1004(csh)
+par_hgrp_agrp_comma	uid=1007(tcsh) gid=1007(tcsh) groups=1007(tcsh)
 par_joblog_nonall	### bug #40001: --joblog and --nonall seem not to work together:
 par_joblog_nonall	3
 par_onall_transfer	### bug #46519: --onall ignores --transfer
