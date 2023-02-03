@@ -151,7 +151,7 @@ num8
 tsv-file.tsv
 foo
 /tmp/parallel-tutorial-tmp/
-       </tmp
+       `touch /tmp/tripwire` <"'/tmp
   my_func() {
     echo in my_func $1
   }
@@ -441,11 +441,12 @@ echo C
 1-end
   parallel --files echo ::: A B C
 /tmp/parallel-tutorial-tmp/
-       </tmp/tempfile
+       `touch /tmp/tripwire` <"'/tmp/tempfile
 /tmp/parallel-tutorial-tmp/
-       </tmp/tempfile
+       `touch /tmp/tripwire` <"'/tmp/tempfile
 /tmp/parallel-tutorial-tmp/
-       </tmp/tempfile
+       `touch /tmp/tripwire` <"'/tmp/tempfile
+parallel: Warning: --files do not work if $TMPDIR contains newline.
   parallel --tmpdir /var/tmp --files echo ::: A B C
 /var/tmp/tempfile
   parallel --results outdir echo ::: A B C
@@ -516,7 +517,7 @@ parallel: Warning: or increasing /proc/sys/fs/file-max
 123 abc ABC
   seq 10 20 | parallel --tmux 'echo start {}; sleep {}; echo done {}'
 See output with: tmux -S '/tmp/parallel-tutorial-tmp/
-       </tmp/tmsXXXXX' attach
+       `touch /tmp/tripwire` <"'"'"'/tmp/tmsXXXXX' attach
   tmux -S /tmp/tmsXXXXX attach
 no sessions
   parallel --delay 2.5 echo Starting {}\;date ::: 1 2 3
@@ -709,7 +710,7 @@ foo
   parallel --workdir ... -S $SERVER1 pwd ::: ""
 /home/parallel
 /tmp/parallel-tutorial-tmp/
-       </tmp
+       `touch /tmp/tripwire` <"'/tmp
 /home/parallel/.TMPWORKDIR
   parallel -S $SERVER1 --sshdelay 0.2 echo ::: 1 2 3
 9

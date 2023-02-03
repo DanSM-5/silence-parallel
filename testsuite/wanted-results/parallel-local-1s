@@ -127,17 +127,17 @@ par_file_rpl	### file as replacement string
 par_file_rpl	contest1
 par_file_rpl	contest2
 par_file_rpl	File name /tmp/parallel-local-1s-tmp/
-par_file_rpl	       </tmp/tmp.XXXXXX
+par_file_rpl	       `touch /tmp/tripwire` <"'/tmp/tmp.XXXXXX
 par_file_rpl	contest1
 par_file_rpl	contest2
 par_file_rpl	File name /parallel-local-1s-tmp/
-par_file_rpl	       </tmp/tmp.XXXXXX/parallel-local-1s-tmp/
-par_file_rpl	       </parallel-local-1s-tmp/
-par_file_rpl	       </tmp/tmp.XXXXXX/tmp.XXXXXX
+par_file_rpl	       `touch /tmp/tripwire` <"'/tmp/tmp.XXXXXX/parallel-local-1s-tmp/
+par_file_rpl	       `touch /parallel-local-1s-tmp/
+par_file_rpl	       `touch /tmp/tripwire` <"'/tmp/tmp.XXXXXX/tripwire` <"'/tmp/tmp.XXXXXX
 par_file_rpl	contest1
 par_file_rpl	contest2
 par_file_rpl	File name /tmp/parallel-local-1s-tmp/
-par_file_rpl	       </tmp/tmp.XXXXXX
+par_file_rpl	       `touch /tmp/tripwire` <"'/tmp/tmp.XXXXXX
 par_file_rpl	1
 par_file_rpl	1
 par_file_rpl	2
@@ -493,7 +493,7 @@ par_profiles_with_space	/bin/bash=/bin/bash
 par_profiles_with_space	echo '/bin/bash=/bin/bash'
 par_profiles_with_space	/bin/bash=/bin/bash
 par_profiles_with_space	With script in $PARALLEL /bin/bash=/tmp/parallel-local-1s-tmp/
-par_profiles_with_space	       </tmp
+par_profiles_with_space	       `touch /tmp/tripwire` <"'/tmp
 par_pxz_complains	bug #44250: pxz complains File format not recognized but decompresses anyway
 par_pxz_complains	ls: cannot access '/OK-if-missing-file': No such file or directory
 par_pxz_complains	can not seek in input: Illegal seek

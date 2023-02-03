@@ -21,6 +21,31 @@ par_sshloginfile() {
     rm -f "$tmp"
 }
 
+par_nonall_results() {
+    echo '### --results --onall'
+    tmp="$TMPDIR"/onall
+    mkdir -p "$tmp"
+    parallel --results "$tmp"/noslash --onall -Scsh@lo,sh@lo ::: id pwd
+    parallel --results "$tmp"/slash/ --onall -Scsh@lo,sh@lo ::: id pwd
+    parallel --results "$tmp"/rplslash/{}/ --onall -Scsh@lo,sh@lo ::: id pwd
+    parallel --results "$tmp"/rplnoslash/{} --onall -Scsh@lo,sh@lo ::: id pwd
+    parallel --results "$tmp"/rpl1slash/{1}/ --onall -Scsh@lo,sh@lo ::: id pwd
+    parallel --results "$tmp"/rpl1noslash/{1} --onall -Scsh@lo,sh@lo ::: id pwd
+    find "$tmp"
+    rm -r "$tmp"    
+    echo '### --results --nonall'
+    tmp="$TMPDIR"/nonall
+    mkdir -p "$tmp"
+    parallel --results "$tmp"/noslash --nonall -Scsh@lo,sh@lo pwd
+    parallel --results "$tmp"/slash/ --nonall -Scsh@lo,sh@lo pwd
+    parallel --results "$tmp"/rplslash/{}/ --nonall -Scsh@lo,sh@lo pwd
+    parallel --results "$tmp"/rplnoslash/{} --nonall -Scsh@lo,sh@lo pwd
+    parallel --results "$tmp"/rpl1slash/{1}/ --nonall -Scsh@lo,sh@lo pwd
+    parallel --results "$tmp"/rpl1noslash/{1} --nonall -Scsh@lo,sh@lo pwd
+    find "$tmp"
+    rm -r "$tmp"    
+}
+
 par_env_underscore() {
     echo '### --env _'
     echo ignored_var >> ~/.parallel/ignored_vars

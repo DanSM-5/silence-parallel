@@ -303,10 +303,14 @@ par_failing_compressor() {
 
 par_fifo_under_csh() {
     echo '### Test --fifo under csh'
+    doit() {
+	csh -c "seq 3000000 | parallel -k --pipe --fifo 'sleep .{#};cat {}|wc -c ; false; echo \$status; false'"
+	echo exit $?
+    }
     # csh does not seem to work with TMPDIR containing \n
+    doit
     TMPDIR=/tmp
-    csh -c "seq 3000000 | parallel -k --pipe --fifo 'sleep .{#};cat {}|wc -c ; false; echo \$status; false'"
-    echo exit $?
+    doit
 }
 
 par_parset() {
@@ -659,7 +663,8 @@ par_results_csv() {
     echo "bug #: --results csv"
 
     doit() {
-	parallel -k $@ --results -.csv echo ::: H2 22 23 ::: H1 11 12;
+	parallel -k $@ --results -.csv echo ::: H2 22 23 ::: H1 11 12 \
+		 2> >(grep -v TMPDIR)
     }
     export -f doit
     parallel -k --tag doit ::: '--header :' '' \

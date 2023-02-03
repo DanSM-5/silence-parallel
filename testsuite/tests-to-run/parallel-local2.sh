@@ -5,6 +5,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 cpuburn=$(mktemp)
+qcpuburn=$(parallel -0 --shellquote ::: "$cpuburn")
 (echo '#!/usr/bin/perl'
  echo "eval{setpriority(0,0,9)}; while(1){}") > "$cpuburn"
 chmod 700 "$cpuburn"
@@ -14,7 +15,7 @@ forceload () {
   # Force load
   LOAD=$1
   # Start 10 times as many cpuburn
-  seq 0 0.1 $1 | parallel -j0 timeout 20 "'$cpuburn'" 2>/dev/null &
+  seq 0 0.1 $1 | parallel -j0 timeout 20 "$qcpuburn" 2>/dev/null &
   PID=$!
   # Give GNU Parallel 1 second to startup
   sleep 1
@@ -42,7 +43,7 @@ killall "$basename" 2>/dev/null
 
 echo '### Test too slow spawning'
 # Let the commands below run during high load
-seq 1000 | timeout 20 parallel -j400% -N0 "'$cpuburn'" 2>/dev/null &
+seq 1000 | timeout 20 parallel -j400% -N0 "$qcpuburn" 2>/dev/null &
 PID=$!
 seq 1 1000 | stdout nice nice parallel --halt 1 -uj0 -N0 kill $PID | 
   perl -pe '/parallel: Warning: Starting \d+ processes took/ and do {close STDIN; `kill '$PID';killall "$basename"`; print "OK\n"; exit }'; 

@@ -22,7 +22,8 @@ par_retries_0() {
     echo '--retries 0 = inf'
     echo this wraps at 256 and should retry until it wraps
     tmp=$(mktemp)
-    parallel --retries 0 -u 'printf {} >> '"'$tmp'"';a=`stat -c %s '"'$tmp'"'`; echo -n " $a";  exit $a' ::: a
+    qtmp=$(parallel -0 --shellquote ::: "$tmp")
+    parallel --retries 0 -u 'printf {} >> '"$qtmp"';a=$(stat -c %s '"$qtmp"'); echo -n " $a";  exit $a' ::: a
     echo
     rm -f "$tmp"
 }

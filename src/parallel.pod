@@ -1881,11 +1881,16 @@ Spread input to jobs on stdin (standard input).
 Read a block of data from stdin (standard input) and give one block of
 data as input to one job.
 
-The block size is determined by B<--block> (default: 1M). The strings
-B<--recstart> and B<--recend> tell GNU B<parallel> how a record starts
-and/or ends. The block read will have the final partial record removed
-before the block is passed on to the job. The partial record will be
-prepended to next block.
+The block size is determined by B<--block> (default: 1M).
+
+Except for the first and last record GNU B<parallel> only passes full
+records to the job. The strings B<--recstart> and B<--recend>
+determine where a record starts and ends: The border between two
+records is defined as B<--recend> immediately followed by
+B<--recstart>. GNU B<parallel> splits exactly after B<--recend> and
+before B<--recstart>. The block will have the last partial record
+removed before the block is passed on to the job. The partial record
+will be prepended to next block.
 
 You can limit the number of records to be passed with B<-N>, and set
 the record size with B<-L>.
@@ -1911,7 +1916,8 @@ B<--fifo> B<--cat> B<--pipe-part> B<-N> B<-L> B<--round-robin>
 
 Pipe parts of a physical file.
 
-B<--pipe-part> works similar to B<--pipe>, but is much faster.
+B<--pipe-part> works similar to B<--pipe>, but is much faster. 5 GB/s
+can easily be delivered.
 
 B<--pipe-part> has a few limitations:
 

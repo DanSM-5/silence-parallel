@@ -42,6 +42,304 @@ par_multiple_hosts_repeat_arg	parallel: Warning: Using -X or -m with --sshlogin 
 par_multiple_hosts_repeat_arg	1
 par_multiple_hosts_repeat_arg	2
 par_multiple_hosts_repeat_arg	3
+par_nonall_results	### --results --onall
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/onall
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/onall/noslashsh@lo
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/onall/noslashsh@lo/1
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/onall/noslashsh@lo/1/id
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/onall/noslashsh@lo/1/id/seq
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/onall/noslashsh@lo/1/id/stderr
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/onall/noslashsh@lo/1/id/stdout
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/onall/noslashsh@lo/1/pwd
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/onall/noslashsh@lo/1/pwd/seq
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/onall/noslashsh@lo/1/pwd/stderr
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/onall/noslashsh@lo/1/pwd/stdout
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/onall/rpl1noslash
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/onall/rpl1noslash/idsh@lo.seq
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/onall/rpl1noslash/idcsh@lo.seq
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/onall/rpl1noslash/idcsh@lo
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/onall/rpl1noslash/pwdsh@lo.err
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/onall/rpl1noslash/idcsh@lo.err
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/onall/rpl1noslash/pwdcsh@lo.err
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/onall/rpl1noslash/idsh@lo
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/onall/rpl1noslash/pwdcsh@lo
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/onall/rpl1noslash/pwdsh@lo.seq
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/onall/rpl1noslash/pwdsh@lo
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/onall/rpl1noslash/idsh@lo.err
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/onall/rpl1noslash/pwdcsh@lo.seq
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/onall/slash
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/onall/slash/sh@lo
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/onall/slash/sh@lo/1
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/onall/slash/sh@lo/1/id
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/onall/slash/sh@lo/1/id/seq
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/onall/slash/sh@lo/1/id/stderr
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/onall/slash/sh@lo/1/id/stdout
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/onall/slash/sh@lo/1/pwd
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/onall/slash/sh@lo/1/pwd/seq
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/onall/slash/sh@lo/1/pwd/stderr
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/onall/slash/sh@lo/1/pwd/stdout
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/onall/slash/csh@lo
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/onall/slash/csh@lo/1
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/onall/slash/csh@lo/1/id
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/onall/slash/csh@lo/1/id/seq
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/onall/slash/csh@lo/1/id/stderr
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/onall/slash/csh@lo/1/id/stdout
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/onall/slash/csh@lo/1/pwd
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/onall/slash/csh@lo/1/pwd/seq
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/onall/slash/csh@lo/1/pwd/stderr
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/onall/slash/csh@lo/1/pwd/stdout
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/onall/rplnoslash
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/onall/rplnoslash/idsh@lo.seq
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/onall/rplnoslash/idcsh@lo.seq
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/onall/rplnoslash/idcsh@lo
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/onall/rplnoslash/pwdsh@lo.err
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/onall/rplnoslash/idcsh@lo.err
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/onall/rplnoslash/pwdcsh@lo.err
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/onall/rplnoslash/idsh@lo
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/onall/rplnoslash/pwdcsh@lo
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/onall/rplnoslash/pwdsh@lo.seq
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/onall/rplnoslash/pwdsh@lo
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/onall/rplnoslash/idsh@lo.err
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/onall/rplnoslash/pwdcsh@lo.seq
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/onall/rpl1slash
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/onall/rpl1slash/id
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/onall/rpl1slash/id/sh@lo.seq
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/onall/rpl1slash/id/csh@lo.err
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/onall/rpl1slash/id/csh@lo.seq
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/onall/rpl1slash/id/sh@lo
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/onall/rpl1slash/id/csh@lo
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/onall/rpl1slash/id/sh@lo.err
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/onall/rpl1slash/pwd
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/onall/rpl1slash/pwd/sh@lo.seq
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/onall/rpl1slash/pwd/csh@lo.err
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/onall/rpl1slash/pwd/csh@lo.seq
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/onall/rpl1slash/pwd/sh@lo
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/onall/rpl1slash/pwd/csh@lo
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/onall/rpl1slash/pwd/sh@lo.err
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/onall/noslashcsh@lo
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/onall/noslashcsh@lo/1
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/onall/noslashcsh@lo/1/id
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/onall/noslashcsh@lo/1/id/seq
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/onall/noslashcsh@lo/1/id/stderr
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/onall/noslashcsh@lo/1/id/stdout
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/onall/noslashcsh@lo/1/pwd
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/onall/noslashcsh@lo/1/pwd/seq
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/onall/noslashcsh@lo/1/pwd/stderr
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/onall/noslashcsh@lo/1/pwd/stdout
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/onall/rplslash
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/onall/rplslash/id
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/onall/rplslash/id/sh@lo.seq
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/onall/rplslash/id/csh@lo.err
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/onall/rplslash/id/csh@lo.seq
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/onall/rplslash/id/sh@lo
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/onall/rplslash/id/csh@lo
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/onall/rplslash/id/sh@lo.err
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/onall/rplslash/pwd
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/onall/rplslash/pwd/sh@lo.seq
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/onall/rplslash/pwd/csh@lo.err
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/onall/rplslash/pwd/csh@lo.seq
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/onall/rplslash/pwd/sh@lo
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/onall/rplslash/pwd/csh@lo
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/onall/rplslash/pwd/sh@lo.err
+par_nonall_results	### --results --nonall
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/nonall
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/nonall/noslashsh@lo
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/nonall/noslashsh@lo/1
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/nonall/noslashsh@lo/1/seq
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/nonall/noslashsh@lo/1/stderr
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/nonall/noslashsh@lo/1/stdout
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/nonall/rpl1noslash
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/nonall/rpl1noslash/sh@lo.seq
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/nonall/rpl1noslash/csh@lo.err
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/nonall/rpl1noslash/csh@lo.seq
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/nonall/rpl1noslash/sh@lo
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/nonall/rpl1noslash/csh@lo
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/nonall/rpl1noslash/sh@lo.err
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/nonall/slash
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/nonall/slash/sh@lo
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/nonall/slash/sh@lo/1
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/nonall/slash/sh@lo/1/seq
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/nonall/slash/sh@lo/1/stderr
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/nonall/slash/sh@lo/1/stdout
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/nonall/slash/csh@lo
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/nonall/slash/csh@lo/1
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/nonall/slash/csh@lo/1/seq
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/nonall/slash/csh@lo/1/stderr
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/nonall/slash/csh@lo/1/stdout
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/nonall/rplnoslash
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/nonall/rplnoslash/sh@lo.seq
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/nonall/rplnoslash/csh@lo.err
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/nonall/rplnoslash/csh@lo.seq
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/nonall/rplnoslash/sh@lo
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/nonall/rplnoslash/csh@lo
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/nonall/rplnoslash/sh@lo.err
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/nonall/rpl1slash
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/nonall/rpl1slash/sh@lo.seq
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/nonall/rpl1slash/csh@lo.err
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/nonall/rpl1slash/csh@lo.seq
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/nonall/rpl1slash/sh@lo
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/nonall/rpl1slash/csh@lo
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/nonall/rpl1slash/sh@lo.err
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/nonall/noslashcsh@lo
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/nonall/noslashcsh@lo/1
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/nonall/noslashcsh@lo/1/seq
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/nonall/noslashcsh@lo/1/stderr
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/nonall/noslashcsh@lo/1/stdout
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/nonall/rplslash
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/nonall/rplslash/sh@lo.seq
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/nonall/rplslash/csh@lo.err
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/nonall/rplslash/csh@lo.seq
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/nonall/rplslash/sh@lo
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/nonall/rplslash/csh@lo
+par_nonall_results	/tmp/parallel-local-ssh4-tmp/
+par_nonall_results	       `touch /tmp/tripwire` <"'/tmp/nonall/rplslash/sh@lo.err
 par_sshloginfile	### --slf with mIxEd cAsE
 par_sshloginfile	1
 par_sshloginfile	2
@@ -77,9 +375,9 @@ par_tmux_different_shells	0
 par_tmux_different_shells	4
 par_tmux_length	### works
 par_tmux_length	See output with: tmux -S '/tmp/parallel-local-ssh4-tmp/
-par_tmux_length	       <' attach
+par_tmux_length	       `touch ' attach
 par_tmux_length	See output with: tmux -S '/tmp/parallel-local-ssh4-tmp/
-par_tmux_length	       <' attach
+par_tmux_length	       `touch ' attach
 par_tmux_length	### These blocked due to length
 par_tmux_length	See output with: tmux -S '/tmp/parallel-local-ssh4-tmp/
 par_tmux_length	See output with: tmux -S '/tmp/parallel-local-ssh4-tmp/

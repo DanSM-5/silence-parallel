@@ -80,24 +80,28 @@ par_compress_prg_fails	  	1
 par_compress_prg_fails	  	parallel: Error: false failed.
 par_compress_prg_fails	  	parallel: Error: false failed.
 par_compress_prg_fails	  --files	1
+par_compress_prg_fails	  --files	parallel: Warning: --files do not work if $TMPDIR contains newline.
 par_compress_prg_fails	  --files	parallel: Error: false failed.
 par_compress_prg_fails	  --files	parallel: Error: false failed.
 par_compress_prg_fails	 --tag 	1
 par_compress_prg_fails	 --tag 	parallel: Error: false failed.
 par_compress_prg_fails	 --tag 	parallel: Error: false failed.
 par_compress_prg_fails	 --tag --files	1
+par_compress_prg_fails	 --tag --files	parallel: Warning: --files do not work if $TMPDIR contains newline.
 par_compress_prg_fails	 --tag --files	parallel: Error: false failed.
 par_compress_prg_fails	 --tag --files	parallel: Error: false failed.
 par_compress_prg_fails	--line-buffer  	1
 par_compress_prg_fails	--line-buffer  	parallel: Error: false failed.
 par_compress_prg_fails	--line-buffer  	parallel: Error: false failed.
 par_compress_prg_fails	--line-buffer  --files	1
+par_compress_prg_fails	--line-buffer  --files	parallel: Warning: --files do not work if $TMPDIR contains newline.
 par_compress_prg_fails	--line-buffer  --files	parallel: Error: false failed.
 par_compress_prg_fails	--line-buffer  --files	parallel: Error: false failed.
 par_compress_prg_fails	--line-buffer --tag 	1
 par_compress_prg_fails	--line-buffer --tag 	parallel: Error: false failed.
 par_compress_prg_fails	--line-buffer --tag 	parallel: Error: false failed.
 par_compress_prg_fails	--line-buffer --tag --files	1
+par_compress_prg_fails	--line-buffer --tag --files	parallel: Warning: --files do not work if $TMPDIR contains newline.
 par_compress_prg_fails	--line-buffer --tag --files	parallel: Error: false failed.
 par_compress_prg_fails	--line-buffer --tag --files	parallel: Error: false failed.
 par_dryrun_timeout_ungroup	bug #51039: --dry-run --timeout 1.4m -u breaks
@@ -108,18 +112,22 @@ par_failing_compressor	Test working/failing compressor/decompressor in all combi
 par_failing_compressor	(-k is used as a dummy argument)
 par_failing_compressor	parallel -k --tag --line-buffer --files --compress --compress-program 'cat;true' --decompress-program 'cat;true' doit ::: C='cat;true',D='cat;true'
 par_failing_compressor	C=cat;true,D=cat;true	/tmp/parallel-local-10s-tmp/
-par_failing_compressor	       </tmpfile
+par_failing_compressor	       `touch /tmpfile
+par_failing_compressor	parallel: Warning: --files do not work if $TMPDIR contains newline.
 par_failing_compressor	parallel -k --tag --line-buffer --files --compress --compress-program 'cat;true' --decompress-program 'cat;false' doit ::: C='cat;true',D='cat;false'
 par_failing_compressor	C=cat;true,D=cat;false	/tmp/parallel-local-10s-tmp/
-par_failing_compressor	       </tmpfile
+par_failing_compressor	       `touch /tmpfile
+par_failing_compressor	parallel: Warning: --files do not work if $TMPDIR contains newline.
 par_failing_compressor	parallel -k --tag --line-buffer --files --compress --compress-program 'cat;false' --decompress-program 'cat;true' doit ::: C='cat;false',D='cat;true'
 par_failing_compressor	C=cat;false,D=cat;true	/tmp/parallel-local-10s-tmp/
-par_failing_compressor	       </tmpfile
+par_failing_compressor	       `touch /tmpfile
+par_failing_compressor	parallel: Warning: --files do not work if $TMPDIR contains newline.
 par_failing_compressor	parallel: Error: cat;false failed.
 par_failing_compressor	parallel: Error: cat;false failed.
 par_failing_compressor	parallel -k --tag --line-buffer --files --compress --compress-program 'cat;false' --decompress-program 'cat;false' doit ::: C='cat;false',D='cat;false'
 par_failing_compressor	C=cat;false,D=cat;false	/tmp/parallel-local-10s-tmp/
-par_failing_compressor	       </tmpfile
+par_failing_compressor	       `touch /tmpfile
+par_failing_compressor	parallel: Warning: --files do not work if $TMPDIR contains newline.
 par_failing_compressor	parallel: Error: cat;false failed.
 par_failing_compressor	parallel: Error: cat;false failed.
 par_failing_compressor	parallel -k --tag --line-buffer -k --compress --compress-program 'cat;true' --decompress-program 'cat;true' doit ::: C='cat;true',D='cat;true'
@@ -140,18 +148,22 @@ par_failing_compressor	parallel: Error: cat;false failed.
 par_failing_compressor	C=cat;false,D=cat;false	C=cat;false,D=cat;false
 par_failing_compressor	parallel -k --tag -k --files --compress --compress-program 'cat;true' --decompress-program 'cat;true' doit ::: C='cat;true',D='cat;true'
 par_failing_compressor	C=cat;true,D=cat;true	/tmp/parallel-local-10s-tmp/
-par_failing_compressor	       </tmpfile
+par_failing_compressor	       `touch /tmpfile
+par_failing_compressor	parallel: Warning: --files do not work if $TMPDIR contains newline.
 par_failing_compressor	parallel -k --tag -k --files --compress --compress-program 'cat;true' --decompress-program 'cat;false' doit ::: C='cat;true',D='cat;false'
 par_failing_compressor	C=cat;true,D=cat;false	/tmp/parallel-local-10s-tmp/
-par_failing_compressor	       </tmpfile
+par_failing_compressor	       `touch /tmpfile
+par_failing_compressor	parallel: Warning: --files do not work if $TMPDIR contains newline.
 par_failing_compressor	parallel -k --tag -k --files --compress --compress-program 'cat;false' --decompress-program 'cat;true' doit ::: C='cat;false',D='cat;true'
 par_failing_compressor	C=cat;false,D=cat;true	/tmp/parallel-local-10s-tmp/
-par_failing_compressor	       </tmpfile
+par_failing_compressor	       `touch /tmpfile
+par_failing_compressor	parallel: Warning: --files do not work if $TMPDIR contains newline.
 par_failing_compressor	parallel: Error: cat;false failed.
 par_failing_compressor	parallel: Error: cat;false failed.
 par_failing_compressor	parallel -k --tag -k --files --compress --compress-program 'cat;false' --decompress-program 'cat;false' doit ::: C='cat;false',D='cat;false'
 par_failing_compressor	C=cat;false,D=cat;false	/tmp/parallel-local-10s-tmp/
-par_failing_compressor	       </tmpfile
+par_failing_compressor	       `touch /tmpfile
+par_failing_compressor	parallel: Warning: --files do not work if $TMPDIR contains newline.
 par_failing_compressor	parallel: Error: cat;false failed.
 par_failing_compressor	parallel: Error: cat;false failed.
 par_failing_compressor	parallel -k --tag -k -k --compress --compress-program 'cat;true' --decompress-program 'cat;true' doit ::: C='cat;true',D='cat;true'
@@ -172,18 +184,22 @@ par_failing_compressor	parallel: Error: cat;false failed.
 par_failing_compressor	C=cat;false,D=cat;false	C=cat;false,D=cat;false
 par_failing_compressor	parallel -k -k --line-buffer --files --compress --compress-program 'cat;true' --decompress-program 'cat;true' doit ::: C='cat;true',D='cat;true'
 par_failing_compressor	/tmp/parallel-local-10s-tmp/
-par_failing_compressor	       </tmpfile
+par_failing_compressor	       `touch /tmpfile
+par_failing_compressor	parallel: Warning: --files do not work if $TMPDIR contains newline.
 par_failing_compressor	parallel -k -k --line-buffer --files --compress --compress-program 'cat;true' --decompress-program 'cat;false' doit ::: C='cat;true',D='cat;false'
 par_failing_compressor	/tmp/parallel-local-10s-tmp/
-par_failing_compressor	       </tmpfile
+par_failing_compressor	       `touch /tmpfile
+par_failing_compressor	parallel: Warning: --files do not work if $TMPDIR contains newline.
 par_failing_compressor	parallel -k -k --line-buffer --files --compress --compress-program 'cat;false' --decompress-program 'cat;true' doit ::: C='cat;false',D='cat;true'
 par_failing_compressor	/tmp/parallel-local-10s-tmp/
-par_failing_compressor	       </tmpfile
+par_failing_compressor	       `touch /tmpfile
+par_failing_compressor	parallel: Warning: --files do not work if $TMPDIR contains newline.
 par_failing_compressor	parallel: Error: cat;false failed.
 par_failing_compressor	parallel: Error: cat;false failed.
 par_failing_compressor	parallel -k -k --line-buffer --files --compress --compress-program 'cat;false' --decompress-program 'cat;false' doit ::: C='cat;false',D='cat;false'
 par_failing_compressor	/tmp/parallel-local-10s-tmp/
-par_failing_compressor	       </tmpfile
+par_failing_compressor	       `touch /tmpfile
+par_failing_compressor	parallel: Warning: --files do not work if $TMPDIR contains newline.
 par_failing_compressor	parallel: Error: cat;false failed.
 par_failing_compressor	parallel: Error: cat;false failed.
 par_failing_compressor	parallel -k -k --line-buffer -k --compress --compress-program 'cat;true' --decompress-program 'cat;true' doit ::: C='cat;true',D='cat;true'
@@ -204,18 +220,22 @@ par_failing_compressor	parallel: Error: cat;false failed.
 par_failing_compressor	C=cat;false,D=cat;false
 par_failing_compressor	parallel -k -k -k --files --compress --compress-program 'cat;true' --decompress-program 'cat;true' doit ::: C='cat;true',D='cat;true'
 par_failing_compressor	/tmp/parallel-local-10s-tmp/
-par_failing_compressor	       </tmpfile
+par_failing_compressor	       `touch /tmpfile
+par_failing_compressor	parallel: Warning: --files do not work if $TMPDIR contains newline.
 par_failing_compressor	parallel -k -k -k --files --compress --compress-program 'cat;true' --decompress-program 'cat;false' doit ::: C='cat;true',D='cat;false'
 par_failing_compressor	/tmp/parallel-local-10s-tmp/
-par_failing_compressor	       </tmpfile
+par_failing_compressor	       `touch /tmpfile
+par_failing_compressor	parallel: Warning: --files do not work if $TMPDIR contains newline.
 par_failing_compressor	parallel -k -k -k --files --compress --compress-program 'cat;false' --decompress-program 'cat;true' doit ::: C='cat;false',D='cat;true'
 par_failing_compressor	/tmp/parallel-local-10s-tmp/
-par_failing_compressor	       </tmpfile
+par_failing_compressor	       `touch /tmpfile
+par_failing_compressor	parallel: Warning: --files do not work if $TMPDIR contains newline.
 par_failing_compressor	parallel: Error: cat;false failed.
 par_failing_compressor	parallel: Error: cat;false failed.
 par_failing_compressor	parallel -k -k -k --files --compress --compress-program 'cat;false' --decompress-program 'cat;false' doit ::: C='cat;false',D='cat;false'
 par_failing_compressor	/tmp/parallel-local-10s-tmp/
-par_failing_compressor	       </tmpfile
+par_failing_compressor	       `touch /tmpfile
+par_failing_compressor	parallel: Warning: --files do not work if $TMPDIR contains newline.
 par_failing_compressor	parallel: Error: cat;false failed.
 par_failing_compressor	parallel: Error: cat;false failed.
 par_failing_compressor	parallel -k -k -k -k --compress --compress-program 'cat;true' --decompress-program 'cat;true' doit ::: C='cat;true',D='cat;true'
@@ -235,6 +255,52 @@ par_failing_compressor	parallel: Error: cat;false failed.
 par_failing_compressor	parallel: Error: cat;false failed.
 par_failing_compressor	C=cat;false,D=cat;false
 par_fifo_under_csh	### Test --fifo under csh
+par_fifo_under_csh	parallel: Warning: --cat/--fifo fails under csh if $TMPDIR contains newline.
+par_fifo_under_csh	Unmatched '"'.
+par_fifo_under_csh	Broken pipe
+par_fifo_under_csh	Unmatched '"'.
+par_fifo_under_csh	Broken pipe
+par_fifo_under_csh	Unmatched '"'.
+par_fifo_under_csh	Broken pipe
+par_fifo_under_csh	Unmatched '"'.
+par_fifo_under_csh	Broken pipe
+par_fifo_under_csh	Unmatched '"'.
+par_fifo_under_csh	Broken pipe
+par_fifo_under_csh	Unmatched '"'.
+par_fifo_under_csh	Broken pipe
+par_fifo_under_csh	Unmatched '"'.
+par_fifo_under_csh	Broken pipe
+par_fifo_under_csh	Unmatched '"'.
+par_fifo_under_csh	Broken pipe
+par_fifo_under_csh	Unmatched '"'.
+par_fifo_under_csh	Broken pipe
+par_fifo_under_csh	Unmatched '"'.
+par_fifo_under_csh	Broken pipe
+par_fifo_under_csh	Unmatched '"'.
+par_fifo_under_csh	Broken pipe
+par_fifo_under_csh	Unmatched '"'.
+par_fifo_under_csh	Broken pipe
+par_fifo_under_csh	Unmatched '"'.
+par_fifo_under_csh	Broken pipe
+par_fifo_under_csh	Unmatched '"'.
+par_fifo_under_csh	Broken pipe
+par_fifo_under_csh	Unmatched '"'.
+par_fifo_under_csh	Broken pipe
+par_fifo_under_csh	Unmatched '"'.
+par_fifo_under_csh	Broken pipe
+par_fifo_under_csh	Unmatched '"'.
+par_fifo_under_csh	Broken pipe
+par_fifo_under_csh	Unmatched '"'.
+par_fifo_under_csh	Broken pipe
+par_fifo_under_csh	Unmatched '"'.
+par_fifo_under_csh	Broken pipe
+par_fifo_under_csh	Unmatched '"'.
+par_fifo_under_csh	Broken pipe
+par_fifo_under_csh	Unmatched '"'.
+par_fifo_under_csh	Broken pipe
+par_fifo_under_csh	Unmatched '"'.
+par_fifo_under_csh	Broken pipe
+par_fifo_under_csh	exit 22
 par_fifo_under_csh	1048571
 par_fifo_under_csh	1
 par_fifo_under_csh	1048572
@@ -734,7 +800,7 @@ par_parset	5
 par_parset	The commands to run can be an array
 par_parset	<<joe  "double  space"  cartoon>>
 par_parset	/tmp/parallel-local-10s-tmp/
-par_parset	       </tmp
+par_parset	       `touch /tmp/tripwire` <"'/tmp
 par_parset	You cannot pipe into parset, but must use a tempfile
 par_parset	1
 par_parset	10
@@ -1061,22 +1127,22 @@ par_reload_slf_every_second	OK
 par_results_csv	bug #: --results csv
 par_results_csv	--header : --tag --files --compress	Seq,Host,Starttime,JobRuntime,Send,Receive,Exitval,Signal,Command,H2,H1,Stdout,Stderr
 par_results_csv	--header : --tag --files --compress	1,:,999.999,999.999,0,15,0,0,"echo 22 11",22,11,"22 11	/tmp/parallel-local-10s-tmp/
-par_results_csv	--header : --tag --files --compress	       </tmpfile",
+par_results_csv	--header : --tag --files --compress	       `touch /tmpfile",
 par_results_csv	--header : --tag --files --compress	2,:,999.999,999.999,0,15,0,0,"echo 22 12",22,12,"22 12	/tmp/parallel-local-10s-tmp/
-par_results_csv	--header : --tag --files --compress	       </tmpfile",
+par_results_csv	--header : --tag --files --compress	       `touch /tmpfile",
 par_results_csv	--header : --tag --files --compress	3,:,999.999,999.999,0,15,0,0,"echo 23 11",23,11,"23 11	/tmp/parallel-local-10s-tmp/
-par_results_csv	--header : --tag --files --compress	       </tmpfile",
+par_results_csv	--header : --tag --files --compress	       `touch /tmpfile",
 par_results_csv	--header : --tag --files --compress	4,:,999.999,999.999,0,15,0,0,"echo 23 12",23,12,"23 12	/tmp/parallel-local-10s-tmp/
-par_results_csv	--header : --tag --files --compress	       </tmpfile",
+par_results_csv	--header : --tag --files --compress	       `touch /tmpfile",
 par_results_csv	--header : --tag --files 	Seq,Host,Starttime,JobRuntime,Send,Receive,Exitval,Signal,Command,H2,H1,Stdout,Stderr
 par_results_csv	--header : --tag --files 	1,:,999.999,999.999,0,6,0,0,"echo 22 11",22,11,"22 11	/tmp/parallel-local-10s-tmp/
-par_results_csv	--header : --tag --files 	       </tmpfile",
+par_results_csv	--header : --tag --files 	       `touch /tmpfile",
 par_results_csv	--header : --tag --files 	2,:,999.999,999.999,0,6,0,0,"echo 22 12",22,12,"22 12	/tmp/parallel-local-10s-tmp/
-par_results_csv	--header : --tag --files 	       </tmpfile",
+par_results_csv	--header : --tag --files 	       `touch /tmpfile",
 par_results_csv	--header : --tag --files 	3,:,999.999,999.999,0,6,0,0,"echo 23 11",23,11,"23 11	/tmp/parallel-local-10s-tmp/
-par_results_csv	--header : --tag --files 	       </tmpfile",
+par_results_csv	--header : --tag --files 	       `touch /tmpfile",
 par_results_csv	--header : --tag --files 	4,:,999.999,999.999,0,6,0,0,"echo 23 12",23,12,"23 12	/tmp/parallel-local-10s-tmp/
-par_results_csv	--header : --tag --files 	       </tmpfile",
+par_results_csv	--header : --tag --files 	       `touch /tmpfile",
 par_results_csv	--header : --tag  --compress	Seq,Host,Starttime,JobRuntime,Send,Receive,Exitval,Signal,Command,H2,H1,Stdout,Stderr
 par_results_csv	--header : --tag  --compress	1,:,999.999,999.999,0,6,0,0,"echo 22 11",22,11,"22 11	22 11
 par_results_csv	--header : --tag  --compress	",
@@ -1097,22 +1163,22 @@ par_results_csv	--header : --tag  	4,:,999.999,999.999,0,6,0,0,"echo 23 12",23,1
 par_results_csv	--header : --tag  	",
 par_results_csv	--header :  --files --compress	Seq,Host,Starttime,JobRuntime,Send,Receive,Exitval,Signal,Command,H2,H1,Stdout,Stderr
 par_results_csv	--header :  --files --compress	1,:,999.999,999.999,0,15,0,0,"echo 22 11",22,11,"/tmp/parallel-local-10s-tmp/
-par_results_csv	--header :  --files --compress	       </tmpfile",
+par_results_csv	--header :  --files --compress	       `touch /tmpfile",
 par_results_csv	--header :  --files --compress	2,:,999.999,999.999,0,15,0,0,"echo 22 12",22,12,"/tmp/parallel-local-10s-tmp/
-par_results_csv	--header :  --files --compress	       </tmpfile",
+par_results_csv	--header :  --files --compress	       `touch /tmpfile",
 par_results_csv	--header :  --files --compress	3,:,999.999,999.999,0,15,0,0,"echo 23 11",23,11,"/tmp/parallel-local-10s-tmp/
-par_results_csv	--header :  --files --compress	       </tmpfile",
+par_results_csv	--header :  --files --compress	       `touch /tmpfile",
 par_results_csv	--header :  --files --compress	4,:,999.999,999.999,0,15,0,0,"echo 23 12",23,12,"/tmp/parallel-local-10s-tmp/
-par_results_csv	--header :  --files --compress	       </tmpfile",
+par_results_csv	--header :  --files --compress	       `touch /tmpfile",
 par_results_csv	--header :  --files 	Seq,Host,Starttime,JobRuntime,Send,Receive,Exitval,Signal,Command,H2,H1,Stdout,Stderr
 par_results_csv	--header :  --files 	1,:,999.999,999.999,0,6,0,0,"echo 22 11",22,11,"/tmp/parallel-local-10s-tmp/
-par_results_csv	--header :  --files 	       </tmpfile",
+par_results_csv	--header :  --files 	       `touch /tmpfile",
 par_results_csv	--header :  --files 	2,:,999.999,999.999,0,6,0,0,"echo 22 12",22,12,"/tmp/parallel-local-10s-tmp/
-par_results_csv	--header :  --files 	       </tmpfile",
+par_results_csv	--header :  --files 	       `touch /tmpfile",
 par_results_csv	--header :  --files 	3,:,999.999,999.999,0,6,0,0,"echo 23 11",23,11,"/tmp/parallel-local-10s-tmp/
-par_results_csv	--header :  --files 	       </tmpfile",
+par_results_csv	--header :  --files 	       `touch /tmpfile",
 par_results_csv	--header :  --files 	4,:,999.999,999.999,0,6,0,0,"echo 23 12",23,12,"/tmp/parallel-local-10s-tmp/
-par_results_csv	--header :  --files 	       </tmpfile",
+par_results_csv	--header :  --files 	       `touch /tmpfile",
 par_results_csv	--header :   --compress	Seq,Host,Starttime,JobRuntime,Send,Receive,Exitval,Signal,Command,H2,H1,Stdout,Stderr
 par_results_csv	--header :   --compress	1,:,999.999,999.999,0,6,0,0,"echo 22 11",22,11,"22 11
 par_results_csv	--header :   --compress	",
@@ -1133,42 +1199,42 @@ par_results_csv	--header :   	4,:,999.999,999.999,0,6,0,0,"echo 23 12",23,12,"23
 par_results_csv	--header :   	",
 par_results_csv	 --tag --files --compress	Seq,Host,Starttime,JobRuntime,Send,Receive,Exitval,Signal,Command,V1,V2,Stdout,Stderr
 par_results_csv	 --tag --files --compress	1,:,999.999,999.999,0,15,0,0,"echo H2 H1",H2,H1,"H2 H1	/tmp/parallel-local-10s-tmp/
-par_results_csv	 --tag --files --compress	       </tmpfile",
+par_results_csv	 --tag --files --compress	       `touch /tmpfile",
 par_results_csv	 --tag --files --compress	2,:,999.999,999.999,0,15,0,0,"echo H2 11",H2,11,"H2 11	/tmp/parallel-local-10s-tmp/
-par_results_csv	 --tag --files --compress	       </tmpfile",
+par_results_csv	 --tag --files --compress	       `touch /tmpfile",
 par_results_csv	 --tag --files --compress	3,:,999.999,999.999,0,15,0,0,"echo H2 12",H2,12,"H2 12	/tmp/parallel-local-10s-tmp/
-par_results_csv	 --tag --files --compress	       </tmpfile",
+par_results_csv	 --tag --files --compress	       `touch /tmpfile",
 par_results_csv	 --tag --files --compress	4,:,999.999,999.999,0,15,0,0,"echo 22 H1",22,H1,"22 H1	/tmp/parallel-local-10s-tmp/
-par_results_csv	 --tag --files --compress	       </tmpfile",
+par_results_csv	 --tag --files --compress	       `touch /tmpfile",
 par_results_csv	 --tag --files --compress	5,:,999.999,999.999,0,15,0,0,"echo 22 11",22,11,"22 11	/tmp/parallel-local-10s-tmp/
-par_results_csv	 --tag --files --compress	       </tmpfile",
+par_results_csv	 --tag --files --compress	       `touch /tmpfile",
 par_results_csv	 --tag --files --compress	6,:,999.999,999.999,0,15,0,0,"echo 22 12",22,12,"22 12	/tmp/parallel-local-10s-tmp/
-par_results_csv	 --tag --files --compress	       </tmpfile",
+par_results_csv	 --tag --files --compress	       `touch /tmpfile",
 par_results_csv	 --tag --files --compress	7,:,999.999,999.999,0,15,0,0,"echo 23 H1",23,H1,"23 H1	/tmp/parallel-local-10s-tmp/
-par_results_csv	 --tag --files --compress	       </tmpfile",
+par_results_csv	 --tag --files --compress	       `touch /tmpfile",
 par_results_csv	 --tag --files --compress	8,:,999.999,999.999,0,15,0,0,"echo 23 11",23,11,"23 11	/tmp/parallel-local-10s-tmp/
-par_results_csv	 --tag --files --compress	       </tmpfile",
+par_results_csv	 --tag --files --compress	       `touch /tmpfile",
 par_results_csv	 --tag --files --compress	9,:,999.999,999.999,0,15,0,0,"echo 23 12",23,12,"23 12	/tmp/parallel-local-10s-tmp/
-par_results_csv	 --tag --files --compress	       </tmpfile",
+par_results_csv	 --tag --files --compress	       `touch /tmpfile",
 par_results_csv	 --tag --files 	Seq,Host,Starttime,JobRuntime,Send,Receive,Exitval,Signal,Command,V1,V2,Stdout,Stderr
 par_results_csv	 --tag --files 	1,:,999.999,999.999,0,6,0,0,"echo H2 H1",H2,H1,"H2 H1	/tmp/parallel-local-10s-tmp/
-par_results_csv	 --tag --files 	       </tmpfile",
+par_results_csv	 --tag --files 	       `touch /tmpfile",
 par_results_csv	 --tag --files 	2,:,999.999,999.999,0,6,0,0,"echo H2 11",H2,11,"H2 11	/tmp/parallel-local-10s-tmp/
-par_results_csv	 --tag --files 	       </tmpfile",
+par_results_csv	 --tag --files 	       `touch /tmpfile",
 par_results_csv	 --tag --files 	3,:,999.999,999.999,0,6,0,0,"echo H2 12",H2,12,"H2 12	/tmp/parallel-local-10s-tmp/
-par_results_csv	 --tag --files 	       </tmpfile",
+par_results_csv	 --tag --files 	       `touch /tmpfile",
 par_results_csv	 --tag --files 	4,:,999.999,999.999,0,6,0,0,"echo 22 H1",22,H1,"22 H1	/tmp/parallel-local-10s-tmp/
-par_results_csv	 --tag --files 	       </tmpfile",
+par_results_csv	 --tag --files 	       `touch /tmpfile",
 par_results_csv	 --tag --files 	5,:,999.999,999.999,0,6,0,0,"echo 22 11",22,11,"22 11	/tmp/parallel-local-10s-tmp/
-par_results_csv	 --tag --files 	       </tmpfile",
+par_results_csv	 --tag --files 	       `touch /tmpfile",
 par_results_csv	 --tag --files 	6,:,999.999,999.999,0,6,0,0,"echo 22 12",22,12,"22 12	/tmp/parallel-local-10s-tmp/
-par_results_csv	 --tag --files 	       </tmpfile",
+par_results_csv	 --tag --files 	       `touch /tmpfile",
 par_results_csv	 --tag --files 	7,:,999.999,999.999,0,6,0,0,"echo 23 H1",23,H1,"23 H1	/tmp/parallel-local-10s-tmp/
-par_results_csv	 --tag --files 	       </tmpfile",
+par_results_csv	 --tag --files 	       `touch /tmpfile",
 par_results_csv	 --tag --files 	8,:,999.999,999.999,0,6,0,0,"echo 23 11",23,11,"23 11	/tmp/parallel-local-10s-tmp/
-par_results_csv	 --tag --files 	       </tmpfile",
+par_results_csv	 --tag --files 	       `touch /tmpfile",
 par_results_csv	 --tag --files 	9,:,999.999,999.999,0,6,0,0,"echo 23 12",23,12,"23 12	/tmp/parallel-local-10s-tmp/
-par_results_csv	 --tag --files 	       </tmpfile",
+par_results_csv	 --tag --files 	       `touch /tmpfile",
 par_results_csv	 --tag  --compress	Seq,Host,Starttime,JobRuntime,Send,Receive,Exitval,Signal,Command,V1,V2,Stdout,Stderr
 par_results_csv	 --tag  --compress	1,:,999.999,999.999,0,6,0,0,"echo H2 H1",H2,H1,"H2 H1	H2 H1
 par_results_csv	 --tag  --compress	",
@@ -1209,42 +1275,42 @@ par_results_csv	 --tag  	9,:,999.999,999.999,0,6,0,0,"echo 23 12",23,12,"23 12	2
 par_results_csv	 --tag  	",
 par_results_csv	  --files --compress	Seq,Host,Starttime,JobRuntime,Send,Receive,Exitval,Signal,Command,V1,V2,Stdout,Stderr
 par_results_csv	  --files --compress	1,:,999.999,999.999,0,15,0,0,"echo H2 H1",H2,H1,"/tmp/parallel-local-10s-tmp/
-par_results_csv	  --files --compress	       </tmpfile",
+par_results_csv	  --files --compress	       `touch /tmpfile",
 par_results_csv	  --files --compress	2,:,999.999,999.999,0,15,0,0,"echo H2 11",H2,11,"/tmp/parallel-local-10s-tmp/
-par_results_csv	  --files --compress	       </tmpfile",
+par_results_csv	  --files --compress	       `touch /tmpfile",
 par_results_csv	  --files --compress	3,:,999.999,999.999,0,15,0,0,"echo H2 12",H2,12,"/tmp/parallel-local-10s-tmp/
-par_results_csv	  --files --compress	       </tmpfile",
+par_results_csv	  --files --compress	       `touch /tmpfile",
 par_results_csv	  --files --compress	4,:,999.999,999.999,0,15,0,0,"echo 22 H1",22,H1,"/tmp/parallel-local-10s-tmp/
-par_results_csv	  --files --compress	       </tmpfile",
+par_results_csv	  --files --compress	       `touch /tmpfile",
 par_results_csv	  --files --compress	5,:,999.999,999.999,0,15,0,0,"echo 22 11",22,11,"/tmp/parallel-local-10s-tmp/
-par_results_csv	  --files --compress	       </tmpfile",
+par_results_csv	  --files --compress	       `touch /tmpfile",
 par_results_csv	  --files --compress	6,:,999.999,999.999,0,15,0,0,"echo 22 12",22,12,"/tmp/parallel-local-10s-tmp/
-par_results_csv	  --files --compress	       </tmpfile",
+par_results_csv	  --files --compress	       `touch /tmpfile",
 par_results_csv	  --files --compress	7,:,999.999,999.999,0,15,0,0,"echo 23 H1",23,H1,"/tmp/parallel-local-10s-tmp/
-par_results_csv	  --files --compress	       </tmpfile",
+par_results_csv	  --files --compress	       `touch /tmpfile",
 par_results_csv	  --files --compress	8,:,999.999,999.999,0,15,0,0,"echo 23 11",23,11,"/tmp/parallel-local-10s-tmp/
-par_results_csv	  --files --compress	       </tmpfile",
+par_results_csv	  --files --compress	       `touch /tmpfile",
 par_results_csv	  --files --compress	9,:,999.999,999.999,0,15,0,0,"echo 23 12",23,12,"/tmp/parallel-local-10s-tmp/
-par_results_csv	  --files --compress	       </tmpfile",
+par_results_csv	  --files --compress	       `touch /tmpfile",
 par_results_csv	  --files 	Seq,Host,Starttime,JobRuntime,Send,Receive,Exitval,Signal,Command,V1,V2,Stdout,Stderr
 par_results_csv	  --files 	1,:,999.999,999.999,0,6,0,0,"echo H2 H1",H2,H1,"/tmp/parallel-local-10s-tmp/
-par_results_csv	  --files 	       </tmpfile",
+par_results_csv	  --files 	       `touch /tmpfile",
 par_results_csv	  --files 	2,:,999.999,999.999,0,6,0,0,"echo H2 11",H2,11,"/tmp/parallel-local-10s-tmp/
-par_results_csv	  --files 	       </tmpfile",
+par_results_csv	  --files 	       `touch /tmpfile",
 par_results_csv	  --files 	3,:,999.999,999.999,0,6,0,0,"echo H2 12",H2,12,"/tmp/parallel-local-10s-tmp/
-par_results_csv	  --files 	       </tmpfile",
+par_results_csv	  --files 	       `touch /tmpfile",
 par_results_csv	  --files 	4,:,999.999,999.999,0,6,0,0,"echo 22 H1",22,H1,"/tmp/parallel-local-10s-tmp/
-par_results_csv	  --files 	       </tmpfile",
+par_results_csv	  --files 	       `touch /tmpfile",
 par_results_csv	  --files 	5,:,999.999,999.999,0,6,0,0,"echo 22 11",22,11,"/tmp/parallel-local-10s-tmp/
-par_results_csv	  --files 	       </tmpfile",
+par_results_csv	  --files 	       `touch /tmpfile",
 par_results_csv	  --files 	6,:,999.999,999.999,0,6,0,0,"echo 22 12",22,12,"/tmp/parallel-local-10s-tmp/
-par_results_csv	  --files 	       </tmpfile",
+par_results_csv	  --files 	       `touch /tmpfile",
 par_results_csv	  --files 	7,:,999.999,999.999,0,6,0,0,"echo 23 H1",23,H1,"/tmp/parallel-local-10s-tmp/
-par_results_csv	  --files 	       </tmpfile",
+par_results_csv	  --files 	       `touch /tmpfile",
 par_results_csv	  --files 	8,:,999.999,999.999,0,6,0,0,"echo 23 11",23,11,"/tmp/parallel-local-10s-tmp/
-par_results_csv	  --files 	       </tmpfile",
+par_results_csv	  --files 	       `touch /tmpfile",
 par_results_csv	  --files 	9,:,999.999,999.999,0,6,0,0,"echo 23 12",23,12,"/tmp/parallel-local-10s-tmp/
-par_results_csv	  --files 	       </tmpfile",
+par_results_csv	  --files 	       `touch /tmpfile",
 par_results_csv	   --compress	Seq,Host,Starttime,JobRuntime,Send,Receive,Exitval,Signal,Command,V1,V2,Stdout,Stderr
 par_results_csv	   --compress	1,:,999.999,999.999,0,6,0,0,"echo H2 H1",H2,H1,"H2 H1
 par_results_csv	   --compress	",
@@ -1358,7 +1424,7 @@ par_tmp_full	parallel: Error: Is the disk full?
 par_tmp_full	parallel: Error: Change $TMPDIR with --tmpdir or use --compress.
 par_tmux_fg	bug #50107: --tmux --fg should also write how to access it
 par_tmux_fg	See output with: tmux -S '/tmp/parallel-local-10s-tmp/
-par_tmux_fg	       <tmpfile' attach
+par_tmux_fg	       `touch tmpfile' attach
 par_tmux_fg	open terminal failed: not a terminal
 par_totaljobs	OK
 par_xargs_compat	xargs compatibility

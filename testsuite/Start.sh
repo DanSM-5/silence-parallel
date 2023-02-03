@@ -35,7 +35,7 @@ run_test() {
     base=`basename "$script" .sh`
     # Force spaces and < into TMPDIR - this will expose bugs
     export TMPDIR=/tmp/"$base-tmp"/'
-       <'/tmp
+       `touch /tmp/tripwire` <"'"'"/tmp
     rm -rf "$TMPDIR"
     mkdir -p "$TMPDIR"
     # Clean before. May be owned by other users
@@ -49,6 +49,12 @@ run_test() {
 	run_once $script
     fi
     run_once $script
+    if [ -e /tmp/tripwire ] ; then
+	echo '!!!'
+	echo '!!! /tmp/tripwire TRIPPED !!!'
+	echo '!!!'
+	exit 1
+    fi
     diff -Naur wanted-results/"$base" actual-results/"$base" ||
 	(touch "$script" && echo touch "$script")
     

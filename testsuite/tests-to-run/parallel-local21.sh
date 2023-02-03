@@ -13,6 +13,7 @@ mkdir -p "$TMPDIR"
 par_basic_shebang_wrap() {
     echo "### Test basic --shebang-wrap"
     script="$TMPDIR"/basic--shebang-wrap
+    qscript=$(parallel -0 --shellquote ::: "$script")
     cat <<EOF > "$script"
 #!/usr/local/bin/parallel --shebang-wrap -k /usr/bin/perl
 
@@ -23,11 +24,11 @@ EOF
     args() { echo arg1; echo arg2; echo "arg3.1  arg3.2"; }
     "$script" "$(args)"
     echo "### Test basic --shebang-wrap Same as"
-    parallel -k /usr/bin/perl "'$script'" ::: "$(args)"
+    parallel -k /usr/bin/perl "$qscript" ::: "$(args)"
     echo "### Test basic --shebang-wrap stdin"
     args | "$script"
     echo "### Test basic --shebang-wrap Same as"
-    args | parallel -k /usr/bin/perl "'$script'"
+    args | parallel -k /usr/bin/perl "$qscript"
     rm "$script"
 }
 
@@ -37,6 +38,7 @@ par_shebang_with_parser_options() {
     
     echo "### Test --shebang-wrap with parser options"
     script="$TMPDIR"/with-parser--shebang-wrap
+    qscript=$(parallel -0 --shellquote ::: "$script")
     cat <<EOF > "$script"
 #!/usr/local/bin/parallel --shebang-wrap -k /usr/bin/perl -p
 
@@ -46,15 +48,16 @@ EOF
     chmod 755 "$script"
     "$script" /tmp/in12 /tmp/in45
     echo "### Test --shebang-wrap with parser options Same as"
-    parallel -k /usr/bin/perl -p "'$script'" ::: /tmp/in12 /tmp/in45
+    parallel -k /usr/bin/perl -p "$qscript" ::: /tmp/in12 /tmp/in45
     echo "### Test --shebang-wrap with parser options stdin"
     (echo /tmp/in12; echo /tmp/in45) | "$script"
     echo "### Test --shebang-wrap with parser options Same as"
-    (echo /tmp/in12; echo /tmp/in45) | parallel -k /usr/bin/perl "'$script'"
+    (echo /tmp/in12; echo /tmp/in45) | parallel -k /usr/bin/perl "$qscript"
     rm "$script"
 
     echo "### Test --shebang-wrap --pipe with parser options"
     script="$TMPDIR"/pipe--shebang-wrap
+    qscript=$(parallel -0 --shellquote ::: "$script")
     cat <<EOF > "$script"
 #!/usr/local/bin/parallel --shebang-wrap -k --pipe /usr/bin/perl -p
 
@@ -65,7 +68,7 @@ EOF
     echo "### Test --shebang-wrap --pipe with parser options stdin"
     cat /tmp/in12 /tmp/in45 | "$script"
     echo "### Test --shebang-wrap --pipe with parser options Same as"
-    cat /tmp/in12 /tmp/in45 | parallel -k --pipe /usr/bin/perl\ -p "'$script'"
+    cat /tmp/in12 /tmp/in45 | parallel -k --pipe /usr/bin/perl\ -p "$qscript"
     rm "$script"
     
     rm /tmp/in12

@@ -660,7 +660,8 @@ par_pipepart_block_bigger_2G() {
 
 par_retries_replacement_string() {
     tmp=$(mktemp)
-    parallel --retries {//} "echo {/} >>'$tmp';exit {/}" ::: 1/11 2/22 3/33
+    qtmp=$(parallel -0 --shellquote ::: "$tmp")
+    parallel --retries {//} "echo {/} >>$qtmp;exit {/}" ::: 1/11 2/22 3/33
     sort "$tmp"
     rm "$tmp"
 }
@@ -696,11 +697,13 @@ par_basic_halt() {
      echo "eval{setpriority(0,0,9)}; while(1){}") > "$cpuburn"
     chmod 700 "$cpuburn"
     cp -a "$cpuburn" "$cpuburn2"
-
-    parallel -0 -j4 --halt 2 ::: 'sleep 1' "'$cpuburn'" false;
+    qcpuburn=$(parallel -0 --shellquote ::: "$cpuburn")
+    qcpuburn2=$(parallel -0 --shellquote ::: "$cpuburn2")
+    
+    parallel -0 -j4 --halt 2 ::: 'sleep 1' "$qcpuburn" false;
     killall $(basename "$cpuburn") 2>/dev/null &&
 	echo ERROR: cpuburn should already have been killed
-    parallel -0 -j4 --halt -2 ::: 'sleep 1' "'$cpuburn2'" true;
+    parallel -0 -j4 --halt -2 ::: 'sleep 1' "$qcpuburn2" true;
     killall $(basename "$cpuburn2") 2>/dev/null &&
 	echo ERROR: cpuburn2 should already have been killed
     rm "$cpuburn" "$cpuburn2"

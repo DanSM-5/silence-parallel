@@ -11,7 +11,8 @@ par_ssh_cmd_with_newline() {
     echo '### Check --ssh with \n works'
     ssh=$(mktemp)
     cp -a /usr/bin/ssh "$ssh"
-    parallel --ssh "'$ssh'" -S sh@lo ::: id
+    qssh=$(parallel -0 --shellquote "$ssh")
+    parallel --ssh "$qssh" -S sh@lo ::: id
 }
 
 par_controlmaster() {
@@ -55,7 +56,7 @@ par_input_loss_pipe() {
 
 par_controlmaster_eats() {
     echo 'bug #36707: --controlmaster eats jobs'
-    seq 2 | parallel -k --controlmaster --sshlogin localhost echo OK{}
+    seq 2 | parallel -k --controlmaster --sshlogin lo echo OK{}
 }
 
 par_lsh() {

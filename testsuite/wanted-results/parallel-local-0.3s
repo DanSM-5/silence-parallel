@@ -319,7 +319,7 @@ par_l0_is_l1	### Because of --tollef -l, then -l0 == -l1, sorry
 par_l0_is_l1	l0 1
 par_l0_is_l1	l0 2
 par_linebuffer_files	### bug #48658: --linebuffer --files
-par_linebuffer_files	20
+par_linebuffer_files	21
 par_link_files_as_only_arg	bug #50685: single ::::+ does not work
 par_link_files_as_only_arg	1 1 1
 par_link_files_as_only_arg	2 2 2
@@ -692,8 +692,9 @@ par_pipe_tag_v	foo	cat
 par_pipe_tag_v	foo	1
 par_pipe_tag_v	foo	2
 par_pipe_tag_v	foo	3
+par_pipe_tag_v	parallel: Warning: --files do not work if $TMPDIR contains newline.
 par_pipe_tag_v	foo	/tmp/parallel-local-0.3s-tmp/
-par_pipe_tag_v	       </tmp/tmpfile.par
+par_pipe_tag_v	       `touch /tmp/tripwire` <"'/tmp/tmpfile.par
 par_pipe_to_func	### bug #45998: --pipe to function broken
 par_pipe_to_func	1
 par_pipe_to_func	pipefunc OK
@@ -1357,24 +1358,24 @@ par_wd_3dot_local	bug #45993: --wd ... should also work when run locally
 par_wd_3dot_local	parallel: Error: Cannot change into non-executable dir /bi: No such file or directory
 par_wd_3dot_local	/bin
 par_wd_3dot_local	/tmp/parallel-local-0.0s-tmp/
-par_wd_3dot_local	       </tmp
+par_wd_3dot_local	       `touch /tmp/tripwire` <"'/tmp
 par_wd_3dot_local	OK
 par_wd_3dot_local	/
 par_wd_3dot_local	/tmp/parallel-local-0.0s-tmp/
-par_wd_3dot_local	       </tmp
+par_wd_3dot_local	       `touch /tmp/tripwire` <"'/tmp
 par_wd_3dot_local	OK
 par_wd_3dot_local	/tmp
 par_wd_3dot_local	/tmp/parallel-local-0.0s-tmp/
-par_wd_3dot_local	       </tmp
+par_wd_3dot_local	       `touch /tmp/tripwire` <"'/tmp
 par_wd_3dot_local	OK
 par_wd_3dot_local	~/.parallel/tmp/hostname-0-0
 par_wd_3dot_local	/tmp/parallel-local-0.0s-tmp/
-par_wd_3dot_local	       </tmp
+par_wd_3dot_local	       `touch /tmp/tripwire` <"'/tmp
 par_wd_3dot_local	OK
 par_wd_3dot_local	/tmp/parallel-local-0.0s-tmp/
-par_wd_3dot_local	       </tmp
+par_wd_3dot_local	       `touch /tmp/tripwire` <"'/tmp
 par_wd_3dot_local	/tmp/parallel-local-0.0s-tmp/
-par_wd_3dot_local	       </tmp
+par_wd_3dot_local	       `touch /tmp/tripwire` <"'/tmp
 par_wd_3dot_local	OK
 par_wd_dotdotdot	### parallel --wd ... should clean up
 par_wd_dotdotdot	1 == 1
