@@ -24,6 +24,21 @@ multicore machine.
 Hopefully these ideas will make it into GNU B<sort> in the future.
 
 
+=head1 OPTIONS
+
+Same as B<sort>. Except:
+
+=over 4
+
+=item B<--parallel=>I<N>
+
+Change the number of sorts run concurrently to I<N>. I<N> will be
+increased to number of files if B<parsort> is given more than I<N>
+files.
+
+=back
+
+
 =head1 EXAMPLE
 
 Sort files:
@@ -37,7 +52,7 @@ Sort stdin (standard input) numerically:
 
 =head1 PERFORMANCE
 
-B<parsort> is faster on a file than on stdin (standard input), because
+B<parsort> is faster on files than on stdin (standard input), because
 different parts of a file can be read in parallel.
 
 On a 48 core machine you should see a speedup of 3x over B<sort>.
@@ -115,7 +130,7 @@ GetOptions(
     "C" => \$opt::dummy,
     "compress-program=s" => \$opt::dummy,
     "T|temporary-directory=s" => \$opt::dummy,
-    "parallel=s" => \$opt::dummy,
+    "parallel=s" => \$opt::parallel,
     "u|unique" => \$opt::dummy,
     "S|buffer-size=s" => \$opt::dummy,
     "s|stable" => \$opt::dummy,
@@ -124,9 +139,20 @@ GetOptions(
 $Global::progname = ($0 =~ m:(^|/)([^/]+)$:)[1];
 $Global::version = 20230122;
 if($opt::version) { version(); exit 0; }
-@Global::sortoptions = grep { ! /^-D$/ }
-    shell_quote(@ARGV_before[0..($#ARGV_before-$#ARGV-1)]);
-
+# Remove -D and --parallel=N
+my @s = (grep { ! /^-D$|^--parallel=\S+$/ }
+		   @ARGV_before[0..($#ARGV_before-$#ARGV-1)]);
+my @sortoptions;
+while(@s) {
+    my $o = shift @s;
+    # Remove '--parallel N'
+    if($o eq "--parallel") {
+	$o = shift @s;
+    } else {
+	push @sortoptions, $o;
+    }
+}
+@Global::sortoptions = shell_quote(@sortoptions);
 $ENV{'TMPDIR'} ||= "/tmp";
 
 sub merge {
@@ -158,7 +184,9 @@ sub sort_files {
     # Let GNU Parallel generate the commands to read parts of files
     # The commands split at \n (or \0)
     # and there will be at least one for each CPU thread
-    my @subopt = $opt::zero_terminated ? qw(--recend "\0") : ();
+    my @subopt;
+    if($opt::zero_terminated) { push @subopt, qw(--recend "\0"); }
+    if($opt::parallel) { push @subopt, qw(--jobs), $opt::parallel; }
     # $uniq is needed because @files could contain \n
     my $uniq = join "", map { (0..9,"a".."z","A".."Z")[rand(62)] } (1..20);
     open(my $par,"-|",qw(parallel), @subopt,
@@ -182,7 +210,8 @@ sub sort_stdin {
     # Input is stdin
     # Spread the input between n processes that each sort
     # n = number of CPU threads
-    my $numthreads = `parallel --number-of-threads`;
+    my $numthreads;
+    $numthreads = $opt::parallel || `parallel --number-of-threads`;
     my @fifos = map { tmpfifo() } 1..$numthreads;
     map { mkfifo($_,0600) } @fifos;
     # This trick removes the fifo as soon as it is connected in the other end
