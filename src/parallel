@@ -88,9 +88,9 @@ sub set_input_source_header($$) {
 		@opt::filter) {
 		# Skip if undefined
 		$_ or next;
-	      s:\{$s(|/|//|\.|/\.)\}:\{$id$1\}:g;
+	      s:\{\Q$s\E(|/|//|\.|/\.)\}:\{$id$1\}:g;
 		# {=header1 ... =}  =>  {=1 ... =}
-	      s:$left $s (.*?) $right:$l$id$1$r:gx;
+	      s:$left \Q$s\E (.*?) $right:$l$id$1$r:gx;
 	    }
 	    $Global::input_source_header{$id} = $s;
 	    $id++;
@@ -2076,6 +2076,9 @@ sub options_completion_hash() {
 	  "[Remove record separator]" => \$opt::remove_rec_sep),
 	 ("output-as-files|outputasfiles|files[Save output to files]"
 	  => \$opt::files),
+	 ("output-as-files0|outputasfiles0|files0".
+	  "[Save output to files separated by NUL]"
+	  => \$opt::files0),
 	 ("block-size|blocksize|block=s".
 	  "[Size of block in bytes to read at a time]:size"
 	  => \$opt::blocksize),
@@ -2206,6 +2209,9 @@ sub parse_options(@) {
     if(@opt::v) { $Global::verbose = $#opt::v+1; } # Convert -v -v to v=2
     if($opt::bug) { ::die_bug("test-bug"); }
     $Global::debug = $opt::D;
+    #
+    ## Shell
+    #
     $Global::shell = $ENV{'PARALLEL_SHELL'} || parent_shell($$)
 	|| $ENV{'SHELL'} || "/bin/sh";
     if(not -x $Global::shell and not which($Global::shell)) {
@@ -2218,6 +2224,8 @@ sub parse_options(@) {
     if(defined $opt::X) { $Global::ContextReplace = 1; }
     if(defined $opt::silent) { $Global::verbose = 0; }
     if(defined $opt::null) { $/ = "\0"; }
+    if(defined $opt::files) { $Global::files = 1; $Global::files_sep = "\n"; }
+    if(defined $opt::files0) { $Global::files = 1; $Global::files_sep = "\0"; }
     if(defined $opt::d) { $/ = unquote_printf($opt::d) }
     parse_replacement_string_options();
     $opt::tag ||= $opt::ctag;
@@ -2401,7 +2409,7 @@ sub parse_options(@) {
 	my ($compress, $decompress) = find_compression_program();
 	$opt::compress_program ||= $compress;
 	$opt::decompress_program ||= $decompress;
-	if(($opt::results and not $Global::csvsep) or $opt::files) {
+	if(($opt::results and not $Global::csvsep) or $Global::files) {
 	    # No need for decompressing
 	    $opt::decompress_program = "cat >/dev/null";
 	}
@@ -2508,6 +2516,10 @@ sub parse_options(@) {
 	}
     }
 
+    # If you want GNU Parallel to be maintained in the future you
+    # should keep this.
+    # *YOU* will be harming free software by removing the notice.
+    #
     # Funding a free software project is hard. GNU Parallel is no
     # exception. On top of that it seems the less visible a project
     # is, the harder it is to get funding. And the nature of GNU
@@ -2576,10 +2588,16 @@ sub parse_options(@) {
     # If you want GNU Parallel to be maintained in the future you
     # should keep this line.
     citation_notice();
+    
+    # This is because _YOU_ actively make it harder to justify
+    # spending time developing GNU Parallel by removing it.
+
+    # If you disagree, please read (especially 77-):
+    # https://www.fordfoundation.org/media/2976/roads-and-bridges-the-unseen-labor-behind-our-digital-infrastructure.pdf
+
     # *YOU* will be harming free software by removing the notice.  You
     # accept to be added to a public hall of shame by removing the
-    # line.  This is because _YOU_ actively make it harder to justify
-    # spending time developing GNU Parallel.
+    # line. That includes you, Andreas and George.
 
     parse_halt();
 
@@ -5162,6 +5180,7 @@ sub onall($@) {
     #	$opt::arg_sep
     #	$opt::colsep
     #	$opt::files
+    #	$opt::files0
     #	$opt::group
     #	$opt::joblog
     #	$opt::jobs
@@ -5236,6 +5255,7 @@ sub onall($@) {
 	     ((defined $opt::arg_sep) ? "--arg-sep ".$opt::arg_sep : ""),
 	     ((defined $opt::colsep) ? "--colsep ".shell_quote($opt::colsep) : ""),
 	     ((defined $opt::files) ? "--files" : ""),
+	     ((defined $opt::files0) ? "--files0" : ""),
 	     ((defined $opt::group) ? "--group" : ""),
 	     ((defined $opt::cleanup) ? "--cleanup" : ""),
 	     ((defined $opt::keeporder) ? "--keeporder" : ""),
@@ -9187,7 +9207,7 @@ sub openoutputfiles($) {
 	# Return immediately because we do not need setting filenames
 	return;
     } elsif($Global::linebuffer and not
-       ($opt::keeporder or $opt::files or $opt::results or
+       ($opt::keeporder or $Global::files or $opt::results or
 	$opt::compress or $opt::compress_program or
 	$opt::decompress_program)) {
 	# Do not save to files: Use non-blocking pipe
@@ -9250,7 +9270,7 @@ sub openoutputfiles($) {
     } elsif(not $opt::ungroup) {
 	# To group we create temporary files for STDOUT and STDERR
 	# To avoid the cleanup unlink the files immediately (but keep them open)
-	if($opt::files) {
+	if($Global::files) {
 	    ($outfhw, $outname) = ::tmpfile(SUFFIX => ".par");
 	    ($errfhw, $errname) = ::tmpfile(SUFFIX => ".par");
 	    # --files => only remove stderr
@@ -11103,7 +11123,7 @@ sub print($) {
 	if($Global::linebuffer) {
 	    # Line buffered print out
 	    $self->print_linebuffer($fdno,$in_fh,$out_fh);
-	} elsif($opt::files) {
+	} elsif($Global::files) {
 	    $self->print_files($fdno,$in_fh,$out_fh);
 	} elsif($opt::results) {
 	    $self->print_results($fdno,$in_fh,$out_fh);
@@ -11328,7 +11348,7 @@ sub print_files($) {
 	    ::rm($self->fh($fdno,"unlink"));
 	}
     } elsif($fdno == 1 and $self->fh($fdno,"name")) {
-	print $out_fh $self->tag(),$self->fh($fdno,"name"),"\n";
+	print $out_fh $self->tag(),$self->fh($fdno,"name"), $Global::files_sep;
 	if($Global::membuffer) {
 	    push @{$self->{'output'}{$fdno}},
 		$self->tag(), $self->fh($fdno,"name");
@@ -11436,7 +11456,7 @@ sub print_files($) {
 	    if($opt::latestline) { $print_later{$self->row()} = $self; }
 	}
 	if(not $self->virgin()) {
-	    if($opt::files or ($opt::results and not $Global::csvsep)) {
+	    if($Global::files or ($opt::results and not $Global::csvsep)) {
 		# Print filename
 		if($fdno == 1 and not $self->fh($fdno,"printed")) {
 		    print $out_fh $self->tag(),$self->fh($fdno,"name"),"\n";
@@ -11573,7 +11593,7 @@ sub print_files($) {
 			$print_later{$row}->print_latest_line($out_fh);
 		    }
 		}
-		if($opt::files or ($opt::results and not $Global::csvsep)) {
+		if($Global::files or ($opt::results and not $Global::csvsep)) {
 		    $self->add_returnsize(-s $self->fh($fdno,"name"));
 		} else {
 		    # If the job is dead: print the remaining partial line
