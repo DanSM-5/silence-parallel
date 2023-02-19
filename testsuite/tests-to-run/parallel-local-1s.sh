@@ -39,32 +39,38 @@ par_plus() {
 
 par_file_rpl() {
     echo '### file as replacement string'
+    TMPDIR=/tmp/parallel-local-1s/"  "/bar
+    mkdir -p "$TMPDIR"
     tmp="$(mktemp)"
     (
-	echo contest1
-	echo contest2
+	echo content1
+	echo content2
 	echo File name "$tmp"
     ) > "$tmp"
     (
-	# {filename}
+	echo '# {filename}'
 	parallel -k --header 0 echo {"$tmp"} :::: "$tmp"
-	# Conflict: both {filename} and {/regexp/rpl}
+
+	echo '# Conflict: both {filename} and {/regexp/rpl}'
 	parallel -k --plus echo {"$tmp"} :::: "$tmp"
+	echo '# --header 0 --plus'
 	parallel -k --header 0 --plus echo {"$tmp"} :::: "$tmp"
 	tmpd="$(mktemp -d)"
 	cd "$tmpd"
-	# Conflict: both {filename} and {n}
+
+	echo '# Conflict: both {filename} and {n}'
 	seq 1 > 1
 	seq 2 > 2
 	seq 3 > 3
 	parallel -k echo {1} :::: 3 2 1
 	parallel -k --header 0 echo {1} :::: 3 2 1
-	# Conflict: both {filename} and {=expr=}
+	
+	echo '# Conflict: both {filename} and {=expr=}'
 	seq 3 > =chop=
 	parallel -k echo  {=chop=} ::: =chop=
 	parallel -k --header 0 echo  {=chop=} ::: =chop=
 	rm -rf "$tmpd"
-    ) | perl -pe 's/tmp\.\w+/tmp.XXXXXX/g'
+    ) | replace_tmpdir | perl -pe 's/tmp\.\w+/tmp.XXXXXX/g'
     rm "$tmp"
 }
 
@@ -403,8 +409,9 @@ par_profiles_with_space() {
     echo '### bug #42902: profiles containing arguments with space'
     echo "--rpl 'FULLPATH chomp(\$_=\"/bin/bash=\".\`readlink -f \$_\`);' " > ~/.parallel/FULLPATH; 
     parallel -JFULLPATH echo FULLPATH ::: $0
-    PARALLEL="--rpl 'FULLPATH chomp(\$_=\"/bin/bash=\".\`readlink -f \$_\`);' -v" parallel  echo FULLPATH ::: $0
+    PARALLEL="--rpl 'FULLPATH chomp(\$_=\"/bin/bash=\".\`readlink -f \$_\`);' -v" parallel  echo FULLPATH ::: "$0"
     PARALLEL="--rpl 'FULLPATH chomp(\$_=\"/bin/bash=\".\`readlink -f \$_\`);' perl -e \'print \\\"@ARGV\\\n\\\"\' " parallel With script in \\\$PARALLEL FULLPATH ::: . |
+	replace_tmpdir |
 	perl -pe 's:parallel./:parallel/:'
 }
 

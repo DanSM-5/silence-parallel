@@ -9,7 +9,7 @@ unset run_once
 
 # SSH only allowed to localhost/lo
 
-par_sshloginfile() {
+par_z_sshloginfile() {
     echo '### --slf with mIxEd cAsE'
     tmp=$(mktemp)
     (
@@ -21,7 +21,7 @@ par_sshloginfile() {
     rm -f "$tmp"
 }
 
-par_nonall_results() {
+par_--nonall_results() {
     echo '### --results --onall'
     tmp="$TMPDIR"/onall
     mkdir -p "$tmp"
@@ -31,7 +31,7 @@ par_nonall_results() {
     parallel --results "$tmp"/rplnoslash/{} --onall -Scsh@lo,sh@lo ::: id pwd
     parallel --results "$tmp"/rpl1slash/{1}/ --onall -Scsh@lo,sh@lo ::: id pwd
     parallel --results "$tmp"/rpl1noslash/{1} --onall -Scsh@lo,sh@lo ::: id pwd
-    find "$tmp"
+    find "$tmp" -print0 | replace_tmpdir
     rm -r "$tmp"    
     echo '### --results --nonall'
     tmp="$TMPDIR"/nonall
@@ -42,7 +42,7 @@ par_nonall_results() {
     parallel --results "$tmp"/rplnoslash/{} --nonall -Scsh@lo,sh@lo pwd
     parallel --results "$tmp"/rpl1slash/{1}/ --nonall -Scsh@lo,sh@lo pwd
     parallel --results "$tmp"/rpl1noslash/{1} --nonall -Scsh@lo,sh@lo pwd
-    find "$tmp"
+    find "$tmp" -print0 | replace_tmpdir
     rm -r "$tmp"    
 }
 
@@ -131,38 +131,57 @@ par_bigvar_rc() {
                     parallel --env A,B,C -k echo '"'"'${}|wc'"'"' ::: A B C'
 }
 
-par_tmux_different_shells() {
+par_--tmux_different_shells() {
     echo '### Test tmux works on different shells'
-    (stdout parallel -Scsh@lo,tcsh@lo,parallel@lo,zsh@lo --tmux echo ::: 1 2 3 4; echo $?) |
-	grep -v 'attach';
-    (stdout parallel -Scsh@lo,tcsh@lo,parallel@lo,zsh@lo --tmux false ::: 1 2 3 4; echo $?) |
-	grep -v 'attach';
+    short_TMPDIR() {
+	# TMPDIR must be short for -M                                                         
+	export TMPDIR=/tmp/ssh/'                                                              
+`touch /tmp/tripwire`                                                                     
+'
+	TMPDIR=/tmp
+	mkdir -p "$TMPDIR"
+    }
+    short_TMPDIR
+    (
+	stdout parallel -Scsh@lo,tcsh@lo,parallel@lo,zsh@lo --tmux echo ::: 1 2 3 4; echo $?
+	stdout parallel -Scsh@lo,tcsh@lo,parallel@lo,zsh@lo --tmux false ::: 1 2 3 4; echo $?
 
-    export PARTMUX='parallel -Scsh@lo,tcsh@lo,parallel@lo,zsh@lo --tmux '; 
-    stdout ssh zsh@lo      "$PARTMUX" 'true  ::: 1 2 3 4; echo $status' | grep -v 'See output'; 
-    stdout ssh zsh@lo      "$PARTMUX" 'false ::: 1 2 3 4; echo $status' | grep -v 'See output'; 
-    stdout ssh parallel@lo "$PARTMUX" 'true  ::: 1 2 3 4; echo $?'      | grep -v 'See output'; 
-    stdout ssh parallel@lo "$PARTMUX" 'false ::: 1 2 3 4; echo $?'      | grep -v 'See output'; 
-    stdout ssh tcsh@lo     "$PARTMUX" 'true  ::: 1 2 3 4; echo $status' | grep -v 'See output'; 
-    stdout ssh tcsh@lo     "$PARTMUX" 'false ::: 1 2 3 4; echo $status' | grep -v 'See output'; 
-    echo "# command is currently too long for csh. Maybe it can be fixed?"; 
-    stdout ssh csh@lo      "$PARTMUX" 'true  ::: 1 2 3 4; echo $status' | grep -v 'See output'; 
-    stdout ssh csh@lo      "$PARTMUX" 'false ::: 1 2 3 4; echo $status' | grep -v 'See output'
+	export PARTMUX='parallel -Scsh@lo,tcsh@lo,parallel@lo,zsh@lo --tmux '; 
+	stdout ssh zsh@lo      "$PARTMUX" 'true  ::: 1 2 3 4; echo $status' 
+	stdout ssh zsh@lo      "$PARTMUX" 'false ::: 1 2 3 4; echo $status' 
+	stdout ssh parallel@lo "$PARTMUX" 'true  ::: 1 2 3 4; echo $?'      
+	stdout ssh parallel@lo "$PARTMUX" 'false ::: 1 2 3 4; echo $?'      
+	stdout ssh tcsh@lo     "$PARTMUX" 'true  ::: 1 2 3 4; echo $status' 
+	stdout ssh tcsh@lo     "$PARTMUX" 'false ::: 1 2 3 4; echo $status' 
+	echo "# command is currently too long for csh. Maybe it can be fixed?"; 
+	stdout ssh csh@lo      "$PARTMUX" 'true  ::: 1 2 3 4; echo $status'
+	stdout ssh csh@lo      "$PARTMUX" 'false ::: 1 2 3 4; echo $status'
+    ) | replace_tmpdir | perl -pe 's/tms...../tmsXXXXX/g'
 }
 
-par_tmux_length() {
+par_--tmux_length() {
     echo '### works'
-    stdout parallel -Sparallel@lo --tmux echo ::: \\\\\\\"\\\\\\\"\\\;\@ |
-	perl -pe 's:/tmp/.*tms.....::'
-    stdout parallel -Sparallel@lo --tmux echo ::: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx |
-	perl -pe 's:/tmp/.*tms.....::'
+    short_TMPDIR() {
+	# TMPDIR must be short for -M                                                         
+	export TMPDIR=/tmp/ssh/'                                                              
+`touch /tmp/tripwire`                                                                     
+'
+	TMPDIR=/tmp
+	mkdir -p "$TMPDIR"
+    }
+    short_TMPDIR
+    (
+	stdout parallel -Sparallel@lo --tmux echo ::: \\\\\\\"\\\\\\\"\\\;\@
+        stdout parallel -Sparallel@lo --tmux echo ::: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
-    echo '### These blocked due to length'
-    stdout parallel -Slo      --tmux echo ::: \\\\\\\"\\\\\\\"\\\;\@ | grep -v 'attach'
-    stdout parallel -Scsh@lo  --tmux echo ::: \\\\\\\"\\\\\\\"\\\;\@ | grep -v 'attach'
-    stdout parallel -Stcsh@lo --tmux echo ::: \\\\\\\"\\\\\\\"\\\;\@ | grep -v 'attach'
-    stdout parallel -Szsh@lo  --tmux echo ::: \\\\\\\"\\\\\\\"\\\;\@ | grep -v 'attach'
-    stdout parallel -Scsh@lo  --tmux echo ::: 111111111111111111111111111111111111111111111111111111111 | grep -v 'attach'
+	echo '### These blocked due to length'
+	stdout parallel -Slo      --tmux echo ::: \\\\\\\"\\\\\\\"\\\;\@
+	stdout parallel -Scsh@lo  --tmux echo ::: \\\\\\\"\\\\\\\"\\\;\@
+	stdout parallel -Stcsh@lo --tmux echo ::: \\\\\\\"\\\\\\\"\\\;\@
+	stdout parallel -Szsh@lo  --tmux echo ::: \\\\\\\"\\\\\\\"\\\;\@
+	stdout parallel -Scsh@lo  --tmux echo ::: 111111111111111111111111111111111111111111111111111111111
+     ) | replace_tmpdir |
+	perl -pe 's:tms.....:tmsXXXXX:'
 }
 
 par_transfer_return_multiple_inputs() {
@@ -176,12 +195,12 @@ par_transfer_return_multiple_inputs() {
     rm /tmp/file1 /tmp/file2 /tmp/file1.a /tmp/file2.b
 }
 
-par_csh_nice() {
+par_z_csh_nice() {
     echo '### bug #44143: csh and nice'
     parallel --nice 1 -S csh@lo setenv B {}\; echo '$B' ::: OK
 }
 
-par_multiple_hosts_repeat_arg() {
+par_z_multiple_hosts_repeat_arg() {
     echo '### bug #45575: -m and multiple hosts repeats first args'
     seq 1 3 | parallel -X -S 2/lo,2/: -k echo 
 }

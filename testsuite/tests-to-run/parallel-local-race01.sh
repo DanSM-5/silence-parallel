@@ -42,10 +42,12 @@ par_parcat_mixing() {
 
 par_tmux_termination() {
     echo '### --tmux test - check termination'
+    TMPDIR=/tmp
     doit() {
 	perl -e 'map {printf "$_%o%c\n",$_,$_}1..255' |
 	    stdout parallel --tmux 'sleep 0.2;echo {}' :::: - ::: a b |
-	    perl -pe 's:(/tmp\S*/tms).....:$1XXXXX:;'
+	    replace_tmpdir |
+	    perl -pe 's:(/tms).....:$1XXXXX:;'
     }
     export -f doit
     stdout parallel --timeout 120 doit ::: 1
@@ -117,9 +119,9 @@ par_delay_Xauto() {
     doit() {
 	perl -e '$a=shift;
 	     $m = -M $a < 0.0000001;
-	     `touch $a`;
+	     system "touch", $a;
 	     print "$m\n";
-	     exit $m;' $1;
+	     exit $m;' "$1";
     }
     export -f doit
     before=`date +%s`

@@ -18,6 +18,18 @@ par_onall_basefile_cleanup	tmp/onall--basefile--clean
 par_onall_basefile_cleanup	tmp/onall--basefile--clean
 par_onall_basefile_cleanup	rm: cannot remove 'tmp/onall--basefile--clean': No such file or directory
 par_onall_basefile_cleanup	rm: cannot remove 'tmp/onall--basefile--clean': No such file or directory
+par_onall_timeout	### --timeout --onall on remote machines: 2*slept 1, 2 jobs failed
+par_onall_timeout	slept 1
+par_onall_timeout	parallel: Warning: This job was killed because it timed out:
+par_onall_timeout	parallel: Warning: sleep 8; echo slept 8
+par_onall_timeout	parallel: Warning: This job was killed because it timed out:
+par_onall_timeout	parallel: Warning: sleep 9; echo slept 9
+par_onall_timeout	slept 1
+par_onall_timeout	parallel: Warning: This job was killed because it timed out:
+par_onall_timeout	parallel: Warning: sleep 8; echo slept 8
+par_onall_timeout	parallel: Warning: This job was killed because it timed out:
+par_onall_timeout	parallel: Warning: sleep 9; echo slept 9
+par_onall_timeout	jobs failed: 2
 par_read_sshloginfile_from_stdin	### Test read sshloginfile from STDIN
 par_read_sshloginfile_from_stdin	/home/csh
 par_read_sshloginfile_from_stdin	/home/parallel
@@ -127,18 +139,6 @@ par_test_pipe_onall	parallel@lo	3
 par_test_pipe_onall	parallel@lo	1
 par_test_pipe_onall	parallel@lo	2
 par_test_pipe_onall	parallel@lo	3
-par_timeout_onall	### --timeout --onall on remote machines: 2*slept 1, 2 jobs failed
-par_timeout_onall	slept 1
-par_timeout_onall	parallel: Warning: This job was killed because it timed out:
-par_timeout_onall	parallel: Warning: sleep 8; echo slept 8
-par_timeout_onall	parallel: Warning: This job was killed because it timed out:
-par_timeout_onall	parallel: Warning: sleep 9; echo slept 9
-par_timeout_onall	slept 1
-par_timeout_onall	parallel: Warning: This job was killed because it timed out:
-par_timeout_onall	parallel: Warning: sleep 8; echo slept 8
-par_timeout_onall	parallel: Warning: This job was killed because it timed out:
-par_timeout_onall	parallel: Warning: sleep 9; echo slept 9
-par_timeout_onall	jobs failed: 2
 par_wd_braces	### Test --wd {}
 par_wd_braces	wd1
 par_wd_braces	wd2

@@ -67,10 +67,6 @@ echo "### bug #35268: shell_quote doesn't treats [] brackets correctly"
   stdout parallel echo ::: '/tmp/foo[123]'; 
   rm /tmp/foo1
 
-echo '### Test make .deb package'; 
-  cd ~/privat/parallel/packager/debian; 
-  stdout make | grep 'To install the GNU Parallel Debian package, run:'
-
 echo '### Test basic --arg-sep'
   parallel -k echo ::: a b
 

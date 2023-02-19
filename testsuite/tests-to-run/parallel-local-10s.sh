@@ -295,10 +295,11 @@ par_failing_compressor() {
 	     parallel -k {tag} {lb} {files} --compress --compress-program {comp} --decompress-program {decomp} doit ::: C={comp},D={decomp} \
 	     ,,, tag --tag -k \
 	     ,,, lb --line-buffer -k \
-	     ,,, files --files -k \
+	     ,,, files --files0 -k \
 	     ,,, comp 'cat;true' 'cat;false' \
 	     ,,, decomp 'cat;true' 'cat;false' |
-	perl -pe 's:/.*par......par:/tmpfile:'
+	replace_tmpdir |
+	perl -pe 's:/par......par:/tmpfile:'
 }
 
 par_fifo_under_csh() {
@@ -315,92 +316,97 @@ par_fifo_under_csh() {
 
 par_parset() {
     echo '### test parset'
-    . `which env_parallel.bash`
+    (
+	. `which env_parallel.bash`
 
-    echo 'Put output into $myarray'
-    parset myarray -k seq 10 ::: 14 15 16
-    echo "${myarray[1]}"
+	echo 'Put output into $myarray'
+	parset myarray -k seq 10 ::: 14 15 16
+	echo "${myarray[1]}"
 
-    echo 'Put output into vars "$seq, $pwd, $ls"'
-    parset "seq pwd ls" -k ::: "seq 10" pwd ls
-    echo "$seq"
+	echo 'Put output into vars "$seq, $pwd, $ls"'
+	parset "seq pwd ls" -k ::: "seq 10" pwd ls
+	echo "$seq"
 
-    echo 'Put output into vars ($seq, $pwd, $ls)':
-    into_vars=(seq pwd ls)
-    parset "${into_vars[*]}" -k ::: "seq 5" pwd ls
-    echo "$seq"
+	echo 'Put output into vars ($seq, $pwd, $ls)':
+	into_vars=(seq pwd ls)
+	parset "${into_vars[*]}" -k ::: "seq 5" pwd ls
+	echo "$seq"
 
-    echo 'The commands to run can be an array'
-    cmd=("echo '<<joe  \"double  space\"  cartoon>>'" "pwd")
-    parset data -k ::: "${cmd[@]}"
-    echo "${data[0]}"
-    echo "${data[1]}"
+	echo 'The commands to run can be an array'
+	cmd=("echo '<<joe  \"double  space\"  cartoon>>'" "pwd")
+	parset data -k ::: "${cmd[@]}"
+	echo "${data[0]}"
+	echo "${data[1]}"
 
-    echo 'You cannot pipe into parset, but must use a tempfile'
-    seq 10 > /tmp/parset_input_$$
-    parset res -k echo :::: /tmp/parset_input_$$
-    echo "${res[0]}"
-    echo "${res[9]}"
-    rm /tmp/parset_input_$$
+	echo 'You cannot pipe into parset, but must use a tempfile'
+	seq 10 > /tmp/parset_input_$$
+	parset res -k echo :::: /tmp/parset_input_$$
+	echo "${res[0]}"
+	echo "${res[9]}"
+	rm /tmp/parset_input_$$
 
-    echo 'or process substitution'
-    parset res -k echo :::: <(seq 0 10)
-    echo "${res[0]}"
-    echo "${res[9]}"
+	echo 'or process substitution'
+	parset res -k echo :::: <(seq 0 10)
+	echo "${res[0]}"
+	echo "${res[9]}"
 
-    echo 'Commands with newline require -0'
-    parset var -k -0 ::: 'echo "line1
+	echo 'Commands with newline require -0'
+	parset var -k -0 ::: 'echo "line1
 line2"' 'echo "command2"'
-    echo "${var[0]}"
+	echo "${var[0]}"
+    ) | replace_tmpdir
 }
 
 par_parset2() {
-    . `which env_parallel.bash`
     echo '### parset into array'
-    parset arr1 echo ::: foo bar baz
-    echo ${arr1[0]} ${arr1[1]} ${arr1[2]}
+    (
+	. `which env_parallel.bash`
 
-    echo '### parset into vars with comma'
-    parset comma3,comma2,comma1 echo ::: baz bar foo
-    echo $comma1 $comma2 $comma3
+	parset arr1 echo ::: foo bar baz
+	echo ${arr1[0]} ${arr1[1]} ${arr1[2]}
 
-    echo '### parset into vars with space'
-    parset 'space3 space2 space1' echo ::: baz bar foo
-    echo $space1 $space2 $space3
+	echo '### parset into vars with comma'
+	parset comma3,comma2,comma1 echo ::: baz bar foo
+	echo $comma1 $comma2 $comma3
 
-    echo '### parset with newlines'
-    parset 'newline3 newline2 newline1' seq ::: 3 2 1
-    echo "$newline1"
-    echo "$newline2"
-    echo "$newline3"
+	echo '### parset into vars with space'
+	parset 'space3 space2 space1' echo ::: baz bar foo
+	echo $space1 $space2 $space3
 
-    echo '### parset into indexed array vars'
-    parset 'myarray[6],myarray[5],myarray[4]' echo ::: baz bar foo
-    echo ${myarray[*]}
-    echo ${myarray[4]} ${myarray[5]} ${myarray[5]}
+	echo '### parset with newlines'
+	parset 'newline3 newline2 newline1' seq ::: 3 2 1
+	echo "$newline1"
+	echo "$newline2"
+	echo "$newline3"
 
-    echo '### env_parset'
-    alias myecho='echo myecho "$myvar" "${myarr[1]}"'
-    myvar="myvar"
-    myarr=("myarr  0" "myarr  1" "myarr  2")
-    mynewline="`echo newline1;echo newline2;`"
-    env_parset arr1 myecho ::: foo bar baz
-    echo "${arr1[0]} ${arr1[1]} ${arr1[2]}"
-    env_parset comma3,comma2,comma1 myecho ::: baz bar foo
-    echo "$comma1 $comma2 $comma3"
-    env_parset 'space3 space2 space1' myecho ::: baz bar foo
-    echo "$space1 $space2 $space3"
-    env_parset 'newline3 newline2 newline1' 'echo "$mynewline";seq' ::: 3 2 1
-    echo "$newline1"
-    echo "$newline2"
-    echo "$newline3"
-    env_parset 'myarray[6],myarray[5],myarray[4]' myecho ::: baz bar foo
-    echo "${myarray[*]}"
-    echo "${myarray[4]} ${myarray[5]} ${myarray[5]}"
+	echo '### parset into indexed array vars'
+	parset 'myarray[6],myarray[5],myarray[4]' echo ::: baz bar foo
+	echo ${myarray[*]}
+	echo ${myarray[4]} ${myarray[5]} ${myarray[5]}
 
-    echo 'bug #52507: parset arr1 -v echo ::: fails'
-    parset arr1 -v seq ::: 1 2 3
-    echo "${arr1[2]}"
+	echo '### env_parset'
+	alias myecho='echo myecho "$myvar" "${myarr[1]}"'
+	myvar="myvar"
+	myarr=("myarr  0" "myarr  1" "myarr  2")
+	mynewline="`echo newline1;echo newline2;`"
+	env_parset arr1 myecho ::: foo bar baz
+	echo "${arr1[0]} ${arr1[1]} ${arr1[2]}"
+	env_parset comma3,comma2,comma1 myecho ::: baz bar foo
+	echo "$comma1 $comma2 $comma3"
+	env_parset 'space3 space2 space1' myecho ::: baz bar foo
+	echo "$space1 $space2 $space3"
+	env_parset 'newline3 newline2 newline1' 'echo "$mynewline";seq' ::: 3 2 1
+	echo "$newline1"
+	echo "$newline2"
+	echo "$newline3"
+	env_parset 'myarray[6],myarray[5],myarray[4]' myecho ::: baz bar foo
+	echo "${myarray[*]}"
+	echo "${myarray[4]} ${myarray[5]} ${myarray[5]}"
+
+	echo 'bug #52507: parset arr1 -v echo ::: fails'
+	parset arr1 -v seq ::: 1 2 3
+	echo "${arr1[2]}"
+    ) | replace_tmpdir
 }
 
 par_perlexpr_repl() {
@@ -664,12 +670,13 @@ par_results_csv() {
 
     doit() {
 	parallel -k $@ --results -.csv echo ::: H2 22 23 ::: H1 11 12 \
-		 2> >(grep -v TMPDIR)
+		 2> >(grep -v TMPDIR) |
+	    replace_tmpdir
     }
     export -f doit
     parallel -k --tag doit ::: '--header :' '' \
-	::: --tag '' ::: --files '' ::: --compress '' |
-    perl -pe 's:/.*par......par:/tmpfile:g;s/\d+\.\d+/999.999/g'
+	::: --tag '' ::: --files0 '' ::: --compress '' |
+	perl -pe 's:/par......par:/tmpfile:g;s/\d+\.\d+/999.999/g'
 }
 
 par_kill_children_timeout() {
@@ -692,7 +699,9 @@ par_kill_children_timeout() {
 
 par_tmux_fg() {
     echo 'bug #50107: --tmux --fg should also write how to access it'
-    stdout parallel --tmux --fg sleep ::: 3 | perl -pe 's:/tmp.*tms.....:tmpfile:'
+    stdout parallel --tmux --fg sleep ::: 3 |
+	replace_tmpdir |
+	perl -pe 's:/tms.....:tmpfile:'
 }
 
 
@@ -768,5 +777,4 @@ compgen -A function | grep par_ | LC_ALL=C sort |
     perl -pe 's/,31,0/,15,0/' |
     # Replace $PWD with . even if given as ~/...
     perl -pe 's:~:'"$HOME"':g' |
-    perl -pe 's:'"$PWD"':.:g' |
     perl -pe 's:'"$HOME"':~:g'

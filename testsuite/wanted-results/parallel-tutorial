@@ -148,10 +148,10 @@ num1000000
 num128
 num30000
 num8
+outdir
 tsv-file.tsv
 foo
-/tmp/parallel-tutorial-tmp/
-       `touch /tmp/tripwire` <"'/tmp
+/TMP
   my_func() {
     echo in my_func $1
   }
@@ -385,6 +385,8 @@ pre-A-post
 /usr/bin/bash: -c: line 1: syntax error near unexpected token `)'
 /usr/bin/bash: -c: line 1: `set a="num8"; if( { test -d "$a" } ) echo "$a is a dir"'
 /usr/bin/bash: -c: line 1: syntax error near unexpected token `)'
+/usr/bin/bash: -c: line 1: `set a="outdir"; if( { test -d "$a" } ) echo "$a is a dir"'
+/usr/bin/bash: -c: line 1: syntax error near unexpected token `)'
 /usr/bin/bash: -c: line 1: `set a="tsv-file.tsv"; if( { test -d "$a" } ) echo "$a is a dir"'
   parallel --tag echo foo-{} ::: A B C
 A	foo-A
@@ -440,13 +442,7 @@ echo C
 1-middle
 1-end
   parallel --files echo ::: A B C
-/tmp/parallel-tutorial-tmp/
-       `touch /tmp/tripwire` <"'/tmp/tempfile
-/tmp/parallel-tutorial-tmp/
-       `touch /tmp/tripwire` <"'/tmp/tempfile
-/tmp/parallel-tutorial-tmp/
-       `touch /tmp/tripwire` <"'/tmp/tempfile
-parallel: Warning: --files do not work if $TMPDIR contains newline.
+/TMP/tempfile
   parallel --tmpdir /var/tmp --files echo ::: A B C
 /var/tmp/tempfile
   parallel --results outdir echo ::: A B C
@@ -516,8 +512,7 @@ parallel: Warning: or increasing /proc/sys/fs/file-max
   parallel --shuf echo ::: 1 2 3 ::: a b c ::: A B C
 123 abc ABC
   seq 10 20 | parallel --tmux 'echo start {}; sleep {}; echo done {}'
-See output with: tmux -S '/tmp/parallel-tutorial-tmp/
-       `touch /tmp/tripwire` <"'"'"'/tmp/tmsXXXXX' attach
+See output with: tmux -S /TMP/tmsXXXXX attach
   tmux -S /tmp/tmsXXXXX attach
 no sessions
   parallel --delay 2.5 echo Starting {}\;date ::: 1 2 3
@@ -705,12 +700,11 @@ This is input_file
     cat common_file\; echo {} ::: foo
 common data
 foo
-  parallel -S $SERVER1 pwd ::: ""
-  parallel --workdir . -S $SERVER1 pwd ::: ""
-  parallel --workdir ... -S $SERVER1 pwd ::: ""
+  parallel -S $SERVER1 pwd ::: "
+  parallel --workdir . -S $SERVER1 pwd ::: "
+  parallel --workdir ... -S $SERVER1 pwd ::: "
 /home/parallel
-/tmp/parallel-tutorial-tmp/
-       `touch /tmp/tripwire` <"'/tmp
+/TMP
 /home/parallel/.TMPWORKDIR
   parallel -S $SERVER1 --sshdelay 0.2 echo ::: 1 2 3
 9
@@ -792,11 +786,14 @@ foo bar baz
 in my_func baz
   parallel --record-env
   cat ~/.parallel/ignored_vars|sort
+BASH_FUNC_replace_tmpdir%%
 BASH_FUNC_run_once%%
 BASH_FUNC_run_test%%
 _
 mysqlrootpass
 oracle_password
+qTMPDIR
+qqTMPDIR
 testsuitedir
 withpassword
   # The function is only copied if using Bash
@@ -1213,7 +1210,7 @@ Arguments
     io.write(" ")
     io.write(arg[a])
   end
-  print("")
+  print(")
 /usr/bin/bash: line 3: io.write: command not found
 /usr/bin/bash: -c: line 4: syntax error near unexpected token `='
 /usr/bin/bash: -c: line 4: `  for a = 1, #arg do'

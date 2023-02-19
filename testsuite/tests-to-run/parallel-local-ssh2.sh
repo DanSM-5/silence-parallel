@@ -7,7 +7,7 @@
 # /tmp/parallel-local-ssh2 will by default be owned by me and should be writable by *@localhost
 chmod 777 "$TMPDIR" 2>/dev/null
 
-par_obey_servers_capacity_slf_reload() {
+par__obey_servers_capacity_slf_reload() {
     echo "### bug #43518: GNU Parallel doesn't obey servers' jobs capacity when an ssh login file is reloaded"
     # Pre-20141106 Would reset the number of jobs run on all sshlogin if --slf changed
     # Thus must take at least 25 sec to run
@@ -19,7 +19,7 @@ par_obey_servers_capacity_slf_reload() {
     rm /tmp/parallel.bug43518
 }
 
-par_filter_hosts_slf() {
+par_z_filter_hosts_slf() {
     echo '### --filter-hosts --slf <()'
     parallel --nonall --filter-hosts --slf <(echo localhost) echo OK
 }

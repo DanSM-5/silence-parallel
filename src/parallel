@@ -2058,7 +2058,8 @@ sub options_completion_hash() {
 	 ("skip-first-line|skipfirstline".
 	  "[Do not use the first line of input]"
 	  => \$opt::skip_first_line),
-	 "bug" => \$opt::bug,
+	 "_bug" => \$opt::_bug,
+	 "_unsafe" => \$opt::_unsafe,
 	 # --pipe
 	 ("pipe|spreadstdin".
 	  "[Spread input to jobs on stdin (standard input)]" => \$opt::pipe),
@@ -2207,7 +2208,7 @@ sub parse_options(@) {
     if($opt::nokeeporder) { $opt::keeporder = undef; }
 
     if(@opt::v) { $Global::verbose = $#opt::v+1; } # Convert -v -v to v=2
-    if($opt::bug) { ::die_bug("test-bug"); }
+    if($opt::_bug) { ::die_bug("test-bug"); }
     $Global::debug = $opt::D;
     #
     ## Shell
@@ -2719,16 +2720,34 @@ sub check_invalid_option_combinations() {
 	    ::wait_and_exit(255);
 	}
     }
+    sub unsafe_warn {
+	# use --_unsafe to only generate a warning
+	if($opt::_unsafe) { ::warning(@_); } else { ::error(@_); exit(255); }
+    }
+    sub test_safe_chars {
+	my $var = shift;
+	if($ENV{$var} =~ m{^[-a-z0-9_+,.%:/= ]*$}i) {
+	    # OK
+	} else {
+	    unsafe_warn("\$$var can only contain [-a-z0-9_+,.%:/= ].");
+	}
+    }
     if($ENV{'TMPDIR'} =~ /\n/) {
 	if(defined $opt::files) {
-	    ::warning("--files do not work if \$TMPDIR contains newline.");
+	    ::warning("Use --files0 when \$TMPDIR contains newline.");
 	} elsif($Global::cshell
 		and
 		(defined $opt::cat or defined $opt::fifo)) {
 	    ::warning("--cat/--fifo fails under csh ".
 		      "if \$TMPDIR contains newline.");
 	}
+    } elsif($ENV{'TMPDIR'} =~ /\257/) {
+	unsafe_warn("\$TMPDIR with \\257 (\257) is not supported.");
+    } else{
+	test_safe_chars('TMPDIR');
     }
+    map { test_safe_chars($_); } qw(PARALLEL_HOME XDG_CONFIG_DIRS
+				    PARALLEL_REMOTE_TMPDIR XDG_CACHE_HOME);
 }
 
 sub init_globals() {
@@ -2852,6 +2871,7 @@ sub init_globals() {
     $Global::job_already_run = '';
     $ENV{'TMPDIR'} ||= "/tmp";
     $ENV{'PARALLEL_REMOTE_TMPDIR'} ||= "/tmp";
+    # bug #55398: set $OLDPWD when using --wd
     $ENV{'OLDPWD'} = $ENV{'PWD'};
     if(not $ENV{HOME}) {
 	# $ENV{HOME} is sometimes not set if called from PHP
@@ -7800,7 +7820,7 @@ sub loadavg($) {
 	# As the command can take long to run if run remote
 	# save it to a tmp file before moving it to the correct file
 	::debug("load", "Update load\n");
-	my $file = $self->{'loadavg_file'};
+	my $file = ::Q($self->{'loadavg_file'});
 	# tmpfile on same filesystem as $file
 	my $tmpfile = $file.$$;
 	$ENV{'SSHPASS'} = $self->{'password'};
@@ -10714,7 +10734,7 @@ sub start($) {
 	    ::shell_quote_scalar_default(
 	    "testfun() { rm $name; }; export -f testfun; ".
 	    "perl -MIPC::Open3 -e ".
-	    ::shell_quote_scalar_default($script)
+	    ::Q(::Q($script))
 	    );
 	my $redefine_eval;
 	# Redirect STDERR temporarily,

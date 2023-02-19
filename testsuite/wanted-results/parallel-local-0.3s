@@ -7,6 +7,7 @@ par_PARALLEL_ENV	OK as file
 par_PARALLEL_ENV	### PARALLEL_ENV as fifo
 par_PARALLEL_ENV	OK as fifo
 par_PARALLEL_HOME_not_exist	### bug #62311: --pipepart + ::: fail
+par_PARALLEL_HOME_not_exist	parallel: Warning: $PARALLEL_HOME can only contain [-a-z0-9_+,.%:/= ].
 par_PARALLEL_HOME_not_exist	OK
 par_PARALLEL_HOME_not_exist	Should warn:
 par_PARALLEL_HOME_not_exist	parallel: Warning: $PARALLEL_HOME (/does-not-exist) does not exist.
@@ -14,6 +15,7 @@ par_PARALLEL_HOME_not_exist	parallel: Warning: Using ~/.parallel
 par_PARALLEL_HOME_not_exist	should
 par_PARALLEL_HOME_not_exist	warn
 par_PARALLEL_HOME_with_+	bug #59453: PARALLEL_HOME with plus sign causes error: config not readable
+par_PARALLEL_HOME_with_+	parallel: Warning: $PARALLEL_HOME can only contain [-a-z0-9_+,.%:/= ].
 par_PARALLEL_HOME_with_+	Parallel_home_with+
 par_X_eta_div_zero	### bug #34422: parallel -X --eta crashes with div by zero
 par_X_eta_div_zero	Computers / CPU cores / Max jobs to run
@@ -313,13 +315,23 @@ par_jobslot_jobnumber_pipe	1
 par_jobslot_jobnumber_pipe	1
 par_jobslot_jobnumber_pipe	1
 par_jobslot_jobnumber_pipe	1
-par_json	{ "Seq": 0, "Host": ":", "Starttime": 0000000000.000, "JobRuntime": 0.000, "Send": 0, "Receive": 0, "Exitval": 0, "Signal": 0, "Command": "echo '\"\u0000\\\"' '\"'", "V": [ "\"\u0000\\\"","\"" ], "Stdout": "\"\u0000\\\" \"\u000a", "Stderr": "" }
-par_json	{ "Seq": 0, "Host": ":", "Starttime": 0000000000.000, "JobRuntime": 0.000, "Send": 0, "Receive": 0, "Exitval": 0, "Signal": 0, "Command": "echo '\"\u0000\\\"' '\\\\'", "V": [ "\"\u0000\\\"","\\\\" ], "Stdout": "\"\u0000\\\" \\\\\u000a", "Stderr": "" }
+par_json	{ "Seq": 0, "Host": ":", "Starttime": 0000000000.000, "JobRuntime": 0.000, "Send": 0, "Receive": 0, "Exitval": 0, "Signal": 0, "Command": "echo '\"\u0000\\\"' '\"'", "V": [ "\"\u0000\\\","\" ], "Stdout": "\"\u0000\\\" \"\u000a", "Stderr": " }
+par_json	{ "Seq": 0, "Host": ":", "Starttime": 0000000000.000, "JobRuntime": 0.000, "Send": 0, "Receive": 0, "Exitval": 0, "Signal": 0, "Command": "echo '\"\u0000\\\"' '\\\\'", "V": [ "\"\u0000\\\","\\\\" ], "Stdout": "\"\u0000\\\" \\\\\u000a", "Stderr": " }
 par_l0_is_l1	### Because of --tollef -l, then -l0 == -l1, sorry
 par_l0_is_l1	l0 1
 par_l0_is_l1	l0 2
 par_linebuffer_files	### bug #48658: --linebuffer --files
-par_linebuffer_files	21
+par_linebuffer_files	parallel: Warning: Use --files0 when $TMPDIR contains newline.
+par_linebuffer_files	/TMP/parXXXXX.par
+par_linebuffer_files	/TMP/parXXXXX.par
+par_linebuffer_files	/TMP/parXXXXX.par
+par_linebuffer_files	/TMP/parXXXXX.par
+par_linebuffer_files	/TMP/parXXXXX.par
+par_linebuffer_files	/TMP/parXXXXX.par
+par_linebuffer_files	/TMP/parXXXXX.par
+par_linebuffer_files	/TMP/parXXXXX.par
+par_linebuffer_files	/TMP/parXXXXX.par
+par_linebuffer_files	/TMP/parXXXXX.par
 par_link_files_as_only_arg	bug #50685: single ::::+ does not work
 par_link_files_as_only_arg	1 1 1
 par_link_files_as_only_arg	2 2 2
@@ -692,9 +704,8 @@ par_pipe_tag_v	foo	cat
 par_pipe_tag_v	foo	1
 par_pipe_tag_v	foo	2
 par_pipe_tag_v	foo	3
-par_pipe_tag_v	parallel: Warning: --files do not work if $TMPDIR contains newline.
-par_pipe_tag_v	foo	/tmp/parallel-local-0.3s-tmp/
-par_pipe_tag_v	       `touch /tmp/tripwire` <"'/tmp/tmpfile.par
+par_pipe_tag_v	parallel: Warning: Use --files0 when $TMPDIR contains newline.
+par_pipe_tag_v	foo	/TMP/tmpfile.par
 par_pipe_to_func	### bug #45998: --pipe to function broken
 par_pipe_to_func	1
 par_pipe_to_func	pipefunc OK
@@ -918,14 +929,14 @@ par_results_arg_256	### bug #42089: --results with arg > 256 chars (should be 1 
 par_results_arg_256	1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456
 par_results_arg_256	123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345
 par_results_json	### --results test.json
-par_results_json	{ "Seq": 1, "Host": ":", "Starttime": 9.999, "JobRuntime": 9.999, "Send": 0, "Receive": 6, "Exitval": 0, "Signal": 0, "Command": "seq 2 4", "V": [ "2","4" ], "Stdout": "2\u000a3\u000a4\u000a", "Stderr": "" }
-par_results_json	{ "Seq": 2, "Host": ":", "Starttime": 9.999, "JobRuntime": 9.999, "Send": 0, "Receive": 8, "Exitval": 0, "Signal": 0, "Command": "seq 2 5", "V": [ "2","5" ], "Stdout": "2\u000a3\u000a4\u000a5\u000a", "Stderr": "" }
-par_results_json	{ "Seq": 3, "Host": ":", "Starttime": 9.999, "JobRuntime": 9.999, "Send": 0, "Receive": 4, "Exitval": 0, "Signal": 0, "Command": "seq 3 4", "V": [ "3","4" ], "Stdout": "3\u000a4\u000a", "Stderr": "" }
-par_results_json	{ "Seq": 4, "Host": ":", "Starttime": 9.999, "JobRuntime": 9.999, "Send": 0, "Receive": 6, "Exitval": 0, "Signal": 0, "Command": "seq 3 5", "V": [ "3","5" ], "Stdout": "3\u000a4\u000a5\u000a", "Stderr": "" }
-par_results_json	{ "Seq": 1, "Host": ":", "Starttime": 9.999, "JobRuntime": 9.999, "Send": 0, "Receive": 6, "Exitval": 0, "Signal": 0, "Command": "seq 2 4", "V": [ "2","4" ], "Stdout": "2\u000a3\u000a4\u000a", "Stderr": "" }
-par_results_json	{ "Seq": 2, "Host": ":", "Starttime": 9.999, "JobRuntime": 9.999, "Send": 0, "Receive": 8, "Exitval": 0, "Signal": 0, "Command": "seq 2 5", "V": [ "2","5" ], "Stdout": "2\u000a3\u000a4\u000a5\u000a", "Stderr": "" }
-par_results_json	{ "Seq": 3, "Host": ":", "Starttime": 9.999, "JobRuntime": 9.999, "Send": 0, "Receive": 4, "Exitval": 0, "Signal": 0, "Command": "seq 3 4", "V": [ "3","4" ], "Stdout": "3\u000a4\u000a", "Stderr": "" }
-par_results_json	{ "Seq": 4, "Host": ":", "Starttime": 9.999, "JobRuntime": 9.999, "Send": 0, "Receive": 6, "Exitval": 0, "Signal": 0, "Command": "seq 3 5", "V": [ "3","5" ], "Stdout": "3\u000a4\u000a5\u000a", "Stderr": "" }
+par_results_json	{ "Seq": 1, "Host": ":", "Starttime": 9.999, "JobRuntime": 9.999, "Send": 0, "Receive": 6, "Exitval": 0, "Signal": 0, "Command": "seq 2 4", "V": [ "2","4" ], "Stdout": "2\u000a3\u000a4\u000a", "Stderr": " }
+par_results_json	{ "Seq": 2, "Host": ":", "Starttime": 9.999, "JobRuntime": 9.999, "Send": 0, "Receive": 8, "Exitval": 0, "Signal": 0, "Command": "seq 2 5", "V": [ "2","5" ], "Stdout": "2\u000a3\u000a4\u000a5\u000a", "Stderr": " }
+par_results_json	{ "Seq": 3, "Host": ":", "Starttime": 9.999, "JobRuntime": 9.999, "Send": 0, "Receive": 4, "Exitval": 0, "Signal": 0, "Command": "seq 3 4", "V": [ "3","4" ], "Stdout": "3\u000a4\u000a", "Stderr": " }
+par_results_json	{ "Seq": 4, "Host": ":", "Starttime": 9.999, "JobRuntime": 9.999, "Send": 0, "Receive": 6, "Exitval": 0, "Signal": 0, "Command": "seq 3 5", "V": [ "3","5" ], "Stdout": "3\u000a4\u000a5\u000a", "Stderr": " }
+par_results_json	{ "Seq": 1, "Host": ":", "Starttime": 9.999, "JobRuntime": 9.999, "Send": 0, "Receive": 6, "Exitval": 0, "Signal": 0, "Command": "seq 2 4", "V": [ "2","4" ], "Stdout": "2\u000a3\u000a4\u000a", "Stderr": " }
+par_results_json	{ "Seq": 2, "Host": ":", "Starttime": 9.999, "JobRuntime": 9.999, "Send": 0, "Receive": 8, "Exitval": 0, "Signal": 0, "Command": "seq 2 5", "V": [ "2","5" ], "Stdout": "2\u000a3\u000a4\u000a5\u000a", "Stderr": " }
+par_results_json	{ "Seq": 3, "Host": ":", "Starttime": 9.999, "JobRuntime": 9.999, "Send": 0, "Receive": 4, "Exitval": 0, "Signal": 0, "Command": "seq 3 4", "V": [ "3","4" ], "Stdout": "3\u000a4\u000a", "Stderr": " }
+par_results_json	{ "Seq": 4, "Host": ":", "Starttime": 9.999, "JobRuntime": 9.999, "Send": 0, "Receive": 6, "Exitval": 0, "Signal": 0, "Command": "seq 3 5", "V": [ "3","5" ], "Stdout": "3\u000a4\u000a5\u000a", "Stderr": " }
 par_resume_k	### --resume -k
 par_resume_k	job0id
 par_resume_k	job1id
@@ -965,10 +976,10 @@ par_sem_quote	### sem --quote should not add empty argument
 par_sem_quote	echo
 par_sem_quote	
 par_shellcompletion	### --shellcompletion
-par_shellcompletion	139a52b9a64a9fd8ec1f63c2d78ff9ac  -
-par_shellcompletion	139a52b9a64a9fd8ec1f63c2d78ff9ac  -
-par_shellcompletion	8da71392e279a12e88f00114d0a4bff0  -
-par_shellcompletion	8da71392e279a12e88f00114d0a4bff0  -
+par_shellcompletion	0097e98f494e6288b33f3201dda7ee11  -
+par_shellcompletion	0097e98f494e6288b33f3201dda7ee11  -
+par_shellcompletion	1655cb29ff14d0008866108c6b5262f7  -
+par_shellcompletion	1655cb29ff14d0008866108c6b5262f7  -
 par_slow_pipe_regexp	### bug #53718: --pipe --regexp -N blocks
 par_slow_pipe_regexp	This should take a few ms, but took more than 2 hours
 par_slow_pipe_regexp	      0       1       1
@@ -1094,6 +1105,8 @@ par_testquote	yash	"#&/
 par_testquote	yash	()*=?'
 par_testquote	zsh	"#&/
 par_testquote	zsh	()*=?'
+par_testquote	fdsh	"#&/
+par_testquote	fdsh	()*=?'
 par_tmpl1	1.t1 /tmp/tmpl-1.1-111.111.t2
 par_tmpl1	    Template1
 par_tmpl1	    Xval: 1.1
@@ -1357,25 +1370,19 @@ par_version	11
 par_wd_3dot_local	bug #45993: --wd ... should also work when run locally
 par_wd_3dot_local	parallel: Error: Cannot change into non-executable dir /bi: No such file or directory
 par_wd_3dot_local	/bin
-par_wd_3dot_local	/tmp/parallel-local-0.0s-tmp/
-par_wd_3dot_local	       `touch /tmp/tripwire` <"'/tmp
+par_wd_3dot_local	/TMP
 par_wd_3dot_local	OK
 par_wd_3dot_local	/
-par_wd_3dot_local	/tmp/parallel-local-0.0s-tmp/
-par_wd_3dot_local	       `touch /tmp/tripwire` <"'/tmp
+par_wd_3dot_local	/TMP
 par_wd_3dot_local	OK
 par_wd_3dot_local	/tmp
-par_wd_3dot_local	/tmp/parallel-local-0.0s-tmp/
-par_wd_3dot_local	       `touch /tmp/tripwire` <"'/tmp
+par_wd_3dot_local	/TMP
 par_wd_3dot_local	OK
 par_wd_3dot_local	~/.parallel/tmp/hostname-0-0
-par_wd_3dot_local	/tmp/parallel-local-0.0s-tmp/
-par_wd_3dot_local	       `touch /tmp/tripwire` <"'/tmp
+par_wd_3dot_local	/TMP
 par_wd_3dot_local	OK
-par_wd_3dot_local	/tmp/parallel-local-0.0s-tmp/
-par_wd_3dot_local	       `touch /tmp/tripwire` <"'/tmp
-par_wd_3dot_local	/tmp/parallel-local-0.0s-tmp/
-par_wd_3dot_local	       `touch /tmp/tripwire` <"'/tmp
+par_wd_3dot_local	/TMP
+par_wd_3dot_local	/TMP
 par_wd_3dot_local	OK
 par_wd_dotdotdot	### parallel --wd ... should clean up
 par_wd_dotdotdot	1 == 1

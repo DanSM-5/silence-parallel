@@ -34,7 +34,7 @@ par_sshpass_with_password() {
     echo OK | parallel -S withpassword:@lo:22 echo
 }
 
-par_ssh_ssh() {
+par_--ssh_ssh_in_ssh() {
     echo '### bug #61894: Pack ssh code in eval protection'
     echo Unquoted ssh should work
     parallel --ssh 'ssh lo ssh' -S lo 'hostname;echo' ::: OK
@@ -190,7 +190,7 @@ par_trc_dashdashdashspace() {
     parallel --nonall -k -S csh@lo,sh@lo 'ls ./?--- ./---? || echo OK' | LC_ALL=C sort
 }
 
-par_onall_transfer() {
+par_--onall_--transfer() {
     echo '### bug #46519: --onall ignores --transfer'
     touch bug46519.{a,b,c}; rm -f bug46519.?? bug46519.???
     parallel --onall --tf bug46519.{} --trc bug46519.{}{} --trc bug46519.{}{}{} -S csh@lo,sh@lo 'ls bug46519.{}; touch bug46519.{}{} bug46519.{}{}{}' ::: a b c
@@ -205,7 +205,7 @@ par_--onall_--plus() {
     parallel -S bash@lo --nonall --plus echo {host}
 }
 
-par_remote_load() {
+par__remote_load() {
     echo '### Test --load remote'
     ssh parallel@lo 'seq 10 | parallel --nice 19 --timeout 15 -j0 -qN0 perl -e while\(1\)\{\ \}' &
     sleep 1

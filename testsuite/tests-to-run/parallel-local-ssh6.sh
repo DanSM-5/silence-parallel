@@ -184,7 +184,7 @@ par_sshlogin_replacement() {
     parallel -S '5//usr/bin/ssh '$SSHLOGIN1 --plus echo {sshlogin} {} {host} ::: and
 }
 
-par_timeout_onall() {
+par_onall_timeout() {
     echo '### --timeout --onall on remote machines: 2*slept 1, 2 jobs failed'
     parallel -j0 --timeout 6 --onall -S localhost,$SSHLOGIN1 'sleep {}; echo slept {}' ::: 1 8 9
     echo jobs failed: $?

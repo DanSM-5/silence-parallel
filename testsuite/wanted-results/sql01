@@ -47,9 +47,7 @@ def 3
 ### Test --debug
 dburl mysql://tange:tange@localhost:3306/tange
 databasedriver mysql user tange password tange host localhost port 3306 database tange query 
-[ | ((sleep 1; rm '/tmp/sql01-tmp/
-       `touch /tmp/tripwire` <"'"'"'tmpfile') & mysql --defaults-extra-file='/tmp/sql01-tmp/
-       `touch /tmp/tripwire` <"'"'"'tmpfile'     --host=localhost --user=tange --port=3306 tange)]
+[ | ((sleep 1; rm /TMP/tmpfile') & mysql --defaults-extra-file=/TMP/tmpfile'     --host=localhost --user=tange --port=3306 tange)]
 Test if --debug works
 Yes it does
 ### Test --version -V

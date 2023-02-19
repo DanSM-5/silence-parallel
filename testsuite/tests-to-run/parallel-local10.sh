@@ -25,3 +25,11 @@ echo perl |
     grep -v '\$' |
     grep -v '] read(6' |
     grep -v input-files/perllib
+
+par_make_deb_package() {
+    echo '### Test make .deb package'; 
+    cd ~/privat/parallel/packager/debian; 
+    stdout make | grep 'To install the GNU Parallel Debian package, run:'
+}
+
+par_make_deb_package

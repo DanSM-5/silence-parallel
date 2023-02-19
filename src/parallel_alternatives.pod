@@ -3856,6 +3856,65 @@ https://github.com/beomagi/parallelium
 (Last checked: 2023-01)
 
 
+=head2 DIFFERENCES BETWEEN forkrun AND GNU Parallel
+
+Summary (see legend above):
+
+=over
+
+=item I1 - - - - - I7
+
+=item - - - - - -
+
+=item - O2 O3 - O5 - - - - O10
+
+=item E1 - - E4 - - -
+
+=item - - - - - - - - -
+
+=item - -
+
+=back
+
+
+B<forkrun> blocks if it receives fewer jobs than slots:
+
+  echo | forkrun -p 2 echo
+
+or when it gets some specific commands e.g.:
+
+  f() { seq "$@" | pv -qL 3; }
+  seq 10 | forkrun f
+
+It is not clear why.
+
+It is faster than GNU B<parallel> (overhead: 1.2 ms/job vs 3 ms/job),
+but way slower than B<parallel-bash> (0.059 ms/job).
+
+Running jobs cannot be stopped by pressing CTRL-C.
+
+B<-k> is supposed to keep the order but fails on the MIX testing
+example below. If used with B<-k> it caches output in RAM.
+
+If B<forkrun> is killed, it leaves temporary files in
+B</tmp/.forkrun.*> that has to be cleaned up manually.
+
+=head3 EXAMPLES
+
+  1$ time find ./ -type f |
+       forkrun -l512 -- sha256sum 2>/dev/null | wc -l
+  1$ time find ./ -type f |
+       parallel -j28 -m -- sha256sum 2>/dev/null | wc -l
+
+  2$ time find ./ -type f |
+       forkrun -l512 -k -- sha256sum 2>/dev/null | wc -l
+  2$ time find ./ -type f |
+       parallel -j28 -k -m -- sha256sum 2>/dev/null | wc -l
+
+https://github.com/jkool702/forkrun
+(Last checked: 2023-02)
+
+
 =head2 Todo
 
 http://code.google.com/p/push/ (cannot compile)

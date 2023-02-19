@@ -14,9 +14,22 @@ MAX_SEC_PER_TEST=900
 export TIMEOUT=$MAX_SEC_PER_TEST
 
 run_once() {
+    replace_tmpdir() {
+	# Replace $TMPDIR with TMP
+	perl -0 -pe 'BEGIN{ ($a,$b,$c) = (shift,shift,shift);
+                            $a =~ s/'"'"'$//s; $b =~ s/'"'"'$//s; $c =~ s/'"'"'$//s; }
+                     s:""+:":g;
+                     s:('"'"'?)(\Q$a\E|\Q$b\E|\Q$c\E)('"'"'?)([/a-z0-9]*)('"'"'?):/TMP$4:gi;
+                     s/\0/\n/g' "$TMPDIR" "$qTMPDIR" "$qqTMPDIR" |
+	    perl -ne '/Use --files0 when $TMPDIR contains newline./ or print'
+    }
+    export qqTMPDIR=$(< /dev/null parallel -0 --shellquote --shellquote ::: "$TMPDIR")
+    export qTMPDIR=$(< /dev/null parallel -0 --shellquote ::: "$TMPDIR")
+    export -f replace_tmpdir
     script=$1
     base=`basename "$script" .sh`
     if diff -Naur wanted-results/"$base" actual-results/"$base" >/dev/null; then
+	# There is no diff: Last time worked - no need to try again
 	true skip
     else
 	(
@@ -24,7 +37,8 @@ run_once() {
 	    export testsuitedir
 	    cd "$TMPDIR"
 	    bash "$testsuitedir/$script" |
-		perl -pe 's:'$HOME':~:g' > "$testsuitedir"/actual-results/"$base"
+		perl -pe 's:'$HOME':~:g' |
+		replace_tmpdir > "$testsuitedir"/actual-results/"$base"
 	)
     fi
 }
@@ -34,13 +48,35 @@ run_test() {
     script="$1"
     base=`basename "$script" .sh`
     # Force spaces and < into TMPDIR - this will expose bugs
-    export TMPDIR=/tmp/"$base-tmp"/'
-       `touch /tmp/tripwire` <"'"'"/tmp
+    # ASCII [^-,+=a-zA-Z0-9] = all special chars (175 is not supported)
+    fancychars="$(perl -e 'print "\n\`touch  /tmp/tripwire\`>/tmp/tripwire;\n".
+                         (pack "c*",2..42,127..174,47,176..255)."\@<?[]|~\\}{"')"
+    fancychars="$(perl -e 'print "\n\`touch  /tmp/tripwire\`>/tmp/tripwire;\n".
+                         (pack "c*",2..42,127..174,47,176..255)."\@<?[]|~\\}{"')"
+    fancychars="$(perl -e 'print "\n\`touch  /tmp/tripwire\`>/tmp/tripwire;\n".
+                         (pack "c*",127..174,47,176..255)."\@<?[]|~\\}{"')"
+    fancychars="$(perl -e 'print "\n\`touch  /tmp/tripwire\`>/tmp/tripwire;\n".
+                         (pack "c*",34,39,176..255)."\@<?[]|~\\}{"')"
+    semiok_fancychars="$(perl -e 'print "\n\`touch  /tmp/tripwire\`>/tmp/tripwire;\n".
+                         "\@<?[]|~\\}{"')"
+    fancychars="$(perl -e 'print "\n\`touch  /tmp/tripwire\`>/tmp/tripwire;\n".
+                         (pack "c*",2..10,34,39)."\@<?[]|~\\"')"
+    export PARALLEL="--_unsafe";
+# OK
+#    fancychars="$(perl -e 'print "\n\`touch  /tmp/tripwire\`>/tmp/tripwire;\n".
+#                         (pack "c*",34,39)."\@<?[]|~\\"')"
+#    export PARALLEL="--_unsafe";
+
+# OK									      
+#    fancychars="$(perl -e 'print "\n\`touch  /tmp/tripwire\`>/tmp/tripwire;\n".
+#                         ""')"
+    export TMPDIR=/tmp/"$base-tmp"/"$fancychars"/tmp
     rm -rf "$TMPDIR"
     mkdir -p "$TMPDIR"
     # Clean before. May be owned by other users
     sudo rm -f /tmp/*.{tmx,pac,arg,all,log,swp,loa,ssh,df,pip,tmb,chr,tms,par} ||
 	printf "%s\0" /tmp/*.par | sudo parallel -0 -X rm
+    rm -f /tmp/tripwire
     # Force running once
     echo >> actual-results/"$base"
     if [ "$TRIES" = "3" ] ; then
@@ -52,6 +88,7 @@ run_test() {
     if [ -e /tmp/tripwire ] ; then
 	echo '!!!'
 	echo '!!! /tmp/tripwire TRIPPED !!!'
+	echo '!!! Quoting of TMPDIR failed !!!'
 	echo '!!!'
 	exit 1
     fi

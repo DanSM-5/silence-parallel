@@ -250,11 +250,11 @@ ole
 echo '### Test --recstart + --recend';   cat /tmp/blocktest | parallel --block 1M -k --recstart 44 --recend "44" -j10 --pipe sort -n |md5sum
 ### Test --recstart + --recend
 fb1560edff4b891a213ce2205b2c1bcb  -
-echo '### Race condition bug - 1 - would block';   seq 1 80  | nice parallel -j0 'seq 1 10| parallel --block 1 --recend "" --pipe cat;true' >/dev/null
+echo '### Race condition bug - 1 - would block';   seq 1 80  | nice parallel -j0 'seq 1 10| parallel --block 1 --recend " --pipe cat;true' >/dev/null
 ### Race condition bug - 1 - would block
-echo '### Race condition bug - 2 - would block';   seq 1 100 | nice parallel -j100 --block 1 --recend "" --pipe cat >/dev/null
+echo '### Race condition bug - 2 - would block';   seq 1 100 | nice parallel -j100 --block 1 --recend " --pipe cat >/dev/null
 ### Race condition bug - 2 - would block
-echo '### Test --block size=1';   seq 1 10| TMPDIR=/tmp parallel --block 1 --files --recend ""  --pipe sort -n | parallel -Xj1 sort -nm {} ";"rm {}
+echo '### Test --block size=1';   seq 1 10| TMPDIR=/tmp parallel --block 1 --files --recend "  --pipe sort -n | parallel -Xj1 sort -nm {} ";"rm {}
 ### Test --block size=1
 
 

@@ -1,3 +1,5 @@
+par__obey_servers_capacity_slf_reload	### bug #43518: GNU Parallel doesn't obey servers' jobs capacity when an ssh login file is reloaded
+par__obey_servers_capacity_slf_reload	OK
 par_cat_fifo_exit	### --cat and --fifo exit value in bash
 par_cat_fifo_exit	true
 par_cat_fifo_exit	0
@@ -21,10 +23,6 @@ par_env_parallel_fifo	data from stdin
 par_env_parallel_fifo	transferred non-exported func
 par_env_parallel_fifo	data from stdin
 par_env_parallel_fifo	transferred non-exported func
-par_filter_hosts_slf	### --filter-hosts --slf <()
-par_filter_hosts_slf	OK
-par_obey_servers_capacity_slf_reload	### bug #43518: GNU Parallel doesn't obey servers' jobs capacity when an ssh login file is reloaded
-par_obey_servers_capacity_slf_reload	OK
 par_pipepart_remote	### bug #42999: --pipepart with remote does not work
 par_pipepart_remote	     14      14      33
 par_pipepart_remote	     11      11      33
@@ -101,3 +99,5 @@ par_wd_no_such_dir	### --wd no-such-dir - bash
 par_wd_no_such_dir	mkdir: cannot create directory '/no-such-dir': Permission denied
 par_wd_no_such_dir	parallel: Cannot chdir to /no-such-dir
 par_wd_no_such_dir	Exit code 1
+par_z_filter_hosts_slf	### --filter-hosts --slf <()
+par_z_filter_hosts_slf	OK

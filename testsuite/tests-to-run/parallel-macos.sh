@@ -62,6 +62,7 @@ EOF
 # Each should generate at least 2 commands
 
 par_many_args() {
+    export PARALLEL="--_unsafe"
     rm -f ~/.parallel/tmp/sshlogin/*/linelen
     pecho() { perl -e 'print "@ARGV\n"' "$@"; }
     export -f pecho
@@ -84,6 +85,7 @@ par_many_var() {
 }
 
 par_many_var_func() {
+    export PARALLEL="--_unsafe"
     export LC_ALL=C
     rm -f ~/.parallel/tmp/sshlogin/*/linelen
     gen() { seq -f %f 1000000000000000 1000000000050000 | head -c $1; }
@@ -97,6 +99,7 @@ par_many_var_func() {
 }
 
 par_many_func() {
+    export PARALLEL="--_unsafe"
     export LC_ALL=C
     rm -f ~/.parallel/tmp/sshlogin/*/linelen
     gen() { seq -f %f 1000000000000000 1000000000050000 | head -c $1; }
@@ -109,6 +112,7 @@ par_many_func() {
 }
 
 par_big_func() {
+    export PARALLEL="--_unsafe"
     export LC_ALL=C
     rm -f ~/.parallel/tmp/sshlogin/*/linelen
     gen() { seq -f %f 1000000000000000 1000000000050000 | head -c $1; }
@@ -164,6 +168,7 @@ par_big_var_func_name() {
 	grep 18XXX
 }
 
+export PARALLEL="--_unsafe"
 macsshlogin=$(parallel --halt now,success=1 ssh {} echo {} ::: ota@mac macosx.p)
 
 scp /usr/local/bin/parallel $macsshlogin:bin/

@@ -10,7 +10,7 @@ echo '### test --env _, env_parallel for different shells'
 ## par_*_man = tests from the man page
 #
 
-par_ash_man() {
+par__man_ash() {
   echo '### ash'
 
   myscript=$(cat <<'_EOF'
@@ -67,7 +67,7 @@ _EOF
   ssh ash@lo "$myscript"
 }
 
-par_bash_man() {
+par__man_bash() {
   echo '### bash'
 
   myscript=$(cat <<'_EOF'
@@ -139,7 +139,7 @@ _EOF
   ssh bash@lo "$myscript"
 }
 
-par_csh_man() {
+par__man_csh() {
   echo '### csh'
   myscript=$(cat <<'_EOF'
     echo "### From man env_parallel"
@@ -183,7 +183,7 @@ _EOF
   stdout ssh csh@lo "$myscript" | LC_ALL=C sort
 }
 
-par_dash_man() {
+par__man_dash() {
   echo '### dash'
 
   myscript=$(cat <<'_EOF'
@@ -240,7 +240,7 @@ _EOF
   ssh dash@lo "$myscript"
 }
 
-par_fish_man() {
+par__man_fish() {
   echo '### fish'
   myscript=$(cat <<'_EOF'
     echo "### From man env_parallel"
@@ -298,7 +298,7 @@ _EOF
   ssh fish@lo "$myscript" | LC_ALL=C sort
 }
 
-par_ksh_man() {
+par__man_ksh() {
   echo '### ksh'
   myscript=$(cat <<'_EOF'
     echo "### From man env_parallel"
@@ -365,7 +365,7 @@ _EOF
   ssh ksh@lo "$myscript"
 }
 
-par_mksh_man() {
+par__man_mksh() {
   echo '### mksh'
   myscript=$(cat <<'_EOF'
     echo "### From man env_parallel"
@@ -430,7 +430,7 @@ _EOF
   ssh mksh@lo "$myscript"
 }
 
-par_sh_man() {
+par__man_sh() {
   echo '### sh'
 
   myscript=$(cat <<'_EOF'
@@ -487,7 +487,7 @@ _EOF
   ssh sh@lo "$myscript"
 }
 
-par_tcsh_man() {
+par__man_tcsh() {
   echo '### tcsh'
   myscript=$(cat <<'_EOF'
     echo "### From man env_parallel"
@@ -531,7 +531,7 @@ _EOF
   ssh -tt tcsh@lo "$myscript"
 }
 
-par_zsh_man() {
+par__man_zsh() {
   echo '### zsh'
   # eval is needed make aliases work
   myscript=$(cat <<'_EOF'
@@ -605,7 +605,7 @@ _EOF
 }
 
 
-par_ash_underscore() {
+par_--env_underscore_ash() {
   echo '### ash'
   myscript=$(cat <<'_EOF'
     echo "### Testing of --env _"
@@ -653,7 +653,7 @@ _EOF
   ssh ash@lo "$myscript"
 }
 
-par_bash_underscore() {
+par_--env_underscore_bash() {
   echo '### bash'
   myscript=$(cat <<'_EOF'
     echo "### Testing of --env _"
@@ -702,7 +702,7 @@ _EOF
   stdout ssh bash@lo "$myscript"
 }
 
-par_csh_underscore() {
+par_--env_underscore_csh() {
   echo '### csh'
   myscript=$(cat <<'_EOF'
     echo "### Testing of --env _"
@@ -737,7 +737,7 @@ _EOF
   ssh -tt csh@lo "$myscript"
 }
 
-par_dash_underscore() {
+par_--env_underscore_dash() {
   echo '### dash'
   myscript=$(cat <<'_EOF'
     echo "### Testing of --env _"
@@ -785,7 +785,7 @@ _EOF
   ssh dash@lo "$myscript"
 }
 
-par_fish_underscore() {
+par_--env_underscore_fish() {
   echo '### fish'
   myscript=$(cat <<'_EOF'
     echo "Fish is broken"
@@ -849,7 +849,7 @@ _EOF
       perl -ne '/fish:|fish\(/ and next; print'
 }
 
-par_ksh_underscore() {
+par_--env_underscore_ksh() {
   echo '### ksh'
   myscript=$(cat <<'_EOF'
     echo "### Testing of --env _"
@@ -897,7 +897,7 @@ _EOF
   ssh ksh@lo "$myscript"
 }
 
-par_mksh_underscore() {
+par_--env_underscore_mksh() {
   echo '### mksh'
   myscript=$(cat <<'_EOF'
     echo "### Testing of --env _"
@@ -945,7 +945,7 @@ _EOF
   ssh mksh@lo "$myscript"
 }
 
-par_sh_underscore() {
+par_--env_underscore_sh() {
   echo '### sh'
   myscript=$(cat <<'_EOF'
     echo "### Testing of --env _"
@@ -993,7 +993,7 @@ _EOF
   ssh sh@lo "$myscript"
 }
 
-par_tcsh_underscore() {
+par_--env_underscore_tcsh() {
   echo '### tcsh'
   myscript=$(cat <<'_EOF'
     echo "### Testing of --env _"
@@ -1028,7 +1028,7 @@ _EOF
   ssh -tt tcsh@lo "$myscript"
 }
 
-par_zsh_underscore() {
+par_--env_underscore_zsh() {
   echo '### zsh'
   myscript=$(cat <<'_EOF'
     echo "### Testing of --env _"
@@ -1086,7 +1086,7 @@ _EOF
 # + remote, locally
 # + variables, variables with funky content, arrays, assoc array, functions, aliases
 
-par_ash_funky() {
+par_funky_ash() {
   myscript=$(cat <<'_EOF'
     . `which env_parallel.ash`;
 
@@ -1119,7 +1119,7 @@ _EOF
   ssh ash@lo "$myscript" 2>&1 | LC_ALL=C sort
 }
 
-par_bash_funky() {
+par_funky_bash() {
   myscript=$(cat <<'_EOF'
     . `which env_parallel.bash`;
 
@@ -1152,7 +1152,7 @@ _EOF
   ssh bash@lo "$myscript" 2>&1 | LC_ALL=C sort
 }
 
-par_csh_funky() {
+par_funky_csh() {
   myscript=$(cat <<'_EOF'
     set myvar = "myvar  works"
     set funky = "`perl -e 'print pack q(c*), 2..255'`"
@@ -1185,7 +1185,7 @@ _EOF
   stdout ssh csh@lo "$myscript" | LC_ALL=C sort
 }
 
-par_dash_funky() {
+par_funky_dash() {
   myscript=$(cat <<'_EOF'
     . `which env_parallel.dash`;
 
@@ -1218,7 +1218,7 @@ _EOF
   ssh dash@lo "$myscript" 2>&1 | LC_ALL=C sort
 }
 
-par_fish_funky() {
+par_funky_fish() {
   myscript=$(cat <<'_EOF'
     env_parallel --session
     set myvar "myvar  works"
@@ -1264,7 +1264,7 @@ _EOF
   ssh fish@lo "$myscript"
 }
 
-par_ksh_funky() {
+par_funky_ksh() {
   myscript=$(cat <<'_EOF'
     . `which env_parallel.ksh`;
 
@@ -1296,7 +1296,7 @@ _EOF
   ssh ksh@lo "$myscript" 2>&1 | LC_ALL=C sort
 }
 
-par_mksh_funky() {
+par_funky_mksh() {
   myscript=$(cat <<'_EOF'
     . `which env_parallel.mksh`;
 
@@ -1329,7 +1329,7 @@ _EOF
   ssh mksh@lo "$myscript" 2>&1 | LC_ALL=C sort
 }
 
-par_sh_funky() {
+par_funky_sh() {
   myscript=$(cat <<'_EOF'
     . `which env_parallel.sh`;
 
@@ -1362,7 +1362,7 @@ _EOF
   ssh sh@lo "$myscript" 2>&1 | LC_ALL=C sort
 }
 
-par_tcsh_funky() {
+par_funky_tcsh() {
   myscript=$(cat <<'_EOF'
     # funky breaks with different LC_ALL
     setenv LC_ALL C
@@ -1397,7 +1397,7 @@ _EOF
   ssh tcsh@lo "$myscript" 2>&1 | LC_ALL=C sort
 }
 
-par_zsh_funky() {
+par_funky_zsh() {
   myscript=$(cat <<'_EOF'
 
     . `which env_parallel.zsh`;
@@ -1429,7 +1429,7 @@ _EOF
   ssh zsh@lo "$myscript" 2>&1 | LC_ALL=C sort
 }
 
-par_ash_env_parallel() {
+par_env_parallel_ash() {
   myscript=$(cat <<'_EOF'
     . `which env_parallel.ash`;
     echo 'bug #50435: Remote fifo broke in 20150522'
@@ -1454,7 +1454,7 @@ _EOF
   ssh ash@lo "$myscript" 2>&1 | LC_ALL=C sort
 }
 
-par_bash_env_parallel() {
+par_env_parallel_bash() {
   myscript=$(cat <<'_EOF'
     echo 'bug #50435: Remote fifo broke in 20150522'
     # Due to $PARALLEL_TMP being transferred
@@ -1479,7 +1479,7 @@ _EOF
   ssh bash@lo "$myscript" 2>&1 | LC_ALL=C sort
 }
 
-par_csh_env_parallel() {
+par_env_parallel_csh() {
   myscript=$(cat <<'_EOF'
     echo 'bug #50435: Remote fifo broke in 20150522'
     # Due to $PARALLEL_TMP being transferred
@@ -1491,7 +1491,7 @@ _EOF
   ssh csh@lo "$myscript"
 }
 
-par_dash_env_parallel() {
+par_env_parallel_dash() {
   myscript=$(cat <<'_EOF'
     . `which env_parallel.dash`;
     echo 'bug #50435: Remote fifo broke in 20150522'
@@ -1516,7 +1516,7 @@ _EOF
   ssh dash@lo "$myscript" 2>&1 | LC_ALL=C sort
 }
 
-par_fish_env_parallel() {
+par_env_parallel_fish() {
   myscript=$(cat <<'_EOF'
     echo 'bug #50435: Remote fifo broke in 20150522'
     # Due to $PARALLEL_TMP being transferred
@@ -1535,7 +1535,7 @@ _EOF
   ssh fish@lo "$myscript"
 }
 
-par_ksh_env_parallel() {
+par_env_parallel_ksh() {
   myscript=$(cat <<'_EOF'
     . `which env_parallel.ksh`;
     echo 'bug #50435: Remote fifo broke in 20150522'
@@ -1560,7 +1560,7 @@ _EOF
   ssh ksh@lo "$myscript" 2>&1 | LC_ALL=C sort
 }
 
-par_mksh_env_parallel() {
+par_env_parallel_mksh() {
   myscript=$(cat <<'_EOF'
     . `which env_parallel.mksh`;
     echo 'bug #50435: Remote fifo broke in 20150522'
@@ -1585,7 +1585,7 @@ _EOF
   ssh mksh@lo "$myscript" 2>&1 | LC_ALL=C sort
 }
 
-par_sh_env_parallel() {
+par_env_parallel_sh() {
   myscript=$(cat <<'_EOF'
     . `which env_parallel.sh`;
     echo 'bug #50435: Remote fifo broke in 20150522'
@@ -1610,7 +1610,7 @@ _EOF
   ssh sh@lo "$myscript" 2>&1 | LC_ALL=C sort
 }
 
-par_tcsh_env_parallel() {
+par_env_parallel_tcsh() {
   myscript=$(cat <<'_EOF'
     echo 'bug #50435: Remote fifo broke in 20150522'
     # Due to $PARALLEL_TMP being transferred
@@ -1623,7 +1623,7 @@ _EOF
   ssh tcsh@lo "$myscript" 2>&1 | LC_ALL=C sort
 }
 
-par_zsh_env_parallel() {
+par_env_parallel_zsh() {
   myscript=$(cat <<'_EOF'
     echo 'bug #50435: Remote fifo broke in 20150522'
     # Due to $PARALLEL_TMP being transferred
@@ -1647,7 +1647,7 @@ _EOF
   ssh zsh@lo "$myscript" 2>&1 | LC_ALL=C sort
 }
 
-par_ash_environment_too_big() {
+par_environment_too_big_ash() {
   myscript=$(cat <<'_EOF'
     echo 'bug #50815: env_parallel should warn if the environment is too big'
     len_var=63
@@ -1717,7 +1717,7 @@ _EOF
   ssh ash@lo "$myscript"
 }
 
-par_bash_environment_too_big() {
+par_environment_too_big_bash() {
   myscript=$(cat <<'_EOF'
     echo 'bug #50815: env_parallel should warn if the environment is too big'
     len_overhead=-$( (shopt;alias;typeset -f;typeset -p) | wc -c)/1000
@@ -1788,11 +1788,11 @@ _EOF
   ssh bash@lo "$myscript"
 }
 
-par_csh_environment_too_big() {
+par_environment_too_big_csh() {
     echo Not implemented
 }
 
-par_dash_environment_too_big() {
+par_environment_too_big_dash() {
   myscript=$(cat <<'_EOF'
     echo 'bug #50815: env_parallel should warn if the environment is too big'
     len_var=63
@@ -1862,12 +1862,12 @@ _EOF
   ssh dash@lo "$myscript"
 }
 
-par_fish_environment_too_big() {
+par_environment_too_big_fish() {
     echo Not implemented
 }
 
 
-par_ksh_environment_too_big() {
+par_environment_too_big_ksh() {
   myscript=$(cat <<'_EOF'
     echo 'bug #50815: env_parallel should warn if the environment is too big'
     len_functions=-$(functions|wc -c)/1000
@@ -1939,7 +1939,7 @@ _EOF
   ssh ksh@lo "$myscript"
 }
 
-par_mksh_environment_too_big() {
+par_environment_too_big_mksh() {
   myscript=$(cat <<'_EOF'
     echo 'bug #50815: env_parallel should warn if the environment is too big'
     len_var=47
@@ -2010,7 +2010,7 @@ _EOF
   ssh mksh@lo "$myscript"
 }
 
-par_sh_environment_too_big() {
+par_environment_too_big_sh() {
   myscript=$(cat <<'_EOF'
     echo 'bug #50815: env_parallel should warn if the environment is too big'
     len_var=63
@@ -2080,11 +2080,11 @@ _EOF
   ssh sh@lo "$myscript"
 }
 
-par_tcsh_environment_too_big() {
+par_environment_too_big_tcsh() {
     echo Not implemented
 }
 
-par_zsh_environment_too_big() {
+par_environment_too_big_zsh() {
   myscript=$(cat <<'_EOF'
     echo 'bug #50815: env_parallel should warn if the environment is too big'
     . `which env_parallel.zsh`;
@@ -2136,7 +2136,7 @@ _EOF
   ssh zsh@lo "$myscript"
 }
 
-par_ash_parset() {
+par_parset_ash() {
   myscript=$(cat <<'_EOF'
     echo 'parset'
     . `which env_parallel.ash`
@@ -2199,7 +2199,7 @@ _EOF
   ssh ash@lo "$myscript"
 }
 
-par_bash_parset() {
+par_parset_bash() {
   myscript=$(cat <<'_EOF'
     echo 'parset'
     . `which env_parallel.bash`
@@ -2257,11 +2257,11 @@ _EOF
   ssh bash@lo "$myscript"
 }
 
-par_csh_parset() {
+par_parset_csh() {
     echo Not implemented
 }
 
-par_dash_parset() {
+par_parset_dash() {
   myscript=$(cat <<'_EOF'
     echo 'parset'
     . `which env_parallel.dash`
@@ -2324,11 +2324,11 @@ _EOF
   ssh dash@lo "$myscript"
 }
 
-par_fish_parset() {
+par_parset_fish() {
     echo Not implemented
 }
 
-par_ksh_parset() {
+par_parset_ksh() {
   myscript=$(cat <<'_EOF'
     echo 'parset'
     . `which env_parallel.ksh`
@@ -2386,7 +2386,7 @@ _EOF
   ssh ksh@lo "$myscript"
 }
 
-par_mksh_parset() {
+par_parset_mksh() {
   myscript=$(cat <<'_EOF'
     echo 'parset'
     . `which env_parallel.mksh`
@@ -2446,7 +2446,7 @@ _EOF
   ssh mksh@lo "$myscript"
 }
 
-par_sh_parset() {
+par_parset_sh() {
   myscript=$(cat <<'_EOF'
     echo 'parset'
     . `which env_parallel.sh`
@@ -2532,11 +2532,11 @@ _EOF
   ssh sh@lo "$myscript"
 }
 
-par_tcsh_parset() {
+par_parset_tcsh() {
     echo Not implemented
 }
 
-par_zsh_parset() {
+par_parset_zsh() {
   myscript=$(cat <<'_EOF'
     echo 'parset'
     . `which env_parallel.zsh`
@@ -2605,7 +2605,7 @@ _EOF
 
 ### env_parallel_session
 
-par_ash_env_parallel_session() {
+par_env_parallel_--session_ash() {
   myscript=$(cat <<'_EOF'
     . `which env_parallel.ash`
     echo '### Test env_parallel --session'
@@ -2706,7 +2706,7 @@ _EOF
   ssh ash@lo "$myscript"
 }
 
-par_bash_env_parallel_session() {
+par_env_parallel_--session_bash() {
   myscript=$(cat <<'_EOF'
     echo '### Test env_parallel --session / --end-session'
     . `which env_parallel.bash`
@@ -2798,11 +2798,11 @@ _EOF
   ssh bash@lo "$myscript"
 }
 
-par_csh_env_parallel_session() {
+par_env_parallel_--session_csh() {
     echo Not implemented
 }
 
-par_dash_env_parallel_session() {
+par_env_parallel_--session_dash() {
   myscript=$(cat <<'_EOF'
     . `which env_parallel.dash`
     echo '### Test env_parallel --session'
@@ -2903,7 +2903,7 @@ _EOF
   ssh dash@lo "$myscript"
 }
 
-par_fish_env_parallel_session() {
+par_env_parallel_--session_fish() {
   myscript=$(cat <<'_EOF'
     . (which env_parallel.fish)
 
@@ -2945,7 +2945,7 @@ _EOF
   ssh fish@lo "$myscript" 2>&1
 }
 
-par_ksh_env_parallel_session() {
+par_env_parallel_--session_ksh() {
   myscript=$(cat <<'_EOF'
     . `which env_parallel.ksh`
     echo '### Test env_parallel --session'
@@ -3035,7 +3035,7 @@ _EOF
   ssh ksh@lo "$myscript"
 }
 
-par_mksh_env_parallel_session() {
+par_env_parallel_--session_mksh() {
   myscript=$(cat <<'_EOF'
     . `which env_parallel.mksh`
     echo '### Test env_parallel --session'
@@ -3125,7 +3125,7 @@ _EOF
   ssh mksh@lo "$myscript"
 }
 
-par_sh_env_parallel_session() {
+par_env_parallel_--session_sh() {
   myscript=$(cat <<'_EOF'
     . `which env_parallel.sh`
     echo '### Test env_parallel --session'
@@ -3219,11 +3219,11 @@ _EOF
   ssh sh@lo "$myscript"
 }
 
-par_tcsh_env_parallel_session() {
+par_env_parallel_--session_tcsh() {
     echo Not implemented
 }
 
-par_zsh_env_parallel_session() {
+par_env_parallel_--session_zsh() {
   myscript=$(cat <<'_EOF'
     . `which env_parallel.zsh`
     eval "`cat <<"_EOS";
@@ -3321,7 +3321,7 @@ export -f $(compgen -A function | grep par_)
 
 #compgen -A function | grep par_ | sort | parallel --delay $D -j$P --tag -k '{} 2>&1'
 #compgen -A function | grep par_ | sort |
-compgen -A function | grep par_ | LC_ALL=C sort -r |
+compgen -A function | grep par_ | LC_ALL=C sort |
 #    parallel --joblog /tmp/jl-`basename $0` --delay $D -j$P --tag -k '{} 2>&1'
     # 2019-07-14 200% too high for 16 GB/4 thread
     parallel --joblog /tmp/jl-`basename $0` -j75% --retries 2 --tag -k '{} 2>&1' |

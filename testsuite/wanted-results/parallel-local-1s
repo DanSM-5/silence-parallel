@@ -124,20 +124,19 @@ par_empty_string_command_line	bar
 par_eof_on_command_line_input_source	### Test of eof string on :::
 par_eof_on_command_line_input_source	foo
 par_file_rpl	### file as replacement string
-par_file_rpl	contest1
-par_file_rpl	contest2
-par_file_rpl	File name /tmp/parallel-local-1s-tmp/
-par_file_rpl	       `touch /tmp/tripwire` <"'/tmp/tmp.XXXXXX
-par_file_rpl	contest1
-par_file_rpl	contest2
-par_file_rpl	File name /parallel-local-1s-tmp/
-par_file_rpl	       `touch /tmp/tripwire` <"'/tmp/tmp.XXXXXX/parallel-local-1s-tmp/
-par_file_rpl	       `touch /parallel-local-1s-tmp/
-par_file_rpl	       `touch /tmp/tripwire` <"'/tmp/tmp.XXXXXX/tripwire` <"'/tmp/tmp.XXXXXX
-par_file_rpl	contest1
-par_file_rpl	contest2
-par_file_rpl	File name /tmp/parallel-local-1s-tmp/
-par_file_rpl	       `touch /tmp/tripwire` <"'/tmp/tmp.XXXXXX
+par_file_rpl	# {filename}
+par_file_rpl	content1
+par_file_rpl	content2
+par_file_rpl	File name /TMP/tmp.XXXXXX
+par_file_rpl	# Conflict: both {filename} and {/regexp/rpl}
+par_file_rpl	content1
+par_file_rpl	content2
+par_file_rpl	File name /parallel-local-1s/  /bar/tmp.XXXXXX/parallel-local-1s/  /bar/tmp.XXXXXX
+par_file_rpl	# --header 0 --plus
+par_file_rpl	content1
+par_file_rpl	content2
+par_file_rpl	File name /TMP/tmp.XXXXXX
+par_file_rpl	# Conflict: both {filename} and {n}
 par_file_rpl	1
 par_file_rpl	1
 par_file_rpl	2
@@ -150,6 +149,7 @@ par_file_rpl	1
 par_file_rpl	1
 par_file_rpl	1
 par_file_rpl	1
+par_file_rpl	# Conflict: both {filename} and {=expr=}
 par_file_rpl	=chop
 par_file_rpl	=chop
 par_header	### Test --header with -N
@@ -492,8 +492,7 @@ par_profiles_with_space	### bug #42902: profiles containing arguments with space
 par_profiles_with_space	/bin/bash=/bin/bash
 par_profiles_with_space	echo '/bin/bash=/bin/bash'
 par_profiles_with_space	/bin/bash=/bin/bash
-par_profiles_with_space	With script in $PARALLEL /bin/bash=/tmp/parallel-local-1s-tmp/
-par_profiles_with_space	       `touch /tmp/tripwire` <"'/tmp
+par_profiles_with_space	With script in $PARALLEL /bin/bash=/TMP
 par_pxz_complains	bug #44250: pxz complains File format not recognized but decompresses anyway
 par_pxz_complains	ls: cannot access '/OK-if-missing-file': No such file or directory
 par_pxz_complains	can not seek in input: Illegal seek

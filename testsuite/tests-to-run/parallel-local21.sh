@@ -232,6 +232,8 @@ EOF
 }
 
 par_shebang_wrap_clisp() {
+    # clisp cannot handle dirs w/ shell wildcards
+    TMPDIR=/tmp
     script="$TMPDIR"/shebang_wrap_clisp
     cat <<'EOF' > "$script"
 #!/usr/local/bin/parallel --shebang-wrap -k /usr/bin/clisp

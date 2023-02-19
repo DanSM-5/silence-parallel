@@ -123,29 +123,36 @@ par_exit_code() {
     export -f in_shell_run_command
 
     runit() {
+	doit() {
+	    s=100
+	    rm -f /tmp/mysleep
+	    cp /bin/sleep /tmp/mysleep
+	    
+	    parallel -kj500% --argsep ,, --tag in_shell_run_command {1} {2} \
+		     ,, "$@" ,, \
+		     "/tmp/mysleep "$s \
+		     "parallel --halt-on-error now,fail=1 /tmp/mysleep ::: "$s \
+		     "parallel --halt-on-error now,done=1 /tmp/mysleep ::: "$s \
+		     "parallel --halt-on-error now,done=1 /bin/true ::: "$s \
+		     "parallel --halt-on-error now,done=1 exit ::: "$s \
+		     "true;/tmp/mysleep "$s \
+		     "parallel --halt-on-error now,fail=1 'true;/tmp/mysleep' ::: "$s \
+		     "parallel --halt-on-error now,done=1 'true;/tmp/mysleep' ::: "$s \
+		     "parallel --halt-on-error now,done=1 'true;/bin/true' ::: "$s \
+		     "parallel --halt-on-error now,done=1 'true;exit' ::: "$s
+	}
+	echo '# Ideally the command should return the same'
+	echo '#   with or without parallel'
 	# These give the same exit code prepended with 'true;' or not
 	OK="ash csh dash fish fizsh ksh2020 posh rc sash sh tcsh"
 	# These do not give the same exit code prepended with 'true;' or not
-	BAD="bash fdsh ksh93 mksh static-sh yash zsh"
-	s=100
-	rm -f /tmp/mysleep
-	cp /bin/sleep /tmp/mysleep
-	
-	echo '# Ideally the command should return the same'
-	echo '#   with or without parallel'
-	echo '# but fish 2.4.0 returns 1 while X.X.X returns 0'
-	parallel -kj500% --argsep ,, --tag in_shell_run_command {1} {2} \
-		 ,, $OK $BAD ,, \
-	"/tmp/mysleep "$s \
-	"parallel --halt-on-error now,fail=1 /tmp/mysleep ::: "$s \
-	"parallel --halt-on-error now,done=1 /tmp/mysleep ::: "$s \
-	"parallel --halt-on-error now,done=1 /bin/true ::: "$s \
-	"parallel --halt-on-error now,done=1 exit ::: "$s \
-	"true;/tmp/mysleep "$s \
-	"parallel --halt-on-error now,fail=1 'true;/tmp/mysleep' ::: "$s \
-	"parallel --halt-on-error now,done=1 'true;/tmp/mysleep' ::: "$s \
-	"parallel --halt-on-error now,done=1 'true;/bin/true' ::: "$s \
-	"parallel --halt-on-error now,done=1 'true;exit' ::: "$s
+	BAD="bash ksh93 mksh static-sh yash zsh"
+	doit $OK $BAD
+	# fdsh does not like weird TMPDIR with \n
+	BROKEN="fdsh"
+	TMPDIR=/tmp
+	cd /tmp
+	doit $BROKEN
     }
     export -f runit
 

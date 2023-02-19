@@ -102,8 +102,9 @@ sql --tablesize :sqlunittest | wc -l
 sql --table-size :sqlunittest | wc -l
 
 echo "### Test --debug"
-sql --debug :sqlunittest "SELECT 'Yes it does' as 'Test if --debug works';" |
-    perl -pe 's:/tmp/...........sql:tmpfile:g'
+stdout sql --debug :sqlunittest "SELECT 'Yes it does' as 'Test if --debug works';" |
+    replace_tmpdir |
+    perl -pe 's:/...........sql:/tmpfile:g'
 
 echo "### Test --version -V"
 sql --version | wc

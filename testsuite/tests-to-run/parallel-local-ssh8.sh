@@ -70,13 +70,13 @@ _EOS
       uniq
 }
 
-par_keep_order() {
+par_z_keep_order() {
     echo '### Test --keep-order'
     seq 0 2 |
 	parallel --keep-order -j100% -S 1/:,2/parallel@lo -q perl -e 'sleep 1;print "job{}\n";exit({})'
 }
 
-par_keeporder() {
+par_z_keeporder() {
     echo '### Test --keeporder'
     seq 0 2 |
 	parallel --keeporder -j100% -S 1/:,2/parallel@lo -q perl -e 'sleep 1;print "job{}\n";exit({})'
@@ -87,7 +87,7 @@ par_load_csh() {
     parallel --load 100% -S csh@lo echo ::: a
 }
 
-par_bar_m() {
+par_z_bar_m() {
     echo '### test --bar -m'
     stdout parallel --bar -P 2 -m sleep ::: 1 1 2 2 3 3 |
 	perl -pe 's/\r/\n/g'|
@@ -125,7 +125,7 @@ par_retries_4() {
     retries 4 48 49
 }
 
-par_csh_environment_variables_set() {
+par_z_csh_environment_variables_set() {
     echo '### Check $PARALLEL_PID $PARALLEL_SEQ are set in csh'
     parallel -S csh@localhost 'echo $PARALLEL_PID $PARALLEL_SEQ {}| wc -w' ::: a
 }

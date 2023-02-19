@@ -95,6 +95,7 @@ par_env_parallel() {
 #   (a)sh does not support 'export -f' so any function exported
 #   must be unset
 
+unset replace_tmpdir
 unset run_once
 unset run_test
 unset TMPDIR

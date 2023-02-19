@@ -145,6 +145,7 @@ EOF
 	     'sleep 0.{#}; cat t1.{#} t2.{%}' ::: 1 2 ::: a b
     echo should give no files
     ls t[12].*
+    rm "$tmp1" "$tmp2"
 }
 
 par_resume_k() {
@@ -732,6 +733,7 @@ par_wd_3dot_local() {
 	parallel --wd ... 'pwd; echo "$OLDPWD"; echo' ::: OK
 	parallel --wd . 'pwd; echo "$OLDPWD"; echo' ::: OK
     ) |
+	replace_tmpdir |
 	perl -pe 's:/mnt/4tb::; s:/home/tange:~:;' |
 	perl -pe 's:parallel./:parallel/:;' |
 	perl -pe 's/'`hostname`'/hostname/g; s/\d+/0/g'
@@ -773,7 +775,8 @@ par_parcat_rm() {
 par_linebuffer_files() {
     echo '### bug #48658: --linebuffer --files'
 
-    stdout parallel --files --linebuffer 'sleep .1;seq {};sleep .1' ::: {1..10} | wc -l
+    stdout parallel --files --linebuffer 'sleep .1;seq {};sleep .1' ::: {1..10} |
+	replace_tmpdir | perl -pe 's:/par......par:/parXXXXX.par:'
 }
 
 par_halt_one_job() {
@@ -812,7 +815,8 @@ par_pipe_tag_v() {
     seq 3 | parallel -v --pipe --tagstring foo cat
     # This should only give the filename
     seq 3 | parallel -v --pipe --tagstring foo --files cat |
-	perl -pe 's:/tmp/par.*.par:/tmp/tmpfile.par:'
+	replace_tmpdir |
+	perl -pe 's:/par.*.par:/tmpfile.par:'
 }
 
 par_dryrun_append_joblog() {
@@ -896,9 +900,10 @@ par_testquote() {
     export -f testquote
     # "sash script" does not work
     # "sash -f script" does, but is currently not supported by GNU Parallel
+    parallel --tag -k testquote ::: ash bash csh dash fdsh fish fizsh ksh ksh93 mksh posh rbash rc rzsh "sash -f" sh static-sh tcsh yash zsh
     # "fdsh" is currently not supported by GNU Parallel:
     #        It gives ioctl(): Interrupted system call
-    parallel --tag -k testquote ::: ash bash csh dash fdsh fish fizsh ksh ksh93 mksh posh rbash rc rzsh "sash -f" sh static-sh tcsh yash zsh
+    parallel --tag -k testquote ::: fdsh
 }
 
 par_locale_quoting() {

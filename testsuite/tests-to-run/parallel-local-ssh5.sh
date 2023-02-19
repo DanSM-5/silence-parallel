@@ -7,6 +7,7 @@
 # SSH only allowed to localhost/lo
 
 
+
 par_ssh_cmd_with_newline() {
     echo '### Check --ssh with \n works'
     ssh=$(mktemp)
@@ -17,15 +18,25 @@ par_ssh_cmd_with_newline() {
 
 par_controlmaster() {
     echo '### Check -M works if TMPDIR contains space'
+    short_TMPDIR() {
+	# TMPDIR must be short for -M                                                         
+	export TMPDIR=/tmp/ssh/'                                                              
+`touch /tmp/tripwire`                                                                     
+'
+	TMPDIR=/tmp
+	mkdir -p "$TMPDIR"
+    }
+    short_TMPDIR
+
     (
 	seq 1 3 | parallel -j10 --retries 3 -k -M -S sh@lo echo
 	seq 1 3 | parallel -j10 --retries 3 -k -M -S sh@lo echo
     )
     echo Part2
-    parallel -j1 -k -M -S sh@lo echo ::: OK
+    stdout parallel -j1 -k -M -S sh@lo echo ::: OK | replace_tmpdir
 }
 
-par_autossh() {
+par_--ssh_autossh() {
     echo '### --ssh autossh'
     (
 	export PARALLEL_SSH=autossh; export AUTOSSH_PORT=0
@@ -54,12 +65,21 @@ par_input_loss_pipe() {
     seq 10000 | xargs | parallel --pipe -S 8/localhost cat 2>/dev/null | wc
 }
 
-par_controlmaster_eats() {
+par_--controlmaster_eats() {
     echo 'bug #36707: --controlmaster eats jobs'
+    short_TMPDIR() {
+	# TMPDIR must be short for -M                                                         
+	export TMPDIR=/tmp/ssh/'                                                              
+`touch /tmp/tripwire`                                                                     
+'
+	TMPDIR=/tmp
+	mkdir -p "$TMPDIR"
+    }
+    short_TMPDIR
     seq 2 | parallel -k --controlmaster --sshlogin lo echo OK{}
 }
 
-par_lsh() {
+par_--ssh_lsh() {
     echo '### --ssh lsh'
     parallel --ssh 'lsh -c aes256-ctr' -S lo echo ::: OK
     echo OK | parallel --ssh 'lsh -c aes256-ctr' --pipe -S csh@lo cat
@@ -85,7 +105,7 @@ par_env_parallel_onall() {
     env_parallel -Slo --nonall doit works
 }
 
-par_command_len_shellquote() {
+par_--shellquote_command_len() {
     echo '### test quoting will not cause a crash if too long'
     # echo "'''" | parallel --shellquote --shellquote --shellquote --shellquote
 

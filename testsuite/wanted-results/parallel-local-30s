@@ -37,7 +37,6 @@ par_bin	      2       4       9
 par_exit_code	bug #52207: Exit status 0 when child job is killed, even with "now,fail=1"
 par_exit_code	# Ideally the command should return the same
 par_exit_code	#   with or without parallel
-par_exit_code	# but fish 2.4.0 returns 1 while X.X.X returns 0
 par_exit_code	ash /tmp/mysleep 100	137
 par_exit_code	ash parallel --halt-on-error now,fail=1 /tmp/mysleep ::: 100	137
 par_exit_code	ash parallel --halt-on-error now,done=1 /tmp/mysleep ::: 100	137
@@ -158,16 +157,6 @@ par_exit_code	bash parallel --halt-on-error now,fail=1 'true;/tmp/mysleep' ::: 1
 par_exit_code	bash parallel --halt-on-error now,done=1 'true;/tmp/mysleep' ::: 100	137
 par_exit_code	bash parallel --halt-on-error now,done=1 'true;/bin/true' ::: 100	0
 par_exit_code	bash parallel --halt-on-error now,done=1 'true;exit' ::: 100	100
-par_exit_code	fdsh /tmp/mysleep 100	137
-par_exit_code	fdsh parallel --halt-on-error now,fail=1 /tmp/mysleep ::: 100	2
-par_exit_code	fdsh parallel --halt-on-error now,done=1 /tmp/mysleep ::: 100	2
-par_exit_code	fdsh parallel --halt-on-error now,done=1 /bin/true ::: 100	2
-par_exit_code	fdsh parallel --halt-on-error now,done=1 exit ::: 100	100
-par_exit_code	fdsh true;/tmp/mysleep 100	137
-par_exit_code	fdsh parallel --halt-on-error now,fail=1 'true;/tmp/mysleep' ::: 100	2
-par_exit_code	fdsh parallel --halt-on-error now,done=1 'true;/tmp/mysleep' ::: 100	2
-par_exit_code	fdsh parallel --halt-on-error now,done=1 'true;/bin/true' ::: 100	2
-par_exit_code	fdsh parallel --halt-on-error now,done=1 'true;exit' ::: 100	100
 par_exit_code	ksh93 /tmp/mysleep 100	0
 par_exit_code	ksh93 parallel --halt-on-error now,fail=1 /tmp/mysleep ::: 100	137
 par_exit_code	ksh93 parallel --halt-on-error now,done=1 /tmp/mysleep ::: 100	137
@@ -218,6 +207,16 @@ par_exit_code	zsh parallel --halt-on-error now,fail=1 'true;/tmp/mysleep' ::: 10
 par_exit_code	zsh parallel --halt-on-error now,done=1 'true;/tmp/mysleep' ::: 100	137
 par_exit_code	zsh parallel --halt-on-error now,done=1 'true;/bin/true' ::: 100	0
 par_exit_code	zsh parallel --halt-on-error now,done=1 'true;exit' ::: 100	100
+par_exit_code	fdsh /tmp/mysleep 100	137
+par_exit_code	fdsh parallel --halt-on-error now,fail=1 /tmp/mysleep ::: 100	2
+par_exit_code	fdsh parallel --halt-on-error now,done=1 /tmp/mysleep ::: 100	2
+par_exit_code	fdsh parallel --halt-on-error now,done=1 /bin/true ::: 100	2
+par_exit_code	fdsh parallel --halt-on-error now,done=1 exit ::: 100	100
+par_exit_code	fdsh true;/tmp/mysleep 100	137
+par_exit_code	fdsh parallel --halt-on-error now,fail=1 'true;/tmp/mysleep' ::: 100	2
+par_exit_code	fdsh parallel --halt-on-error now,done=1 'true;/tmp/mysleep' ::: 100	2
+par_exit_code	fdsh parallel --halt-on-error now,done=1 'true;/bin/true' ::: 100	2
+par_exit_code	fdsh parallel --halt-on-error now,done=1 'true;exit' ::: 100	100
 par_exit_code	parallel: This job finished:
 par_exit_code	runit
 par_groupby	-N1 3 $_%=2 tsv \t	### test tsv | --colsep \t --groupby 3 $_%=2 -N1
