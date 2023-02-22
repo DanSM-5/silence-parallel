@@ -14,9 +14,6 @@ Output is in sync
 write a haiku about gnu parallel and the :::+  option
 
 
-  Praise GNU parallel, though. That gets me pretty far.
-    -- Your Obed. Servant, J. B. @Jeffinatorator
-
   Got around to using GNU parallel for the first time from a suggestion by @jdwasmuth ... now I'm wishing I started using this years ago
     -- Stefan Gavriliuc @GavriliucStefan@twitter
 
@@ -216,6 +213,9 @@ https://negfeedback.blogspot.com/2020/05/indispensable-command-line-tools.html
     -- @alinajaf@twitter
 
 === Used ===
+
+  Praise GNU parallel, though. That gets me pretty far.
+    -- Your Obed. Servant, J. B. @Jeffinatorator
 
   Colorful output
   parallel, with --color flag

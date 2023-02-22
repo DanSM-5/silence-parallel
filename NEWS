@@ -1,3 +1,19 @@
+20230222
+
+New in this release:
+
+* parsort: --parallel now does closer to what you expect.
+
+* parallel: --files0 is --files but \0 separated.
+
+* Bug fixes and man page updates.
+
+News about GNU Parallel:
+
+* 5 great Perl scripts to keep in your sysadmin toolbox
+  https://www.redhat.com/sysadmin/perl-scripts
+
+
 20230122
 
 New in this release:

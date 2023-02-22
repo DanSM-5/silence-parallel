@@ -1586,9 +1586,9 @@ Similar to B<--memfree>.
 See also: B<--memfree> B<--load>
 
 
-=item B<--latest-line> (alpha testing)
+=item B<--latest-line> (beta testing)
 
-=item B<--ll> (alpha testing)
+=item B<--ll> (beta testing)
 
 Print the lastest line. Each job gets a single line that is updated
 with the lastest output from the job.
@@ -1858,16 +1858,20 @@ Similar to B<--tty> but does not set B<--jobs> or B<--ungroup>.
 See also: B<--tty>
 
 
-=item B<--output-as-files>
+=item B<--output-as-files> (alpha testing)
 
-=item B<--outputasfiles>
+=item B<--outputasfiles> (alpha testing)
 
-=item B<--files>
+=item B<--files> (alpha testing)
+
+=item B<--files0> (alpha testing)
 
 Save output to files.
 
 Instead of printing the output to stdout (standard output) the output
 of each job is saved in a file and the filename is then printed.
+
+B<--files0> uses NUL (\0) instead of newline (\n) as separator.
 
 See also: B<--results>
 
