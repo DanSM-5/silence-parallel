@@ -21,6 +21,27 @@ par_z_sshloginfile() {
     rm -f "$tmp"
 }
 
+par__test_different_rsync_versions() {
+    echo '### different versions of rsync need fixups'
+    echo '### no output is good'
+    doit() {
+	rm -f 'a`b`c\<d\$e\{#\}g\"h\ i'$2 'a`b`c\<d\$e\{#\}g\"h\ i'$2.out
+	touch 'a`b`c\<d\$e\{#\}g\"h\ i'$2
+	TMPDIR=/tmp tmp=$(mktemp -d)
+	(
+	    echo "#!/bin/bash"
+	    echo $1' "$@"'
+	) > "$tmp"/rsync
+	chmod +x "$tmp"/rsync
+	PATH="$tmp":"$PATH"
+	parallel --trc {}.out -S sh@lo cp {} {}.out ::: 'a`b`c\<d\$e\{#\}g\"h\ i'$2
+	rm 'a`b`c\<d\$e\{#\}g\"h\ i'$2 'a`b`c\<d\$e\{#\}g\"h\ i'$2.out
+	rm -rf "$tmp"
+    }
+    export -f doit
+    stdout parallel --tagstring {/} -k doit {} {/} ::: /usr/local/bin/rsync-v*
+}
+
 par_--nonall_results() {
     echo '### --results --onall'
     tmp="$TMPDIR"/onall

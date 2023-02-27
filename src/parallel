@@ -5876,9 +5876,6 @@ sub citation() {
 	"https://lists.gnu.org/archive/html/parallel/2013-11/msg00006.html",
 	"https://www.gnu.org/software/parallel/parallel_design.html#citation-notice",
 	"https://git.savannah.gnu.org/cgit/parallel.git/tree/doc/citation-notice-faq.txt",
-	"",
-	"If you send a copy of your published article to tange\@gnu.org, it will be",
-	"mentioned in the release notes of next version of GNU Parallel.",
 	""
 	);
     while(not grep { -e "$_/will-cite" } @Global::config_dirs) {
@@ -8833,15 +8830,17 @@ sub rsync_transfer_cmd($) {
 }
 
 {
-    my $rsync_protocol;
+    my $rsync_fix;
+    my $rsync_version;
 
     sub rsync($) {
-	sub rsync_protocol {
-	    # rsync 3.1.x uses protocol 31 which is unsupported by 2.5.7.
-	    # If the version >= 3.1.0: downgrade to protocol 30
-	    # Returns:
-	    #   $rsync = "rsync" or "rsync --protocol 30"
-	    if(not $rsync_protocol) {
+	# rsync 3.1.x uses protocol 31 which is unsupported by 2.5.7.
+	# If the version >= 3.1.0: downgrade to protocol 30
+	# rsync 3.2.4 introduces a quoting bug: Add --old-args for that
+	# Returns:
+	#   $rsync = "rsync" or "rsync --protocol 30 --old-args"
+	sub rsync_version {
+	    if(not $rsync_version) {
 		my @out = `rsync --version`;
 		if(not @out) {
 		    if(::which("rsync")) {
@@ -8854,23 +8853,37 @@ sub rsync_transfer_cmd($) {
 		for (@out) {
 		    # rsync	 version 3.1.3	protocol version 31
 		    # rsync	 version v3.2.3	 protocol version 31
-		    if(/version v?(\d+.\d+)(.\d+)?/) {
-			if($1 >= 3.1) {
-			    # Version 3.1.0 or later: Downgrade to protocol 30
-			    $rsync_protocol = "rsync --protocol 30";
-			} else {
-			    $rsync_protocol = "rsync";
-			}
+		    if(/version v?(\d+)\.(\d+)(\.(\d+))?/) {
+			# 3.2.27 => 03.0227
+			$rsync_version = sprintf "%02d.%02d%02d",$1,$2,$4;
 		    }
 		}
-		$rsync_protocol or
+		$rsync_version or
 		    ::die_bug("Cannot figure out version of rsync: @out");
 	    }
-	    return $rsync_protocol;
+	}
+
+	sub rsync_fixup {
+	    # rsync 3.1.x uses protocol 31 which is unsupported by 2.5.7.
+	    # If the version >= 3.1.0: downgrade to protocol 30
+	    # Returns:
+	    #   $rsync = "rsync" or "rsync --protocol 30"
+	    if(not $rsync_fix) {
+		rsync_version();
+		if($rsync_version >= 3.01) {
+		    # Version 3.1.0 or later: Downgrade to protocol 30
+		    $rsync_fix .= " --protocol 30";
+		}
+		if($rsync_version >= 3.0204) {
+		    # Version 3.2.4 .. 3.2.8: --old-args
+		    $rsync_fix .= " --old-args";
+		}
+	    }
+	    return $rsync_fix;
 	}
 	my $self = shift;
 
-	return rsync_protocol()." ".$ENV{'PARALLEL_RSYNC_OPTS'}.
+	return "rsync".rsync_fixup()." ".$ENV{'PARALLEL_RSYNC_OPTS'}.
 	    " -e".::Q($self->sshcmd());
     }
 }
