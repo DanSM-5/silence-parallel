@@ -1389,6 +1389,9 @@ Sans.
 
 =head2 Citation notice
 
+For details: See
+https://git.savannah.gnu.org/cgit/parallel.git/tree/doc/citation-notice-faq.txt
+
 Funding a free software project is hard. GNU B<parallel> is no
 exception. On top of that it seems the less visible a project is, the
 harder it is to get funding. And the nature of GNU B<parallel> is that

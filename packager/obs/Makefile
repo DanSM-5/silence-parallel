@@ -15,6 +15,7 @@ all:
 	cd home-tange/parallel/ && osc ci -m "New release"
 	### Wait for "building" state to complete
 	echo '### Wait for "building" state'
+	sleep 3
 	cd home-tange/parallel/ && yes building | parallel -vj1 --delay 10 --halt now,success=1 'osc results|G -E {}'
 	echo '### Wait for "building" state to end'
 	echo '### Ignore RedHat_RHEL-6 and Univention_3.2 that are broken'
@@ -23,4 +24,5 @@ all:
 	cd home-tange/parallel/ && echo succeeded | parallel -vj1 --retries 30 --delay 10 --halt now,success=1 'osc results|G -E "(Debian|Ubuntu).*{}"'
 	echo '### Wait for "finished" state of .rpm'
 	cd home-tange/parallel/ && echo succeeded | parallel -vj1 --retries 30 --delay 10 --halt now,success=1 'osc results|G -E "(SUSE|SLE|Scientific|RHEL|Fedora|CentOS).*{}"'
-
+	echo 'Check:'
+	echo 'https://build.opensuse.org/package/show/home:tange/parallel'
