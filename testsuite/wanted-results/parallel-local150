@@ -141,9 +141,6 @@ echo "### bug #35268: shell_quote doesn't treats [] brackets correctly"
 ### bug #35268: shell_quote doesn't treats [] brackets correctly
   touch /tmp/foo1;   stdout parallel echo ::: '/tmp/foo[123]';   rm /tmp/foo1
 /tmp/foo[123]
-echo '### Test make .deb package';   cd ~/privat/parallel/packager/debian;   stdout make | grep 'To install the GNU Parallel Debian package, run:'
-### Test make .deb package
-To install the GNU Parallel Debian package, run:
 echo '### Test basic --arg-sep'
 ### Test basic --arg-sep
   parallel -k echo ::: a b

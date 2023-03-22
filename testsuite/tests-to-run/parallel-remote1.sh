@@ -5,7 +5,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 SERVER1=parallel-server1
-SERVER2=parallel-server2
+SERVER2=parallel-server4
 SERVER3=parallel-server3
 SSHUSER1=vagrant
 SSHUSER2=vagrant

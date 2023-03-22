@@ -1,3 +1,14 @@
+20230322
+
+New in this release:
+
+* Better support for wide characters in --latest-line.
+
+* Support for rsync 3.2.7.
+
+* Bug fixes and man page updates.
+
+
 20230222
 
 New in this release:

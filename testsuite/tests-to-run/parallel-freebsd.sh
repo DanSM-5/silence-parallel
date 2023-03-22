@@ -5,7 +5,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 echo "### These tests requires VirtualBox running with the following images"
-SERVER1=freebsd11
+SERVER1=freebsd12
 SSHUSER1=vagrant
 SSHLOGIN1=$SSHUSER1@$SERVER1
 echo $SSHUSER1@$SERVER1

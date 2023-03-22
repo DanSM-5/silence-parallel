@@ -6,6 +6,18 @@
 
 # These fail regularly
 
+par_ll_asian() {
+    echo '### --ll with Asian wide chars mess up display'
+    echo 'bug #63878: Wide East Asian chars in --latest-line'
+    p="parallel --ll --color --tag"
+    COLUMNS=80 $p echo tag fits, line fits a{}b{}c \
+	   ::: ヌー平行
+    COLUMNS=80 $p echo tag fits, line too long a{}b{}c \
+	   ::: ヌー平行ヌー平行ヌー平行ヌー平行ヌー平行ヌー平行ヌー平行ヌー平行ヌー
+    COLUMNS=80 $p echo tag too long a{}b{}c \
+	   ::: ヌー平行ヌー平行ヌー平行ヌー平行ヌー平行ヌー平行ヌー平行ヌー平行ヌー平行ヌー平行ヌー平行ヌー平行a
+}
+
 par_ll_tag() {
 	parallel --tag --ll -q printf "a\n{}\n" ::: should-be-tagged-A
 	parallel --tag --ll -q printf "a\n\r{}\n" ::: should-be-tagged-B

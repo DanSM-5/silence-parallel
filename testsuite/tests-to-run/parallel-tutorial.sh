@@ -92,8 +92,10 @@ perl -ne '$/="\n\n"; /^Output/../^[^O]\S/ and next; /^  / and print;' "$testsuit
 	      s/^[A-Z][A-Z0-9_]*\s$//;
 	      # Fails often due to race
 	      s/cat: input_file: No such file or directory\n//;
-	      s{rsync: link_stat ".*/home/parallel/input_file.out" .*\n}{};
+	      s{rsync: .* link_stat ".*/home/parallel/input_file.out" .*\n}{};
 	      s{rsync error: some files/attrs were not transferred .*\n}{};
+	      s{Give up after 2 secs\n}{};
+	      s{parallel: Warning: Semaphore timed out. Exiting.\n}{};
 	      s{.* GtkDialog .*\n}{};
 	      s{tried 1}{};
 	      s/^\s*\n//;

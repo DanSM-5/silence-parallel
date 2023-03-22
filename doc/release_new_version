@@ -262,24 +262,26 @@ from:tange@gnu.org
 to:parallel@gnu.org, bug-parallel@gnu.org
 stable-bcc: Jesse Alama <jessealama@fastmail.fm>
 
-Subject: GNU Parallel 20230322 ('Grækenland Larissa tog/Tiktok?') released
+Subject: GNU Parallel 20230322 ('ICC Putin/Arrest Warrant/Fosbury/Grækenland Larissa tog/Tiktok?') released
 
 GNU Parallel 20230322 ('<<>>') has been released. It is available for download at: lbry://@GnuParallel:4
 
 Quote of the month:
 
-  Praise GNU parallel, though. That gets me pretty far.
-    -- Your Obed. Servant, J. B. @Jeffinatorator
+  GNU parallel is magic, half of my work uses it, to the point where they're referenced and thanked in my thesis
+    -- Best Catboy Key Grip @alamogordoglass@twitter
 
 New in this release:
 
-* parsort: --parallel now does closer to what you expect.
+* Better support for wide characters in --latest-line.
 
-* parallel: --files0 is --files but \0 separated.
+* Support for rsync 3.2.7.
 
 * Bug fixes and man page updates.
 
 News about GNU Parallel:
+
+* Analyzing multi-gigabyte JSON files locally https://thenybble.de/posts/json-analysis/
 
 * 5 great Perl scripts to keep in your sysadmin toolbox https://www.redhat.com/sysadmin/perl-scripts
 

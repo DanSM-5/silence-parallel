@@ -6,8 +6,8 @@ par_filter_hosts_different_errors	### --filter-hosts - OK, non-such-user, connec
 par_filter_hosts_different_errors	aspire
 par_filter_hosts_no_ssh_nxserver	### test --filter-hosts with server w/o ssh, non-existing server
 par_filter_hosts_no_ssh_nxserver	vagrant@parallel-server1	
-par_filter_hosts_no_ssh_nxserver	vagrant@parallel-server2	
 par_filter_hosts_no_ssh_nxserver	vagrant@parallel-server3	
+par_filter_hosts_no_ssh_nxserver	vagrant@parallel-server4	
 par_special_ssh	### Test use special ssh
 par_special_ssh	TODO test ssh with > 9 simultaneous
 par_special_ssh	1
@@ -119,7 +119,7 @@ par_timeout_retries	parallel: Warning: ssh 8.8.8.8 echo 8.8.8.8
 par_timeout_retries	parallel: Warning: This job was killed because it timed out:
 par_timeout_retries	parallel: Warning: ssh 8.8.8.8 echo 8.8.8.8
 par_timeout_retries	vagrant@parallel-server1
-par_timeout_retries	vagrant@parallel-server2
+par_timeout_retries	vagrant@parallel-server4
 par_timeout_retries	vagrant@parallel-server3
 par_workdir_in_HOME	### test --workdir . in $HOME
 par_workdir_in_HOME	OK

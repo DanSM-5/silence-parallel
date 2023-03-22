@@ -149,6 +149,8 @@ num128
 num30000
 num8
 outdir
+tmsFPAdA
+tmsNGdem
 tsv-file.tsv
 foo
 /TMP
@@ -386,6 +388,16 @@ pre-A-post
 /usr/bin/bash: -c: line 1: `set a="num8"; if( { test -d "$a" } ) echo "$a is a dir"'
 /usr/bin/bash: -c: line 1: syntax error near unexpected token `)'
 /usr/bin/bash: -c: line 1: `set a="outdir"; if( { test -d "$a" } ) echo "$a is a dir"'
+/usr/bin/bash: -c: line 1: syntax error near unexpected token `)'
+/usr/bin/bash: -c: line 1: `set a="tempfile"; if( { test -d "$a" } ) echo "$a is a dir"'
+/usr/bin/bash: -c: line 1: syntax error near unexpected token `)'
+/usr/bin/bash: -c: line 1: `set a="tempfile"; if( { test -d "$a" } ) echo "$a is a dir"'
+/usr/bin/bash: -c: line 1: syntax error near unexpected token `)'
+/usr/bin/bash: -c: line 1: `set a="tempfile"; if( { test -d "$a" } ) echo "$a is a dir"'
+/usr/bin/bash: -c: line 1: syntax error near unexpected token `)'
+/usr/bin/bash: -c: line 1: `set a="tmsFPAdA"; if( { test -d "$a" } ) echo "$a is a dir"'
+/usr/bin/bash: -c: line 1: syntax error near unexpected token `)'
+/usr/bin/bash: -c: line 1: `set a="tmsNGdem"; if( { test -d "$a" } ) echo "$a is a dir"'
 /usr/bin/bash: -c: line 1: syntax error near unexpected token `)'
 /usr/bin/bash: -c: line 1: `set a="tsv-file.tsv"; if( { test -d "$a" } ) echo "$a is a dir"'
   parallel --tag echo foo-{} ::: A B C
@@ -871,7 +883,7 @@ For details: see  man env_parallel
   export -f my_func3
   parallel -vv --workdir ... --nice 17 --env _ --trc {}.out \
     -S $SERVER1 my_func3 {} ::: abc-file
-ssh -l parallel lo -- exec mkdir -p ./.TMPWORKDIR && rsync --protocol 30 -rlDzR -e'ssh -l parallel' ./abc-file lo:./.TMPWORKDIR;ssh -l parallel lo -- exec perl -X -e GNU_Parallel_worker,eval+pack+q/H10000000/,join+q//,@ARGV BASE64;_EXIT_status=$?; mkdir -p ./. && rsync --protocol 30 -rlDzR -e'ssh -l parallel' --rsync-path='cd ./.TMPWORKDIR/./.; rsync' -- lo:./abc-file.out ./.;ssh -l parallel lo -- exec 'sh -c '"'"'rm -f ./.TMPWORKDIR/abc-file 2>/dev/null;rmdir ./.TMPWORKDIR/ ./.parallel/tmp/ ./.parallel/ 2>/dev/null;rm -rf ./.TMPWORKDIR;'"'";ssh -l parallel lo -- exec 'sh -c '"'"'rm -f ./.TMPWORKDIR/abc-file.out 2>/dev/null;rmdir ./.TMPWORKDIR/ ./.parallel/tmp/ ./.parallel/ 2>/dev/null;rm -rf ./.TMPWORKDIR;'"'";ssh -l parallel lo -- exec rm -rf .TMPWORKDIR;exit $_EXIT_status;
+ssh -l parallel lo -- exec mkdir -p ./.TMPWORKDIR && rsync --protocol 30 --old-args -rlDzR -e'ssh -l parallel' ./abc-file lo:./.TMPWORKDIR;ssh -l parallel lo -- exec perl -X -e GNU_Parallel_worker,eval+pack+q/H10000000/,join+q//,@ARGV BASE64;_EXIT_status=$?; mkdir -p ./. && rsync --protocol 30 --old-args -rlDzR -e'ssh -l parallel' --rsync-path='cd ./.TMPWORKDIR/./.; rsync' -- lo:./abc-file.out ./.;ssh -l parallel lo -- exec 'sh -c '"'"'rm -f ./.TMPWORKDIR/abc-file 2>/dev/null;rmdir ./.TMPWORKDIR/ ./.parallel/tmp/ ./.parallel/ 2>/dev/null;rm -rf ./.TMPWORKDIR;'"'";ssh -l parallel lo -- exec 'sh -c '"'"'rm -f ./.TMPWORKDIR/abc-file.out 2>/dev/null;rmdir ./.TMPWORKDIR/ ./.parallel/tmp/ ./.parallel/ 2>/dev/null;rm -rf ./.TMPWORKDIR;'"'";ssh -l parallel lo -- exec rm -rf .TMPWORKDIR;exit $_EXIT_status;
   parset myvar1,myvar2 echo ::: a b
   echo $myvar1
   echo $myvar2
@@ -1260,7 +1272,6 @@ Slow started
 Forced running after 1 sec
 Slow ended
 parallel: Warning: Semaphore timed out. Stealing the semaphore.
-parallel: Warning: Semaphore timed out. Exiting.
   parallel --help
 Usage:
 parallel [options] [command [arguments]] < list_of_arguments
@@ -1325,8 +1336,6 @@ More about funding GNU Parallel and the citation notice:
 https://lists.gnu.org/archive/html/parallel/2013-11/msg00006.html
 https://www.gnu.org/software/tempfileallel_design.html#citation-notice
 https:BASE64-notice-faq.txt
-If you send a copy of your published article to tange@gnu.org, it will be
-mentioned in the release notes of next version of GNU Parallel.
   parallel --number-of-cpus
   parallel --number-of-cores
 9

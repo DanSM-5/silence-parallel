@@ -2,3 +2,5 @@
 ### See if we get compile error
 perl
 ### See if we read modules outside perllib
+### Test make .deb package
+To install the GNU Parallel Debian package, run:

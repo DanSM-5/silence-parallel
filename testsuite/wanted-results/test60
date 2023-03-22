@@ -1,6 +1,6 @@
 par_nonall	### Test --nonall
 par_nonall	centos8.localdomain
-par_nonall	freebsd11.localdomain
+par_nonall	freebsd12.localdomain
 par_nonall_basefile	### Test --nonall --basefile
 par_nonall_basefile	/tmp/nonall--basefile
 par_nonall_basefile	/tmp/nonall--basefile
@@ -10,8 +10,8 @@ par_nonall_sshloginfile_stdin	centos8.localdomain
 par_nonall_u	### Test --nonall -u - should be interleaved x y x y
 par_nonall_u	      1 centos8.localdomain
 par_nonall_u	      1 centos8.localdomain
-par_nonall_u	      1 freebsd11.localdomain
-par_nonall_u	      1 freebsd11.localdomain
+par_nonall_u	      1 freebsd12.localdomain
+par_nonall_u	      1 freebsd12.localdomain
 par_onall	### Test --onall
 par_onall	1
 par_onall	2

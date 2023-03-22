@@ -2503,6 +2503,7 @@ sub parse_options(@) {
     if(defined $opt::bar) { $opt::progress = $opt::bar; }
     if(defined $opt::bar or defined $opt::latestline) {
 	my $fh = $Global::status_fd || *STDERR;
+	# Activate decode_utf8
 	eval q{
 	    # Enable utf8 if possible
 	    use utf8;
@@ -2514,6 +2515,20 @@ sub parse_options(@) {
 	} else {
 	    # UTF8-decode not supported: Dummy decode
 	    eval q{sub decode_utf8($;$) { $_[0]; }};
+	}
+	# Activate decode_utf8
+	eval q{
+	    # Enable utf8 if possible
+	    use utf8;
+	    use Encode             qw( encode_utf8 );
+	    use Text::CharWidth    qw( mbswidth );
+	    use Unicode::Normalize qw( NFC NFD );
+	};
+	if(eval { mbswidth("ヌー平行") }) {
+	    # Great: mbswidth works
+	} else {
+	    # mbswidth not supported: Dummy mbswidth
+	    eval q{ sub mbswidth { return length @_; } };
 	}
     }
 
@@ -2589,7 +2604,6 @@ sub parse_options(@) {
     # If you want GNU Parallel to be maintained in the future you
     # should keep this line.
     citation_notice();
-    
     # This is because _YOU_ actively make it harder to justify
     # spending time developing GNU Parallel by removing it.
 
@@ -4556,6 +4570,17 @@ sub progress() {
 	update_terminal_size();
 	return $columns;
     }
+}
+
+sub untabify($) {
+    # Convert \t into spaces
+    my @out;
+    my ($src);
+    # Deal with multi-byte characters
+    for my $src (split("\t",$_[0])) {
+	push @out, $src. " "x(8-mbswidth($src)%8);
+    }
+    return join "",@out;
 }
 
 # Prototype forwarding
@@ -11421,6 +11446,22 @@ sub print_files($) {
 	}
     }
 
+    sub truncate_mbs($$) {
+	my $str = shift;
+	my $len = shift;
+	if(::mbswidth($str) == length($str)) {
+	    $str = substr($str,0,$len);
+	} else {
+	    # Highly inefficient truncator
+	    while(::mbswidth($str) > $len) {
+		do {
+		    chop $str;
+		} while(::mbswidth($str) < 0);
+	    }
+	}
+	return $str;
+    }
+    
     sub print_latest_line($) {
 	my $self = shift;
 	my $out_fh = shift;
@@ -11437,37 +11478,35 @@ sub print_files($) {
 	    eval q{ binmode $out_fh, "encoding(utf8)"; };
 	}
 	my ($color,$reset_color) = $self->color();
-	# Strings with TABs give the wrong length. Untabify strings
 	my $termcol = ::terminal_columns();
-	my $untabify_tag = ::decode_utf8($self->untabtag());
-	my $taglen = length $untabify_tag;
+	my $untabify_tag = $self->untabtag();
+	my $untabify_str = ::untabify($self->{$out_fh,'latestline'});
+	# -1 to make space for $truncated_str
+	my $maxtaglen = $termcol - 1;
+	$untabify_tag = truncate_mbs($untabify_tag,$maxtaglen);
+	my $taglen = ::mbswidth($untabify_tag);
+	my $maxstrlen = $termcol - $taglen - 1;
+	$untabify_str = truncate_mbs($untabify_str,$maxstrlen);
+	my $strlen = ::mbswidth($untabify_str);
 	my $truncated_tag = "";
-	my $untabify_str = ::decode_utf8($self->{$out_fh,'latestline'});
-	$untabify_str =~ s/\t/$tab{$-[0]%8}/g;
-	# -1 to make space for $truncated
-	my $strlen = $termcol - $taglen - 1;
-	my $strspc = $strlen - length $untabify_str;
-	if($strlen < 0) { $strlen = 0;}
-	# Line is shorter than terminal width: add " "
-	# Line is longer than terminal width: add ">"
-	my $truncated = ($strspc >= 0) ? " " : ">";
-	if($taglen > $termcol) {
-	    # Tag is longer than terminal width: add ">" to tag
-	    # Remove $truncated (it will not be shown at all)
-	    $taglen = $termcol - 1;
+	my $truncated_str = "";
+	if($termcol - $taglen < 2) {
 	    $truncated_tag = ">";
-	    $truncated = "";
+	} else {
+	    if($termcol - $taglen - $strlen <= 2) {
+		$truncated_str = ">";
+	    }
 	}
 	$maxrow = ($row > $maxrow) ? $row : $maxrow;
 	printf($out_fh
 	       ("%s%s%s%s". # up down \r eol
-		"%.${taglen}s%s". # tag trunc_tag
-		"%s%.${strlen}s%s%s". # color line trunc reset_color
+		"%s%s". # tag trunc_tag
+		"%s%s%s%s". # color line trunc reset_color
 		"%s" # down
 	       ),
 	       "$up"x($currow - $row), "\n"x($row - $currow), "\r", $eol,
-	       $untabify_tag,$truncated_tag,
-	       $color, $untabify_str, $truncated, $reset_color,
+	       ::decode_utf8($untabify_tag),$truncated_tag,
+	       $color, ::decode_utf8($untabify_str), $truncated_str, $reset_color,
 	       "\n"x($maxrow - $row + 1));
 	$currow = $maxrow + 1;
     }
@@ -11898,9 +11937,7 @@ sub untabtag($) {
     my $self = shift;
     my $tag = $self->tag();
     if(not defined $self->{'untab'}{$tag}) {
-	my $t = $tag;
-	$t =~ s/\t/" "x(8-($-[0]%8))/eg;
-	$self->{'untab'}{$tag} = $t;
+	$self->{'untab'}{$tag} = ::untabify($tag);
     }
     return $self->{'untab'}{$tag};
 }

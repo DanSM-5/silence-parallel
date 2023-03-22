@@ -7,7 +7,7 @@
 # TODO return multiple
 
 SERVER1=parallel-server1
-SERVER2=parallel-server2
+SERVER2=parallel-server3
 SSHUSER1=vagrant
 SSHUSER2=vagrant
 #SSHLOGIN1=parallel@$SERVER1

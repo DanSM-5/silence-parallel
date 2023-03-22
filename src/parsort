@@ -30,7 +30,7 @@ Same as B<sort>. Except:
 
 =over 4
 
-=item B<--parallel=>I<N> (alpha testing)
+=item B<--parallel=>I<N> (beta testing)
 
 Change the number of sorts run concurrently to I<N>. I<N> will be
 increased to number of files if B<parsort> is given more than I<N>

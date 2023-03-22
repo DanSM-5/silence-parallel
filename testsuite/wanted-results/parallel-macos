@@ -1,7 +1,7 @@
-par_big_func	       1    3XXX   90XXX
-par_big_func	       1    3XXX   90XXX
-par_big_func	       1    3XXX   90XXX
-par_big_func	       1    1XXX   47XXX
+par_big_func	       1    3XXX   91XXX
+par_big_func	       1    3XXX   91XXX
+par_big_func	       1    3XXX   91XXX
+par_big_func	       1    1XXX   46XXX
 par_big_func_name	   18XXX
 par_big_func_name	   18XXX
 par_big_func_name	   18XXX
@@ -65,8 +65,7 @@ par_many_func	       1     196    4XXX
 par_many_func	       1     196    4XXX
 par_many_func	       1     196    4XXX
 par_many_func	       1     196    4XXX
-par_many_func	       1     196    4XXX
-par_many_func	       1       4      68
+par_many_func	       1     200    4XXX
 par_many_var	   22XXX
 par_many_var	   22XXX
 par_many_var	   22XXX

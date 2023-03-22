@@ -153,22 +153,22 @@ par_--tmux_different_shells	See output with: tmux -S /TMP/tmsXXXXX attach
 par_--tmux_different_shells	0
 par_--tmux_different_shells	See output with: tmux -S /TMP/tmsXXXXX attach
 par_--tmux_different_shells	4
-par_--tmux_different_shells	See output with: tmux -S /tmp/tmsXXXXX attach
+par_--tmux_different_shells	See output with: tmux -S /TMP/tmsXXXXX attach
 par_--tmux_different_shells	0
-par_--tmux_different_shells	See output with: tmux -S /tmp/tmsXXXXX attach
+par_--tmux_different_shells	See output with: tmux -S /TMP/tmsXXXXX attach
 par_--tmux_different_shells	4
-par_--tmux_different_shells	See output with: tmux -S /tmp/tmsXXXXX attach
+par_--tmux_different_shells	See output with: tmux -S /TMP/tmsXXXXX attach
 par_--tmux_different_shells	0
-par_--tmux_different_shells	See output with: tmux -S /tmp/tmsXXXXX attach
+par_--tmux_different_shells	See output with: tmux -S /TMP/tmsXXXXX attach
 par_--tmux_different_shells	4
-par_--tmux_different_shells	See output with: tmux -S /tmp/tmsXXXXX attach
+par_--tmux_different_shells	See output with: tmux -S /TMP/tmsXXXXX attach
 par_--tmux_different_shells	0
-par_--tmux_different_shells	See output with: tmux -S /tmp/tmsXXXXX attach
+par_--tmux_different_shells	See output with: tmux -S /TMP/tmsXXXXX attach
 par_--tmux_different_shells	4
 par_--tmux_different_shells	# command is currently too long for csh. Maybe it can be fixed?
-par_--tmux_different_shells	See output with: tmux -S /tmp/tmsXXXXX attach
+par_--tmux_different_shells	See output with: tmux -S /TMP/tmsXXXXX attach
 par_--tmux_different_shells	0
-par_--tmux_different_shells	See output with: tmux -S /tmp/tmsXXXXX attach
+par_--tmux_different_shells	See output with: tmux -S /TMP/tmsXXXXX attach
 par_--tmux_different_shells	4
 par_--tmux_length	### works
 par_--tmux_length	See output with: tmux -S /TMP/tmsXXXXX attach
@@ -179,6 +179,8 @@ par_--tmux_length	See output with: tmux -S /TMP/tmsXXXXX attach
 par_--tmux_length	See output with: tmux -S /TMP/tmsXXXXX attach
 par_--tmux_length	See output with: tmux -S /TMP/tmsXXXXX attach
 par_--tmux_length	See output with: tmux -S /TMP/tmsXXXXX attach
+par__test_different_rsync_versions	### different versions of rsync need fixups
+par__test_different_rsync_versions	### no output is good
 par_bigvar_csh	### csh
 par_bigvar_csh	3 big vars run remotely - length(base64) > 1000
 par_bigvar_csh	      1     200     692
