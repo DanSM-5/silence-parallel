@@ -3917,6 +3917,10 @@ https://github.com/jkool702/forkrun
 
 =head2 Todo
 
+https://www.npmjs.com/package/concurrently
+
+https://github.com/thilinaba/bash-parallel
+
 http://code.google.com/p/push/ (cannot compile)
 
 https://github.com/krashanoff/parallel

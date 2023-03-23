@@ -83,6 +83,9 @@ perl -ne '$/="\n\n"; /^Output/../^[^O]\S/ and next; /^  / and print;' "$testsuit
               s/(std(out|err)|seq): Permission denied/$1: No such file or directory/;
               # Race condition
               s/^4-(middle|end)\n//;
+              # Race condition
+	      s/^parallel: This job failed:\n//;
+	      s/^echo .; exit .\n//;
               # Base 64 string with quotes
               s:['"'"'"\\+/a-z.0-9=]{50,}(\s['"'"'"\\+/a-z.0-9=]*)*:BASE64:ig;
               # Timings are often off

@@ -1799,10 +1799,6 @@ sub options_completion_hash() {
 	  "[Use the replacement string replace-str instead of {%} for job ".
 	  "slot number]:replace-str"
 	  => \$opt::slotreplace),
-	 ("jobs|j=s".
-	  "[(Add +N to/Subtract -N from/Multiply N%) the number of CPU ".
-	  "threads or read parameter from file]:_files"
-	  => \$opt::jobs),
 	 ("delay=s".
 	  "[Delay starting next job by duration]:duration" => \$opt::delay),
 	 ("ssh-delay|sshdelay=f".
@@ -1985,7 +1981,7 @@ sub options_completion_hash() {
 	 ("term-seq|termseq=s".
 	  "[Termination sequence]:sequence" => \$opt::termseq),
 	 # xargs-compatibility - implemented, man, testsuite
-	 ("max-procs|maxprocs|P=s".
+	 ("max-procs|maxprocs|P|jobs|j=s".
 	  "[Add N to/Subtract N from/Multiply N% with/ the number of CPU ".
 	  "threads or read parameter from file]:+N/-N/N%/N/procfile:_files"
 	  => \$opt::jobs),
@@ -2766,7 +2762,7 @@ sub check_invalid_option_combinations() {
 
 sub init_globals() {
     # Defaults:
-    $Global::version = 20230322;
+    $Global::version = 20230323;
     $Global::progname = 'parallel';
     $::name = "GNU Parallel";
     $Global::infinity = 2**31;
@@ -8245,28 +8241,7 @@ sub user_requested_processes($) {
     my $opt_P = shift;
     my $processes;
     if(defined $opt_P) {
-	if($opt_P =~ /^\+(\d+)$/) {
-	    # E.g. -P +2
-	    my $j = $1;
-	    $processes =
-		$self->ncpus() + $j;
-	} elsif ($opt_P =~ /^-(\d+)$/) {
-	    # E.g. -P -2
-	    my $j = $1;
-	    $processes =
-		$self->ncpus() - $j;
-	} elsif ($opt_P =~ /^(\d+(\.\d+)?)\%$/) {
-	    # E.g. -P 10.5%
-	    my $j = $1;
-	    $processes =
-		$self->ncpus() * $j / 100;
-	} elsif ($opt_P =~ /^(\d+)$/) {
-	    $processes = $1;
-	    if($processes == 0) {
-		# -P 0 = infinity (or at least close)
-		$processes = $Global::infinity;
-	    }
-	} elsif (-f $opt_P) {
+	if (-f $opt_P) {
 	    $Global::max_procs_file = $opt_P;
 	    if(open(my $in_fh, "<", $Global::max_procs_file)) {
 		my $opt_P_file = join("",<$in_fh>);
@@ -8277,8 +8252,15 @@ sub user_requested_processes($) {
 		::wait_and_exit(255);
 	    }
 	} else {
-	    ::error("Parsing of --jobs/-j/--max-procs/-P failed.");
-	    ::die_usage();
+	    # -P +3 and -P -1
+	    $opt_P =~ s/^([-+])/\$self->ncpus()$1/;
+	    # -P 40%
+	    $opt_P =~ s:%$:*\$self->ncpus()/100:;
+	    $processes = eval $opt_P;
+	    if($processes == 0) {
+		# -P 0 = infinity (or at least close)
+		$processes = $Global::infinity;
+	    }
 	}
 	$processes = ::ceil($processes);
     }
@@ -11452,11 +11434,11 @@ sub print_files($) {
 	if(::mbswidth($str) == length($str)) {
 	    $str = substr($str,0,$len);
 	} else {
-	    # Highly inefficient truncator
+	    $str=~s/(.{$len}).*/$1/;
+	    my $rlen = (::mbswidth($str) - $len)/2;
+	    $str=~s/.{$rlen}$//;
 	    while(::mbswidth($str) > $len) {
-		do {
-		    chop $str;
-		} while(::mbswidth($str) < 0);
+		$str=~s/.$//;
 	    }
 	}
 	return $str;
@@ -11479,8 +11461,9 @@ sub print_files($) {
 	}
 	my ($color,$reset_color) = $self->color();
 	my $termcol = ::terminal_columns();
-	my $untabify_tag = $self->untabtag();
-	my $untabify_str = ::untabify($self->{$out_fh,'latestline'});
+	my $untabify_tag = ::decode_utf8($self->untabtag());
+	my $untabify_str =
+	    ::untabify(::decode_utf8($self->{$out_fh,'latestline'}));
 	# -1 to make space for $truncated_str
 	my $maxtaglen = $termcol - 1;
 	$untabify_tag = truncate_mbs($untabify_tag,$maxtaglen);
@@ -11505,8 +11488,8 @@ sub print_files($) {
 		"%s" # down
 	       ),
 	       "$up"x($currow - $row), "\n"x($row - $currow), "\r", $eol,
-	       ::decode_utf8($untabify_tag),$truncated_tag,
-	       $color, ::decode_utf8($untabify_str), $truncated_str, $reset_color,
+	       $untabify_tag,$truncated_tag,
+	       $color, $untabify_str, $truncated_str, $reset_color,
 	       "\n"x($maxrow - $row + 1));
 	$currow = $maxrow + 1;
     }
@@ -15128,8 +15111,6 @@ sub main() {
 	# Parallel check all hosts are up. Remove hosts that are down
 	filter_hosts();
     }
-
-
     if($opt::sqlmaster and $opt::sqlworker) {
 	# Start a real --sqlworker in the background later
 	$Global::start_sqlworker = 1;
@@ -15184,7 +15165,6 @@ sub main() {
     # Compute $Global::max_jobs_running
     # Must be done after ungetting any --pipepart jobs.
     max_jobs_running();
-
     init_run_jobs();
     my $sem;
     if($Global::semaphore) {

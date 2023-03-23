@@ -10,12 +10,23 @@ par_ll_asian() {
     echo '### --ll with Asian wide chars mess up display'
     echo 'bug #63878: Wide East Asian chars in --latest-line'
     p="parallel --ll --color --tag"
-    COLUMNS=80 $p echo tag fits, line fits a{}b{}c \
-	   ::: ヌー平行
-    COLUMNS=80 $p echo tag fits, line too long a{}b{}c \
-	   ::: ヌー平行ヌー平行ヌー平行ヌー平行ヌー平行ヌー平行ヌー平行ヌー平行ヌー
-    COLUMNS=80 $p echo tag too long a{}b{}c \
+    echo Oops: the first adds '>' too early
+    COLUMNS=50 $p echo tag fits, line fits a{}b{}c \
+	   ::: ヌー平
+    COLUMNS=50 $p echo tag fits, line too long a{}b{}c \
+	   ::: ヌー平行ヌー平行ヌー平行ヌー平行ヌ
+    COLUMNS=50 $p echo tag too long a{}b{}c \
 	   ::: ヌー平行ヌー平行ヌー平行ヌー平行ヌー平行ヌー平行ヌー平行ヌー平行ヌー平行ヌー平行ヌー平行ヌー平行a
+}
+
+par_mbswidth() {
+    echo '### characters with screen width > 1'
+    perl -e '@a=qw(ヌ ー 平 行.);
+	 print map {
+	     (join"",map{ $a[$_% $#a] } (1..$_))."\n".
+	     "a".(join"",map{ $a[$_% $#a] } (1..$_))."\n"
+	 } (1..40)' |
+	COLUMNS=50 parallel -k --ll --color --tag echo
 }
 
 par_ll_tag() {

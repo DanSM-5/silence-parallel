@@ -1375,19 +1375,27 @@ If the host is long, you can use B<column -t> to pretty print it:
 See also: B<--resume> B<--resume-failed>
 
 
-=item B<--jobs> I<N>
+=item B<--jobs> I<num> (alpha testing)
 
-=item B<-j> I<N>
+=item B<-j> I<num> (alpha testing)
 
-=item B<--max-procs> I<N>
+=item B<--max-procs> I<num> (alpha testing)
 
-=item B<-P> I<N>
+=item B<-P> I<num> (alpha testing)
 
 Number of jobslots on each machine.
 
-Run up to N jobs in parallel.  0 means as many as possible (this can
-take a while to determine). Default is 100% which will run one job per
-CPU thread on each machine.
+Run up to I<num> jobs in parallel. Default is 100%.
+
+=over 7
+
+=item I<num>
+
+Run up to I<num> jobs in parallel.
+
+=item Z<>0
+
+Run as many as possible (this can take a while to determine).
 
 Due to a bug B<-j 0> will also evaluate replacement strings twice up
 to the number of joblots:
@@ -1397,80 +1405,48 @@ to the number of joblots:
   # This will count from 1
   seq 10000 | parallel -j100 echo '{= $_ = $foo++; =}' | head
 
-If B<--semaphore> is set, the default is 1 thus making a mutex.
+=item I<num>%
 
-See also: B<--use-cores-instead-of-threads>
-B<--use-sockets-instead-of-threads>
+Multiply the number of CPU threads by I<num> percent. E.g. 100% means
+one job per CPU thread on each machine.
 
+=item +I<num>
 
+Add I<num> to the number of CPU threads.
 
-=item B<--jobs> I<+N>
+=item -I<num>
 
-=item B<-j> I<+N>
+Subtract I<num> from the number of CPU threads.
 
-=item B<--max-procs> I<+N>
+=item I<expr>
 
-=item B<-P> I<+N>
+Evaluate I<expr>. E.g. '12/2' to get 6, '+25%' gives the same as
+'125%', or complex expressions like '+3*log(55)%' which means:
+multiply 3 by log(55), multiply that by the number of CPU threads and
+divide by 100, add this to the number of CPU threads.
 
-Add N to the number of CPU threads.
-
-Run this many jobs in parallel.
-
-See also: B<--number-of-threads> B<--number-of-cores>
-B<--number-of-sockets>
-
-
-=item B<--jobs> I<-N>
-
-=item B<-j> I<-N>
-
-=item B<--max-procs> I<-N>
-
-=item B<-P> I<-N>
-
-Subtract N from the number of CPU threads.
-
-Run this many jobs in parallel.  If the evaluated number is less than
-1 then 1 will be used.
-
-See also: B<--number-of-threads> B<--number-of-cores>
-B<--number-of-sockets>
-
-
-=item B<--jobs> I<N>%
-
-=item B<-j> I<N>%
-
-=item B<--max-procs> I<N>%
-
-=item B<-P> I<N>%
-
-Multiply N% with the number of CPU threads.
-
-Run this many jobs in parallel.
-
-See also: B<--number-of-threads> B<--number-of-cores>
-B<--number-of-sockets>
-
-
-=item B<--jobs> I<procfile>
-
-=item B<-j> I<procfile>
-
-=item B<--max-procs> I<procfile>
-
-=item B<-P> I<procfile>
+=item I<procfile>
 
 Read parameter from file.
 
 Use the content of I<procfile> as parameter for
-I<-j>. E.g. I<procfile> could contain the string 100% or +2 or 10. If
-I<procfile> is changed when a job completes, I<procfile> is read again
-and the new number of jobs is computed. If the number is lower than
-before, running jobs will be allowed to finish but new jobs will not
-be started until the wanted number of jobs has been reached.  This
+I<-j>. E.g. I<procfile> could contain the string 100% or +2 or 10.
+
+If I<procfile> is changed when a job completes, I<procfile> is read
+again and the new number of jobs is computed. If the number is lower
+than before, running jobs will be allowed to finish but new jobs will
+not be started until the wanted number of jobs has been reached.  This
 makes it possible to change the number of simultaneous running jobs
 while GNU B<parallel> is running.
+
+=back
+
+If the evaluated number is less than 1 then 1 will be used.
+
+If B<--semaphore> is set, the default is 1 thus making a mutex.
+
+See also: B<--use-cores-instead-of-threads>
+B<--use-sockets-instead-of-threads>
 
 
 =item B<--keep-order>

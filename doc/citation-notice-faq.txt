@@ -121,7 +121,7 @@ contribution to the research is big enough to warrant a citation.
 
 The citation is also needed for reproducibility: Let us assume a bug
 in GNU Parallel skews the results. People replicating the research
-needs to have the information, so they can replicate the (possibly
+need to have the information, so they can replicate the (possibly
 wrong) results.
 
 

@@ -161,7 +161,7 @@ line number and the URL.
 
   cat urlfile | parallel "wget {} 2>/dev/null || grep -n {} urlfile"
 
-Create a mirror directory with the same filenames except all files and
+Create a mirror directory with the same file names except all files and
 symlinks are empty files.
 
   cp -rs /the/source/dir mirror_dir
@@ -286,6 +286,21 @@ Put all converted in the same directory:
 
   find sounddir -type f -name '*.wav' | \
     parallel lame {} -o mydir/{/.}.mp3
+
+
+=head2 EXAMPLE: Replacing parts of file names
+
+If you deal with paired end reads, you will have files like
+barcode1_R1.fq.gz, barcode1_R2.fq.gz, barcode2_R1.fq.gz, and
+barcode2_R2.fq.gz.
+
+You want barcodeI<N>_R1 to be processed with barcodeI<N>_R2.
+
+    parallel --plus myprocess {} {/_R1.fq.gz/_R2.fq.gz} ::: *_R1.fq.gz
+
+If the barcode does not contain '_R1', you can do:
+
+    parallel --plus myprocess {} {/_R1/_R2} ::: *_R1.fq.gz
 
 
 =head2 EXAMPLE: Removing strings from the argument
@@ -1719,7 +1734,7 @@ Here B<python>:
   print "exclusively";
 
 
-=head2 EXAMPLE: Start editor with filenames from stdin (standard input)
+=head2 EXAMPLE: Start editor with file names from stdin (standard input)
 
 You can use GNU B<parallel> to start interactive programs like emacs or vi:
 

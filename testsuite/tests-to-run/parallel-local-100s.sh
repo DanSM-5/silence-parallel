@@ -39,7 +39,7 @@ linebuffer_matters() {
     # Random data because it does not compress well
     # forcing the compress tool to spit out compressed blocks
     perl -pe 'y/[A-Za-z]//cd; $t++ % 1000 or print "\n"' < /dev/urandom |
-	head -c 10000000 > $randomfile
+	head -c 10000000 > "$randomfile"
     export randomfile
 
     testfunc() {
@@ -49,10 +49,10 @@ linebuffer_matters() {
 	    # generate some incompressible ascii
 	    # with lines starting with the same string
 	    id=$1
-	    shuf $randomfile | perl -pe 's/^/'$id' /'
+	    shuf "$randomfile" | perl -pe 's/^/'$id' /'
 	    # Sleep to give time to linebuffer-print the first part
 	    sleep 10
-	    shuf $randomfile | perl -pe 's/^/'$id' /'
+	    shuf "$randomfile" | perl -pe 's/^/'$id' /'
 	    echo
 	}
 	export -f incompressible_ascii
@@ -72,15 +72,15 @@ linebuffer_matters() {
     }
 
     # These can run in parallel if there are enough ressources
-    testfunc > $nolbfile
-    testfunc > $controlfile
-    testfunc --linebuffer > $lbfile
+    testfunc > "$nolbfile"
+    testfunc > "$controlfile"
+    testfunc --linebuffer > "$lbfile"
     wait
 
-    nolb="$(cat $nolbfile)"
-    control="$(cat $controlfile)"
-    lb="$(cat $lbfile)"
-    rm $nolbfile $lbfile $controlfile $randomfile
+    nolb="$(cat "$nolbfile")"
+    control="$(cat "$controlfile")"
+    lb="$(cat "$lbfile")"
+    rm "$nolbfile" "$lbfile" "$controlfile" "$randomfile"
 
     if [ "$nolb" == "$control" ] ; then
 	if [ "$lb" == "$nolb" ] ; then
