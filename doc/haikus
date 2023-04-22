@@ -4,8 +4,6 @@
  
 Quote of the month:
 
-  parallel might be one of the best utilities out there
-    -- @ThePrimeagen ThePrimeagen
     
   Recently learned how to use GNU parallel (from ChatGPT, no less!) and I've gone mad with power
     -- Mark, Anthropomorphic Anuran @reject_resubmit@twitter
@@ -232,6 +230,9 @@ https://negfeedback.blogspot.com/2020/05/indispensable-command-line-tools.html
     -- @alinajaf@twitter
 
 === Used ===
+
+  parallel might be one of the best utilities out there
+    -- @ThePrimeagen ThePrimeagen
 
   GNU parallel is magic, half of my work uses it, to the point where they're referenced and thanked in my thesis
     -- Best Catboy Key Grip @alamogordoglass@twitter

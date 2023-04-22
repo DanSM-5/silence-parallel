@@ -9,6 +9,8 @@ TMPDIR=${TMPDIR:-/tmp}
 mkdir -p $TMPDIR
 # Jobs that eat more than 2 GB RAM
 
+echo "dir $testsuitedir"
+[ -e "$testsuitedir" ] && cd "$testsuitedir"
 gendata() {
     # Generate a lot of text data fast
     yes "`seq 3000`" | head -c $1
@@ -18,6 +20,7 @@ export -f gendata
 perl5.14parallel() {
     # Run GNU Parallel under perl 5.14 which does not support 64-bit very well
     # Remove setpgrp_func because 5.14 may use another func
+    pwd
     rm -f ~/.parallel/tmp/sshlogin/*/setpgrp_func
     PATH=input-files/perl-v5.14.2:$PATH
     PERL5LIB=input-files/perl-v5.14.2/lib input-files/perl-v5.14.2/perl `which parallel` "$@"
