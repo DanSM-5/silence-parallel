@@ -11430,18 +11430,21 @@ sub print_files($) {
 	}
     }
 
-    sub truncate_mbs($$) {
+    sub mbtrunc($$) {
+	# Simple mbtrunc to avoid using Text::WideChar::Util
 	my $str = shift;
 	my $len = shift;
 	if(::mbswidth($str) == length($str)) {
 	    $str = substr($str,0,$len);
 	} else {
-	    $str=~s/(.{$len}).*/$1/;
-	    my $rlen = (::mbswidth($str) - $len)/2;
-	    $str=~s/.{$rlen}$//;
-	    while(::mbswidth($str) > $len) {
-		$str=~s/.$//;
-	    }
+	    # mb chars (ヌー平行) are wider than 1 char on screen
+	    # We need at most $len chars - they may be wide
+	    $str =~ s/(.{$len}).*/$1/;
+	    my $rlen = int((::mbswidth($str) - $len)/2+0.5);
+	    do {
+		$str =~ s/.{$rlen}$//;
+		$rlen = int((::mbswidth($str) - $len)/2+0.5);
+	    } while($rlen >= 1);
 	}
 	return $str;
     }
@@ -11468,10 +11471,10 @@ sub print_files($) {
 	    ::untabify(::decode_utf8($self->{$out_fh,'latestline'}));
 	# -1 to make space for $truncated_str
 	my $maxtaglen = $termcol - 1;
-	$untabify_tag = truncate_mbs($untabify_tag,$maxtaglen);
+	$untabify_tag = mbtrunc($untabify_tag,$maxtaglen);
 	my $taglen = ::mbswidth($untabify_tag);
 	my $maxstrlen = $termcol - $taglen - 1;
-	$untabify_str = truncate_mbs($untabify_str,$maxstrlen);
+	$untabify_str = mbtrunc($untabify_str,$maxstrlen);
 	my $strlen = ::mbswidth($untabify_str);
 	my $truncated_tag = "";
 	my $truncated_str = "";
