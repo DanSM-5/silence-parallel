@@ -2,7 +2,7 @@
 
 # This file must be sourced in ksh:
 #
-#   source `which env_parallel.ksh`
+#   source env_parallel.ksh
 #
 # after which 'env_parallel' works
 #

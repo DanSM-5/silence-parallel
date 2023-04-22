@@ -2,7 +2,7 @@
 
 # This file must be sourced in bash:
 #
-#   source `which env_parallel.bash`
+#   source env_parallel.bash
 #
 # after which 'env_parallel' works
 #

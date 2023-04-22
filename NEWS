@@ -1,3 +1,12 @@
+20230422
+
+New in this release:
+
+* --jobs evaluates expression: +3*log(55)% = ncpu*1.12
+
+* Bug fixes and man page updates.
+
+
 20230322
 
 New in this release:

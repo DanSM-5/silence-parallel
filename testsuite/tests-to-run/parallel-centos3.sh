@@ -29,6 +29,9 @@ export SSHLOGIN2=$SSHUSER2@$SERVER2
 start_centos3() {
     stdout ping -w 1 -c 1 centos3 >/dev/null || (
 	# Vagrant does not set the IP addr
+	# cd to the centos3 dir with the Vagrantfile
+	# Try different "cd"s as the script may be started from another dir
+	cd $testsuitedir/vagrant/tange/centos3/ 2>/dev/null
 	cd testsuite/vagrant/tange/centos3/ 2>/dev/null
 	cd vagrant/tange/centos3/ 2>/dev/null
 	cd ../vagrant/tange/centos3/ 2>/dev/null

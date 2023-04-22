@@ -3143,6 +3143,8 @@ sub open_joblog() {
 	# Do not log if --sqlworker
 	if($opt::resume || $opt::resume_failed || $opt::retry_failed) {
 	    if(open(my $joblog_fh, "<", $opt::joblog)) {
+		# Enable utf8 if possible
+		eval q{ binmode $joblog_fh, "encoding(utf8)"; };
 		# Read the joblog
 		# Override $/ with \n because -d might be set
 		local $/ = "\n";
@@ -11443,7 +11445,7 @@ sub print_files($) {
 	}
 	return $str;
     }
-    
+
     sub print_latest_line($) {
 	my $self = shift;
 	my $out_fh = shift;
@@ -11651,26 +11653,28 @@ sub print_files($) {
 		if($Global::files or ($opt::results and not $Global::csvsep)) {
 		    $self->add_returnsize(-s $self->fh($fdno,"name"));
 		} else {
-		    # If the job is dead: print the remaining partial line
-		    # read remaining
-		    my $halfline_ref = $self->{'halfline'}{$fdno};
-		    if(grep /./, @$halfline_ref) {
-			my $returnsize = 0;
-			for(@{$self->{'halfline'}{$fdno}}) {
-			    $returnsize += length $_;
+		    if(not $opt::latestline) {
+			# If the job is dead: print the remaining partial line
+			# read remaining (already done for $opt::latestline)
+			my $halfline_ref = $self->{'halfline'}{$fdno};
+			if(grep /./, @$halfline_ref) {
+			    my $returnsize = 0;
+			    for(@{$self->{'halfline'}{$fdno}}) {
+				$returnsize += length $_;
+			    }
+			    $self->add_returnsize($returnsize);
+			    if($opt::tag or defined $opt::tagstring) {
+				# Prepend $tag the the remaining half line
+				unshift @$halfline_ref, $self->tag();
+			    }
+			    # Print the partial line (halfline)
+			    print $out_fh @{$self->{'halfline'}{$fdno}};
+			    # Buffer in memory for SQL and CSV-output
+			    if($Global::membuffer) {
+				push(@{$self->{'output'}{$fdno}}, @$halfline_ref);
+			    }
+			    @$halfline_ref = ();
 			}
-			$self->add_returnsize($returnsize);
-			if($opt::tag or defined $opt::tagstring) {
-			    # Prepend $tag the the remaining half line
-			    unshift @$halfline_ref, $self->tag();
-			}
-			# Print the partial line (halfline)
-			print $out_fh @{$self->{'halfline'}{$fdno}};
-			# Buffer in memory for SQL and CSV-output
-			if($Global::membuffer) {
-			    push(@{$self->{'output'}{$fdno}}, @$halfline_ref);
-			}
-			@$halfline_ref = ();
 		    }
 		}
 		if($self->fh($fdno,"rpid") and

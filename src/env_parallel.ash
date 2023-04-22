@@ -2,7 +2,7 @@
 
 # This file must be sourced in ash:
 #
-#   . `which env_parallel.ash`
+#   . env_parallel.ash
 #
 # after which 'env_parallel' works
 #

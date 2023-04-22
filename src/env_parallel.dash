@@ -2,7 +2,7 @@
 
 # This file must be sourced in dash:
 #
-#   . `which env_parallel.dash`
+#   . env_parallel.dash
 #
 # after which 'env_parallel' works
 #

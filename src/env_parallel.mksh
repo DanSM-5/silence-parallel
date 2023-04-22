@@ -2,7 +2,7 @@
 
 # This file must be sourced in mksh:
 #
-#   source `which env_parallel.mksh`
+#   source env_parallel.mksh
 #
 # after which 'env_parallel' works
 #

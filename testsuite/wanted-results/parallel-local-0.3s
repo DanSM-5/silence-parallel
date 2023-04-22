@@ -339,6 +339,12 @@ par_link_files_as_only_arg	3 3 3
 par_ll_long_followed_by_short	par_ll_long_followed_by_short	[KA very long line        
 par_ll_long_followed_by_short	[Apar_ll_long_followed_by_short	[KA very long line        
 par_ll_long_followed_by_short	[Apar_ll_long_followed_by_short	[KOK      
+par_ll_no_newline	bug #64030: parallel --ll echo -n ::: foo
+par_ll_no_newline	par_ll_no_newline	[Klines   
+par_ll_no_newline	par_ll_no_newline	[Ktwo     
+par_ll_no_newline	par_ll_no_newline	[Klines   
+par_ll_no_newline	par_ll_no_newline	[Ktwo     
+par_ll_no_newline	last linelast line
 par_locale_quoting	### quoting in different locales
 par_locale_quoting	£`/tmp/test£`
 par_locale_quoting	$LC_ALL £`/tmp/test£`

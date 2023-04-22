@@ -16,6 +16,15 @@ export -f stdsort
 # Test amount of parallelization
 # parallel --shuf --jl /tmp/myjl -j1 'export JOBS={1};'bash tests-to-run/parallel-local-0.3s.sh ::: {1..16} ::: {1..5}
 
+par_ll_no_newline() {
+    echo 'bug #64030: parallel --ll echo -n ::: foo'
+    parallel --ll echo -n ::: two lines | sort
+    parallel --ll echo -n '>&2' ::: two lines | sort
+    parallel --linebuffer 'echo -n last {}' ::: line
+    stdout parallel --linebuffer 'echo -n last {} >&2' ::: line
+    echo
+}
+
 par_ll_long_followed_by_short() {
     parallel --ll 'echo A very long line;sleep 0.2;echo' ::: OK | puniq
 }
@@ -70,7 +79,7 @@ par_ctagstring() {
 par_env_parallel_pipefail() {
     cat <<'EOF' | bash
     echo "### test env_parallel with pipefail + inherit_errexit"
-    . $(which env_parallel.bash)
+    . env_parallel.bash
     env_parallel --session
     set -Eeuo pipefail
     shopt -s inherit_errexit
@@ -210,7 +219,7 @@ par_do_not_export_PARALLEL_ENV() {
 	echo Should give 60k and not overflow
 	PARALLEL_ENV="$PARALLEL_ENV" parallel echo '{=$_="\""x$_=}' ::: 60000 | wc
     }
-    . `which env_parallel.bash`
+    . env_parallel.bash
     # Make PARALLEL_ENV as big as possible
     PARALLEL_ENV="a='$(seq 100000 | head -c $((139000-$(set|wc -c) )) )'"
     env_parallel doit ::: 1
@@ -587,7 +596,7 @@ par_expansion_in_colsep() {
 }
 
 par_extglob() {
-    bash -O extglob -c '. `which env_parallel.bash`;
+    bash -O extglob -c '. env_parallel.bash;
       _longopt () {
         case "$prev" in
           --+([-a-z0-9_]))
@@ -674,7 +683,7 @@ par_tee() {
 }
 
 par_parset_tee() {
-    . $(which env_parallel.bash)
+    . env_parallel.bash
     export PARALLEL='-k --tee --pipe --tag'
     parset a,b 'grep {}|wc' ::: 1 5 < <(seq 10000)
     echo $a
@@ -952,7 +961,7 @@ par_empty_command() {
     echo 'bug #54647: parset ignores empty lines'
     # really due to this. Should give an empty line due to -v:
     parallel -v :::: <(echo)
-    . `which env_parallel.bash`
+    . env_parallel.bash
     parset a,b,c :::: <(echo echo A; echo; echo echo C)
     echo Empty: $b
     parset a,b,c :::: <(echo echo A; echo echo B; echo echo C)

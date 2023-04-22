@@ -761,10 +761,6 @@ par_tmp_full() {
 }
 
 par_jobs_file() {
-    echo '### Test of -j filename - non-existent file'
-    stdout parallel -j no_such_file echo ::: 1 |
-	perl -ne '/Tange, O.|Zenodo./ or print'
-
     echo '### Test of -j filename'
     echo 3 >/tmp/jobs_to_run1
     parallel -j /tmp/jobs_to_run1 -v sleep {} ::: 10 8 6 5 4

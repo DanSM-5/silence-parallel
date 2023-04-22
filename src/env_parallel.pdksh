@@ -2,7 +2,7 @@
 
 # This file must be sourced in pdksh:
 #
-#   source `which env_parallel.pdksh`
+#   source env_parallel.pdksh
 #
 # after which 'env_parallel' works
 #

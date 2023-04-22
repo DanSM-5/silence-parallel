@@ -149,8 +149,6 @@ num128
 num30000
 num8
 outdir
-tmsFPAdA
-tmsNGdem
 tsv-file.tsv
 foo
 /TMP
@@ -389,16 +387,6 @@ pre-A-post
 /usr/bin/bash: -c: line 1: syntax error near unexpected token `)'
 /usr/bin/bash: -c: line 1: `set a="outdir"; if( { test -d "$a" } ) echo "$a is a dir"'
 /usr/bin/bash: -c: line 1: syntax error near unexpected token `)'
-/usr/bin/bash: -c: line 1: `set a="tempfile"; if( { test -d "$a" } ) echo "$a is a dir"'
-/usr/bin/bash: -c: line 1: syntax error near unexpected token `)'
-/usr/bin/bash: -c: line 1: `set a="tempfile"; if( { test -d "$a" } ) echo "$a is a dir"'
-/usr/bin/bash: -c: line 1: syntax error near unexpected token `)'
-/usr/bin/bash: -c: line 1: `set a="tempfile"; if( { test -d "$a" } ) echo "$a is a dir"'
-/usr/bin/bash: -c: line 1: syntax error near unexpected token `)'
-/usr/bin/bash: -c: line 1: `set a="tmsFPAdA"; if( { test -d "$a" } ) echo "$a is a dir"'
-/usr/bin/bash: -c: line 1: syntax error near unexpected token `)'
-/usr/bin/bash: -c: line 1: `set a="tmsNGdem"; if( { test -d "$a" } ) echo "$a is a dir"'
-/usr/bin/bash: -c: line 1: syntax error near unexpected token `)'
 /usr/bin/bash: -c: line 1: `set a="tsv-file.tsv"; if( { test -d "$a" } ) echo "$a is a dir"'
   parallel --tag echo foo-{} ::: A B C
 A	foo-A
@@ -612,7 +600,6 @@ parallel: Starting no more jobs. Waiting for 1 jobs to finish.
   parallel -j2 --halt soon,fail=20% echo {}\; exit {} \
     ::: 0 1 2 3 4 5 6 7 8 9
 9
-parallel: Starting no more jobs. Waiting for 1 jobs to finish.
   parallel -j2 --halt now,success=1 echo {}\; exit {} ::: 1 2 3 0 4 5 6
 9
 parallel: This job succeeded:
@@ -731,30 +718,30 @@ Unknown option: :::
 Unknown option: green
 env_parallel only works if it is a function.
 Do this and restart your shell:
-bash:  Put this in $HOME/.bashrc:  . `which env_parallel.bash`
-       E.g. by doing:  echo '. `which env_parallel.bash`' >> $HOME/.bashrc
+bash:  Put this in $HOME/.bashrc:  . env_parallel.bash
+       E.g. by doing:  echo '. env_parallel.bash' >> $HOME/.bashrc
        Supports: variables, aliases, functions, arrays
 fish:  Put this in $HOME/.config/fish/config.fish:  . (which env_parallel.fish)
        E.g. by doing:
          echo '. (which env_parallel.fish)' >> $HOME/.config/fish/config.fish
        Supports: variables, aliases, functions, arrays
-ksh:   Put this in $HOME/.kshrc:  source `which env_parallel.ksh`
-       E.g. by doing:  echo 'source `which env_parallel.ksh`' >> $HOME/.kshrc
+ksh:   Put this in $HOME/.kshrc:  source env_parallel.ksh
+       E.g. by doing:  echo 'source env_parallel.ksh' >> $HOME/.kshrc
        Supports: variables, aliases, functions, arrays
-mksh:  Put this in $HOME/.mkshrc:  source `which env_parallel.mksh`
-       E.g. by doing:  echo 'source `which env_parallel.mksh`' >> $HOME/.mkshrc
+mksh:  Put this in $HOME/.mkshrc:  source env_parallel.mksh
+       E.g. by doing:  echo 'source env_parallel.mksh' >> $HOME/.mkshrc
        Supports: variables, aliases, functions, arrays
-pdksh: Put this in $HOME/.profile:  source `which env_parallel.pdksh`
-       E.g. by doing:  echo '. `which env_parallel.pdksh`' >> $HOME/.profile
+pdksh: Put this in $HOME/.profile:  source env_parallel.pdksh
+       E.g. by doing:  echo '. env_parallel.pdksh' >> $HOME/.profile
        Supports: variables, aliases, functions, arrays
-zsh:   Put this in $HOME/.zshrc:  . `which env_parallel.zsh`
-       E.g. by doing:  echo '. `which env_parallel.zsh`' >> $HOME/.zshenv
+zsh:   Put this in $HOME/.zshrc:  . env_parallel.zsh
+       E.g. by doing:  echo '. env_parallel.zsh' >> $HOME/.zshenv
        Supports: variables, functions, arrays
-ash:   Put this in $HOME/.profile:  . `which env_parallel.ash`
-       E.g. by doing:  echo '. `which env_parallel.ash`' >> $HOME/.profile
+ash:   Put this in $HOME/.profile:  . env_parallel.ash
+       E.g. by doing:  echo '. env_parallel.ash' >> $HOME/.profile
        Supports: variables, aliases
-dash:  Put this in $HOME/.profile:  . `which env_parallel.dash`
-       E.g. by doing:  echo '. `which env_parallel.dash`' >> $HOME/.profile
+dash:  Put this in $HOME/.profile:  . env_parallel.dash
+       E.g. by doing:  echo '. env_parallel.dash' >> $HOME/.profile
        Supports: variables, aliases
 csh:   Put this in $HOME/.cshrc:  source `which env_parallel.csh`
        E.g. by doing:  echo 'source `which env_parallel.csh`' >> $HOME/.cshrc
@@ -765,13 +752,13 @@ tcsh:  Put this in $HOME/.tcshrc:  source `which env_parallel.tcsh`
 To install in all shells run:
   env_parallel --install
 In a script you need to run this before using env_parallel:
-bash:  . `which env_parallel.bash`
-ksh:   source `which env_parallel.ksh`
-mksh:  source `which env_parallel.mksh`
-pdksh: source `which env_parallel.pdksh`
-zsh:   . `which env_parallel.zsh`
-ash:   . `which env_parallel.ash`
-dash:  . `which env_parallel.dash`
+bash:  . env_parallel.bash
+ksh:   source env_parallel.ksh
+mksh:  source env_parallel.mksh
+pdksh: source env_parallel.pdksh
+zsh:   . env_parallel.zsh
+ash:   . env_parallel.ash
+dash:  . env_parallel.dash
 For details: see  man env_parallel
   MYVAR='foo bar'
   export MYVAR
@@ -819,30 +806,30 @@ Unknown option: :::
 Unknown option: bar
 env_parallel only works if it is a function.
 Do this and restart your shell:
-bash:  Put this in $HOME/.bashrc:  . `which env_parallel.bash`
-       E.g. by doing:  echo '. `which env_parallel.bash`' >> $HOME/.bashrc
+bash:  Put this in $HOME/.bashrc:  . env_parallel.bash
+       E.g. by doing:  echo '. env_parallel.bash' >> $HOME/.bashrc
        Supports: variables, aliases, functions, arrays
 fish:  Put this in $HOME/.config/fish/config.fish:  . (which env_parallel.fish)
        E.g. by doing:
          echo '. (which env_parallel.fish)' >> $HOME/.config/fish/config.fish
        Supports: variables, aliases, functions, arrays
-ksh:   Put this in $HOME/.kshrc:  source `which env_parallel.ksh`
-       E.g. by doing:  echo 'source `which env_parallel.ksh`' >> $HOME/.kshrc
+ksh:   Put this in $HOME/.kshrc:  source env_parallel.ksh
+       E.g. by doing:  echo 'source env_parallel.ksh' >> $HOME/.kshrc
        Supports: variables, aliases, functions, arrays
-mksh:  Put this in $HOME/.mkshrc:  source `which env_parallel.mksh`
-       E.g. by doing:  echo 'source `which env_parallel.mksh`' >> $HOME/.mkshrc
+mksh:  Put this in $HOME/.mkshrc:  source env_parallel.mksh
+       E.g. by doing:  echo 'source env_parallel.mksh' >> $HOME/.mkshrc
        Supports: variables, aliases, functions, arrays
-pdksh: Put this in $HOME/.profile:  source `which env_parallel.pdksh`
-       E.g. by doing:  echo '. `which env_parallel.pdksh`' >> $HOME/.profile
+pdksh: Put this in $HOME/.profile:  source env_parallel.pdksh
+       E.g. by doing:  echo '. env_parallel.pdksh' >> $HOME/.profile
        Supports: variables, aliases, functions, arrays
-zsh:   Put this in $HOME/.zshrc:  . `which env_parallel.zsh`
-       E.g. by doing:  echo '. `which env_parallel.zsh`' >> $HOME/.zshenv
+zsh:   Put this in $HOME/.zshrc:  . env_parallel.zsh
+       E.g. by doing:  echo '. env_parallel.zsh' >> $HOME/.zshenv
        Supports: variables, functions, arrays
-ash:   Put this in $HOME/.profile:  . `which env_parallel.ash`
-       E.g. by doing:  echo '. `which env_parallel.ash`' >> $HOME/.profile
+ash:   Put this in $HOME/.profile:  . env_parallel.ash
+       E.g. by doing:  echo '. env_parallel.ash' >> $HOME/.profile
        Supports: variables, aliases
-dash:  Put this in $HOME/.profile:  . `which env_parallel.dash`
-       E.g. by doing:  echo '. `which env_parallel.dash`' >> $HOME/.profile
+dash:  Put this in $HOME/.profile:  . env_parallel.dash
+       E.g. by doing:  echo '. env_parallel.dash' >> $HOME/.profile
        Supports: variables, aliases
 csh:   Put this in $HOME/.cshrc:  source `which env_parallel.csh`
        E.g. by doing:  echo 'source `which env_parallel.csh`' >> $HOME/.cshrc
@@ -853,13 +840,13 @@ tcsh:  Put this in $HOME/.tcshrc:  source `which env_parallel.tcsh`
 To install in all shells run:
   env_parallel --install
 In a script you need to run this before using env_parallel:
-bash:  . `which env_parallel.bash`
-ksh:   source `which env_parallel.ksh`
-mksh:  source `which env_parallel.mksh`
-pdksh: source `which env_parallel.pdksh`
-zsh:   . `which env_parallel.zsh`
-ash:   . `which env_parallel.ash`
-dash:  . `which env_parallel.dash`
+bash:  . env_parallel.bash
+ksh:   source env_parallel.ksh
+mksh:  source env_parallel.mksh
+pdksh: source env_parallel.pdksh
+zsh:   . env_parallel.zsh
+ash:   . env_parallel.ash
+dash:  . env_parallel.dash
 For details: see  man env_parallel
   parallel -vv --pipepart --block 1M wc :::: num30000
 <num30000 perl -e 'while(@ARGV){sysseek(STDIN,shift,0)||die;$left=shift;while($read=sysread(STDIN,$buf,$left>32767?32767:$left)){$left-=$read;syswrite(STDOUT,$buf);}}' 0 0 0 168894 |(wc)

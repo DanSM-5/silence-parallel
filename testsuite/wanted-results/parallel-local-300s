@@ -1,7 +1,6 @@
 par_compare_exit_codes	### compare the exit codes
 par_compare_exit_codes	directly from shells, shells called from parallel,
 par_compare_exit_codes	killed with different signals
-par_compare_exit_codes	
 par_compare_exit_codes	sig=joblog_sig shell=parallel=joblog
 par_compare_exit_codes	par_compare_exit_codes	
 par_compare_exit_codes	csh sig  2=0 130=1=1
