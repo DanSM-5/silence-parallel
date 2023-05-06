@@ -1,15 +1,18 @@
 bug #46120: Suspend should suspend (at least local) children
 it should burn 1.9 CPU seconds, but no more than that
 The 5 second sleep will make it be killed by timeout when it fgs
+input_source_pipe
 
-stdout /usr/bin/time -f CPUTIME=%U parallel --timeout 5 -q perl -e "while(1){ }" ::: 1 | \grep -q CPUTIME=1
+$cmd
 Zero=OK 0
+input_source_cmdline
 
-echo 1 | stdout /usr/bin/time -f CPUTIME=%U parallel --timeout 5 -q perl -e "while(1){ }" | \grep -q CPUTIME=1
+$cmd
 Zero=OK 0
-Control case: Burn for 2.9 seconds
+Control case: This should run 2.9 seconds
+input_source_cmdline
 
-stdout /usr/bin/time -f CPUTIME=%U parallel --timeout 5 -q perl -e "while(1){ }" ::: 1 | \grep -q CPUTIME=1
+$cmd
 1=OK 1
 par_PARALLEL_RSYNC_OPTS	### test rsync opts
 par_PARALLEL_RSYNC_OPTS	-rlDzRRRR

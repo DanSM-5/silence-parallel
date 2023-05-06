@@ -137,7 +137,7 @@ GetOptions(
     "help" => \$opt::dummy,
     ) || exit(255);
 $Global::progname = ($0 =~ m:(^|/)([^/]+)$:)[1];
-$Global::version = 20230422;
+$Global::version = 20230423;
 if($opt::version) { version(); exit 0; }
 # Remove -D and --parallel=N
 my @s = (grep { ! /^-D$|^--parallel=\S+$/ }
@@ -211,7 +211,7 @@ sub sort_stdin {
     # Spread the input between n processes that each sort
     # n = number of CPU threads
     my $numthreads;
-    $numthreads = $opt::parallel || `parallel --number-of-threads`;
+    chomp($numthreads = $opt::parallel || `parallel --number-of-threads`);
     my @fifos = map { tmpfifo() } 1..$numthreads;
     map { mkfifo($_,0600) } @fifos;
     # This trick removes the fifo as soon as it is connected in the other end

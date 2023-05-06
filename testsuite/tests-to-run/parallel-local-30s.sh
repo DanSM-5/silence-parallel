@@ -8,6 +8,49 @@
 # Each should be taking 30-100s and be possible to run in parallel
 # I.e.: No race conditions, no logins
 
+par__groupby_big() {
+    echo "### test --group-by on file bigger than block"
+    groupcol() {
+	export groupcol=$1
+	export n=$2
+	export sorted=$(mktemp)
+	# Sort on grouping column
+	parsort -k${groupcol}n "$testfile" > "$sorted"
+	headtail() { (head -n1;tail -n1); }
+	export -f headtail
+	# wrapper functions for -v below to give headers in output
+	_ppart() { headtail; }
+	export -f _ppart
+	_pipe() { headtail; }
+	export -f _pipe
+	pipepart() {
+	    parallel $n -k --groupby $groupcol --colsep ' ' -v \
+		     --pipepart -a "$sorted" _ppart
+	}
+	pipe() {
+	    parallel $n -k --groupby $groupcol --colsep ' ' -v \
+		     < "$sorted" _pipe
+	}
+	export -f pipepart pipe
+	. $(which env_parallel.bash)
+	# Do the same with --pipe and --pipepart
+	parset a,b -k ::: pipe pipepart
+	paste <(echo "$a") <(echo "$b")
+	rm "$sorted"
+    }
+    export -f groupcol
+
+    export testfile=$(mktemp)
+    # 3 columns: 1..10, 1..100, 1..14
+    seq 1 1000000 |
+	awk '{print int(10*rand()),int(100*rand()),int(14*rand())}' > "$testfile"
+
+    echo "--group-by on col 1..3, -n1..5"
+    echo "_pipe and _ppart (pipepart) must return the same"
+    parallel -k --tag groupcol ::: 1 2 3 ::: '' -n1 -n2 -n3 -n4 -n5
+    rm "$testfile"
+}
+
 par_test_diff_roundrobin_k() {
     echo '### test there is difference on -k'
     . $(which env_parallel.bash)
@@ -281,7 +324,7 @@ par_groupby() {
     # Test --colsep --header : (OK: --header : not needed)
 }
 
-par_groupby_pipepart() {
+par__groupby_pipepart() {
     tsv() {
 	# TSV file
 	printf "%s\t" header_a1 head_b1 c1 d1 e1 f1; echo
@@ -346,7 +389,7 @@ par_race_condition1() {
     rm /tmp/parallel_race_cond
 }
 
-par_memory_leak() {
+par__memory_leak() {
     a_run() {
 	seq $1 |time -v parallel true 2>&1 |
 	grep 'Maximum resident' |
@@ -457,7 +500,7 @@ par_max_length_len_128k() {
     ) |	perl -pe 's/(\d\d+)\d\d\d/${1}xxx/g'
 }
 
-par_plus_dyn_repl() {
+par__plus_dyn_repl() {
     echo "Dynamic replacement strings defined by --plus"
 
     unset myvar

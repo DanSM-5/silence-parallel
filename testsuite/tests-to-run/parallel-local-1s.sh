@@ -8,7 +8,66 @@
 # Each should be taking 1-3s and be possible to run in parallel
 # I.e.: No race conditions, no logins
 
-par_plus() {
+par_tagstring() {
+    echo '### Test --tagstring'
+    parallel -j1 -X -v --tagstring a{}b echo  ::: 3 4
+    parallel -j1 -k -v --tagstring a{}b echo  ::: 3 4
+    parallel -j1 -k -v --tagstring a{}b echo job{#} ::: 3 4
+    parallel -j1 -k -v --tagstring ajob{#}b echo job{#} ::: 3 4
+}
+
+par_quote_bugs() {
+    echo '### Bug did not quote'
+    echo '>' | parallel -v echo
+    parallel -v echo ::: '>'
+    (echo '>'; echo  2) | parallel -j1 -vX echo
+    parallel -X -j1 echo ::: '>' 2
+
+    echo '### Must not quote'; 
+    echo 'echo | wc -l' | parallel -v
+    parallel -v ::: 'echo | wc -l'
+    echo 'echo a b c | wc -w' | parallel -v
+    parallel -kv ::: 'echo a b c | wc -w' 'echo a b | wc -w'
+}
+
+par_keep_order() {
+    echo '### Bug made 4 5 go before 1 2 3'
+    parallel -k ::: "sleep 1; echo 1" "echo 2" "echo 3" "echo 4" "echo 5"
+
+    echo '### Bug made 3 go before 1 2'
+    parallel -kj 1 ::: "sleep 1; echo 1" "echo 2" "echo 3"
+}
+
+par__arg_sep() {
+    echo '### Test basic --arg-sep'
+    parallel -k echo ::: a b
+
+    echo '### Run commands using --arg-sep'
+    parallel -kv ::: 'echo a' 'echo b'
+
+    echo '### Change --arg-sep'
+    parallel --arg-sep ::: -kv ::: 'echo a' 'echo b'
+    parallel --arg-sep .--- -kv .--- 'echo a' 'echo b'
+    parallel --argsep ::: -kv ::: 'echo a' 'echo b'
+    parallel --argsep .--- -kv .--- 'echo a' 'echo b'
+
+    echo '### Test stdin goes to first command only'
+    echo via cat | parallel --arg-sep .--- -kv .--- 'cat' 'echo b'
+    echo via cat | parallel -kv ::: 'cat' 'echo b'
+}
+
+par_retired() {
+    echo '### Test retired'
+    stdout parallel -B foo
+    stdout parallel -g
+    stdout parallel -H 1
+    stdout parallel -T
+    stdout parallel -U foo
+    stdout parallel -W foo
+    stdout parallel -Y
+}
+
+par__plus() {
     echo '### --plus'
     echo '(It is OK to start with extra / or end with extra .)'
     parallel -k --plus echo {} = {+/}/{/} = {.}.{+.} = {+/}/{/.}.{+.} = \
@@ -149,14 +208,6 @@ par_sqlandworker_uninstalled_dbd() {
     parallel --sqlandworker csv:///%2Ftmp%2Fparallel-bug-56096/mytable echo ::: works
 }
 
-par_uninstalled_sshpass() {
-    echo '### sshpass must be installed for --sshlogin user:pass@host'
-    sshpass=$(command -v sshpass)
-    sudo mv "$sshpass" "$sshpass".hidden
-    parallel -S user:pass@host echo ::: must fail
-    sudo mv "$sshpass".hidden "$sshpass"
-}
-
 par_results_compress() {
     tmpdir="$(mktemp)"
     rm -r "$tmpdir"
@@ -178,7 +229,7 @@ par_results_compress() {
     rm -r "$tmpdir"
 }
 
-par_I_X_m() {
+par__I_X_m() {
     echo '### Test -I with -X and -m'
 
     seq 10 | parallel -k 'seq 1 {.} | parallel -k -I :: echo {.} ::'
@@ -251,11 +302,6 @@ _EOF
 	LC_ALL=C sort
 }
 
-par_bug43654() {
-    echo "bug #43654: --bar with command not using {} - only last output line "
-    COLUMNS=80 stdout parallel --bar true {.} ::: 1 | perl -pe 's/.*\r/\r/'
-}
-
 par_replacement_rename() {
     echo "### Test --basenamereplace"
     parallel -j1 -k -X --basenamereplace FOO echo FOO ::: /a/b.c a/b.c b.c /a/b a/b b
@@ -312,16 +358,6 @@ par_test_gt_quoting() {
     (echo '> '; echo '> '; echo '>') | parallel --max-lines 3 echo
 }
 
-par_eof_on_command_line_input_source() {
-    echo '### Test of eof string on :::'
-    parallel -k -E ole echo ::: foo ole bar
-}
-
-par_empty_string_command_line() {
-    echo '### Test of ignore-empty string on :::'
-    parallel -k -r echo ::: foo '' ole bar
-}
-
 par_trailing_space_line_continuation() {
     echo '### Test of trailing space continuation'
     (echo foo; echo '';echo 'ole ';echo bar;echo quux) | xargs -r -L2 echo
@@ -374,11 +410,71 @@ par_test_job_number() {
     seq 1 10 | parallel -k echo {#}
 }
 
-par_seqreplace_long_line() {
-    echo '### Test --seqreplace and line too long'
-    seq 1 1000 |
-	stdout parallel -j1 -s 210 -k --seqreplace I echo IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII \|wc |
-	uniq -c
+par_jobslot_jobnumber_pipe() {
+    echo '### Test bug #43376: {%} and {#} with --pipe'
+    echo foo | parallel -q --pipe -k echo {#}
+    echo foo | parallel --pipe -k echo {%}
+    echo foo | parallel -q --pipe -k echo {%}
+    echo foo | parallel --pipe -k echo {#}
+}
+
+par_replacement_string_as_part_of_command() {
+    echo '### {} as part of the command'
+    echo p /bin/ls | parallel l{= s/p/s/ =}
+    echo /bin/ls-p | parallel --colsep '-' l{=2 s/p/s/ =} {1}
+    echo s /bin/ls | parallel l{}
+    echo /bin/ls | parallel ls {}
+    echo ls /bin/ls | parallel {}
+    echo ls /bin/ls | parallel
+}
+
+par_test_m_X() {
+    echo '### Test -m vs -X'
+    (echo foo;echo bar;echo joe.gif) | parallel -j1 -km echo 1{}2{.}3 A{.}B{.}C
+    (echo foo;echo bar;echo joe.gif) | parallel -j1 -kX echo 1{}2{.}3 A{.}B{.}C
+    seq 1 6 | parallel -k printf '{}.gif\\n' | parallel -j1 -km echo a{}b{.}c{.}
+    seq 1 6 | parallel -k printf '{}.gif\\n' | parallel -j1 -kX echo a{}b{.}c{.}
+
+    echo '### Test -q {.}'
+    echo a | parallel -qX echo  "'"{.}"' "
+    echo a | parallel -qX echo  "'{.}'"
+}
+
+par_testquote() {
+    testquote() {
+	printf '"#&/\n()*=?'"'" |
+	    PARALLEL_SHELL="$1" parallel -0 echo
+    }
+    export -f testquote
+    # "sash script" does not work
+    # "sash -f script" does, but is currently not supported by GNU Parallel
+    parallel --tag -k testquote ::: ash bash csh dash fdsh fish fizsh ksh ksh93 mksh posh rbash rc rzsh "sash -f" sh static-sh tcsh yash zsh
+    # "fdsh" is currently not supported by GNU Parallel:
+    #        It gives ioctl(): Interrupted system call
+    parallel --tag -k testquote ::: fdsh
+}
+
+par_basic_halt() {
+    cpuburn=$(mktemp)
+    cpuburn2=$(mktemp)
+    (echo '#!/usr/bin/perl'
+     echo "eval{setpriority(0,0,9)}; while(1){}") > "$cpuburn"
+    chmod 700 "$cpuburn"
+    cp -a "$cpuburn" "$cpuburn2"
+    qcpuburn=$(parallel -0 --shellquote ::: "$cpuburn")
+    qcpuburn2=$(parallel -0 --shellquote ::: "$cpuburn2")
+    
+    parallel -0 -j4 --halt 2 ::: 'sleep 1' "$qcpuburn" false;
+    killall $(basename "$cpuburn") 2>/dev/null &&
+	echo ERROR: cpuburn should already have been killed
+    parallel -0 -j4 --halt -2 ::: 'sleep 1' "$qcpuburn2" true;
+    killall $(basename "$cpuburn2") 2>/dev/null &&
+	echo ERROR: cpuburn2 should already have been killed
+    rm "$cpuburn" "$cpuburn2"
+
+    parallel --halt error echo ::: should not print
+    parallel --halt soon echo ::: should not print
+    parallel --halt now echo ::: should not print
 }
 
 par_bug37042() {
@@ -425,7 +521,7 @@ par_pxz_complains() {
     stdout parallel --compress --compress-program pxz true ::: OK-if-no-output
 }
 
-par_test_XI_mI() {
+par__test_XI_mI() {
     echo "### Test -I"
     seq 1 10 | parallel -k 'seq 1 {} | parallel -k -I :: echo {} ::'
 
@@ -569,7 +665,7 @@ par_too_long_line_X() {
     seq 3000 | parallel -Xj1 'echo {} {} {} {} {} {} {} {} {} {} {} {} {} {} | wc'
 }
 
-par_test_cpu_detection_cpuinfo() {
+par__test_cpu_detection_cpuinfo() {
     pack() { zstd -19 | mmencode; }
     unpack() { mmencode -u | zstd -d; }
     export -f unpack
@@ -854,7 +950,7 @@ par_test_cpu_detection_cpuinfo() {
     rm ~/.parallel/tmp/sshlogin/*/cpuspec 2>/dev/null
 }
 
-par_test_cpu_detection_lscpu() {
+par__test_cpu_detection_lscpu() {
     pack() { zstd -19 | mmencode; }
     unpack() { mmencode -u | zstd -d; }
     export -f unpack
@@ -1083,7 +1179,7 @@ par_block_negative_prefix() {
     rm "$tmp"
 }
 
-par_sql_colsep() {
+par__sql_colsep() {
     echo '### SQL should add Vn columns for --colsep'
     dburl=sqlite3:///%2ftmp%2fparallel-sql-colsep-$$/bar
     parallel -k -C' ' --sqlandworker $dburl echo /{1}/{2}/{3}/{4}/ \

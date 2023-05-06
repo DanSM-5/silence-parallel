@@ -59,24 +59,28 @@ run_test() {
                          (pack "c*",34,39,176..255)."\@<?[]|~\\}{"')"
     semiok_fancychars="$(perl -e 'print "\n\`touch  /tmp/tripwire\`>/tmp/tripwire;\n".
                          "\@<?[]|~\\}{"')"
-    fancychars="$(perl -e 'print "\n\`touch  /tmp/tripwire\`>/tmp/tripwire;\n".
+    fancychars="$(perl -e 'print "\n\`/tmp/trip\`>/tmp/tripwire;\n".
                          (pack "c*",2..10,34,39)."\@<?[]|~\\"')"
-    export PARALLEL="--_unsafe";
+# OK
+#    fancychars="$(perl -e 'print "\n\`/tmp/trip\`>/tmp/tripwire;\n".
+#                         (pack "c*",2..10,34,39)."\@<?[]|~\\"')"
 # OK
 #    fancychars="$(perl -e 'print "\n\`touch  /tmp/tripwire\`>/tmp/tripwire;\n".
 #                         (pack "c*",34,39)."\@<?[]|~\\"')"
-#    export PARALLEL="--_unsafe";
 
 # OK									      
 #    fancychars="$(perl -e 'print "\n\`touch  /tmp/tripwire\`>/tmp/tripwire;\n".
 #                         ""')"
     export TMPDIR=/tmp/"$base-tmp"/"$fancychars"/tmp
+    export PARALLEL="--_unsafe";
     rm -rf "$TMPDIR"
     mkdir -p "$TMPDIR"
     # Clean before. May be owned by other users
     sudo rm -f /tmp/*.{tmx,pac,arg,all,log,swp,loa,ssh,df,pip,tmb,chr,tms,par} ||
 	printf "%s\0" /tmp/*.par | sudo parallel -0 -X rm
     rm -f /tmp/tripwire
+    printf '#!/bin/bash\ntouch /tmp/tripwire' > /tmp/trip
+    chmod +x /tmp/trip
     # Force running once
     echo >> actual-results/"$base"
     if [ "$TRIES" = "3" ] ; then

@@ -5,6 +5,20 @@ par_bug56403	3	job3cjob3d
 par_bug56403	1	job1a
 par_bug56403	1	job1b
 par_bug56403	2	job2cjob2d
+par_change_content_--jobs_filename	### Test of -j filename with file content changing (missing -k is correct)
+par_change_content_--jobs_filename	sleep 3.3
+par_change_content_--jobs_filename	sleep 0.1
+par_change_content_--jobs_filename	sleep 0.2
+par_change_content_--jobs_filename	sleep 0.3
+par_change_content_--jobs_filename	sleep 0.4
+par_change_content_--jobs_filename	sleep 0.5
+par_change_content_--jobs_filename	sleep 0.6
+par_change_content_--jobs_filename	sleep 0.7
+par_change_content_--jobs_filename	sleep 2.1
+par_change_content_--jobs_filename	sleep 2.2
+par_change_content_--jobs_filename	sleep 2.3
+par_change_content_--jobs_filename	sleep 2.4
+par_change_content_--jobs_filename	sleep 2.5
 par_csv_not_installed	### Give error if CSV.pm is not installed when using --csv
 par_csv_not_installed	parallel: Error: The perl module Text::CSV is not installed.
 par_csv_not_installed	parallel: Error: Try installing libtext-csv-perl or perl-Text-CSV.
@@ -12,7 +26,8 @@ par_delay_Xauto	TODO: --retries for those that fail and --sshdelay
 par_delay_Xauto	### bug #58911: --delay Xauto
 par_delay_Xauto	0
 par_delay_Xauto	2
-par_distribute_input_by_ability	### bug #48290: round-robin does not distribute data based on business
+par_distribute_input_by_ability	### bug #48290: round-robin does not distribute data
+par_distribute_input_by_ability	based on busy-ness
 par_distribute_input_by_ability	### Distribute input to jobs that are ready
 par_distribute_input_by_ability	Job-slot n is 50% slower than n+1, so the order should be 1..7
 par_distribute_input_by_ability	1

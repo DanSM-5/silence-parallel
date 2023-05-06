@@ -152,7 +152,7 @@ par_bigvar_rc() {
                     parallel --env A,B,C -k echo '"'"'${}|wc'"'"' ::: A B C'
 }
 
-par_--tmux_different_shells() {
+par__--tmux_different_shells() {
     echo '### Test tmux works on different shells'
     short_TMPDIR() {
 	# TMPDIR must be short for -M                                                         

@@ -742,27 +742,34 @@ sub find_split_positions($$$) {
 
 sub split_positions_for_group_by($$$$) {
     my($fh);
+    my %value;
     sub value_at($) {
 	my $pos = shift;
-	if($pos != 0) {
-	    seek($fh, $pos-1, 0) || die;
-	    # Read half line
-	    <$fh>;
-	}
-	# Read full line
-	my $linepos = tell($fh);
-	$_ = <$fh>;
-	if(defined $_) {
-	    # Not end of file
-	    my @F;
-	    if(defined $group_by::col) {
-		$opt::colsep ||= "\t";
-		@F = split /$opt::colsep/, $_;
-		$_ = $F[$group_by::col];
+	if(not defined $value{$pos}) {
+	    if($pos != 0) {
+		seek($fh, $pos-1, 0) || die;
+		# Read half line
+		<$fh>;
 	    }
-	    eval $group_by::perlexpr;
+	    # Read full line
+	    my $linepos = tell($fh);
+	    if(not defined $value{$linepos}) {
+		$_ = <$fh>;
+		if(defined $_) {
+		    # Not end of file
+		    my @F;
+		    if(defined $group_by::col) {
+			$opt::colsep ||= "\t";
+			@F = split /$opt::colsep/, $_;
+			$_ = $F[$group_by::col];
+		    }
+		    eval $group_by::perlexpr;
+		}
+		$value{$linepos} = [$_,$linepos];
+	    }
+	    $value{$pos} = $value{$linepos};
 	}
-	return ($_,$linepos);
+	return (@{$value{$pos}});
     }
 
     sub binary_search_end($$$) {
@@ -804,48 +811,70 @@ sub split_positions_for_group_by($$$$) {
     }
 
     my ($file,$size,$block,$header,$firstlinelen) = @_;
-    my ($a,$b,$c,$apos,$bpos,$cpos);
     my @pos;
     $fh = open_or_exit($file);
     # Set $Global::group_by_column $Global::group_by_perlexpr
     group_by_loop($fh,$opt::recsep);
-    # $xpos = linestart, $x = value at $xpos, $apos < $bpos < $cpos
-    $apos = $firstlinelen + length $header;
-    for(($a,$apos) = value_at($apos); $apos < $size;) {
-	push @pos, $apos;
-	$bpos = $apos + $block;
-	($b,$bpos) = value_at($bpos);
-	if(eof($fh)) {
-	    push @pos, $size; last;
-	}
-	$cpos = $bpos + $block;
-	($c,$cpos) = value_at($cpos);
-	if($a eq $b) {
-	    while($b eq $c) {
-		# Move bpos, cpos a block forward until $a == $b != $c
-		$bpos = $cpos;
-		$cpos += $block;
-		($c,$cpos) = value_at($cpos);
-		if($cpos >= $size) {
-		    $cpos = $size;
-		    last;
-		}
+    if($opt::max_args) {
+	# Split after n values
+	my ($a,$apos);
+	# $xpos = linestart, $x = value at $xpos
+	$apos = $firstlinelen + length $header;
+	for(($a,$apos) = value_at($apos); $apos < $size;) {
+	    push @pos, $apos;
+	    ($a,$apos) = binary_search_end($a,$apos,$size);
+	    if(eof($fh)) {
+		push @pos, $size; last;
 	    }
-	    # $a == $b != $c
-	    # Binary search for $b ending between ($bpos,$cpos)
-	    ($b,$bpos) = binary_search_end($b,$bpos,$cpos);
-	} else {
-	    if($b eq $c) {
-		# $a != $b == $c
-		# Binary search for $b starting between ($apos,$bpos)
-		($b,$bpos) = binary_search_start($b,$apos,$bpos);
-	    } else {
-		# $a != $b != $c
+	}
+	# @pos = start of every value
+	# Merge n values
+	# -nX = keep every X'th position
+	my $i = 0;
+	@pos = grep { not ($i++ % $opt::max_args) } @pos;
+    } else {
+	# Split after any value group
+	# Preferable < $blocksize
+	my ($a,$b,$c,$apos,$bpos,$cpos);
+	# $xpos = linestart, $x = value at $xpos, $apos < $bpos < $cpos
+	$apos = $firstlinelen + length $header;
+	for(($a,$apos) = value_at($apos); $apos < $size;) {
+	    push @pos, $apos;
+	    $bpos = $apos + $block;
+	    ($b,$bpos) = value_at($bpos);
+	    if(eof($fh)) {
+		# EOF is less than 1 block away
+		push @pos, $size; last;
+	    }
+	    $cpos = $bpos + $block;
+	    ($c,$cpos) = value_at($cpos);
+	    if($a eq $b) {
+		while($b eq $c) {
+		    # Move bpos, cpos a block forward until $a == $b != $c
+		    $bpos = $cpos;
+		    $cpos += $block;
+		    ($c,$cpos) = value_at($cpos);
+		    if($cpos >= $size) {
+			$cpos = $size;
+			last;
+		    }
+		}
+		# $a == $b != $c
 		# Binary search for $b ending between ($bpos,$cpos)
 		($b,$bpos) = binary_search_end($b,$bpos,$cpos);
+	    } else {
+		if($b eq $c) {
+		    # $a != $b == $c
+		    # Binary search for $b starting between ($apos,$bpos)
+		    ($b,$bpos) = binary_search_start($b,$apos,$bpos);
+		} else {
+		    # $a != $b != $c
+		    # Binary search for $b ending between ($bpos,$cpos)
+		    ($b,$bpos) = binary_search_end($b,$bpos,$cpos);
+		}
 	    }
+	    ($a,$apos) = ($b,$bpos);
 	}
-	($a,$apos) = ($b,$bpos);
     }
     if($pos[$#pos] != $size) {
 	# Last splitpoint was not at end of the file: add it
@@ -1009,7 +1038,7 @@ sub pipe_group_by_setup() {
 	$sep =~ s/\t/\\t/g;
 	$sep =~ s/\"/\\"/g;
 	# man perlrun: -Fpattern [...] You can't use literal whitespace
-	$sep =~ s/ /\\040{1}/g;
+	$sep =~ s/ /\\040/g;
 	push @filter, "-F$sep";
     }
     push @filter, "-pe";
@@ -1432,10 +1461,10 @@ sub index64($$$) {
     my $ref = shift;
     my $match = shift;
     my $pos = shift || 0;
-    my $block_size = 2**31-1;
+    my $max2gb = 2**31-1;
     my $strlen = length($$ref);
     # No point in doing extra work if we don't need to.
-    if($strlen < $block_size or $] > 5.022) {
+    if($strlen < $max2gb or $] > 5.022) {
 	return index($$ref, $match, $pos);
     }
 
@@ -1444,12 +1473,12 @@ sub index64($$$) {
     my $offset = $pos;
     while($offset < $strlen) {
 	$ret = index(
-	    substr($$ref, $offset, $block_size),
+	    substr($$ref, $offset, $max2gb),
 	    $match, $pos-$offset);
 	if($ret != -1) {
 	    return $ret + $offset;
 	}
-	$offset += ($block_size - $matchlen - 1);
+	$offset += ($max2gb - $matchlen - 1);
     }
     return -1;
 }
@@ -1646,6 +1675,7 @@ sub bash_competion() {
 }
 
 sub zsh_competion() {
+    # Print code used for completion in zsh
     my @zsh_completion =
 	("compdef _comp_parallel parallel; ",
 	 "setopt localoptions extended_glob; ",
@@ -1694,6 +1724,7 @@ sub options_hash() {
     my %oh;
     my ($k,$v);
     while(($k,$v) = each %och) {
+	# Remove description
 	$k =~ s/\[.*//;
 	$oh{$k} = $v;
     }
@@ -1953,7 +1984,7 @@ sub options_completion_hash() {
 	 # https://www.gnu.org/software/parallel/parallel_design.html#citation-notice
 	 # https://git.savannah.gnu.org/cgit/parallel.git/tree/doc/citation-notice-faq.txt
 	 # You accept to be put in a public hall-of-shame by removing
-	 # these lines.
+	 # these lines
 	 ("bibtex|citation".
 	  "[Print the citation notice and BibTeX entry for GNU parallel, ".
 	  "silence citation notice for all future runs, and exit. ".
@@ -2114,7 +2145,7 @@ sub get_options_from_array($@) {
     # Run GetOptions on @array
     # Input:
     #	$array_ref = ref to @ARGV to parse
-    #	@keep_only = Keep only these options
+    #	@keep_only = Keep only these options (e.g. --profile)
     # Uses:
     #	@ARGV
     # Returns:
@@ -2195,7 +2226,7 @@ sub parse_options(@) {
     # Before changing these line, please read
     # https://www.gnu.org/software/parallel/parallel_design.html#citation-notice
     # https://git.savannah.gnu.org/cgit/parallel.git/tree/doc/citation-notice-faq.txt
-    # You accept to be added to a public hall-of-shame by removing the lines.
+    # You accept to be added to a public hall-of-shame by removing the lines
     if(defined $opt::citation) {
 	citation(\@argv_before,\@ARGV);
 	wait_and_exit(0);
@@ -2258,6 +2289,7 @@ sub parse_options(@) {
     if(defined $opt::max_args) {
 	$opt::max_args = multiply_binary_prefix($opt::max_args);
 	$Global::max_number_of_args = $opt::max_args;
+	if($opt::pipepart and $opt::groupby) { $Global::max_number_of_args = 1; }
     }
     if(defined $opt::blocktimeout) {
 	$Global::blocktimeout = int(multiply_time_units($opt::blocktimeout));
@@ -2597,7 +2629,7 @@ sub parse_options(@) {
     # the alternatives instead?
     # See a list in: 'man parallel_alternatives'
     #
-    # If you want GNU Parallel to be maintained in the future you
+    # If you want GNU Parallel to be maintained in the future, you
     # should keep this line.
     citation_notice();
     # This is because _YOU_ actively make it harder to justify
@@ -2608,7 +2640,7 @@ sub parse_options(@) {
 
     # *YOU* will be harming free software by removing the notice.  You
     # accept to be added to a public hall of shame by removing the
-    # line. That includes you, Andreas and George.
+    # line. That includes you, George and Andreas.
 
     parse_halt();
 
@@ -2734,6 +2766,11 @@ sub check_invalid_option_combinations() {
 	# use --_unsafe to only generate a warning
 	if($opt::_unsafe) { ::warning(@_); } else { ::error(@_); exit(255); }
     }
+    if(defined $opt::results) {
+	if($opt::nonall or $opt::onall) {
+	    unsafe_warn("--(n)onall + --results not supported (yet).");
+	}
+    }
     sub test_safe_chars {
 	my $var = shift;
 	if($ENV{$var} =~ m{^[-a-z0-9_+,.%:/= ]*$}i) {
@@ -2762,7 +2799,7 @@ sub check_invalid_option_combinations() {
 
 sub init_globals() {
     # Defaults:
-    $Global::version = 20230422;
+    $Global::version = 20230423;
     $Global::progname = 'parallel';
     $::name = "GNU Parallel";
     $Global::infinity = 2**31;
@@ -5718,7 +5755,7 @@ sub usage() {
 	 # https://www.gnu.org/software/parallel/parallel_design.html#citation-notice
 	 # https://git.savannah.gnu.org/cgit/parallel.git/tree/doc/citation-notice-faq.txt
 	 # You accept to be put in a public hall of shame by removing
-	 # these lines.
+	 # these lines
 	 "This helps funding further development; AND IT WON'T COST YOU A CENT.",
 	 "If you pay 10000 EUR you should feel free to use GNU Parallel without citing.",
 	 "",
@@ -5751,7 +5788,7 @@ sub citation_notice() {
 	     # https://www.gnu.org/software/parallel/parallel_design.html#citation-notice and
 	     # https://git.savannah.gnu.org/cgit/parallel.git/tree/doc/citation-notice-faq.txt
 	     # You accept to be put in a public hall of shame by
-	     # removing these lines.
+	     # removing these lines
 	     "This helps funding further development; AND IT WON'T COST YOU A CENT.",
 	     "If you pay 10000 EUR you should feel free to use GNU Parallel without citing.",
 	     "",
@@ -5891,7 +5928,7 @@ sub citation() {
 	# https://www.gnu.org/software/parallel/parallel_design.html#citation-notice and
 	# https://git.savannah.gnu.org/cgit/parallel.git/tree/doc/citation-notice-faq.txt
 	# You accept to be put in a public hall of shame by removing
-	# these lines.
+	# these lines
 	"This helps funding further development; AND IT WON'T COST YOU A CENT.",
 	"If you pay 10000 EUR you should feel free to use GNU Parallel without citing.",
 	"",
@@ -8254,14 +8291,19 @@ sub user_requested_processes($) {
 		::wait_and_exit(255);
 	    }
 	} else {
-	    # -P +3 and -P -1
-	    $opt_P =~ s/^([-+])/\$self->ncpus()$1/;
-	    # -P 40%
-	    $opt_P =~ s:%$:*\$self->ncpus()/100:;
-	    $processes = eval $opt_P;
-	    if($processes == 0) {
+	    if($opt_P eq "0") {
 		# -P 0 = infinity (or at least close)
 		$processes = $Global::infinity;
+	    } else {
+		# -P +3 and -P -1
+		$opt_P =~ s/^([-+])/\$self->ncpus()$1/;
+		# -P 40%
+		$opt_P =~ s:%$:*\$self->ncpus()/100:;
+		$processes = eval $opt_P;
+		if($processes <= 0) {
+		    # Do not go below 1
+		    $processes = 1;
+		}
 	    }
 	}
 	$processes = ::ceil($processes);

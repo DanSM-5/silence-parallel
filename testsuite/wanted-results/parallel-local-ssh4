@@ -1,4 +1,10 @@
 par_--nonall_results	### --results --onall
+par_--nonall_results	parallel: Warning: --(n)onall + --results not supported (yet).
+par_--nonall_results	parallel: Warning: --(n)onall + --results not supported (yet).
+par_--nonall_results	parallel: Warning: --(n)onall + --results not supported (yet).
+par_--nonall_results	parallel: Warning: --(n)onall + --results not supported (yet).
+par_--nonall_results	parallel: Warning: --(n)onall + --results not supported (yet).
+par_--nonall_results	parallel: Warning: --(n)onall + --results not supported (yet).
 par_--nonall_results	/TMP/onall
 par_--nonall_results	/TMP/onall/noslashsh@lo
 par_--nonall_results	/TMP/onall/noslashsh@lo/1
@@ -98,6 +104,12 @@ par_--nonall_results	/TMP/onall/rplslash/pwd/sh@lo
 par_--nonall_results	/TMP/onall/rplslash/pwd/csh@lo
 par_--nonall_results	/TMP/onall/rplslash/pwd/sh@lo.err
 par_--nonall_results	### --results --nonall
+par_--nonall_results	parallel: Warning: --(n)onall + --results not supported (yet).
+par_--nonall_results	parallel: Warning: --(n)onall + --results not supported (yet).
+par_--nonall_results	parallel: Warning: --(n)onall + --results not supported (yet).
+par_--nonall_results	parallel: Warning: --(n)onall + --results not supported (yet).
+par_--nonall_results	parallel: Warning: --(n)onall + --results not supported (yet).
+par_--nonall_results	parallel: Warning: --(n)onall + --results not supported (yet).
 par_--nonall_results	/TMP/nonall
 par_--nonall_results	/TMP/nonall/noslashsh@lo
 par_--nonall_results	/TMP/nonall/noslashsh@lo/1
@@ -148,28 +160,6 @@ par_--nonall_results	/TMP/nonall/rplslash/csh@lo.seq
 par_--nonall_results	/TMP/nonall/rplslash/sh@lo
 par_--nonall_results	/TMP/nonall/rplslash/csh@lo
 par_--nonall_results	/TMP/nonall/rplslash/sh@lo.err
-par_--tmux_different_shells	### Test tmux works on different shells
-par_--tmux_different_shells	See output with: tmux -S /TMP/tmsXXXXX attach
-par_--tmux_different_shells	0
-par_--tmux_different_shells	See output with: tmux -S /TMP/tmsXXXXX attach
-par_--tmux_different_shells	4
-par_--tmux_different_shells	See output with: tmux -S /TMP/tmsXXXXX attach
-par_--tmux_different_shells	0
-par_--tmux_different_shells	See output with: tmux -S /TMP/tmsXXXXX attach
-par_--tmux_different_shells	4
-par_--tmux_different_shells	See output with: tmux -S /TMP/tmsXXXXX attach
-par_--tmux_different_shells	0
-par_--tmux_different_shells	See output with: tmux -S /TMP/tmsXXXXX attach
-par_--tmux_different_shells	4
-par_--tmux_different_shells	See output with: tmux -S /TMP/tmsXXXXX attach
-par_--tmux_different_shells	0
-par_--tmux_different_shells	See output with: tmux -S /TMP/tmsXXXXX attach
-par_--tmux_different_shells	4
-par_--tmux_different_shells	# command is currently too long for csh. Maybe it can be fixed?
-par_--tmux_different_shells	See output with: tmux -S /TMP/tmsXXXXX attach
-par_--tmux_different_shells	0
-par_--tmux_different_shells	See output with: tmux -S /TMP/tmsXXXXX attach
-par_--tmux_different_shells	4
 par_--tmux_length	### works
 par_--tmux_length	See output with: tmux -S /TMP/tmsXXXXX attach
 par_--tmux_length	See output with: tmux -S /TMP/tmsXXXXX attach
@@ -179,6 +169,28 @@ par_--tmux_length	See output with: tmux -S /TMP/tmsXXXXX attach
 par_--tmux_length	See output with: tmux -S /TMP/tmsXXXXX attach
 par_--tmux_length	See output with: tmux -S /TMP/tmsXXXXX attach
 par_--tmux_length	See output with: tmux -S /TMP/tmsXXXXX attach
+par__--tmux_different_shells	### Test tmux works on different shells
+par__--tmux_different_shells	See output with: tmux -S /TMP/tmsXXXXX attach
+par__--tmux_different_shells	0
+par__--tmux_different_shells	See output with: tmux -S /TMP/tmsXXXXX attach
+par__--tmux_different_shells	4
+par__--tmux_different_shells	See output with: tmux -S /TMP/tmsXXXXX attach
+par__--tmux_different_shells	0
+par__--tmux_different_shells	See output with: tmux -S /TMP/tmsXXXXX attach
+par__--tmux_different_shells	4
+par__--tmux_different_shells	See output with: tmux -S /TMP/tmsXXXXX attach
+par__--tmux_different_shells	0
+par__--tmux_different_shells	See output with: tmux -S /TMP/tmsXXXXX attach
+par__--tmux_different_shells	4
+par__--tmux_different_shells	See output with: tmux -S /TMP/tmsXXXXX attach
+par__--tmux_different_shells	0
+par__--tmux_different_shells	See output with: tmux -S /TMP/tmsXXXXX attach
+par__--tmux_different_shells	4
+par__--tmux_different_shells	# command is currently too long for csh. Maybe it can be fixed?
+par__--tmux_different_shells	See output with: tmux -S /TMP/tmsXXXXX attach
+par__--tmux_different_shells	0
+par__--tmux_different_shells	See output with: tmux -S /TMP/tmsXXXXX attach
+par__--tmux_different_shells	4
 par__test_different_rsync_versions	### different versions of rsync need fixups
 par__test_different_rsync_versions	### no output is good
 par_bigvar_csh	### csh

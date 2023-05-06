@@ -16,6 +16,29 @@ export -f stdsort
 # Test amount of parallelization
 # parallel --shuf --jl /tmp/myjl -j1 'export JOBS={1};'bash tests-to-run/parallel-local-0.3s.sh ::: {1..16} ::: {1..5}
 
+par_uninstalled_sshpass() {
+    echo '### sshpass must be installed for --sshlogin user:pass@host'
+    sshpass=$(command -v sshpass)
+    sudo mv "$sshpass" "$sshpass".hidden
+    parallel -S user:pass@host echo ::: must fail
+    sudo mv "$sshpass".hidden "$sshpass"
+}
+
+par_bug43654() {
+    echo "bug #43654: --bar with command not using {} - only last output line "
+    COLUMNS=80 stdout parallel --bar true {.} ::: 1 | perl -pe 's/.*\r/\r/'
+}
+
+par_eof_on_command_line_input_source() {
+    echo '### Test of eof string on :::'
+    parallel -k -E ole echo ::: foo ole bar
+}
+
+par_empty_string_command_line() {
+    echo '### Test of ignore-empty string on :::'
+    parallel -k -r echo ::: foo '' ole bar
+}
+
 par_ll_no_newline() {
     echo 'bug #64030: parallel --ll echo -n ::: foo'
     parallel --ll echo -n ::: two lines | sort
@@ -235,18 +258,6 @@ par_compress_stdout_stderr() {
 par_regexp_chars_in_template() {
     echo '### Test regexp chars in template'
     seq 1 6 | parallel -j1 -I :: -X echo 'a::b::^c::[.}c'
-}
-
-par_test_m_X() {
-    echo '### Test -m vs -X'
-    (echo foo;echo bar;echo joe.gif) | parallel -j1 -km echo 1{}2{.}3 A{.}B{.}C
-    (echo foo;echo bar;echo joe.gif) | parallel -j1 -kX echo 1{}2{.}3 A{.}B{.}C
-    seq 1 6 | parallel -k printf '{}.gif\\n' | parallel -j1 -km echo a{}b{.}c{.}
-    seq 1 6 | parallel -k printf '{}.gif\\n' | parallel -j1 -kX echo a{}b{.}c{.}
-
-    echo '### Test -q {.}'
-    echo a | parallel -qX echo  "'"{.}"' "
-    echo a | parallel -qX echo  "'{.}'"
 }
 
 par_i_t() {
@@ -700,29 +711,6 @@ par_link_files_as_only_arg() {
     parallel -k echo ::::+ <(seq 10) <(seq 3) <(seq 4)
 }
 
-par_basic_halt() {
-    cpuburn=$(mktemp)
-    cpuburn2=$(mktemp)
-    (echo '#!/usr/bin/perl'
-     echo "eval{setpriority(0,0,9)}; while(1){}") > "$cpuburn"
-    chmod 700 "$cpuburn"
-    cp -a "$cpuburn" "$cpuburn2"
-    qcpuburn=$(parallel -0 --shellquote ::: "$cpuburn")
-    qcpuburn2=$(parallel -0 --shellquote ::: "$cpuburn2")
-    
-    parallel -0 -j4 --halt 2 ::: 'sleep 1' "$qcpuburn" false;
-    killall $(basename "$cpuburn") 2>/dev/null &&
-	echo ERROR: cpuburn should already have been killed
-    parallel -0 -j4 --halt -2 ::: 'sleep 1' "$qcpuburn2" true;
-    killall $(basename "$cpuburn2") 2>/dev/null &&
-	echo ERROR: cpuburn2 should already have been killed
-    rm "$cpuburn" "$cpuburn2"
-
-    parallel --halt error echo ::: should not print
-    parallel --halt soon echo ::: should not print
-    parallel --halt now echo ::: should not print
-}
-
 par_newline_in_command() {
     echo Command with newline and positional replacement strings
     parallel "
@@ -901,20 +889,6 @@ par_results_json() {
 	perl -pe 's/\d+\.\d{3}/9.999/g'
 }
 
-par_testquote() {
-    testquote() {
-	printf '"#&/\n()*=?'"'" |
-	    PARALLEL_SHELL="$1" parallel -0 echo
-    }
-    export -f testquote
-    # "sash script" does not work
-    # "sash -f script" does, but is currently not supported by GNU Parallel
-    parallel --tag -k testquote ::: ash bash csh dash fdsh fish fizsh ksh ksh93 mksh posh rbash rc rzsh "sash -f" sh static-sh tcsh yash zsh
-    # "fdsh" is currently not supported by GNU Parallel:
-    #        It gives ioctl(): Interrupted system call
-    parallel --tag -k testquote ::: fdsh
-}
-
 par_locale_quoting() {
     echo "### quoting in different locales"
     printf '\243`/tmp/test\243`\n'
@@ -1012,24 +986,6 @@ par_wd_dotdotdot() {
 par_fish() {
     echo '### https://github.com/fish-shell/fish-shell/issues/5582'
     echo OK | stdout fish -c 'parallel --pipe cat'
-}
-
-par_jobslot_jobnumber_pipe() {
-    echo '### Test bug #43376: {%} and {#} with --pipe'
-    echo foo | parallel -q --pipe -k echo {#}
-    echo foo | parallel --pipe -k echo {%}
-    echo foo | parallel -q --pipe -k echo {%}
-    echo foo | parallel --pipe -k echo {#}
-}
-
-par_replacement_string_as_part_of_command() {
-    echo '### {} as part of the command'
-    echo p /bin/ls | parallel l{= s/p/s/ =}
-    echo /bin/ls-p | parallel --colsep '-' l{=2 s/p/s/ =} {1}
-    echo s /bin/ls | parallel l{}
-    echo /bin/ls | parallel ls {}
-    echo ls /bin/ls | parallel {}
-    echo ls /bin/ls | parallel
 }
 
 par_japanese_chars_in_replacement_string() {

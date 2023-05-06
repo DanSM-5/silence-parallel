@@ -6,6 +6,42 @@
 
 # These fail regularly
 
+ctrlz_should_suspend_children() {
+    echo 'bug #46120: Suspend should suspend (at least local) children'
+    echo 'it should burn 1.9 CPU seconds, but no more than that'
+    echo 'The 5 second sleep will make it be killed by timeout when it fgs'
+
+    run() {
+	cmd="$1"
+	sleep="$2"
+	error="$3"
+	input_source_pipe() {
+	    echo 1 | stdout /usr/bin/time -f CPUTIME=%U parallel --timeout 5 -q perl -e "while(1){ }" | \grep -q CPUTIME=1
+	}
+	input_source_cmdline() {
+	    stdout /usr/bin/time -f CPUTIME=%U parallel --timeout 5 -q perl -e "while(1){ }" ::: 1 | \grep -q CPUTIME=1
+	}
+	# $cmd is input_source_pipe or input_source_cmdline
+	$cmd &
+	echo $cmd
+	sleep $sleep
+	kill -TSTP -$!
+	sleep 5
+	fg
+	echo $error $?
+    }    
+    export -f run
+    clean() {
+	grep -v '\[1\]' | grep -v 'SHA256'
+    }
+    
+    stdout bash -i -c 'run input_source_pipe 1.9 Zero=OK' | clean
+    stdout bash -i -c 'run input_source_cmdline 1.9 Zero=OK' | clean
+    echo "Control case: This should run 2.9 seconds"
+    stdout bash -i -c 'run input_source_cmdline 2.9 1=OK' | clean
+}
+ctrlz_should_suspend_children
+
 par_semaphore() {
     echo '### Test if parallel invoked as sem will run parallel --semaphore'
     sem --id as_sem -u -j2 'echo job1a 1; sleep 3; echo job1b 3'
@@ -16,34 +52,6 @@ par_semaphore() {
     sem --id as_sem --wait
     echo done
 }
-
-ctrlz_should_suspend_children() {
-    echo 'bug #46120: Suspend should suspend (at least local) children'
-    echo 'it should burn 1.9 CPU seconds, but no more than that'
-    echo 'The 5 second sleep will make it be killed by timeout when it fgs'
-    stdout bash -i -c 'stdout /usr/bin/time -f CPUTIME=%U parallel --timeout 5 -q perl -e "while(1){ }" ::: 1 | \grep -q CPUTIME=1 &
-      sleep 1.9;
-      kill -TSTP -$!;
-      sleep 5;
-      fg;
-      echo Zero=OK $?' | grep -v '\[1\]' | grep -v 'SHA256'
-
-    stdout bash -i -c 'echo 1 | stdout /usr/bin/time -f CPUTIME=%U parallel --timeout 5 -q perl -e "while(1){ }" | \grep -q CPUTIME=1 &
-      sleep 1.9;
-      kill -TSTP -$!;
-      sleep 5;
-      fg;
-      echo Zero=OK $?' | grep -v '\[1\]' | grep -v 'SHA256'
-
-    echo Control case: Burn for 2.9 seconds
-    stdout bash -i -c 'stdout /usr/bin/time -f CPUTIME=%U parallel --timeout 5 -q perl -e "while(1){ }" ::: 1 | \grep -q CPUTIME=1 &
-      sleep 2.9;
-      kill -TSTP -$!;
-      sleep 5;
-      fg;
-      echo 1=OK $?' | grep -v '\[1\]' | grep -v 'SHA256'
-}
-ctrlz_should_suspend_children
 
 par_more_than_9_relative_sshlogin() {
     echo '### Check more than 9(relative) simultaneous sshlogins'
@@ -218,4 +226,4 @@ par_continuous_output() {
 export -f $(compgen -A function | grep par_)
 compgen -A function | grep par_ | sort |
     #    parallel --joblog /tmp/jl-`basename $0` -j10 --tag -k '{} 2>&1'
-        parallel --joblog /tmp/jl-`basename $0` -j1 --tag -k '{} 2>&1'
+        parallel -o --joblog /tmp/jl-`basename $0` -j1 --tag -k '{} 2>&1'

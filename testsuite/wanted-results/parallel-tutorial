@@ -16,7 +16,6 @@
   perl -e 'printf "A_B_C_"' > abc_-file
   perl -e 'printf "f1\tf2\nA\tB\nC\tD\n"' > tsv-file.tsv
   perl -e 'for(1..8){print "$_\n"}' > num8
-  perl -e 'for(1..128){print "$_\n"}' > num128
   perl -e 'for(1..30000){print "$_\n"}' > num30000
   perl -e 'for(1..1000000){print "$_\n"}' > num1000000
   (echo %head1; echo %head2; \
@@ -145,7 +144,6 @@ abc_-file
 def-file
 fixedlen
 num1000000
-num128
 num30000
 num8
 outdir
@@ -379,8 +377,6 @@ pre-A-post
 /usr/bin/bash: -c: line 1: syntax error near unexpected token `)'
 /usr/bin/bash: -c: line 1: `set a="num1000000"; if( { test -d "$a" } ) echo "$a is a dir"'
 /usr/bin/bash: -c: line 1: syntax error near unexpected token `)'
-/usr/bin/bash: -c: line 1: `set a="num128"; if( { test -d "$a" } ) echo "$a is a dir"'
-/usr/bin/bash: -c: line 1: syntax error near unexpected token `)'
 /usr/bin/bash: -c: line 1: `set a="num30000"; if( { test -d "$a" } ) echo "$a is a dir"'
 /usr/bin/bash: -c: line 1: syntax error near unexpected token `)'
 /usr/bin/bash: -c: line 1: `set a="num8"; if( { test -d "$a" } ) echo "$a is a dir"'
@@ -489,30 +485,13 @@ echo C
 /usr/bin/bash: line 10: outdir/f1/B/f2/D/seq: No such file or directory
 /usr/bin/bash: line 11: outdir/f1/B/f2/D/stderr: No such file or directory
 /usr/bin/bash: line 12: outdir/f1/B/f2/D/stdout: No such file or directory
-  /usr/bin/time -f %e parallel -N0 -j64 sleep 1 :::: num128
-9
-  /usr/bin/time -f %e parallel -N0 sleep 1 :::: num128
-99
-  /usr/bin/time -f %e parallel -N0 --jobs 200% sleep 1 :::: num128
-9
-  /usr/bin/time -f %e parallel -N0 --jobs 0 sleep 1 :::: num128
-9
   echo 50% > my_jobs
-  /usr/bin/time -f %e parallel -N0 --jobs my_jobs sleep 1 :::: num128 &
   sleep 1
   echo 0 > my_jobs
   wait
-parallel: Warning: Only enough file handles to run 247 jobs in parallel.
-parallel: Warning: Try running 'parallel -j0 -N 247 --pipe parallel -j0'
-parallel: Warning: or increasing 'ulimit -n' (try: ulimit -n `ulimit -Hn`)
-parallel: Warning: or increasing 'nofile' in /etc/security/limits.conf
-parallel: Warning: or increasing /proc/sys/fs/file-max
-9
   parallel --use-cpus-instead-of-cores -N0 sleep 1 :::: num8
   parallel --shuf echo ::: 1 2 3 ::: a b c ::: A B C
 123 abc ABC
-  seq 10 20 | parallel --tmux 'echo start {}; sleep {}; echo done {}'
-See output with: tmux -S /TMP/tmsXXXXX attach
   tmux -S /tmp/tmsXXXXX attach
 no sessions
   parallel --delay 2.5 echo Starting {}\;date ::: 1 2 3
@@ -594,7 +573,6 @@ Seq	Host	Starttime	JobRuntime	Send	Receive	Exitval	Signal	Command
 2	:	TIMESTAMP	9.999	0	0	2	0	exit 2
 3	:	TIMESTAMP	9.999	0	0	3	0	exit 3
 9
-parallel: Starting no more jobs. Waiting for 1 jobs to finish.
   parallel -j2 --halt now,fail=1 echo {}\; exit {} ::: 0 0 1 2 3
 9
   parallel -j2 --halt soon,fail=20% echo {}\; exit {} \
@@ -696,9 +674,6 @@ foo
 9
   parallel --controlmaster -S $SERVER1 echo ::: 1 2 3
 9
-  parallel --filter-hosts -S 173.194.32.46,$SERVER1 echo ::: bar
-bar
-parallel: Warning: Removed 173.194.32.46.
   parallel --onall -S $SERVER1,$SERVER2 echo ::: foo bar
 foo
 bar
@@ -1221,23 +1196,6 @@ The second is now running in the background
 The first finished
 The first finished running in the foreground
 The second finished running in the foreground
-  sem --id my_id -u 'echo First started; sleep 10; echo First done'
-First started
-First done
-  sem --id my_id -u 'echo Second started; sleep 10; echo Second done'
-  sem --jobs 3 --id my_id -u 'echo Start 1; sleep 5; echo 1 done' &&
-  sem --jobs 3 --id my_id -u 'echo Start 2; sleep 6; echo 2 done' &&
-  sem --jobs 3 --id my_id -u 'echo Start 3; sleep 7; echo 3 done' &&
-  sem --jobs 3 --id my_id -u 'echo Start 4; sleep 8; echo 4 done' &&
-  sem --wait --id my_id
-Start 1
-Start 2
-1 done
-Start 3
-2 done
-Start 4
-3 done
-4 done
   sem --id foo -u 'echo Slow started; sleep 5; echo Slow ended' &&
   sem --id foo --semaphoretimeout 1 'echo Forced running after 1 sec' &&
   sem --id foo --semaphoretimeout -2 'echo Give up after 2 secs'

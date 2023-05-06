@@ -263,32 +263,39 @@ from:tange@gnu.org
 to:parallel@gnu.org, bug-parallel@gnu.org
 stable-bcc: Jesse Alama <jessealama@fastmail.fm>
 
-Subject: GNU Parallel 20230422 ('Grand Jury') released
+Subject: GNU Parallel 20230522 ('Charles<<>>') released
 
-GNU Parallel 20230422 ('Grand Jury') has been released. It is available for download at: lbry://@GnuParallel:4
+GNU Parallel 20230522 ('<<>>') has been released. It is available for download at: lbry://@GnuParallel:4
 
 Quote of the month:
 
-  parallel might be one of the best utilities out there
-    -- @ThePrimeagen ThePrimeagen
+  <<>>
 
 New in this release:
 
-* --jobs evaluates expression: +3*log(55)% = ncpu*1.12
+<<>>
 
 * Bug fixes and man page updates.
 
 News about GNU Parallel:
 
-* Running shell script in parallel https://w3toppers.com/running-shell-script-in-parallel/
+* Introduction to parallel computing https://youtu.be/fvrHXV8yqU4?t=2874
 
-* Simulating climate risk scenarios for the Amazon Rainforest https://aws.amazon.com/blogs/hpc/simulating-climate-risk-scenarios-for-the-amazon-rainforest/
+* Script for summarizing GNU parallel joblog file https://github.com/gavinmdouglas/parallel_joblog_summary
 
-* How To Use Your Entire CPU In Bash With Parallel https://bash-prompt.net/guides/parallell-bash/
+https://www.cyberciti.biz/faq/linux-unix-copy-a-file-to-multiple-directories-using-cp-command/
+https://dev.to/attilavm/search-in-your-jupyter-notebooks-from-the-cli-fast-1408
 
-* Bash - parallel command execution https://medium.com/linuxstories/bash-parallel-command-execution-d4bd7c7cc1d6
+https://www.youtube.com/watch?v=2tVpUfND3LI
+https://www.youtube.com/watch?v=eC_RPuFCcU8
+https://www.youtube.com/watch?v=3vFxDqgcdVI
 
-* 3 tips for faster batch post-pro https://www.cfdengine.com/newsletter/142/
+https://www.youtube.com/watch?v=Ke3sirM-aQQ
+https://www.youtube.com/watch?v=OXg-WHlB_dk
+
+ 
+ 
+<<>>
 
 
 GNU Parallel - For people who live life in the parallel lane.

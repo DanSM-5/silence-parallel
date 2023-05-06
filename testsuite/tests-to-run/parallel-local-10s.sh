@@ -8,7 +8,43 @@
 # Each should be taking 10-30s and be possible to run in parallel
 # I.e.: No race conditions, no logins
 
-par_keeporder_roundrobin() {
+par_retries_0() {
+    echo '--retries 0 = inf'
+    echo this wraps at 256 and should retry until it wraps
+    tmp=$(mktemp)
+    qtmp=$(parallel -0 --shellquote ::: "$tmp")
+    parallel --retries 0 -u 'printf {} >> '"$qtmp"';a=$(stat -c %s '"$qtmp"'); echo -n " $a";  exit $a' ::: a
+    echo
+    rm -f "$tmp"
+}
+
+par_seqreplace_long_line() {
+    echo '### Test --seqreplace and line too long'
+    seq 1 1000 |
+	stdout parallel -j1 -s 210 -k --seqreplace I echo IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII \|wc |
+	uniq -c
+}
+
+par__print_in_blocks() {
+    echo '### bug #41565: Print happens in blocks - not after each job complete'
+    median() { perl -e '@a=sort {$a<=>$b} <>;print $a[$#a/2]';}
+    export -f median
+
+    echo 'The timing here is important: a full second between each'
+    perl -e 'for(1..30){print("$_\n");`sleep 1`}' |
+	parallel -j3  'echo {#}' |
+	timestamp -dd |
+	perl -pe '$_=int($_+0.3)."\n"' |
+	median
+    echo '300 ms jobs:'
+    perl -e 'for(1..30){print("$_\n");`sleep .3`}' |
+	parallel -j3 --delay 0.3 echo |
+	timestamp -d -d |
+	perl -pe 's/(.....).*/int($1*10+0.2)/e' |
+	median
+}
+
+par__keeporder_roundrobin() {
     echo 'bug #50081: --keep-order --round-robin should give predictable results'
     . `which env_parallel.bash`
 
@@ -38,7 +74,7 @@ par_keeporder_roundrobin() {
     fi
 }
 
-par_load_from_PARALLEL() {
+par__load_from_PARALLEL() {
     echo "### Test reading load from PARALLEL"
     export PARALLEL="--load 300%"
     # Ignore stderr due to 'Starting processes took > 2 sec'
@@ -152,12 +188,16 @@ par_load_blocks() {
 	grep -Ev 'processes took|Consider adjusting -j'
 }
 
-par_round_robin_blocks() {
+par__round_robin_blocks() {
     echo "bug #49664: --round-robin does not complete"
     seq 20000000 | parallel -j8 --block 10M --round-robin --pipe wc -c | wc -l
 }
 
 par_compress_prg_fails() {
+    echo "### bug #41609: --compress fails"
+    seq 12 | parallel --compress --compress-program gzip -k seq {} 10000 | md5sum
+    seq 12 | parallel --compress -k seq {} 10000 | md5sum
+
     echo '### bug #44546: If --compress-program fails: fail'
     doit() {
 	(parallel $* --compress-program false \
@@ -312,101 +352,6 @@ par_fifo_under_csh() {
     doit
     TMPDIR=/tmp
     doit
-}
-
-par_parset() {
-    echo '### test parset'
-    (
-	. `which env_parallel.bash`
-
-	echo 'Put output into $myarray'
-	parset myarray -k seq 10 ::: 14 15 16
-	echo "${myarray[1]}"
-
-	echo 'Put output into vars "$seq, $pwd, $ls"'
-	parset "seq pwd ls" -k ::: "seq 10" pwd ls
-	echo "$seq"
-
-	echo 'Put output into vars ($seq, $pwd, $ls)':
-	into_vars=(seq pwd ls)
-	parset "${into_vars[*]}" -k ::: "seq 5" pwd ls
-	echo "$seq"
-
-	echo 'The commands to run can be an array'
-	cmd=("echo '<<joe  \"double  space\"  cartoon>>'" "pwd")
-	parset data -k ::: "${cmd[@]}"
-	echo "${data[0]}"
-	echo "${data[1]}"
-
-	echo 'You cannot pipe into parset, but must use a tempfile'
-	seq 10 > /tmp/parset_input_$$
-	parset res -k echo :::: /tmp/parset_input_$$
-	echo "${res[0]}"
-	echo "${res[9]}"
-	rm /tmp/parset_input_$$
-
-	echo 'or process substitution'
-	parset res -k echo :::: <(seq 0 10)
-	echo "${res[0]}"
-	echo "${res[9]}"
-
-	echo 'Commands with newline require -0'
-	parset var -k -0 ::: 'echo "line1
-line2"' 'echo "command2"'
-	echo "${var[0]}"
-    ) | replace_tmpdir
-}
-
-par_parset2() {
-    echo '### parset into array'
-    (
-	. `which env_parallel.bash`
-
-	parset arr1 echo ::: foo bar baz
-	echo ${arr1[0]} ${arr1[1]} ${arr1[2]}
-
-	echo '### parset into vars with comma'
-	parset comma3,comma2,comma1 echo ::: baz bar foo
-	echo $comma1 $comma2 $comma3
-
-	echo '### parset into vars with space'
-	parset 'space3 space2 space1' echo ::: baz bar foo
-	echo $space1 $space2 $space3
-
-	echo '### parset with newlines'
-	parset 'newline3 newline2 newline1' seq ::: 3 2 1
-	echo "$newline1"
-	echo "$newline2"
-	echo "$newline3"
-
-	echo '### parset into indexed array vars'
-	parset 'myarray[6],myarray[5],myarray[4]' echo ::: baz bar foo
-	echo ${myarray[*]}
-	echo ${myarray[4]} ${myarray[5]} ${myarray[5]}
-
-	echo '### env_parset'
-	alias myecho='echo myecho "$myvar" "${myarr[1]}"'
-	myvar="myvar"
-	myarr=("myarr  0" "myarr  1" "myarr  2")
-	mynewline="`echo newline1;echo newline2;`"
-	env_parset arr1 myecho ::: foo bar baz
-	echo "${arr1[0]} ${arr1[1]} ${arr1[2]}"
-	env_parset comma3,comma2,comma1 myecho ::: baz bar foo
-	echo "$comma1 $comma2 $comma3"
-	env_parset 'space3 space2 space1' myecho ::: baz bar foo
-	echo "$space1 $space2 $space3"
-	env_parset 'newline3 newline2 newline1' 'echo "$mynewline";seq' ::: 3 2 1
-	echo "$newline1"
-	echo "$newline2"
-	echo "$newline3"
-	env_parset 'myarray[6],myarray[5],myarray[4]' myecho ::: baz bar foo
-	echo "${myarray[*]}"
-	echo "${myarray[4]} ${myarray[5]} ${myarray[5]}"
-
-	echo 'bug #52507: parset arr1 -v echo ::: fails'
-	parset arr1 -v seq ::: 1 2 3
-	echo "${arr1[2]}"
-    ) | replace_tmpdir
 }
 
 par_perlexpr_repl() {
@@ -591,7 +536,7 @@ par__pipepart_spawn() {
 	grep 1:local | perl -pe 's/\d\d\d/999/g; s/\d\d+|[2-9]/2+/g;'
 }
 
-par__pipe_tee() {
+par_pipe_tee() {
     echo 'bug #45479: --pipe/--pipepart --tee'
     echo '--pipe --tee'
 
@@ -602,7 +547,7 @@ par__pipe_tee() {
     random100M | parallel --pipe --tee cat ::: {1..3} | LC_ALL=C wc -c
 }
 
-par__pipepart_tee() {
+par_pipepart_tee() {
     echo 'bug #45479: --pipe/--pipepart --tee'
     echo '--pipepart --tee'
 
@@ -657,12 +602,6 @@ par_maxlinelen_X_I() {
     export LINES=$(cat /tmp/114-b$$ | wc -l);
     echo "Chars per line ($CHAR/$LINES): "$(echo "$CHAR/$LINES" | bc);
     rm /tmp/114-b$$
-}
-
-par_compress_fail() {
-    echo "### bug #41609: --compress fails"
-    seq 12 | parallel --compress --compress-program gzip -k seq {} 10000 | md5sum
-    seq 12 | parallel --compress -k seq {} 10000 | md5sum
 }
 
 par_results_csv() {

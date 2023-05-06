@@ -16,14 +16,20 @@ par_END	include this
 par_END	include this
 par_END	include this
 par_END	include this
-par__pipe_tee	bug #45479: --pipe/--pipepart --tee
-par__pipe_tee	--pipe --tee
-par__pipe_tee	314572800
+par__keeporder_roundrobin	bug #50081: --keep-order --round-robin should give predictable results
+par__keeporder_roundrobin	OK
+par__load_from_PARALLEL	### Test reading load from PARALLEL
+par__load_from_PARALLEL	8a7095c1c23bfadc311fe6b16d950582  -
+par__load_from_PARALLEL	8a7095c1c23bfadc311fe6b16d950582  -
 par__pipepart_spawn	### bug #46214: Using --pipepart doesnt spawn multiple jobs in version 20150922
 par__pipepart_spawn	1:local / 2+ / 2+
-par__pipepart_tee	bug #45479: --pipe/--pipepart --tee
-par__pipepart_tee	--pipepart --tee
-par__pipepart_tee	314572800
+par__print_in_blocks	### bug #41565: Print happens in blocks - not after each job complete
+par__print_in_blocks	The timing here is important: a full second between each
+par__print_in_blocks	1
+par__print_in_blocks	300 ms jobs:
+par__print_in_blocks	3
+par__round_robin_blocks	bug #49664: --round-robin does not complete
+par__round_robin_blocks	8
 par_colsep	### Test of --colsep
 par_colsep	a b c
 par_colsep	a b c
@@ -72,9 +78,9 @@ par_colsep	echo ac
 par_colsep	ac
 par_colsep	echo ac
 par_colsep	ac
-par_compress_fail	### bug #41609: --compress fails
-par_compress_fail	f1a751b1283e99e7dda40f63f1225f74  -
-par_compress_fail	f1a751b1283e99e7dda40f63f1225f74  -
+par_compress_prg_fails	### bug #41609: --compress fails
+par_compress_prg_fails	f1a751b1283e99e7dda40f63f1225f74  -
+par_compress_prg_fails	f1a751b1283e99e7dda40f63f1225f74  -
 par_compress_prg_fails	### bug #44546: If --compress-program fails: fail
 par_compress_prg_fails	  	1
 par_compress_prg_fails	  	parallel: Error: false failed.
@@ -531,8 +537,6 @@ par_k_linebuffer	20	20
 par_k_linebuffer	stdout top
 par_k_linebuffer	stderr in the middle
 par_k_linebuffer	stdout end
-par_keeporder_roundrobin	bug #50081: --keep-order --round-robin should give predictable results
-par_keeporder_roundrobin	OK
 par_kill_children_timeout	### Test killing children with --timeout and exit value (failed if timed out)
 par_kill_children_timeout	      0       0       0
 par_kill_children_timeout	parallel: Warning: This job was killed because it timed out:
@@ -609,9 +613,6 @@ par_ll_long_line	par_ll_long_line	[K30xxxxxxxxxxxxxxxxxxxxxxxxxxx>
 par_load_blocks	### Test if --load blocks. Bug.
 par_load_blocks	53d025127ae99ab79e8502aae2d9bea6  -
 par_load_blocks	53d025127ae99ab79e8502aae2d9bea6  -
-par_load_from_PARALLEL	### Test reading load from PARALLEL
-par_load_from_PARALLEL	8a7095c1c23bfadc311fe6b16d950582  -
-par_load_from_PARALLEL	8a7095c1c23bfadc311fe6b16d950582  -
 par_long_line_remote	### Deal with long command lines on remote servers
 par_long_line_remote	      1       6   30006
 par_long_line_remote	      6      50  250050
@@ -703,82 +704,6 @@ par_opt_arg_eaten	2 OK
 par_opt_arg_eaten	3 OK
 par_opt_arg_eaten	4 OK
 par_opt_arg_eaten	5 OK
-par_parset	### test parset
-par_parset	Put output into $myarray
-par_parset	10
-par_parset	11
-par_parset	12
-par_parset	13
-par_parset	14
-par_parset	15
-par_parset	Put output into vars "$seq, $pwd, $ls"
-par_parset	1
-par_parset	2
-par_parset	3
-par_parset	4
-par_parset	5
-par_parset	6
-par_parset	7
-par_parset	8
-par_parset	9
-par_parset	10
-par_parset	Put output into vars ($seq, $pwd, $ls):
-par_parset	1
-par_parset	2
-par_parset	3
-par_parset	4
-par_parset	5
-par_parset	The commands to run can be an array
-par_parset	<<joe  "double  space"  cartoon>>
-par_parset	/TMP
-par_parset	You cannot pipe into parset, but must use a tempfile
-par_parset	1
-par_parset	10
-par_parset	or process substitution
-par_parset	0
-par_parset	9
-par_parset	Commands with newline require -0
-par_parset	line1
-par_parset	line2
-par_parset2	### parset into array
-par_parset2	foo bar baz
-par_parset2	### parset into vars with comma
-par_parset2	foo bar baz
-par_parset2	### parset into vars with space
-par_parset2	foo bar baz
-par_parset2	### parset with newlines
-par_parset2	1
-par_parset2	1
-par_parset2	2
-par_parset2	1
-par_parset2	2
-par_parset2	3
-par_parset2	### parset into indexed array vars
-par_parset2	foo bar baz
-par_parset2	foo bar bar
-par_parset2	### env_parset
-par_parset2	myecho myvar myarr  1 foo myecho myvar myarr  1 bar myecho myvar myarr  1 baz
-par_parset2	myecho myvar myarr  1 foo myecho myvar myarr  1 bar myecho myvar myarr  1 baz
-par_parset2	myecho myvar myarr  1 foo myecho myvar myarr  1 bar myecho myvar myarr  1 baz
-par_parset2	newline1
-par_parset2	newline2
-par_parset2	1
-par_parset2	newline1
-par_parset2	newline2
-par_parset2	1
-par_parset2	2
-par_parset2	newline1
-par_parset2	newline2
-par_parset2	1
-par_parset2	2
-par_parset2	3
-par_parset2	myecho myvar myarr  1 foo myecho myvar myarr  1 bar myecho myvar myarr  1 baz
-par_parset2	myecho myvar myarr  1 foo myecho myvar myarr  1 bar myecho myvar myarr  1 bar
-par_parset2	bug #52507: parset arr1 -v echo ::: fails
-par_parset2	seq 3
-par_parset2	1
-par_parset2	2
-par_parset2	3
 par_perlexpr_repl	### {= and =} in different groups separated by space
 par_perlexpr_repl	b
 par_perlexpr_repl	b
@@ -831,6 +756,12 @@ par_pipe_line_buffer	    200     400    1202
 par_pipe_line_buffer	These must diff: 1
 par_pipe_line_buffer_compress	### --pipe --line-buffer --compress
 par_pipe_line_buffer_compress	    200     400    1202
+par_pipe_tee	bug #45479: --pipe/--pipepart --tee
+par_pipe_tee	--pipe --tee
+par_pipe_tee	314572800
+par_pipepart_tee	bug #45479: --pipe/--pipepart --tee
+par_pipepart_tee	--pipepart --tee
+par_pipepart_tee	314572800
 par_quote_special_results	### Test --results on file systems with limited UTF8 support
 par_quote_special_results	mkfs.btrfs	btrfs-progs v5.16.2
 par_quote_special_results	mkfs.btrfs	See http://btrfs.wiki.kernel.org for more information.
@@ -1227,6 +1158,9 @@ par_results_csv	   	8,:,999.999,999.999,0,6,0,0,"echo 23 11",23,11,"23 11
 par_results_csv	   	",
 par_results_csv	   	9,:,999.999,999.999,0,6,0,0,"echo 23 12",23,12,"23 12
 par_results_csv	   	",
+par_retries_0	--retries 0 = inf
+par_retries_0	this wraps at 256 and should retry until it wraps
+par_retries_0	 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75 76 77 78 79 80 81 82 83 84 85 86 87 88 89 90 91 92 93 94 95 96 97 98 99 100 101 102 103 104 105 106 107 108 109 110 111 112 113 114 115 116 117 118 119 120 121 122 123 124 125 126 127 128 129 130 131 132 133 134 135 136 137 138 139 140 141 142 143 144 145 146 147 148 149 150 151 152 153 154 155 156 157 158 159 160 161 162 163 164 165 166 167 168 169 170 171 172 173 174 175 176 177 178 179 180 181 182 183 184 185 186 187 188 189 190 191 192 193 194 195 196 197 198 199 200 201 202 203 204 205 206 207 208 209 210 211 212 213 214 215 216 217 218 219 220 221 222 223 224 225 226 227 228 229 230 231 232 233 234 235 236 237 238 239 240 241 242 243 244 245 246 247 248 249 250 251 252 253 254 255 256
 par_retries_all_fail	bug #53748: -k --retries 10 + out of filehandles = blocking
 par_retries_all_fail	1
 par_retries_all_fail	2
@@ -1236,8 +1170,6 @@ par_retries_all_fail	5
 par_retries_all_fail	6
 par_retries_all_fail	7
 par_retries_all_fail	8
-par_round_robin_blocks	bug #49664: --round-robin does not complete
-par_round_robin_blocks	8
 par_sem_2jobs	### Test semaphore 2 jobs running simultaneously
 par_sem_2jobs	job1a 1
 par_sem_2jobs	job2a 2
@@ -1246,6 +1178,10 @@ par_sem_2jobs	job3a 4
 par_sem_2jobs	job2b 5
 par_sem_2jobs	job3b 6
 par_sem_2jobs	done
+par_seqreplace_long_line	### Test --seqreplace and line too long
+par_seqreplace_long_line	      9       1       1     101
+par_seqreplace_long_line	     90       1       1     201
+par_seqreplace_long_line	      1 parallel: Error: Command line too long (309 >= 210) at input 0: 100
 par_shellquote	### Test --shellquote in all shells
 par_shellquote	ash	'	
 par_shellquote	ash	par_shellquote	ash	 !"#$%&'"'"'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~€‚ƒ„…†‡ˆ‰Š‹Œ‘’“”•–—˜™š›œŸ ¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º»¼½¾¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏĞÑÒÓÔÕÖ×ØÙÚÛÜİŞßàáâãäåæçèéêëìíîïğñòóôõö÷øùúûüışÿ'

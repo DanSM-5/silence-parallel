@@ -2552,8 +2552,9 @@ command. With B<--round-robin> all blocks will at random be written to
 commands already running. This is useful if the command takes a long
 time to initialize.
 
-B<--keep-order> will not work with B<--round-robin> as it is
-impossible to track which input block corresponds to which output.
+With B<--keep-order> and B<--round-robin> the jobslots will get the
+same blocks as input in the same order in every run if the input is
+kept the same. See details under B<--keep-order>.
 
 B<--round-robin> implies B<--pipe>, except if B<--pipe-part> is given.
 
@@ -2789,9 +2790,9 @@ I<shardexpr> is [column number|column name] [perlexpression] e.g.:
   3 $_%=100
   Address s/\d//g
 
-Each input line is split using B<--colsep>. The value of the column is
-put into $_, the perl expression is executed, the resulting value is
-hashed so that all lines of a given value is given to the same job
+Each input line is split using B<--colsep>. The string of the column
+is put into $_, the perl expression is executed, the resulting string
+is hashed so that all lines of a given value is given to the same job
 slot.
 
 This is similar to sharding in databases.
@@ -3670,18 +3671,18 @@ the content except for identifying where a record ends to make sure it
 only passes full records.
 
 B<--shard> starts I<n> jobs in total. It parses each line to read the
-value in the given column. Based on this value the line is passed to
-one of the I<n> jobs. All lines having this value will be given to the
+string in the given column. Based on this string the line is passed to
+one of the I<n> jobs. All lines having this string will be given to the
 same jobslot.
 
-B<--bin> works like B<--shard> but the value of the column is the
-jobslot number it will be passed to. If the value is bigger than I<n>,
-then I<n> will be subtracted from the value until the values is
-smaller than or equal to I<n>.
+B<--bin> works like B<--shard> but the value of the column must be
+numeric and is the jobslot number it will be passed to. If the value
+is bigger than I<n>, then I<n> will be subtracted from the value until
+the value is smaller than or equal to I<n>.
 
 B<--group-by> starts one job per chunk. Record borders are not given
-by B<--recend>/B<--recstart>. Instead a record is defined by a number
-of lines having the same value in a given column. So the value of a
+by B<--recend>/B<--recstart>. Instead a record is defined by a group
+of lines having the same string in a given column. So the string of a
 given column changes at a chunk border. With B<--pipe> every line is
 parsed, with B<--pipe-part> only a few lines are parsed to find the
 chunk border.

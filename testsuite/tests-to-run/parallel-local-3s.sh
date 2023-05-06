@@ -10,25 +10,15 @@
 
 par_process_slot_var() {
     echo '### bug #62310: xargs compatibility: --process-slot-var=name'
-    seq 0.1 0.1 0.5 |
-	parallel -n1 -P4 --process-slot-var=name -q bash -c 'sleep $1; echo "$name"' _
-    seq 0.1 0.1 0.5 |
+    seq 0.1 0.3 1.5 |
+	parallel -n1 -kP4 --process-slot-var=name -q bash -c 'sleep $1; echo "$name"' _
+    seq 0.1 0.3 1.5 |
 	xargs -n1 -P4 --process-slot-var=name bash -c 'sleep $1; echo "$name"' _
-    seq 0.1 0.1 0.5 |
-	parallel -P4 --process-slot-var=name sleep {}\; echo '$name'
+    seq 0.1 0.3 1.5 |
+	parallel -kP4 --process-slot-var=name sleep {}\; echo '$name'
 }
 
-par_retries_0() {
-    echo '--retries 0 = inf'
-    echo this wraps at 256 and should retry until it wraps
-    tmp=$(mktemp)
-    qtmp=$(parallel -0 --shellquote ::: "$tmp")
-    parallel --retries 0 -u 'printf {} >> '"$qtmp"';a=$(stat -c %s '"$qtmp"'); echo -n " $a";  exit $a' ::: a
-    echo
-    rm -f "$tmp"
-}
-
-par_prefix_for_L_n_N_s() {
+par__prefix_for_L_n_N_s() {
     echo Must give xxx000 args
     seq 10000 | parallel -N 1k 'echo {} | wc -w' | sort
     seq 10000 | parallel -n 1k 'echo {} | wc -w' | sort
@@ -38,7 +28,102 @@ par_prefix_for_L_n_N_s() {
     seq 10000 | parallel -mj1 -s 1k 'echo {} | wc -w' | sort
 }
 
-par_parset_assoc_arr() {
+par_parset() {
+    echo '### test parset'
+    (
+	. `which env_parallel.bash`
+
+	echo 'Put output into $myarray'
+	parset myarray -k seq 10 ::: 14 15 16
+	echo "${myarray[1]}"
+
+	echo 'Put output into vars "$seq, $pwd, $ls"'
+	parset "seq pwd ls" -k ::: "seq 10" pwd ls
+	echo "$seq"
+
+	echo 'Put output into vars ($seq, $pwd, $ls)':
+	into_vars=(seq pwd ls)
+	parset "${into_vars[*]}" -k ::: "seq 5" pwd ls
+	echo "$seq"
+
+	echo 'The commands to run can be an array'
+	cmd=("echo '<<joe  \"double  space\"  cartoon>>'" "pwd")
+	parset data -k ::: "${cmd[@]}"
+	echo "${data[0]}"
+	echo "${data[1]}"
+
+	echo 'You cannot pipe into parset, but must use a tempfile'
+	seq 10 > /tmp/parset_input_$$
+	parset res -k echo :::: /tmp/parset_input_$$
+	echo "${res[0]}"
+	echo "${res[9]}"
+	rm /tmp/parset_input_$$
+
+	echo 'or process substitution'
+	parset res -k echo :::: <(seq 0 10)
+	echo "${res[0]}"
+	echo "${res[9]}"
+
+	echo 'Commands with newline require -0'
+	parset var -k -0 ::: 'echo "line1
+line2"' 'echo "command2"'
+	echo "${var[0]}"
+    ) | replace_tmpdir
+}
+
+par_parset2() {
+    echo '### parset into array'
+    (
+	. `which env_parallel.bash`
+
+	parset arr1 echo ::: foo bar baz
+	echo ${arr1[0]} ${arr1[1]} ${arr1[2]}
+
+	echo '### parset into vars with comma'
+	parset comma3,comma2,comma1 echo ::: baz bar foo
+	echo $comma1 $comma2 $comma3
+
+	echo '### parset into vars with space'
+	parset 'space3 space2 space1' echo ::: baz bar foo
+	echo $space1 $space2 $space3
+
+	echo '### parset with newlines'
+	parset 'newline3 newline2 newline1' seq ::: 3 2 1
+	echo "$newline1"
+	echo "$newline2"
+	echo "$newline3"
+
+	echo '### parset into indexed array vars'
+	parset 'myarray[6],myarray[5],myarray[4]' echo ::: baz bar foo
+	echo ${myarray[*]}
+	echo ${myarray[4]} ${myarray[5]} ${myarray[5]}
+
+	echo '### env_parset'
+	alias myecho='echo myecho "$myvar" "${myarr[1]}"'
+	myvar="myvar"
+	myarr=("myarr  0" "myarr  1" "myarr  2")
+	mynewline="`echo newline1;echo newline2;`"
+	env_parset arr1 myecho ::: foo bar baz
+	echo "${arr1[0]} ${arr1[1]} ${arr1[2]}"
+	env_parset comma3,comma2,comma1 myecho ::: baz bar foo
+	echo "$comma1 $comma2 $comma3"
+	env_parset 'space3 space2 space1' myecho ::: baz bar foo
+	echo "$space1 $space2 $space3"
+	env_parset 'newline3 newline2 newline1' 'echo "$mynewline";seq' ::: 3 2 1
+	echo "$newline1"
+	echo "$newline2"
+	echo "$newline3"
+	env_parset 'myarray[6],myarray[5],myarray[4]' myecho ::: baz bar foo
+	echo "${myarray[*]}"
+	echo "${myarray[4]} ${myarray[5]} ${myarray[5]}"
+
+	echo 'bug #52507: parset arr1 -v echo ::: fails'
+	parset arr1 -v seq ::: 1 2 3
+	echo "${arr1[2]}"
+    ) | replace_tmpdir
+}
+
+par__parset_assoc_arr() {
     mytest=$(cat <<'EOF'
     mytest() {
 	shell=`basename $SHELL`
@@ -226,13 +311,16 @@ par_10000_m_X() {
         parallel -k --pipe --tee ::: wc md5sum
 }
 
-par_10000_5_rpl_X() {
+par__10000_5_rpl_X() {
     echo '### Test -X with 10000 args and 5 replacement strings'
-    seq 10000 | perl -pe 's/$/.gif/' | parallel -j1 -kX echo a{}b{.}c{.}{.}{} | wc -l
-    seq 10000 | perl -pe 's/$/.gif/' | parallel -j1 -kX echo a{}b{.}c{.}{.} | wc -l
-    seq 10000 | perl -pe 's/$/.gif/' | parallel -j1 -kX echo a{}b{.}c{.} | wc -l
-    seq 10000 | perl -pe 's/$/.gif/' | parallel -j1 -kX echo a{}b{.}c | wc -l
-    seq 10000 | perl -pe 's/$/.gif/' | parallel -j1 -kX echo a{}b | wc -l
+    gen() {
+	seq 10000 | perl -pe 's/$/.gif/'
+    }
+    gen | parallel -j1 -kX echo a{}b{.}c{.}{.}{} | wc -l
+    gen | parallel -j1 -kX echo a{}b{.}c{.}{.} | wc -l
+    gen | parallel -j1 -kX echo a{}b{.}c{.} | wc -l
+    gen | parallel -j1 -kX echo a{}b{.}c | wc -l
+    gen | parallel -j1 -kX echo a{}b | wc -l
 }
 
 par_X_I_meta() {
@@ -329,7 +417,7 @@ par_tee_with_premature_close() {
     rmdir "$tmpdir"
 }
 
-par_tee_too_many_args() {
+par__tee_too_many_args() {
     echo '### Fail if there are more arguments than --jobs'
     seq 11 | stdout parallel -k --tag --pipe -j4 --tee grep {} ::: {1..4}
     tmp=`mktemp`
@@ -365,7 +453,7 @@ par_totaljob_repl() {
     parallel -k -N7 --plus echo {#} {##} ::: {1..14}
     parallel -k -N7 --plus echo {#} {##} ::: {1..15}
     parallel -k -S 8/: -X --plus echo {#} {##} ::: {1..15}
-    parallel -k --plus --delay 0.1 -j 10 'sleep 1; echo {0#}/{##}:{0%}' ::: {1..5} ::: {1..4}
+    parallel -k --plus --delay 0.01 -j 10 'sleep 2; echo {0#}/{##}:{0%}' ::: {1..5} ::: {1..4}
 }
 
 par_jobslot_repl() {
@@ -379,7 +467,7 @@ par_jobslot_repl() {
     echo 'bug #46231: {%} with --pipepart broken. Should give 1+2'
 
     seq 10000 > /tmp/num10000
-    parallel -k --pipepart -ka /tmp/num10000 --block 10k -j2 --delay 0.05 'sleep 0.1; echo {%}'
+    parallel -k --pipepart -ka /tmp/num10000 --block 10k -j2 --delay 0.1 'sleep 0.2; echo {%}'
     rm /tmp/num10000
 }
 

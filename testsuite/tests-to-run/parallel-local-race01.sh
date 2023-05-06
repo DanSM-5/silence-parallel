@@ -4,6 +4,13 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+par_change_content_--jobs_filename() {
+    echo '### Test of -j filename with file content changing (missing -k is correct)'
+    echo 1 >/tmp/jobs_to_run2
+    (sleep 3; echo 10 >/tmp/jobs_to_run2) &
+    parallel -j /tmp/jobs_to_run2 -v sleep {} ::: 3.3 2.{1..5} 0.{1..7}
+}
+
 par_csv_not_installed() {
     echo '### Give error if CSV.pm is not installed when using --csv'
     sudo parallel mv {} {}.hidden ::: /usr/share/perl5/Text/CSV.pm
@@ -63,7 +70,8 @@ par_linebuffer_tag_slow_output() {
 }
 
 par_distribute_input_by_ability() {
-    echo "### bug #48290: round-robin does not distribute data based on business"
+    echo "### bug #48290: round-robin does not distribute data"
+    echo "based on busy-ness"
     echo "### Distribute input to jobs that are ready"
     echo "Job-slot n is 50% slower than n+1, so the order should be 1..7"
     seq 20000000 |

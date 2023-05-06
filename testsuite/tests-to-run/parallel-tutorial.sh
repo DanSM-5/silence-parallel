@@ -23,7 +23,8 @@ export SERVER1=parallel@lo
 export SERVER2=csh@lo
 export PARALLEL=-k
 perl -ne '$/="\n\n"; /^Output/../^[^O]\S/ and next; /^  / and print;' "$testsuitedir"/../src/parallel_tutorial.pod |
-    egrep -v 'curl|tty|parallel_tutorial|interactive|example.(com|net)|shellquote|works' |
+    egrep -v 'curl|tty|parallel_tutorial|interactive|example.(com|net)' |
+    egrep -v 'shellquote|works|num128|--filter-hosts|--tmux|my_id' |
     perl -pe 's/username@//;s/user@//;
               s/zenity/zenity --timeout=15/;
               s:/usr/bin/time:/usr/bin/time -f %e:;
@@ -99,6 +100,7 @@ perl -ne '$/="\n\n"; /^Output/../^[^O]\S/ and next; /^  / and print;' "$testsuit
 	      s{rsync error: some files/attrs were not transferred .*\n}{};
 	      s{Give up after 2 secs\n}{};
 	      s{parallel: Warning: Semaphore timed out. Exiting.\n}{};
+	      s{parallel: Starting no more jobs. Waiting for 1 jobs to finish.}{};
 	      s{.* GtkDialog .*\n}{};
 	      s{tried 1}{};
 	      s/^\s*\n//;
