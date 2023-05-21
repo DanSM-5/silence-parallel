@@ -8285,6 +8285,11 @@ sub user_requested_processes($) {
 	    if(open(my $in_fh, "<", $Global::max_procs_file)) {
 		my $opt_P_file = join("",<$in_fh>);
 		close $in_fh;
+		if($opt_P_file !~ /\S/) {
+		    ::warning_once("$Global::max_procs_file is empty. ".
+				   "Treated as 100%");
+		    $opt_P_file = "100%";
+		}
 		$processes = $self->user_requested_processes($opt_P_file);
 	    } else {
 		::error("Cannot open $opt_P.");
