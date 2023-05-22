@@ -263,17 +263,18 @@ from:tange@gnu.org
 to:parallel@gnu.org, bug-parallel@gnu.org
 stable-bcc: Jesse Alama <jessealama@fastmail.fm>
 
-Subject: GNU Parallel 20230522 ('Charles<<>>') released
+Subject: GNU Parallel 20230522 ('Charles') released [stable]
 
-GNU Parallel 20230522 ('<<>>') has been released. It is available for download at: lbry://@GnuParallel:4
+GNU Parallel 20230522 ('Charles') has been released. It is available for download at: lbry://@GnuParallel:4
 
 Quote of the month:
 
-  <<>>
+  Recently learned how to use GNU parallel (from ChatGPT, no less!) and I've gone mad with power
+    -- Mark, Anthropomorphic Anuran @reject_resubmit@twitter
 
 New in this release:
 
-<<>>
+* No new features. This is a candidate for a stable release.
 
 * Bug fixes and man page updates.
 
@@ -283,19 +284,17 @@ News about GNU Parallel:
 
 * Script for summarizing GNU parallel joblog file https://github.com/gavinmdouglas/parallel_joblog_summary
 
-https://www.cyberciti.biz/faq/linux-unix-copy-a-file-to-multiple-directories-using-cp-command/
-https://dev.to/attilavm/search-in-your-jupyter-notebooks-from-the-cli-fast-1408
+* How to copy a single file to multiple directories in Linux or Unix https://www.cyberciti.biz/faq/linux-unix-copy-a-file-to-multiple-directories-using-cp-command/
 
-https://www.youtube.com/watch?v=2tVpUfND3LI
-https://www.youtube.com/watch?v=eC_RPuFCcU8
-https://www.youtube.com/watch?v=3vFxDqgcdVI
+* Search in your Jupyter notebooks from the CLI, fast. https://dev.to/attilavm/search-in-your-jupyter-notebooks-from-the-cli-fast-1408
 
-https://www.youtube.com/watch?v=Ke3sirM-aQQ
-https://www.youtube.com/watch?v=OXg-WHlB_dk
+* Parallel Job Orchestration with GNU Parallel https://www.youtube.com/watch?v=2tVpUfND3LI
 
- 
- 
-<<>>
+* Optional Individual Submission 4 Job Handling 20266001 - GNU Parallel https://www.youtube.com/watch?v=eC_RPuFCcU8
+
+* DOE Cross-facility Workflows Training - April 12, 2023 https://www.youtube.com/watch?v=Ke3sirM-aQQ
+
+* How to run MiXCR 4.x on multiple patient samples using GNU Parallel https://www.youtube.com/watch?v=OXg-WHlB_dk
 
 
 GNU Parallel - For people who live life in the parallel lane.
