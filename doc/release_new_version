@@ -105,6 +105,7 @@ lbry://@GnuParallel#4/parallel-20210322.tar.bz2
 . .last-doitag.txt
 file_path="`pwd`/parallel-$YYYYMMDD.tar.bz2"
 title="GNU Parallel $YYYYMMDD ('$SPCTAG') [stable]"
+
 title="GNU Parallel $YYYYMMDD ('$SPCTAG')"
 name="GNU-Parallel-$YYYYMMDD-$TAG"
 author="Ole Tange"
@@ -263,38 +264,24 @@ from:tange@gnu.org
 to:parallel@gnu.org, bug-parallel@gnu.org
 stable-bcc: Jesse Alama <jessealama@fastmail.fm>
 
-Subject: GNU Parallel 20230522 ('Charles') released [stable]
+Subject: GNU Parallel 20230622 ('Tina Turner/Odisha<<>>') released <<[stable]>>
 
-GNU Parallel 20230522 ('Charles') has been released. It is available for download at: lbry://@GnuParallel:4
+GNU Parallel 20230622 ('<<>>') has been released. It is available for download at: lbry://@GnuParallel:4
 
 Quote of the month:
 
-  Recently learned how to use GNU parallel (from ChatGPT, no less!) and I've gone mad with power
-    -- Mark, Anthropomorphic Anuran @reject_resubmit@twitter
+  <<>>
 
 New in this release:
 
-* No new features. This is a candidate for a stable release.
+<<>>
 
 * Bug fixes and man page updates.
 
 News about GNU Parallel:
+http://blog.faucher.net/2023/05/building-evil-android-phone-bot-army.html
 
-* Introduction to parallel computing https://youtu.be/fvrHXV8yqU4?t=2874
-
-* Script for summarizing GNU parallel joblog file https://github.com/gavinmdouglas/parallel_joblog_summary
-
-* How to copy a single file to multiple directories in Linux or Unix https://www.cyberciti.biz/faq/linux-unix-copy-a-file-to-multiple-directories-using-cp-command/
-
-* Search in your Jupyter notebooks from the CLI, fast. https://dev.to/attilavm/search-in-your-jupyter-notebooks-from-the-cli-fast-1408
-
-* Parallel Job Orchestration with GNU Parallel https://www.youtube.com/watch?v=2tVpUfND3LI
-
-* Optional Individual Submission 4 Job Handling 20266001 - GNU Parallel https://www.youtube.com/watch?v=eC_RPuFCcU8
-
-* DOE Cross-facility Workflows Training - April 12, 2023 https://www.youtube.com/watch?v=Ke3sirM-aQQ
-
-* How to run MiXCR 4.x on multiple patient samples using GNU Parallel https://www.youtube.com/watch?v=OXg-WHlB_dk
+<<>>
 
 
 GNU Parallel - For people who live life in the parallel lane.

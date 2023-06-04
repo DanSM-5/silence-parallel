@@ -4,6 +4,22 @@ par_filter_host_noise	localhost	Warning: Identity file id_rsa not accessible: No
 par_filter_host_noise	localhost	Warning: Permanently added 'localhost' (ED25519) to the list of known hosts.par_filter_host_noise	localhost	
 par_filter_host_noise	localhost	OK
 par_filter_host_noise	localhost	Warning: Permanently added 'localhost' (ED25519) to the list of known hosts.par_filter_host_noise	localhost	
+par_filter_host_noise	### bug #64237: --filter-hosts and VisualHostKey=yes
+par_filter_host_noise	localhost	OK
+par_filter_host_noise	localhost	Host key fingerprint is
+par_filter_host_noise	localhost	+,,,,,,,,,,,,,,,,,+
+par_filter_host_noise	localhost	|,,,,,,,,,,,,,,,,,|
+par_filter_host_noise	localhost	|,,,,,,,,,,,,,,,,,|
+par_filter_host_noise	localhost	|,,,,,,,,,,,,,,,,,|
+par_filter_host_noise	localhost	|,,,,,,,,,,,,,,,,,|
+par_filter_host_noise	localhost	|,,,,,,,,,,,,,,,,,|
+par_filter_host_noise	localhost	|,,,,,,,,,,,,,,,,,|
+par_filter_host_noise	localhost	|,,,,,,,,,,,,,,,,,|
+par_filter_host_noise	localhost	|,,,,,,,,,,,,,,,,,|
+par_filter_host_noise	localhost	|,,,,,,,,,,,,,,,,,|
+par_filter_host_noise	localhost	+,,,,,,,,,,,,,,,,,+par_filter_host_noise	localhost	
+par_filter_host_noise	localhost	OK
+par_filter_host_noise	localhost	Warning: Permanently added 'localhost' (ED25519) to the list of known hosts.par_filter_host_noise	localhost	
 par_load_csh	### Gave Word too long.
 par_load_csh	a
 par_path_remote_bash	bug #47695: How to set $PATH on remote? Bash

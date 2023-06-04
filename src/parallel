@@ -2799,7 +2799,7 @@ sub check_invalid_option_combinations() {
 
 sub init_globals() {
     # Defaults:
-    $Global::version = 20230522;
+    $Global::version = 20230523;
     $Global::progname = 'parallel';
     $::name = "GNU Parallel";
     $Global::infinity = 2**31;
@@ -5121,8 +5121,10 @@ sub parse_host_filtering() {
 		next;
 	    }
 	    if(/\t(perl: warning:|LANGUAGE =|LC_ALL =|LANG =|are supported and installed|Disconnected from|Received disconnect from)/
-		    or
-		    /\tWarning: /
+	       or
+	       /\tWarning: /
+	       or
+	       /\t(Host key fingerprint is|\+-.*-\+|\|.*\|)/
 		) {
 		# Skip these (from perl):
 		#   perl: warning: Setting locale failed.
@@ -5137,6 +5139,11 @@ sub parse_host_filtering() {
 		# Skip these (from ssh):
 		#   Warning: Permanently added * to the list of known hosts.
 		#   Warning: Identity file * not accessible: *
+		#   (VisualHostKey=yes)
+		#   Host key fingerprint is SHA256:...
+		#   +--[ED25519 256]--+
+		#   |               o |
+		#   +----[SHA256]-----+
 	    } elsif(not defined $nsockets{$col[0]}) {
 		$nsockets{$col[0]} = $col[1];
 	    } elsif(not defined $ncores{$col[0]}) {

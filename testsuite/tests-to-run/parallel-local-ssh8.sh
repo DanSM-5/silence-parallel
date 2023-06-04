@@ -133,7 +133,12 @@ par_z_csh_environment_variables_set() {
 par_filter_host_noise() {
     echo '### bug #63296: --filter-hosts option gets confused by output from SSH command'
     parallel --ssh "ssh -i id_rsa -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o GlobalKnownHostsFile=/dev/null " -S localhost --nonall --tag --filter-hosts echo OK
-    parallel --ssh "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o GlobalKnownHostsFile=/dev/null " -S localhost --nonall --tag --filter-hosts echo OK  
+    parallel --ssh "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o GlobalKnownHostsFile=/dev/null " -S localhost --nonall --tag --filter-hosts echo OK
+    echo '### bug #64237: --filter-hosts and VisualHostKey=yes'
+    stdout parallel --ssh "ssh -o VisualHostKey=yes" -S localhost --nonall --tag --filter-hosts echo OK |
+	perl -pe 's/(Host key fingerprint is).*/$1/; s/\t(\+|\|).*\1/\t$1,,,,,,,,,,,,,,,,,$1/;'
+    parallel --ssh "ssh -o VisualHostKey=yes  -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o GlobalKnownHostsFile=/dev/null " -S localhost --nonall --tag --filter-hosts echo OK
+    
 }
 
 export -f $(compgen -A function | grep par_)
