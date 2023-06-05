@@ -2248,6 +2248,7 @@ sub parse_options(@) {
     }
     ::debug("init","Global::shell $Global::shell\n");
     $Global::cshell = $Global::shell =~ m:(/[-a-z]*)?csh:;
+    $Global::fish = $Global::shell =~ m:(/[-a-z]*)?fish:;
     if(defined $opt::_parset) { parse_parset(); }
     if(defined $opt::X) { $Global::ContextReplace = 1; }
     if(defined $opt::silent) { $Global::verbose = 0; }
@@ -10658,6 +10659,10 @@ sub exitstatuswrapper(@) {
     #	shell script that returns current status after executing @shellcode
     if($Global::cshell) {
 	return ('set _EXIT_status=$status; ' .
+		join(" ",@_).
+		'exit $_EXIT_status;');
+    } elsif($Global::fish) {
+	return ('export _EXIT_status=$status; ' .
 		join(" ",@_).
 		'exit $_EXIT_status;');
     } else {

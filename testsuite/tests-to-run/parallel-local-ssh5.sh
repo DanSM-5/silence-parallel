@@ -51,7 +51,16 @@ par_--ssh_autossh() {
     ) | grep -Ev 'Warning: remote port forwarding failed for listen'
 }
 
-par_basefile_cleanup() {
+par_fish_exit() {
+    echo '### bug #64222: sshlogin --return and fish shell'
+    ssh fish@lo '
+      echo OK > bug_64222
+      parallel --wd ... --sshlogin lo --trc {} cat ::: bug_64222
+      rm bug_64222
+    '
+}
+
+par__basefile_cleanup() {
     echo '### bug #46520: --basefile cleans up without --cleanup'
     touch bug_46520
     parallel -S parallel@lo --bf bug_46520 ls ::: bug_46520
@@ -105,7 +114,7 @@ par_env_parallel_onall() {
     env_parallel -Slo --nonall doit works
 }
 
-par_--shellquote_command_len() {
+par__--shellquote_command_len() {
     echo '### test quoting will not cause a crash if too long'
     # echo "'''" | parallel --shellquote --shellquote --shellquote --shellquote
 
@@ -126,6 +135,6 @@ par_--shellquote_command_len() {
 }
 
 export -f $(compgen -A function | grep par_)
-compgen -A function | grep par_ | sort -r |
+compgen -A function | grep par_ | sort |
     # 2019-07-14 100% slowed down 4 threads/16GB
     parallel -j75% --joblog /tmp/jl-`basename $0` -j3 --tag -k --delay 0.1 --retries 3 '{} 2>&1'

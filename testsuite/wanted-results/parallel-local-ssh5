@@ -1,36 +1,6 @@
-par_ssh_cmd_with_newline	### Check --ssh with \n works
-par_ssh_cmd_with_newline	uid=1003(sh) gid=1003(sh) groups=1003(sh)
-par_pipe_retries	### bug #45025: --pipe --retries does not reschedule on other host
-par_pipe_retries	parallel: Warning: Could not figure out number of cpus on a.a (). Using 1.
-par_pipe_retries	 165668  165668 1048571
-par_pipe_retries	localhost-:
-par_pipe_retries	 134362  134362  940534
-par_pipe_retries	localhost-:
-par_pipe_retries	parallel: Error: --retries cannot be combined with --roundrobin.
-par_input_loss_pipe	### bug #36595: silent loss of input with --pipe and --sshlogin
-par_input_loss_pipe	      1   10000   48894
-par_env_parallel_onall	bug #54352: env_parallel -Slo --nonall myfunc broken in 20180722
-par_env_parallel_onall	Myfunc works
-par_env_parallel_onall	Myfunc works
-par_controlmaster	### Check -M works if TMPDIR contains space
-par_controlmaster	1
-par_controlmaster	2
-par_controlmaster	3
-par_controlmaster	1
-par_controlmaster	2
-par_controlmaster	3
-par_controlmaster	Part2
-par_controlmaster	OK
-par_basefile_cleanup	### bug #46520: --basefile cleans up without --cleanup
-par_basefile_cleanup	bug_46520
-par_basefile_cleanup	bug_46520
-par_basefile_cleanup	bug_46520
-par_basefile_cleanup	ls: cannot access 'bug_46520': No such file or directory
-par_--ssh_lsh	### --ssh lsh
-par_--ssh_lsh	OK
-par_--ssh_lsh	OK
-par_--ssh_lsh	OK
-par_--ssh_lsh	OK
+par_--controlmaster_eats	bug #36707: --controlmaster eats jobs
+par_--controlmaster_eats	OK1
+par_--controlmaster_eats	OK2
 par_--ssh_autossh	### --ssh autossh
 par_--ssh_autossh	OK
 par_--ssh_autossh	OK
@@ -69,555 +39,587 @@ par_--ssh_autossh
 par_--ssh_autossh	rsync: connection unexpectedly closed (0 bytes received so far) [Receiver]
 par_--ssh_autossh	rsync error: error in rsync protocol data stream (code 12) at io.c(231) [Receiver=3.2.7]
 par_--ssh_autossh	foo_autossh
-par_--shellquote_command_len	### test quoting will not cause a crash if too long
-par_--shellquote_command_len	-Slo -j10	" 1 1	      1       1       4
-par_--shellquote_command_len	-Slo -j10	" 1 2	      1       1      10
-par_--shellquote_command_len	-Slo -j10	" 1 3	      1       1      28
-par_--shellquote_command_len	-Slo -j10	" 1 4	      1       1      82
-par_--shellquote_command_len	-Slo -j10	" 1 5	      1       1     244
-par_--shellquote_command_len	-Slo -j10	" 1 6	      1       1     730
-par_--shellquote_command_len	-Slo -j10	" 1 7	      1       1    2188
-par_--shellquote_command_len	-Slo -j10	" 1 8	      1       1    6562
-par_--shellquote_command_len	-Slo -j10	" 1 9	      0       0       0
-par_--shellquote_command_len	-Slo -j10	" 1 10	      0       0       0
-par_--shellquote_command_len	-Slo -j10	" 2 1	      1       1       5
-par_--shellquote_command_len	-Slo -j10	" 2 2	      1       1      11
-par_--shellquote_command_len	-Slo -j10	" 2 3	      1       1      29
-par_--shellquote_command_len	-Slo -j10	" 2 4	      1       1      83
-par_--shellquote_command_len	-Slo -j10	" 2 5	      1       1     245
-par_--shellquote_command_len	-Slo -j10	" 2 6	      1       1     731
-par_--shellquote_command_len	-Slo -j10	" 2 7	      1       1    2189
-par_--shellquote_command_len	-Slo -j10	" 2 8	      0       0       0
-par_--shellquote_command_len	-Slo -j10	" 2 9	      0       0       0
-par_--shellquote_command_len	-Slo -j10	" 2 10	      0       0       0
-par_--shellquote_command_len	-Slo -j10	" 3 1	      1       1       6
-par_--shellquote_command_len	-Slo -j10	" 3 2	      1       1      12
-par_--shellquote_command_len	-Slo -j10	" 3 3	      1       1      30
-par_--shellquote_command_len	-Slo -j10	" 3 4	      1       1      84
-par_--shellquote_command_len	-Slo -j10	" 3 5	      1       1     246
-par_--shellquote_command_len	-Slo -j10	" 3 6	      1       1     732
-par_--shellquote_command_len	-Slo -j10	" 3 7	      1       1    2190
-par_--shellquote_command_len	-Slo -j10	" 3 8	      0       0       0
-par_--shellquote_command_len	-Slo -j10	" 3 9	      0       0       0
-par_--shellquote_command_len	-Slo -j10	" 3 10	      0       0       0
-par_--shellquote_command_len	-Slo -j10	" 4 1	      1       1       7
-par_--shellquote_command_len	-Slo -j10	" 4 2	      1       1      13
-par_--shellquote_command_len	-Slo -j10	" 4 3	      1       1      31
-par_--shellquote_command_len	-Slo -j10	" 4 4	      1       1      85
-par_--shellquote_command_len	-Slo -j10	" 4 5	      1       1     247
-par_--shellquote_command_len	-Slo -j10	" 4 6	      1       1     733
-par_--shellquote_command_len	-Slo -j10	" 4 7	      1       1    2191
-par_--shellquote_command_len	-Slo -j10	" 4 8	      0       0       0
-par_--shellquote_command_len	-Slo -j10	" 4 9	      0       0       0
-par_--shellquote_command_len	-Slo -j10	" 4 10	      0       0       0
-par_--shellquote_command_len	-Slo -j10	" 5 1	      1       1       8
-par_--shellquote_command_len	-Slo -j10	" 5 2	      1       1      14
-par_--shellquote_command_len	-Slo -j10	" 5 3	      1       1      32
-par_--shellquote_command_len	-Slo -j10	" 5 4	      1       1      86
-par_--shellquote_command_len	-Slo -j10	" 5 5	      1       1     248
-par_--shellquote_command_len	-Slo -j10	" 5 6	      1       1     734
-par_--shellquote_command_len	-Slo -j10	" 5 7	      1       1    2192
-par_--shellquote_command_len	-Slo -j10	" 5 8	      0       0       0
-par_--shellquote_command_len	-Slo -j10	" 5 9	      0       0       0
-par_--shellquote_command_len	-Slo -j10	" 5 10	      0       0       0
-par_--shellquote_command_len	-Slo -j10	" 6 1	      1       1       9
-par_--shellquote_command_len	-Slo -j10	" 6 2	      1       1      15
-par_--shellquote_command_len	-Slo -j10	" 6 3	      1       1      33
-par_--shellquote_command_len	-Slo -j10	" 6 4	      1       1      87
-par_--shellquote_command_len	-Slo -j10	" 6 5	      1       1     249
-par_--shellquote_command_len	-Slo -j10	" 6 6	      1       1     735
-par_--shellquote_command_len	-Slo -j10	" 6 7	      0       0       0
-par_--shellquote_command_len	-Slo -j10	" 6 8	      0       0       0
-par_--shellquote_command_len	-Slo -j10	" 6 9	      0       0       0
-par_--shellquote_command_len	-Slo -j10	" 6 10	      0       0       0
-par_--shellquote_command_len	-Slo -j10	" 7 1	      1       1      10
-par_--shellquote_command_len	-Slo -j10	" 7 2	      1       1      16
-par_--shellquote_command_len	-Slo -j10	" 7 3	      1       1      34
-par_--shellquote_command_len	-Slo -j10	" 7 4	      1       1      88
-par_--shellquote_command_len	-Slo -j10	" 7 5	      1       1     250
-par_--shellquote_command_len	-Slo -j10	" 7 6	      1       1     736
-par_--shellquote_command_len	-Slo -j10	" 7 7	      0       0       0
-par_--shellquote_command_len	-Slo -j10	" 7 8	      0       0       0
-par_--shellquote_command_len	-Slo -j10	" 7 9	      0       0       0
-par_--shellquote_command_len	-Slo -j10	" 7 10	      0       0       0
-par_--shellquote_command_len	-Slo -j10	" 8 1	      1       1      11
-par_--shellquote_command_len	-Slo -j10	" 8 2	      1       1      17
-par_--shellquote_command_len	-Slo -j10	" 8 3	      1       1      35
-par_--shellquote_command_len	-Slo -j10	" 8 4	      1       1      89
-par_--shellquote_command_len	-Slo -j10	" 8 5	      1       1     251
-par_--shellquote_command_len	-Slo -j10	" 8 6	      1       1     737
-par_--shellquote_command_len	-Slo -j10	" 8 7	      0       0       0
-par_--shellquote_command_len	-Slo -j10	" 8 8	      0       0       0
-par_--shellquote_command_len	-Slo -j10	" 8 9	      0       0       0
-par_--shellquote_command_len	-Slo -j10	" 8 10	      0       0       0
-par_--shellquote_command_len	-Slo -j10	" 9 1	      1       1      12
-par_--shellquote_command_len	-Slo -j10	" 9 2	      1       1      18
-par_--shellquote_command_len	-Slo -j10	" 9 3	      1       1      36
-par_--shellquote_command_len	-Slo -j10	" 9 4	      1       1      90
-par_--shellquote_command_len	-Slo -j10	" 9 5	      1       1     252
-par_--shellquote_command_len	-Slo -j10	" 9 6	      1       1     738
-par_--shellquote_command_len	-Slo -j10	" 9 7	      0       0       0
-par_--shellquote_command_len	-Slo -j10	" 9 8	      0       0       0
-par_--shellquote_command_len	-Slo -j10	" 9 9	      0       0       0
-par_--shellquote_command_len	-Slo -j10	" 9 10	      0       0       0
-par_--shellquote_command_len	-Slo -j10	" 10 1	      1       1      13
-par_--shellquote_command_len	-Slo -j10	" 10 2	      1       1      19
-par_--shellquote_command_len	-Slo -j10	" 10 3	      1       1      37
-par_--shellquote_command_len	-Slo -j10	" 10 4	      1       1      91
-par_--shellquote_command_len	-Slo -j10	" 10 5	      1       1     253
-par_--shellquote_command_len	-Slo -j10	" 10 6	      1       1     739
-par_--shellquote_command_len	-Slo -j10	" 10 7	      0       0       0
-par_--shellquote_command_len	-Slo -j10	" 10 8	      0       0       0
-par_--shellquote_command_len	-Slo -j10	" 10 9	      0       0       0
-par_--shellquote_command_len	-Slo -j10	" 10 10	      0       0       0
-par_--shellquote_command_len	-Slo -j10	' 1 1	      1       1       4
-par_--shellquote_command_len	-Slo -j10	' 1 2	      1       1      10
-par_--shellquote_command_len	-Slo -j10	' 1 3	      1       1      28
-par_--shellquote_command_len	-Slo -j10	' 1 4	      1       1      82
-par_--shellquote_command_len	-Slo -j10	' 1 5	      1       1     244
-par_--shellquote_command_len	-Slo -j10	' 1 6	      1       1     730
-par_--shellquote_command_len	-Slo -j10	' 1 7	      1       1    2188
-par_--shellquote_command_len	-Slo -j10	' 1 8	      1       1    6562
-par_--shellquote_command_len	-Slo -j10	' 1 9	      0       0       0
-par_--shellquote_command_len	-Slo -j10	' 1 10	      0       0       0
-par_--shellquote_command_len	-Slo -j10	' 2 1	      1       1       5
-par_--shellquote_command_len	-Slo -j10	' 2 2	      1       1      11
-par_--shellquote_command_len	-Slo -j10	' 2 3	      1       1      29
-par_--shellquote_command_len	-Slo -j10	' 2 4	      1       1      83
-par_--shellquote_command_len	-Slo -j10	' 2 5	      1       1     245
-par_--shellquote_command_len	-Slo -j10	' 2 6	      1       1     731
-par_--shellquote_command_len	-Slo -j10	' 2 7	      1       1    2189
-par_--shellquote_command_len	-Slo -j10	' 2 8	      0       0       0
-par_--shellquote_command_len	-Slo -j10	' 2 9	      0       0       0
-par_--shellquote_command_len	-Slo -j10	' 2 10	      0       0       0
-par_--shellquote_command_len	-Slo -j10	' 3 1	      1       1       6
-par_--shellquote_command_len	-Slo -j10	' 3 2	      1       1      12
-par_--shellquote_command_len	-Slo -j10	' 3 3	      1       1      30
-par_--shellquote_command_len	-Slo -j10	' 3 4	      1       1      84
-par_--shellquote_command_len	-Slo -j10	' 3 5	      1       1     246
-par_--shellquote_command_len	-Slo -j10	' 3 6	      1       1     732
-par_--shellquote_command_len	-Slo -j10	' 3 7	      1       1    2190
-par_--shellquote_command_len	-Slo -j10	' 3 8	      0       0       0
-par_--shellquote_command_len	-Slo -j10	' 3 9	      0       0       0
-par_--shellquote_command_len	-Slo -j10	' 3 10	      0       0       0
-par_--shellquote_command_len	-Slo -j10	' 4 1	      1       1       7
-par_--shellquote_command_len	-Slo -j10	' 4 2	      1       1      13
-par_--shellquote_command_len	-Slo -j10	' 4 3	      1       1      31
-par_--shellquote_command_len	-Slo -j10	' 4 4	      1       1      85
-par_--shellquote_command_len	-Slo -j10	' 4 5	      1       1     247
-par_--shellquote_command_len	-Slo -j10	' 4 6	      1       1     733
-par_--shellquote_command_len	-Slo -j10	' 4 7	      1       1    2191
-par_--shellquote_command_len	-Slo -j10	' 4 8	      0       0       0
-par_--shellquote_command_len	-Slo -j10	' 4 9	      0       0       0
-par_--shellquote_command_len	-Slo -j10	' 4 10	      0       0       0
-par_--shellquote_command_len	-Slo -j10	' 5 1	      1       1       8
-par_--shellquote_command_len	-Slo -j10	' 5 2	      1       1      14
-par_--shellquote_command_len	-Slo -j10	' 5 3	      1       1      32
-par_--shellquote_command_len	-Slo -j10	' 5 4	      1       1      86
-par_--shellquote_command_len	-Slo -j10	' 5 5	      1       1     248
-par_--shellquote_command_len	-Slo -j10	' 5 6	      1       1     734
-par_--shellquote_command_len	-Slo -j10	' 5 7	      1       1    2192
-par_--shellquote_command_len	-Slo -j10	' 5 8	      0       0       0
-par_--shellquote_command_len	-Slo -j10	' 5 9	      0       0       0
-par_--shellquote_command_len	-Slo -j10	' 5 10	      0       0       0
-par_--shellquote_command_len	-Slo -j10	' 6 1	      1       1       9
-par_--shellquote_command_len	-Slo -j10	' 6 2	      1       1      15
-par_--shellquote_command_len	-Slo -j10	' 6 3	      1       1      33
-par_--shellquote_command_len	-Slo -j10	' 6 4	      1       1      87
-par_--shellquote_command_len	-Slo -j10	' 6 5	      1       1     249
-par_--shellquote_command_len	-Slo -j10	' 6 6	      1       1     735
-par_--shellquote_command_len	-Slo -j10	' 6 7	      0       0       0
-par_--shellquote_command_len	-Slo -j10	' 6 8	      0       0       0
-par_--shellquote_command_len	-Slo -j10	' 6 9	      0       0       0
-par_--shellquote_command_len	-Slo -j10	' 6 10	      0       0       0
-par_--shellquote_command_len	-Slo -j10	' 7 1	      1       1      10
-par_--shellquote_command_len	-Slo -j10	' 7 2	      1       1      16
-par_--shellquote_command_len	-Slo -j10	' 7 3	      1       1      34
-par_--shellquote_command_len	-Slo -j10	' 7 4	      1       1      88
-par_--shellquote_command_len	-Slo -j10	' 7 5	      1       1     250
-par_--shellquote_command_len	-Slo -j10	' 7 6	      1       1     736
-par_--shellquote_command_len	-Slo -j10	' 7 7	      0       0       0
-par_--shellquote_command_len	-Slo -j10	' 7 8	      0       0       0
-par_--shellquote_command_len	-Slo -j10	' 7 9	      0       0       0
-par_--shellquote_command_len	-Slo -j10	' 7 10	      0       0       0
-par_--shellquote_command_len	-Slo -j10	' 8 1	      1       1      11
-par_--shellquote_command_len	-Slo -j10	' 8 2	      1       1      17
-par_--shellquote_command_len	-Slo -j10	' 8 3	      1       1      35
-par_--shellquote_command_len	-Slo -j10	' 8 4	      1       1      89
-par_--shellquote_command_len	-Slo -j10	' 8 5	      1       1     251
-par_--shellquote_command_len	-Slo -j10	' 8 6	      1       1     737
-par_--shellquote_command_len	-Slo -j10	' 8 7	      0       0       0
-par_--shellquote_command_len	-Slo -j10	' 8 8	      0       0       0
-par_--shellquote_command_len	-Slo -j10	' 8 9	      0       0       0
-par_--shellquote_command_len	-Slo -j10	' 8 10	      0       0       0
-par_--shellquote_command_len	-Slo -j10	' 9 1	      1       1      12
-par_--shellquote_command_len	-Slo -j10	' 9 2	      1       1      18
-par_--shellquote_command_len	-Slo -j10	' 9 3	      1       1      36
-par_--shellquote_command_len	-Slo -j10	' 9 4	      1       1      90
-par_--shellquote_command_len	-Slo -j10	' 9 5	      1       1     252
-par_--shellquote_command_len	-Slo -j10	' 9 6	      1       1     738
-par_--shellquote_command_len	-Slo -j10	' 9 7	      0       0       0
-par_--shellquote_command_len	-Slo -j10	' 9 8	      0       0       0
-par_--shellquote_command_len	-Slo -j10	' 9 9	      0       0       0
-par_--shellquote_command_len	-Slo -j10	' 9 10	      0       0       0
-par_--shellquote_command_len	-Slo -j10	' 10 1	      1       1      13
-par_--shellquote_command_len	-Slo -j10	' 10 2	      1       1      19
-par_--shellquote_command_len	-Slo -j10	' 10 3	      1       1      37
-par_--shellquote_command_len	-Slo -j10	' 10 4	      1       1      91
-par_--shellquote_command_len	-Slo -j10	' 10 5	      1       1     253
-par_--shellquote_command_len	-Slo -j10	' 10 6	      1       1     739
-par_--shellquote_command_len	-Slo -j10	' 10 7	      0       0       0
-par_--shellquote_command_len	-Slo -j10	' 10 8	      0       0       0
-par_--shellquote_command_len	-Slo -j10	' 10 9	      0       0       0
-par_--shellquote_command_len	-Slo -j10	' 10 10	      0       0       0
-par_--shellquote_command_len	-Slo -j10	" 1 9	parallel: Error: Command line too long (98xxx >= 63xxx) at input 0: "
-par_--shellquote_command_len	-Slo -j10	" 1 10	parallel: Error: Command line too long (295xxx >= 63xxx) at input 0: "
-par_--shellquote_command_len	-Slo -j10	" 2 8	parallel: Error: Command line too long (65xxx >= 63xxx) at input 0: "
-par_--shellquote_command_len	-Slo -j10	" 2 9	parallel: Error: Command line too long (196xxx >= 63xxx) at input 0: "
-par_--shellquote_command_len	-Slo -j10	" 2 10	parallel: Error: Command line too long (590xxx >= 63xxx) at input 0: "
-par_--shellquote_command_len	-Slo -j10	" 3 8	parallel: Error: Command line too long (98xxx >= 63xxx) at input 0: "
-par_--shellquote_command_len	-Slo -j10	" 3 9	parallel: Error: Command line too long (295xxx >= 63xxx) at input 0: "
-par_--shellquote_command_len	-Slo -j10	" 3 10	parallel: Error: Command line too long (885xxx >= 63xxx) at input 0: "
-par_--shellquote_command_len	-Slo -j10	" 4 8	parallel: Error: Command line too long (131xxx >= 63xxx) at input 0: "
-par_--shellquote_command_len	-Slo -j10	" 4 9	parallel: Error: Command line too long (393xxx >= 63xxx) at input 0: "
-par_--shellquote_command_len	-Slo -j10	" 4 10	parallel: Error: Command line too long (1180xxx >= 63xxx) at input 0: "
-par_--shellquote_command_len	-Slo -j10	" 5 8	parallel: Error: Command line too long (164xxx >= 63xxx) at input 0: "
-par_--shellquote_command_len	-Slo -j10	" 5 9	parallel: Error: Command line too long (492xxx >= 63xxx) at input 0: "
-par_--shellquote_command_len	-Slo -j10	" 5 10	parallel: Error: Command line too long (1476xxx >= 63xxx) at input 0: "
-par_--shellquote_command_len	-Slo -j10	" 6 7	parallel: Error: Command line too long (65xxx >= 63xxx) at input 0: "
-par_--shellquote_command_len	-Slo -j10	" 6 8	parallel: Error: Command line too long (196xxx >= 63xxx) at input 0: "
-par_--shellquote_command_len	-Slo -j10	" 6 9	parallel: Error: Command line too long (590xxx >= 63xxx) at input 0: "
-par_--shellquote_command_len	-Slo -j10	" 6 10	parallel: Error: Command line too long (1771xxx >= 63xxx) at input 0: "
-par_--shellquote_command_len	-Slo -j10	" 7 7	parallel: Error: Command line too long (76xxx >= 63xxx) at input 0: "
-par_--shellquote_command_len	-Slo -j10	" 7 8	parallel: Error: Command line too long (229xxx >= 63xxx) at input 0: "
-par_--shellquote_command_len	-Slo -j10	" 7 9	parallel: Error: Command line too long (688xxx >= 63xxx) at input 0: "
-par_--shellquote_command_len	-Slo -j10	" 7 10	parallel: Error: Command line too long (2066xxx >= 63xxx) at input 0: "
-par_--shellquote_command_len	-Slo -j10	" 8 7	parallel: Error: Command line too long (87xxx >= 63xxx) at input 0: "
-par_--shellquote_command_len	-Slo -j10	" 8 8	parallel: Error: Command line too long (262xxx >= 63xxx) at input 0: "
-par_--shellquote_command_len	-Slo -j10	" 8 9	parallel: Error: Command line too long (787xxx >= 63xxx) at input 0: "
-par_--shellquote_command_len	-Slo -j10	" 8 10	parallel: Error: Command line too long (2361xxx >= 63xxx) at input 0: "
-par_--shellquote_command_len	-Slo -j10	" 9 7	parallel: Error: Command line too long (98xxx >= 63xxx) at input 0: "
-par_--shellquote_command_len	-Slo -j10	" 9 8	parallel: Error: Command line too long (295xxx >= 63xxx) at input 0: "
-par_--shellquote_command_len	-Slo -j10	" 9 9	parallel: Error: Command line too long (885xxx >= 63xxx) at input 0: "
-par_--shellquote_command_len	-Slo -j10	" 9 10	parallel: Error: Command line too long (2657xxx >= 63xxx) at input 0: "
-par_--shellquote_command_len	-Slo -j10	" 10 7	parallel: Error: Command line too long (109xxx >= 63xxx) at input 0: "
-par_--shellquote_command_len	-Slo -j10	" 10 8	parallel: Error: Command line too long (328xxx >= 63xxx) at input 0: "
-par_--shellquote_command_len	-Slo -j10	" 10 9	parallel: Error: Command line too long (984xxx >= 63xxx) at input 0: "
-par_--shellquote_command_len	-Slo -j10	" 10 10	parallel: Error: Command line too long (2952xxx >= 63xxx) at input 0: "
-par_--shellquote_command_len	-Slo -j10	' 1 9	parallel: Error: Command line too long (98xxx >= 63xxx) at input 0: '
-par_--shellquote_command_len	-Slo -j10	' 1 10	parallel: Error: Command line too long (295xxx >= 63xxx) at input 0: '
-par_--shellquote_command_len	-Slo -j10	' 2 8	parallel: Error: Command line too long (65xxx >= 63xxx) at input 0: ''
-par_--shellquote_command_len	-Slo -j10	' 2 9	parallel: Error: Command line too long (196xxx >= 63xxx) at input 0: ''
-par_--shellquote_command_len	-Slo -j10	' 2 10	parallel: Error: Command line too long (590xxx >= 63xxx) at input 0: ''
-par_--shellquote_command_len	-Slo -j10	' 3 8	parallel: Error: Command line too long (98xxx >= 63xxx) at input 0: '''
-par_--shellquote_command_len	-Slo -j10	' 3 9	parallel: Error: Command line too long (295xxx >= 63xxx) at input 0: '''
-par_--shellquote_command_len	-Slo -j10	' 3 10	parallel: Error: Command line too long (885xxx >= 63xxx) at input 0: '''
-par_--shellquote_command_len	-Slo -j10	' 4 8	parallel: Error: Command line too long (131xxx >= 63xxx) at input 0: ''''
-par_--shellquote_command_len	-Slo -j10	' 4 9	parallel: Error: Command line too long (393xxx >= 63xxx) at input 0: ''''
-par_--shellquote_command_len	-Slo -j10	' 4 10	parallel: Error: Command line too long (1180xxx >= 63xxx) at input 0: ''''
-par_--shellquote_command_len	-Slo -j10	' 5 8	parallel: Error: Command line too long (164xxx >= 63xxx) at input 0: '''''
-par_--shellquote_command_len	-Slo -j10	' 5 9	parallel: Error: Command line too long (492xxx >= 63xxx) at input 0: '''''
-par_--shellquote_command_len	-Slo -j10	' 5 10	parallel: Error: Command line too long (1476xxx >= 63xxx) at input 0: '''''
-par_--shellquote_command_len	-Slo -j10	' 6 7	parallel: Error: Command line too long (65xxx >= 63xxx) at input 0: ''''''
-par_--shellquote_command_len	-Slo -j10	' 6 8	parallel: Error: Command line too long (196xxx >= 63xxx) at input 0: ''''''
-par_--shellquote_command_len	-Slo -j10	' 6 9	parallel: Error: Command line too long (590xxx >= 63xxx) at input 0: ''''''
-par_--shellquote_command_len	-Slo -j10	' 6 10	parallel: Error: Command line too long (1771xxx >= 63xxx) at input 0: ''''''
-par_--shellquote_command_len	-Slo -j10	' 7 7	parallel: Error: Command line too long (76xxx >= 63xxx) at input 0: '''''''
-par_--shellquote_command_len	-Slo -j10	' 7 8	parallel: Error: Command line too long (229xxx >= 63xxx) at input 0: '''''''
-par_--shellquote_command_len	-Slo -j10	' 7 9	parallel: Error: Command line too long (688xxx >= 63xxx) at input 0: '''''''
-par_--shellquote_command_len	-Slo -j10	' 7 10	parallel: Error: Command line too long (2066xxx >= 63xxx) at input 0: '''''''
-par_--shellquote_command_len	-Slo -j10	' 8 7	parallel: Error: Command line too long (87xxx >= 63xxx) at input 0: ''''''''
-par_--shellquote_command_len	-Slo -j10	' 8 8	parallel: Error: Command line too long (262xxx >= 63xxx) at input 0: ''''''''
-par_--shellquote_command_len	-Slo -j10	' 8 9	parallel: Error: Command line too long (787xxx >= 63xxx) at input 0: ''''''''
-par_--shellquote_command_len	-Slo -j10	' 8 10	parallel: Error: Command line too long (2361xxx >= 63xxx) at input 0: ''''''''
-par_--shellquote_command_len	-Slo -j10	' 9 7	parallel: Error: Command line too long (98xxx >= 63xxx) at input 0: '''''''''
-par_--shellquote_command_len	-Slo -j10	' 9 8	parallel: Error: Command line too long (295xxx >= 63xxx) at input 0: '''''''''
-par_--shellquote_command_len	-Slo -j10	' 9 9	parallel: Error: Command line too long (885xxx >= 63xxx) at input 0: '''''''''
-par_--shellquote_command_len	-Slo -j10	' 9 10	parallel: Error: Command line too long (2657xxx >= 63xxx) at input 0: '''''''''
-par_--shellquote_command_len	-Slo -j10	' 10 7	parallel: Error: Command line too long (109xxx >= 63xxx) at input 0: ''''''''''
-par_--shellquote_command_len	-Slo -j10	' 10 8	parallel: Error: Command line too long (328xxx >= 63xxx) at input 0: ''''''''''
-par_--shellquote_command_len	-Slo -j10	' 10 9	parallel: Error: Command line too long (984xxx >= 63xxx) at input 0: ''''''''''
-par_--shellquote_command_len	-Slo -j10	' 10 10	parallel: Error: Command line too long (2952xxx >= 63xxx) at input 0: ''''''''''
-par_--shellquote_command_len		" 1 1	      1       2       6
-par_--shellquote_command_len		" 1 2	      1       2      12
-par_--shellquote_command_len		" 1 3	      1       2      30
-par_--shellquote_command_len		" 1 4	      1       2      84
-par_--shellquote_command_len		" 1 5	      1       2     246
-par_--shellquote_command_len		" 1 6	      1       2     732
-par_--shellquote_command_len		" 1 7	      1       2    2190
-par_--shellquote_command_len		" 1 8	      0       0       0
-par_--shellquote_command_len		" 1 9	      0       0       0
-par_--shellquote_command_len		" 1 10	      0       0       0
-par_--shellquote_command_len		" 2 1	      1       2       8
-par_--shellquote_command_len		" 2 2	      1       2      14
-par_--shellquote_command_len		" 2 3	      1       2      32
-par_--shellquote_command_len		" 2 4	      1       2      86
-par_--shellquote_command_len		" 2 5	      1       2     248
-par_--shellquote_command_len		" 2 6	      1       2     734
-par_--shellquote_command_len		" 2 7	      1       2    2192
-par_--shellquote_command_len		" 2 8	      0       0       0
-par_--shellquote_command_len		" 2 9	      0       0       0
-par_--shellquote_command_len		" 2 10	      0       0       0
-par_--shellquote_command_len		" 3 1	      1       2      10
-par_--shellquote_command_len		" 3 2	      1       2      16
-par_--shellquote_command_len		" 3 3	      1       2      34
-par_--shellquote_command_len		" 3 4	      1       2      88
-par_--shellquote_command_len		" 3 5	      1       2     250
-par_--shellquote_command_len		" 3 6	      1       2     736
-par_--shellquote_command_len		" 3 7	      0       0       0
-par_--shellquote_command_len		" 3 8	      0       0       0
-par_--shellquote_command_len		" 3 9	      0       0       0
-par_--shellquote_command_len		" 3 10	      0       0       0
-par_--shellquote_command_len		" 4 1	      1       2      12
-par_--shellquote_command_len		" 4 2	      1       2      18
-par_--shellquote_command_len		" 4 3	      1       2      36
-par_--shellquote_command_len		" 4 4	      1       2      90
-par_--shellquote_command_len		" 4 5	      1       2     252
-par_--shellquote_command_len		" 4 6	      1       2     738
-par_--shellquote_command_len		" 4 7	      0       0       0
-par_--shellquote_command_len		" 4 8	      0       0       0
-par_--shellquote_command_len		" 4 9	      0       0       0
-par_--shellquote_command_len		" 4 10	      0       0       0
-par_--shellquote_command_len		" 5 1	      1       2      14
-par_--shellquote_command_len		" 5 2	      1       2      20
-par_--shellquote_command_len		" 5 3	      1       2      38
-par_--shellquote_command_len		" 5 4	      1       2      92
-par_--shellquote_command_len		" 5 5	      1       2     254
-par_--shellquote_command_len		" 5 6	      1       2     740
-par_--shellquote_command_len		" 5 7	      0       0       0
-par_--shellquote_command_len		" 5 8	      0       0       0
-par_--shellquote_command_len		" 5 9	      0       0       0
-par_--shellquote_command_len		" 5 10	      0       0       0
-par_--shellquote_command_len		" 6 1	      1       2      16
-par_--shellquote_command_len		" 6 2	      1       2      22
-par_--shellquote_command_len		" 6 3	      1       2      40
-par_--shellquote_command_len		" 6 4	      1       2      94
-par_--shellquote_command_len		" 6 5	      1       2     256
-par_--shellquote_command_len		" 6 6	      1       2     742
-par_--shellquote_command_len		" 6 7	      0       0       0
-par_--shellquote_command_len		" 6 8	      0       0       0
-par_--shellquote_command_len		" 6 9	      0       0       0
-par_--shellquote_command_len		" 6 10	      0       0       0
-par_--shellquote_command_len		" 7 1	      1       2      18
-par_--shellquote_command_len		" 7 2	      1       2      24
-par_--shellquote_command_len		" 7 3	      1       2      42
-par_--shellquote_command_len		" 7 4	      1       2      96
-par_--shellquote_command_len		" 7 5	      1       2     258
-par_--shellquote_command_len		" 7 6	      1       2     744
-par_--shellquote_command_len		" 7 7	      0       0       0
-par_--shellquote_command_len		" 7 8	      0       0       0
-par_--shellquote_command_len		" 7 9	      0       0       0
-par_--shellquote_command_len		" 7 10	      0       0       0
-par_--shellquote_command_len		" 8 1	      1       2      20
-par_--shellquote_command_len		" 8 2	      1       2      26
-par_--shellquote_command_len		" 8 3	      1       2      44
-par_--shellquote_command_len		" 8 4	      1       2      98
-par_--shellquote_command_len		" 8 5	      1       2     260
-par_--shellquote_command_len		" 8 6	      1       2     746
-par_--shellquote_command_len		" 8 7	      0       0       0
-par_--shellquote_command_len		" 8 8	      0       0       0
-par_--shellquote_command_len		" 8 9	      0       0       0
-par_--shellquote_command_len		" 8 10	      0       0       0
-par_--shellquote_command_len		" 9 1	      1       2      22
-par_--shellquote_command_len		" 9 2	      1       2      28
-par_--shellquote_command_len		" 9 3	      1       2      46
-par_--shellquote_command_len		" 9 4	      1       2     100
-par_--shellquote_command_len		" 9 5	      1       2     262
-par_--shellquote_command_len		" 9 6	      0       0       0
-par_--shellquote_command_len		" 9 7	      0       0       0
-par_--shellquote_command_len		" 9 8	      0       0       0
-par_--shellquote_command_len		" 9 9	      0       0       0
-par_--shellquote_command_len		" 9 10	      0       0       0
-par_--shellquote_command_len		" 10 1	      1       2      24
-par_--shellquote_command_len		" 10 2	      1       2      30
-par_--shellquote_command_len		" 10 3	      1       2      48
-par_--shellquote_command_len		" 10 4	      1       2     102
-par_--shellquote_command_len		" 10 5	      1       2     264
-par_--shellquote_command_len		" 10 6	      0       0       0
-par_--shellquote_command_len		" 10 7	      0       0       0
-par_--shellquote_command_len		" 10 8	      0       0       0
-par_--shellquote_command_len		" 10 9	      0       0       0
-par_--shellquote_command_len		" 10 10	      0       0       0
-par_--shellquote_command_len		' 1 1	      1       2       6
-par_--shellquote_command_len		' 1 2	      1       2      12
-par_--shellquote_command_len		' 1 3	      1       2      30
-par_--shellquote_command_len		' 1 4	      1       2      84
-par_--shellquote_command_len		' 1 5	      1       2     246
-par_--shellquote_command_len		' 1 6	      1       2     732
-par_--shellquote_command_len		' 1 7	      1       2    2190
-par_--shellquote_command_len		' 1 8	      0       0       0
-par_--shellquote_command_len		' 1 9	      0       0       0
-par_--shellquote_command_len		' 1 10	      0       0       0
-par_--shellquote_command_len		' 2 1	      1       2       8
-par_--shellquote_command_len		' 2 2	      1       2      14
-par_--shellquote_command_len		' 2 3	      1       2      32
-par_--shellquote_command_len		' 2 4	      1       2      86
-par_--shellquote_command_len		' 2 5	      1       2     248
-par_--shellquote_command_len		' 2 6	      1       2     734
-par_--shellquote_command_len		' 2 7	      1       2    2192
-par_--shellquote_command_len		' 2 8	      0       0       0
-par_--shellquote_command_len		' 2 9	      0       0       0
-par_--shellquote_command_len		' 2 10	      0       0       0
-par_--shellquote_command_len		' 3 1	      1       2      10
-par_--shellquote_command_len		' 3 2	      1       2      16
-par_--shellquote_command_len		' 3 3	      1       2      34
-par_--shellquote_command_len		' 3 4	      1       2      88
-par_--shellquote_command_len		' 3 5	      1       2     250
-par_--shellquote_command_len		' 3 6	      1       2     736
-par_--shellquote_command_len		' 3 7	      0       0       0
-par_--shellquote_command_len		' 3 8	      0       0       0
-par_--shellquote_command_len		' 3 9	      0       0       0
-par_--shellquote_command_len		' 3 10	      0       0       0
-par_--shellquote_command_len		' 4 1	      1       2      12
-par_--shellquote_command_len		' 4 2	      1       2      18
-par_--shellquote_command_len		' 4 3	      1       2      36
-par_--shellquote_command_len		' 4 4	      1       2      90
-par_--shellquote_command_len		' 4 5	      1       2     252
-par_--shellquote_command_len		' 4 6	      1       2     738
-par_--shellquote_command_len		' 4 7	      0       0       0
-par_--shellquote_command_len		' 4 8	      0       0       0
-par_--shellquote_command_len		' 4 9	      0       0       0
-par_--shellquote_command_len		' 4 10	      0       0       0
-par_--shellquote_command_len		' 5 1	      1       2      14
-par_--shellquote_command_len		' 5 2	      1       2      20
-par_--shellquote_command_len		' 5 3	      1       2      38
-par_--shellquote_command_len		' 5 4	      1       2      92
-par_--shellquote_command_len		' 5 5	      1       2     254
-par_--shellquote_command_len		' 5 6	      1       2     740
-par_--shellquote_command_len		' 5 7	      0       0       0
-par_--shellquote_command_len		' 5 8	      0       0       0
-par_--shellquote_command_len		' 5 9	      0       0       0
-par_--shellquote_command_len		' 5 10	      0       0       0
-par_--shellquote_command_len		' 6 1	      1       2      16
-par_--shellquote_command_len		' 6 2	      1       2      22
-par_--shellquote_command_len		' 6 3	      1       2      40
-par_--shellquote_command_len		' 6 4	      1       2      94
-par_--shellquote_command_len		' 6 5	      1       2     256
-par_--shellquote_command_len		' 6 6	      1       2     742
-par_--shellquote_command_len		' 6 7	      0       0       0
-par_--shellquote_command_len		' 6 8	      0       0       0
-par_--shellquote_command_len		' 6 9	      0       0       0
-par_--shellquote_command_len		' 6 10	      0       0       0
-par_--shellquote_command_len		' 7 1	      1       2      18
-par_--shellquote_command_len		' 7 2	      1       2      24
-par_--shellquote_command_len		' 7 3	      1       2      42
-par_--shellquote_command_len		' 7 4	      1       2      96
-par_--shellquote_command_len		' 7 5	      1       2     258
-par_--shellquote_command_len		' 7 6	      1       2     744
-par_--shellquote_command_len		' 7 7	      0       0       0
-par_--shellquote_command_len		' 7 8	      0       0       0
-par_--shellquote_command_len		' 7 9	      0       0       0
-par_--shellquote_command_len		' 7 10	      0       0       0
-par_--shellquote_command_len		' 8 1	      1       2      20
-par_--shellquote_command_len		' 8 2	      1       2      26
-par_--shellquote_command_len		' 8 3	      1       2      44
-par_--shellquote_command_len		' 8 4	      1       2      98
-par_--shellquote_command_len		' 8 5	      1       2     260
-par_--shellquote_command_len		' 8 6	      1       2     746
-par_--shellquote_command_len		' 8 7	      0       0       0
-par_--shellquote_command_len		' 8 8	      0       0       0
-par_--shellquote_command_len		' 8 9	      0       0       0
-par_--shellquote_command_len		' 8 10	      0       0       0
-par_--shellquote_command_len		' 9 1	      1       2      22
-par_--shellquote_command_len		' 9 2	      1       2      28
-par_--shellquote_command_len		' 9 3	      1       2      46
-par_--shellquote_command_len		' 9 4	      1       2     100
-par_--shellquote_command_len		' 9 5	      1       2     262
-par_--shellquote_command_len		' 9 6	      0       0       0
-par_--shellquote_command_len		' 9 7	      0       0       0
-par_--shellquote_command_len		' 9 8	      0       0       0
-par_--shellquote_command_len		' 9 9	      0       0       0
-par_--shellquote_command_len		' 9 10	      0       0       0
-par_--shellquote_command_len		' 10 1	      1       2      24
-par_--shellquote_command_len		' 10 2	      1       2      30
-par_--shellquote_command_len		' 10 3	      1       2      48
-par_--shellquote_command_len		' 10 4	      1       2     102
-par_--shellquote_command_len		' 10 5	      1       2     264
-par_--shellquote_command_len		' 10 6	      0       0       0
-par_--shellquote_command_len		' 10 7	      0       0       0
-par_--shellquote_command_len		' 10 8	      0       0       0
-par_--shellquote_command_len		' 10 9	      0       0       0
-par_--shellquote_command_len		' 10 10	      0       0       0
-par_--shellquote_command_len		" 1 8	parallel: Error: Command line too long (65xxx >= 63xxx) at input 0: "
-par_--shellquote_command_len		" 1 9	parallel: Error: Command line too long (196xxx >= 63xxx) at input 0: "
-par_--shellquote_command_len		" 1 10	parallel: Error: Command line too long (590xxx >= 63xxx) at input 0: "
-par_--shellquote_command_len		" 2 8	parallel: Error: Command line too long (131xxx >= 63xxx) at input 0: "
-par_--shellquote_command_len		" 2 9	parallel: Error: Command line too long (393xxx >= 63xxx) at input 0: "
-par_--shellquote_command_len		" 2 10	parallel: Error: Command line too long (1180xxx >= 63xxx) at input 0: "
-par_--shellquote_command_len		" 3 7	parallel: Error: Command line too long (65xxx >= 63xxx) at input 0: "
-par_--shellquote_command_len		" 3 8	parallel: Error: Command line too long (196xxx >= 63xxx) at input 0: "
-par_--shellquote_command_len		" 3 9	parallel: Error: Command line too long (590xxx >= 63xxx) at input 0: "
-par_--shellquote_command_len		" 3 10	parallel: Error: Command line too long (1771xxx >= 63xxx) at input 0: "
-par_--shellquote_command_len		" 4 7	parallel: Error: Command line too long (87xxx >= 63xxx) at input 0: "
-par_--shellquote_command_len		" 4 8	parallel: Error: Command line too long (262xxx >= 63xxx) at input 0: "
-par_--shellquote_command_len		" 4 9	parallel: Error: Command line too long (787xxx >= 63xxx) at input 0: "
-par_--shellquote_command_len		" 4 10	parallel: Error: Command line too long (2361xxx >= 63xxx) at input 0: "
-par_--shellquote_command_len		" 5 7	parallel: Error: Command line too long (109xxx >= 63xxx) at input 0: "
-par_--shellquote_command_len		" 5 8	parallel: Error: Command line too long (328xxx >= 63xxx) at input 0: "
-par_--shellquote_command_len		" 5 9	parallel: Error: Command line too long (984xxx >= 63xxx) at input 0: "
-par_--shellquote_command_len		" 5 10	parallel: Error: Command line too long (2952xxx >= 63xxx) at input 0: "
-par_--shellquote_command_len		" 6 7	parallel: Error: Command line too long (131xxx >= 63xxx) at input 0: "
-par_--shellquote_command_len		" 6 8	parallel: Error: Command line too long (393xxx >= 63xxx) at input 0: "
-par_--shellquote_command_len		" 6 9	parallel: Error: Command line too long (1180xxx >= 63xxx) at input 0: "
-par_--shellquote_command_len		" 6 10	parallel: Error: Command line too long (3542xxx >= 63xxx) at input 0: "
-par_--shellquote_command_len		" 7 7	parallel: Error: Command line too long (153xxx >= 63xxx) at input 0: "
-par_--shellquote_command_len		" 7 8	parallel: Error: Command line too long (459xxx >= 63xxx) at input 0: "
-par_--shellquote_command_len		" 7 9	parallel: Error: Command line too long (1377xxx >= 63xxx) at input 0: "
-par_--shellquote_command_len		" 7 10	parallel: Error: Command line too long (4133xxx >= 63xxx) at input 0: "
-par_--shellquote_command_len		" 8 7	parallel: Error: Command line too long (174xxx >= 63xxx) at input 0: "
-par_--shellquote_command_len		" 8 8	parallel: Error: Command line too long (524xxx >= 63xxx) at input 0: "
-par_--shellquote_command_len		" 8 9	parallel: Error: Command line too long (1574xxx >= 63xxx) at input 0: "
-par_--shellquote_command_len		" 8 10	parallel: Error: Command line too long (4723xxx >= 63xxx) at input 0: "
-par_--shellquote_command_len		" 9 6	parallel: Error: Command line too long (65xxx >= 63xxx) at input 0: "
-par_--shellquote_command_len		" 9 7	parallel: Error: Command line too long (196xxx >= 63xxx) at input 0: "
-par_--shellquote_command_len		" 9 8	parallel: Error: Command line too long (590xxx >= 63xxx) at input 0: "
-par_--shellquote_command_len		" 9 9	parallel: Error: Command line too long (1771xxx >= 63xxx) at input 0: "
-par_--shellquote_command_len		" 9 10	parallel: Error: Command line too long (5314xxx >= 63xxx) at input 0: "
-par_--shellquote_command_len		" 10 6	parallel: Error: Command line too long (72xxx >= 63xxx) at input 0: "
-par_--shellquote_command_len		" 10 7	parallel: Error: Command line too long (218xxx >= 63xxx) at input 0: "
-par_--shellquote_command_len		" 10 8	parallel: Error: Command line too long (656xxx >= 63xxx) at input 0: "
-par_--shellquote_command_len		" 10 9	parallel: Error: Command line too long (1968xxx >= 63xxx) at input 0: "
-par_--shellquote_command_len		" 10 10	parallel: Error: Command line too long (5904xxx >= 63xxx) at input 0: "
-par_--shellquote_command_len		' 1 8	parallel: Error: Command line too long (65xxx >= 63xxx) at input 0: '
-par_--shellquote_command_len		' 1 9	parallel: Error: Command line too long (196xxx >= 63xxx) at input 0: '
-par_--shellquote_command_len		' 1 10	parallel: Error: Command line too long (590xxx >= 63xxx) at input 0: '
-par_--shellquote_command_len		' 2 8	parallel: Error: Command line too long (131xxx >= 63xxx) at input 0: ''
-par_--shellquote_command_len		' 2 9	parallel: Error: Command line too long (393xxx >= 63xxx) at input 0: ''
-par_--shellquote_command_len		' 2 10	parallel: Error: Command line too long (1180xxx >= 63xxx) at input 0: ''
-par_--shellquote_command_len		' 3 7	parallel: Error: Command line too long (65xxx >= 63xxx) at input 0: '''
-par_--shellquote_command_len		' 3 8	parallel: Error: Command line too long (196xxx >= 63xxx) at input 0: '''
-par_--shellquote_command_len		' 3 9	parallel: Error: Command line too long (590xxx >= 63xxx) at input 0: '''
-par_--shellquote_command_len		' 3 10	parallel: Error: Command line too long (1771xxx >= 63xxx) at input 0: '''
-par_--shellquote_command_len		' 4 7	parallel: Error: Command line too long (87xxx >= 63xxx) at input 0: ''''
-par_--shellquote_command_len		' 4 8	parallel: Error: Command line too long (262xxx >= 63xxx) at input 0: ''''
-par_--shellquote_command_len		' 4 9	parallel: Error: Command line too long (787xxx >= 63xxx) at input 0: ''''
-par_--shellquote_command_len		' 4 10	parallel: Error: Command line too long (2361xxx >= 63xxx) at input 0: ''''
-par_--shellquote_command_len		' 5 7	parallel: Error: Command line too long (109xxx >= 63xxx) at input 0: '''''
-par_--shellquote_command_len		' 5 8	parallel: Error: Command line too long (328xxx >= 63xxx) at input 0: '''''
-par_--shellquote_command_len		' 5 9	parallel: Error: Command line too long (984xxx >= 63xxx) at input 0: '''''
-par_--shellquote_command_len		' 5 10	parallel: Error: Command line too long (2952xxx >= 63xxx) at input 0: '''''
-par_--shellquote_command_len		' 6 7	parallel: Error: Command line too long (131xxx >= 63xxx) at input 0: ''''''
-par_--shellquote_command_len		' 6 8	parallel: Error: Command line too long (393xxx >= 63xxx) at input 0: ''''''
-par_--shellquote_command_len		' 6 9	parallel: Error: Command line too long (1180xxx >= 63xxx) at input 0: ''''''
-par_--shellquote_command_len		' 6 10	parallel: Error: Command line too long (3542xxx >= 63xxx) at input 0: ''''''
-par_--shellquote_command_len		' 7 7	parallel: Error: Command line too long (153xxx >= 63xxx) at input 0: '''''''
-par_--shellquote_command_len		' 7 8	parallel: Error: Command line too long (459xxx >= 63xxx) at input 0: '''''''
-par_--shellquote_command_len		' 7 9	parallel: Error: Command line too long (1377xxx >= 63xxx) at input 0: '''''''
-par_--shellquote_command_len		' 7 10	parallel: Error: Command line too long (4133xxx >= 63xxx) at input 0: '''''''
-par_--shellquote_command_len		' 8 7	parallel: Error: Command line too long (174xxx >= 63xxx) at input 0: ''''''''
-par_--shellquote_command_len		' 8 8	parallel: Error: Command line too long (524xxx >= 63xxx) at input 0: ''''''''
-par_--shellquote_command_len		' 8 9	parallel: Error: Command line too long (1574xxx >= 63xxx) at input 0: ''''''''
-par_--shellquote_command_len		' 8 10	parallel: Error: Command line too long (4723xxx >= 63xxx) at input 0: ''''''''
-par_--shellquote_command_len		' 9 6	parallel: Error: Command line too long (65xxx >= 63xxx) at input 0: '''''''''
-par_--shellquote_command_len		' 9 7	parallel: Error: Command line too long (196xxx >= 63xxx) at input 0: '''''''''
-par_--shellquote_command_len		' 9 8	parallel: Error: Command line too long (590xxx >= 63xxx) at input 0: '''''''''
-par_--shellquote_command_len		' 9 9	parallel: Error: Command line too long (1771xxx >= 63xxx) at input 0: '''''''''
-par_--shellquote_command_len		' 9 10	parallel: Error: Command line too long (5314xxx >= 63xxx) at input 0: '''''''''
-par_--shellquote_command_len		' 10 6	parallel: Error: Command line too long (72xxx >= 63xxx) at input 0: ''''''''''
-par_--shellquote_command_len		' 10 7	parallel: Error: Command line too long (218xxx >= 63xxx) at input 0: ''''''''''
-par_--shellquote_command_len		' 10 8	parallel: Error: Command line too long (656xxx >= 63xxx) at input 0: ''''''''''
-par_--shellquote_command_len		' 10 9	parallel: Error: Command line too long (1968xxx >= 63xxx) at input 0: ''''''''''
-par_--shellquote_command_len		' 10 10	parallel: Error: Command line too long (5904xxx >= 63xxx) at input 0: ''''''''''
-par_--controlmaster_eats	bug #36707: --controlmaster eats jobs
-par_--controlmaster_eats	OK1
-par_--controlmaster_eats	OK2
+par_--ssh_lsh	### --ssh lsh
+par_--ssh_lsh	OK
+par_--ssh_lsh	OK
+par_--ssh_lsh	OK
+par_--ssh_lsh	OK
+par__--shellquote_command_len	### test quoting will not cause a crash if too long
+par__--shellquote_command_len	-Slo -j10	" 1 1	      1       1       4
+par__--shellquote_command_len	-Slo -j10	" 1 2	      1       1      10
+par__--shellquote_command_len	-Slo -j10	" 1 3	      1       1      28
+par__--shellquote_command_len	-Slo -j10	" 1 4	      1       1      82
+par__--shellquote_command_len	-Slo -j10	" 1 5	      1       1     244
+par__--shellquote_command_len	-Slo -j10	" 1 6	      1       1     730
+par__--shellquote_command_len	-Slo -j10	" 1 7	      1       1    2188
+par__--shellquote_command_len	-Slo -j10	" 1 8	      1       1    6562
+par__--shellquote_command_len	-Slo -j10	" 1 9	      0       0       0
+par__--shellquote_command_len	-Slo -j10	" 1 10	      0       0       0
+par__--shellquote_command_len	-Slo -j10	" 2 1	      1       1       5
+par__--shellquote_command_len	-Slo -j10	" 2 2	      1       1      11
+par__--shellquote_command_len	-Slo -j10	" 2 3	      1       1      29
+par__--shellquote_command_len	-Slo -j10	" 2 4	      1       1      83
+par__--shellquote_command_len	-Slo -j10	" 2 5	      1       1     245
+par__--shellquote_command_len	-Slo -j10	" 2 6	      1       1     731
+par__--shellquote_command_len	-Slo -j10	" 2 7	      1       1    2189
+par__--shellquote_command_len	-Slo -j10	" 2 8	      0       0       0
+par__--shellquote_command_len	-Slo -j10	" 2 9	      0       0       0
+par__--shellquote_command_len	-Slo -j10	" 2 10	      0       0       0
+par__--shellquote_command_len	-Slo -j10	" 3 1	      1       1       6
+par__--shellquote_command_len	-Slo -j10	" 3 2	      1       1      12
+par__--shellquote_command_len	-Slo -j10	" 3 3	      1       1      30
+par__--shellquote_command_len	-Slo -j10	" 3 4	      1       1      84
+par__--shellquote_command_len	-Slo -j10	" 3 5	      1       1     246
+par__--shellquote_command_len	-Slo -j10	" 3 6	      1       1     732
+par__--shellquote_command_len	-Slo -j10	" 3 7	      1       1    2190
+par__--shellquote_command_len	-Slo -j10	" 3 8	      0       0       0
+par__--shellquote_command_len	-Slo -j10	" 3 9	      0       0       0
+par__--shellquote_command_len	-Slo -j10	" 3 10	      0       0       0
+par__--shellquote_command_len	-Slo -j10	" 4 1	      1       1       7
+par__--shellquote_command_len	-Slo -j10	" 4 2	      1       1      13
+par__--shellquote_command_len	-Slo -j10	" 4 3	      1       1      31
+par__--shellquote_command_len	-Slo -j10	" 4 4	      1       1      85
+par__--shellquote_command_len	-Slo -j10	" 4 5	      1       1     247
+par__--shellquote_command_len	-Slo -j10	" 4 6	      1       1     733
+par__--shellquote_command_len	-Slo -j10	" 4 7	      1       1    2191
+par__--shellquote_command_len	-Slo -j10	" 4 8	      0       0       0
+par__--shellquote_command_len	-Slo -j10	" 4 9	      0       0       0
+par__--shellquote_command_len	-Slo -j10	" 4 10	      0       0       0
+par__--shellquote_command_len	-Slo -j10	" 5 1	      1       1       8
+par__--shellquote_command_len	-Slo -j10	" 5 2	      1       1      14
+par__--shellquote_command_len	-Slo -j10	" 5 3	      1       1      32
+par__--shellquote_command_len	-Slo -j10	" 5 4	      1       1      86
+par__--shellquote_command_len	-Slo -j10	" 5 5	      1       1     248
+par__--shellquote_command_len	-Slo -j10	" 5 6	      1       1     734
+par__--shellquote_command_len	-Slo -j10	" 5 7	      1       1    2192
+par__--shellquote_command_len	-Slo -j10	" 5 8	      0       0       0
+par__--shellquote_command_len	-Slo -j10	" 5 9	      0       0       0
+par__--shellquote_command_len	-Slo -j10	" 5 10	      0       0       0
+par__--shellquote_command_len	-Slo -j10	" 6 1	      1       1       9
+par__--shellquote_command_len	-Slo -j10	" 6 2	      1       1      15
+par__--shellquote_command_len	-Slo -j10	" 6 3	      1       1      33
+par__--shellquote_command_len	-Slo -j10	" 6 4	      1       1      87
+par__--shellquote_command_len	-Slo -j10	" 6 5	      1       1     249
+par__--shellquote_command_len	-Slo -j10	" 6 6	      1       1     735
+par__--shellquote_command_len	-Slo -j10	" 6 7	      0       0       0
+par__--shellquote_command_len	-Slo -j10	" 6 8	      0       0       0
+par__--shellquote_command_len	-Slo -j10	" 6 9	      0       0       0
+par__--shellquote_command_len	-Slo -j10	" 6 10	      0       0       0
+par__--shellquote_command_len	-Slo -j10	" 7 1	      1       1      10
+par__--shellquote_command_len	-Slo -j10	" 7 2	      1       1      16
+par__--shellquote_command_len	-Slo -j10	" 7 3	      1       1      34
+par__--shellquote_command_len	-Slo -j10	" 7 4	      1       1      88
+par__--shellquote_command_len	-Slo -j10	" 7 5	      1       1     250
+par__--shellquote_command_len	-Slo -j10	" 7 6	      1       1     736
+par__--shellquote_command_len	-Slo -j10	" 7 7	      0       0       0
+par__--shellquote_command_len	-Slo -j10	" 7 8	      0       0       0
+par__--shellquote_command_len	-Slo -j10	" 7 9	      0       0       0
+par__--shellquote_command_len	-Slo -j10	" 7 10	      0       0       0
+par__--shellquote_command_len	-Slo -j10	" 8 1	      1       1      11
+par__--shellquote_command_len	-Slo -j10	" 8 2	      1       1      17
+par__--shellquote_command_len	-Slo -j10	" 8 3	      1       1      35
+par__--shellquote_command_len	-Slo -j10	" 8 4	      1       1      89
+par__--shellquote_command_len	-Slo -j10	" 8 5	      1       1     251
+par__--shellquote_command_len	-Slo -j10	" 8 6	      1       1     737
+par__--shellquote_command_len	-Slo -j10	" 8 7	      0       0       0
+par__--shellquote_command_len	-Slo -j10	" 8 8	      0       0       0
+par__--shellquote_command_len	-Slo -j10	" 8 9	      0       0       0
+par__--shellquote_command_len	-Slo -j10	" 8 10	      0       0       0
+par__--shellquote_command_len	-Slo -j10	" 9 1	      1       1      12
+par__--shellquote_command_len	-Slo -j10	" 9 2	      1       1      18
+par__--shellquote_command_len	-Slo -j10	" 9 3	      1       1      36
+par__--shellquote_command_len	-Slo -j10	" 9 4	      1       1      90
+par__--shellquote_command_len	-Slo -j10	" 9 5	      1       1     252
+par__--shellquote_command_len	-Slo -j10	" 9 6	      1       1     738
+par__--shellquote_command_len	-Slo -j10	" 9 7	      0       0       0
+par__--shellquote_command_len	-Slo -j10	" 9 8	      0       0       0
+par__--shellquote_command_len	-Slo -j10	" 9 9	      0       0       0
+par__--shellquote_command_len	-Slo -j10	" 9 10	      0       0       0
+par__--shellquote_command_len	-Slo -j10	" 10 1	      1       1      13
+par__--shellquote_command_len	-Slo -j10	" 10 2	      1       1      19
+par__--shellquote_command_len	-Slo -j10	" 10 3	      1       1      37
+par__--shellquote_command_len	-Slo -j10	" 10 4	      1       1      91
+par__--shellquote_command_len	-Slo -j10	" 10 5	      1       1     253
+par__--shellquote_command_len	-Slo -j10	" 10 6	      1       1     739
+par__--shellquote_command_len	-Slo -j10	" 10 7	      0       0       0
+par__--shellquote_command_len	-Slo -j10	" 10 8	      0       0       0
+par__--shellquote_command_len	-Slo -j10	" 10 9	      0       0       0
+par__--shellquote_command_len	-Slo -j10	" 10 10	      0       0       0
+par__--shellquote_command_len	-Slo -j10	' 1 1	      1       1       4
+par__--shellquote_command_len	-Slo -j10	' 1 2	      1       1      10
+par__--shellquote_command_len	-Slo -j10	' 1 3	      1       1      28
+par__--shellquote_command_len	-Slo -j10	' 1 4	      1       1      82
+par__--shellquote_command_len	-Slo -j10	' 1 5	      1       1     244
+par__--shellquote_command_len	-Slo -j10	' 1 6	      1       1     730
+par__--shellquote_command_len	-Slo -j10	' 1 7	      1       1    2188
+par__--shellquote_command_len	-Slo -j10	' 1 8	      1       1    6562
+par__--shellquote_command_len	-Slo -j10	' 1 9	      0       0       0
+par__--shellquote_command_len	-Slo -j10	' 1 10	      0       0       0
+par__--shellquote_command_len	-Slo -j10	' 2 1	      1       1       5
+par__--shellquote_command_len	-Slo -j10	' 2 2	      1       1      11
+par__--shellquote_command_len	-Slo -j10	' 2 3	      1       1      29
+par__--shellquote_command_len	-Slo -j10	' 2 4	      1       1      83
+par__--shellquote_command_len	-Slo -j10	' 2 5	      1       1     245
+par__--shellquote_command_len	-Slo -j10	' 2 6	      1       1     731
+par__--shellquote_command_len	-Slo -j10	' 2 7	      1       1    2189
+par__--shellquote_command_len	-Slo -j10	' 2 8	      0       0       0
+par__--shellquote_command_len	-Slo -j10	' 2 9	      0       0       0
+par__--shellquote_command_len	-Slo -j10	' 2 10	      0       0       0
+par__--shellquote_command_len	-Slo -j10	' 3 1	      1       1       6
+par__--shellquote_command_len	-Slo -j10	' 3 2	      1       1      12
+par__--shellquote_command_len	-Slo -j10	' 3 3	      1       1      30
+par__--shellquote_command_len	-Slo -j10	' 3 4	      1       1      84
+par__--shellquote_command_len	-Slo -j10	' 3 5	      1       1     246
+par__--shellquote_command_len	-Slo -j10	' 3 6	      1       1     732
+par__--shellquote_command_len	-Slo -j10	' 3 7	      1       1    2190
+par__--shellquote_command_len	-Slo -j10	' 3 8	      0       0       0
+par__--shellquote_command_len	-Slo -j10	' 3 9	      0       0       0
+par__--shellquote_command_len	-Slo -j10	' 3 10	      0       0       0
+par__--shellquote_command_len	-Slo -j10	' 4 1	      1       1       7
+par__--shellquote_command_len	-Slo -j10	' 4 2	      1       1      13
+par__--shellquote_command_len	-Slo -j10	' 4 3	      1       1      31
+par__--shellquote_command_len	-Slo -j10	' 4 4	      1       1      85
+par__--shellquote_command_len	-Slo -j10	' 4 5	      1       1     247
+par__--shellquote_command_len	-Slo -j10	' 4 6	      1       1     733
+par__--shellquote_command_len	-Slo -j10	' 4 7	      1       1    2191
+par__--shellquote_command_len	-Slo -j10	' 4 8	      0       0       0
+par__--shellquote_command_len	-Slo -j10	' 4 9	      0       0       0
+par__--shellquote_command_len	-Slo -j10	' 4 10	      0       0       0
+par__--shellquote_command_len	-Slo -j10	' 5 1	      1       1       8
+par__--shellquote_command_len	-Slo -j10	' 5 2	      1       1      14
+par__--shellquote_command_len	-Slo -j10	' 5 3	      1       1      32
+par__--shellquote_command_len	-Slo -j10	' 5 4	      1       1      86
+par__--shellquote_command_len	-Slo -j10	' 5 5	      1       1     248
+par__--shellquote_command_len	-Slo -j10	' 5 6	      1       1     734
+par__--shellquote_command_len	-Slo -j10	' 5 7	      1       1    2192
+par__--shellquote_command_len	-Slo -j10	' 5 8	      0       0       0
+par__--shellquote_command_len	-Slo -j10	' 5 9	      0       0       0
+par__--shellquote_command_len	-Slo -j10	' 5 10	      0       0       0
+par__--shellquote_command_len	-Slo -j10	' 6 1	      1       1       9
+par__--shellquote_command_len	-Slo -j10	' 6 2	      1       1      15
+par__--shellquote_command_len	-Slo -j10	' 6 3	      1       1      33
+par__--shellquote_command_len	-Slo -j10	' 6 4	      1       1      87
+par__--shellquote_command_len	-Slo -j10	' 6 5	      1       1     249
+par__--shellquote_command_len	-Slo -j10	' 6 6	      1       1     735
+par__--shellquote_command_len	-Slo -j10	' 6 7	      0       0       0
+par__--shellquote_command_len	-Slo -j10	' 6 8	      0       0       0
+par__--shellquote_command_len	-Slo -j10	' 6 9	      0       0       0
+par__--shellquote_command_len	-Slo -j10	' 6 10	      0       0       0
+par__--shellquote_command_len	-Slo -j10	' 7 1	      1       1      10
+par__--shellquote_command_len	-Slo -j10	' 7 2	      1       1      16
+par__--shellquote_command_len	-Slo -j10	' 7 3	      1       1      34
+par__--shellquote_command_len	-Slo -j10	' 7 4	      1       1      88
+par__--shellquote_command_len	-Slo -j10	' 7 5	      1       1     250
+par__--shellquote_command_len	-Slo -j10	' 7 6	      1       1     736
+par__--shellquote_command_len	-Slo -j10	' 7 7	      0       0       0
+par__--shellquote_command_len	-Slo -j10	' 7 8	      0       0       0
+par__--shellquote_command_len	-Slo -j10	' 7 9	      0       0       0
+par__--shellquote_command_len	-Slo -j10	' 7 10	      0       0       0
+par__--shellquote_command_len	-Slo -j10	' 8 1	      1       1      11
+par__--shellquote_command_len	-Slo -j10	' 8 2	      1       1      17
+par__--shellquote_command_len	-Slo -j10	' 8 3	      1       1      35
+par__--shellquote_command_len	-Slo -j10	' 8 4	      1       1      89
+par__--shellquote_command_len	-Slo -j10	' 8 5	      1       1     251
+par__--shellquote_command_len	-Slo -j10	' 8 6	      1       1     737
+par__--shellquote_command_len	-Slo -j10	' 8 7	      0       0       0
+par__--shellquote_command_len	-Slo -j10	' 8 8	      0       0       0
+par__--shellquote_command_len	-Slo -j10	' 8 9	      0       0       0
+par__--shellquote_command_len	-Slo -j10	' 8 10	      0       0       0
+par__--shellquote_command_len	-Slo -j10	' 9 1	      1       1      12
+par__--shellquote_command_len	-Slo -j10	' 9 2	      1       1      18
+par__--shellquote_command_len	-Slo -j10	' 9 3	      1       1      36
+par__--shellquote_command_len	-Slo -j10	' 9 4	      1       1      90
+par__--shellquote_command_len	-Slo -j10	' 9 5	      1       1     252
+par__--shellquote_command_len	-Slo -j10	' 9 6	      1       1     738
+par__--shellquote_command_len	-Slo -j10	' 9 7	      0       0       0
+par__--shellquote_command_len	-Slo -j10	' 9 8	      0       0       0
+par__--shellquote_command_len	-Slo -j10	' 9 9	      0       0       0
+par__--shellquote_command_len	-Slo -j10	' 9 10	      0       0       0
+par__--shellquote_command_len	-Slo -j10	' 10 1	      1       1      13
+par__--shellquote_command_len	-Slo -j10	' 10 2	      1       1      19
+par__--shellquote_command_len	-Slo -j10	' 10 3	      1       1      37
+par__--shellquote_command_len	-Slo -j10	' 10 4	      1       1      91
+par__--shellquote_command_len	-Slo -j10	' 10 5	      1       1     253
+par__--shellquote_command_len	-Slo -j10	' 10 6	      1       1     739
+par__--shellquote_command_len	-Slo -j10	' 10 7	      0       0       0
+par__--shellquote_command_len	-Slo -j10	' 10 8	      0       0       0
+par__--shellquote_command_len	-Slo -j10	' 10 9	      0       0       0
+par__--shellquote_command_len	-Slo -j10	' 10 10	      0       0       0
+par__--shellquote_command_len	-Slo -j10	" 1 9	parallel: Error: Command line too long (98xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len	-Slo -j10	" 1 10	parallel: Error: Command line too long (295xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len	-Slo -j10	" 2 8	parallel: Error: Command line too long (65xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len	-Slo -j10	" 2 9	parallel: Error: Command line too long (196xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len	-Slo -j10	" 2 10	parallel: Error: Command line too long (590xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len	-Slo -j10	" 3 8	parallel: Error: Command line too long (98xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len	-Slo -j10	" 3 9	parallel: Error: Command line too long (295xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len	-Slo -j10	" 3 10	parallel: Error: Command line too long (885xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len	-Slo -j10	" 4 8	parallel: Error: Command line too long (131xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len	-Slo -j10	" 4 9	parallel: Error: Command line too long (393xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len	-Slo -j10	" 4 10	parallel: Error: Command line too long (1180xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len	-Slo -j10	" 5 8	parallel: Error: Command line too long (164xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len	-Slo -j10	" 5 9	parallel: Error: Command line too long (492xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len	-Slo -j10	" 5 10	parallel: Error: Command line too long (1476xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len	-Slo -j10	" 6 7	parallel: Error: Command line too long (65xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len	-Slo -j10	" 6 8	parallel: Error: Command line too long (196xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len	-Slo -j10	" 6 9	parallel: Error: Command line too long (590xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len	-Slo -j10	" 6 10	parallel: Error: Command line too long (1771xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len	-Slo -j10	" 7 7	parallel: Error: Command line too long (76xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len	-Slo -j10	" 7 8	parallel: Error: Command line too long (229xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len	-Slo -j10	" 7 9	parallel: Error: Command line too long (688xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len	-Slo -j10	" 7 10	parallel: Error: Command line too long (2066xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len	-Slo -j10	" 8 7	parallel: Error: Command line too long (87xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len	-Slo -j10	" 8 8	parallel: Error: Command line too long (262xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len	-Slo -j10	" 8 9	parallel: Error: Command line too long (787xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len	-Slo -j10	" 8 10	parallel: Error: Command line too long (2361xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len	-Slo -j10	" 9 7	parallel: Error: Command line too long (98xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len	-Slo -j10	" 9 8	parallel: Error: Command line too long (295xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len	-Slo -j10	" 9 9	parallel: Error: Command line too long (885xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len	-Slo -j10	" 9 10	parallel: Error: Command line too long (2657xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len	-Slo -j10	" 10 7	parallel: Error: Command line too long (109xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len	-Slo -j10	" 10 8	parallel: Error: Command line too long (328xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len	-Slo -j10	" 10 9	parallel: Error: Command line too long (984xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len	-Slo -j10	" 10 10	parallel: Error: Command line too long (2952xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len	-Slo -j10	' 1 9	parallel: Error: Command line too long (98xxx >= 63xxx) at input 0: '
+par__--shellquote_command_len	-Slo -j10	' 1 10	parallel: Error: Command line too long (295xxx >= 63xxx) at input 0: '
+par__--shellquote_command_len	-Slo -j10	' 2 8	parallel: Error: Command line too long (65xxx >= 63xxx) at input 0: ''
+par__--shellquote_command_len	-Slo -j10	' 2 9	parallel: Error: Command line too long (196xxx >= 63xxx) at input 0: ''
+par__--shellquote_command_len	-Slo -j10	' 2 10	parallel: Error: Command line too long (590xxx >= 63xxx) at input 0: ''
+par__--shellquote_command_len	-Slo -j10	' 3 8	parallel: Error: Command line too long (98xxx >= 63xxx) at input 0: '''
+par__--shellquote_command_len	-Slo -j10	' 3 9	parallel: Error: Command line too long (295xxx >= 63xxx) at input 0: '''
+par__--shellquote_command_len	-Slo -j10	' 3 10	parallel: Error: Command line too long (885xxx >= 63xxx) at input 0: '''
+par__--shellquote_command_len	-Slo -j10	' 4 8	parallel: Error: Command line too long (131xxx >= 63xxx) at input 0: ''''
+par__--shellquote_command_len	-Slo -j10	' 4 9	parallel: Error: Command line too long (393xxx >= 63xxx) at input 0: ''''
+par__--shellquote_command_len	-Slo -j10	' 4 10	parallel: Error: Command line too long (1180xxx >= 63xxx) at input 0: ''''
+par__--shellquote_command_len	-Slo -j10	' 5 8	parallel: Error: Command line too long (164xxx >= 63xxx) at input 0: '''''
+par__--shellquote_command_len	-Slo -j10	' 5 9	parallel: Error: Command line too long (492xxx >= 63xxx) at input 0: '''''
+par__--shellquote_command_len	-Slo -j10	' 5 10	parallel: Error: Command line too long (1476xxx >= 63xxx) at input 0: '''''
+par__--shellquote_command_len	-Slo -j10	' 6 7	parallel: Error: Command line too long (65xxx >= 63xxx) at input 0: ''''''
+par__--shellquote_command_len	-Slo -j10	' 6 8	parallel: Error: Command line too long (196xxx >= 63xxx) at input 0: ''''''
+par__--shellquote_command_len	-Slo -j10	' 6 9	parallel: Error: Command line too long (590xxx >= 63xxx) at input 0: ''''''
+par__--shellquote_command_len	-Slo -j10	' 6 10	parallel: Error: Command line too long (1771xxx >= 63xxx) at input 0: ''''''
+par__--shellquote_command_len	-Slo -j10	' 7 7	parallel: Error: Command line too long (76xxx >= 63xxx) at input 0: '''''''
+par__--shellquote_command_len	-Slo -j10	' 7 8	parallel: Error: Command line too long (229xxx >= 63xxx) at input 0: '''''''
+par__--shellquote_command_len	-Slo -j10	' 7 9	parallel: Error: Command line too long (688xxx >= 63xxx) at input 0: '''''''
+par__--shellquote_command_len	-Slo -j10	' 7 10	parallel: Error: Command line too long (2066xxx >= 63xxx) at input 0: '''''''
+par__--shellquote_command_len	-Slo -j10	' 8 7	parallel: Error: Command line too long (87xxx >= 63xxx) at input 0: ''''''''
+par__--shellquote_command_len	-Slo -j10	' 8 8	parallel: Error: Command line too long (262xxx >= 63xxx) at input 0: ''''''''
+par__--shellquote_command_len	-Slo -j10	' 8 9	parallel: Error: Command line too long (787xxx >= 63xxx) at input 0: ''''''''
+par__--shellquote_command_len	-Slo -j10	' 8 10	parallel: Error: Command line too long (2361xxx >= 63xxx) at input 0: ''''''''
+par__--shellquote_command_len	-Slo -j10	' 9 7	parallel: Error: Command line too long (98xxx >= 63xxx) at input 0: '''''''''
+par__--shellquote_command_len	-Slo -j10	' 9 8	parallel: Error: Command line too long (295xxx >= 63xxx) at input 0: '''''''''
+par__--shellquote_command_len	-Slo -j10	' 9 9	parallel: Error: Command line too long (885xxx >= 63xxx) at input 0: '''''''''
+par__--shellquote_command_len	-Slo -j10	' 9 10	parallel: Error: Command line too long (2657xxx >= 63xxx) at input 0: '''''''''
+par__--shellquote_command_len	-Slo -j10	' 10 7	parallel: Error: Command line too long (109xxx >= 63xxx) at input 0: ''''''''''
+par__--shellquote_command_len	-Slo -j10	' 10 8	parallel: Error: Command line too long (328xxx >= 63xxx) at input 0: ''''''''''
+par__--shellquote_command_len	-Slo -j10	' 10 9	parallel: Error: Command line too long (984xxx >= 63xxx) at input 0: ''''''''''
+par__--shellquote_command_len	-Slo -j10	' 10 10	parallel: Error: Command line too long (2952xxx >= 63xxx) at input 0: ''''''''''
+par__--shellquote_command_len		" 1 1	      1       2       6
+par__--shellquote_command_len		" 1 2	      1       2      12
+par__--shellquote_command_len		" 1 3	      1       2      30
+par__--shellquote_command_len		" 1 4	      1       2      84
+par__--shellquote_command_len		" 1 5	      1       2     246
+par__--shellquote_command_len		" 1 6	      1       2     732
+par__--shellquote_command_len		" 1 7	      1       2    2190
+par__--shellquote_command_len		" 1 8	      0       0       0
+par__--shellquote_command_len		" 1 9	      0       0       0
+par__--shellquote_command_len		" 1 10	      0       0       0
+par__--shellquote_command_len		" 2 1	      1       2       8
+par__--shellquote_command_len		" 2 2	      1       2      14
+par__--shellquote_command_len		" 2 3	      1       2      32
+par__--shellquote_command_len		" 2 4	      1       2      86
+par__--shellquote_command_len		" 2 5	      1       2     248
+par__--shellquote_command_len		" 2 6	      1       2     734
+par__--shellquote_command_len		" 2 7	      1       2    2192
+par__--shellquote_command_len		" 2 8	      0       0       0
+par__--shellquote_command_len		" 2 9	      0       0       0
+par__--shellquote_command_len		" 2 10	      0       0       0
+par__--shellquote_command_len		" 3 1	      1       2      10
+par__--shellquote_command_len		" 3 2	      1       2      16
+par__--shellquote_command_len		" 3 3	      1       2      34
+par__--shellquote_command_len		" 3 4	      1       2      88
+par__--shellquote_command_len		" 3 5	      1       2     250
+par__--shellquote_command_len		" 3 6	      1       2     736
+par__--shellquote_command_len		" 3 7	      0       0       0
+par__--shellquote_command_len		" 3 8	      0       0       0
+par__--shellquote_command_len		" 3 9	      0       0       0
+par__--shellquote_command_len		" 3 10	      0       0       0
+par__--shellquote_command_len		" 4 1	      1       2      12
+par__--shellquote_command_len		" 4 2	      1       2      18
+par__--shellquote_command_len		" 4 3	      1       2      36
+par__--shellquote_command_len		" 4 4	      1       2      90
+par__--shellquote_command_len		" 4 5	      1       2     252
+par__--shellquote_command_len		" 4 6	      1       2     738
+par__--shellquote_command_len		" 4 7	      0       0       0
+par__--shellquote_command_len		" 4 8	      0       0       0
+par__--shellquote_command_len		" 4 9	      0       0       0
+par__--shellquote_command_len		" 4 10	      0       0       0
+par__--shellquote_command_len		" 5 1	      1       2      14
+par__--shellquote_command_len		" 5 2	      1       2      20
+par__--shellquote_command_len		" 5 3	      1       2      38
+par__--shellquote_command_len		" 5 4	      1       2      92
+par__--shellquote_command_len		" 5 5	      1       2     254
+par__--shellquote_command_len		" 5 6	      1       2     740
+par__--shellquote_command_len		" 5 7	      0       0       0
+par__--shellquote_command_len		" 5 8	      0       0       0
+par__--shellquote_command_len		" 5 9	      0       0       0
+par__--shellquote_command_len		" 5 10	      0       0       0
+par__--shellquote_command_len		" 6 1	      1       2      16
+par__--shellquote_command_len		" 6 2	      1       2      22
+par__--shellquote_command_len		" 6 3	      1       2      40
+par__--shellquote_command_len		" 6 4	      1       2      94
+par__--shellquote_command_len		" 6 5	      1       2     256
+par__--shellquote_command_len		" 6 6	      1       2     742
+par__--shellquote_command_len		" 6 7	      0       0       0
+par__--shellquote_command_len		" 6 8	      0       0       0
+par__--shellquote_command_len		" 6 9	      0       0       0
+par__--shellquote_command_len		" 6 10	      0       0       0
+par__--shellquote_command_len		" 7 1	      1       2      18
+par__--shellquote_command_len		" 7 2	      1       2      24
+par__--shellquote_command_len		" 7 3	      1       2      42
+par__--shellquote_command_len		" 7 4	      1       2      96
+par__--shellquote_command_len		" 7 5	      1       2     258
+par__--shellquote_command_len		" 7 6	      1       2     744
+par__--shellquote_command_len		" 7 7	      0       0       0
+par__--shellquote_command_len		" 7 8	      0       0       0
+par__--shellquote_command_len		" 7 9	      0       0       0
+par__--shellquote_command_len		" 7 10	      0       0       0
+par__--shellquote_command_len		" 8 1	      1       2      20
+par__--shellquote_command_len		" 8 2	      1       2      26
+par__--shellquote_command_len		" 8 3	      1       2      44
+par__--shellquote_command_len		" 8 4	      1       2      98
+par__--shellquote_command_len		" 8 5	      1       2     260
+par__--shellquote_command_len		" 8 6	      1       2     746
+par__--shellquote_command_len		" 8 7	      0       0       0
+par__--shellquote_command_len		" 8 8	      0       0       0
+par__--shellquote_command_len		" 8 9	      0       0       0
+par__--shellquote_command_len		" 8 10	      0       0       0
+par__--shellquote_command_len		" 9 1	      1       2      22
+par__--shellquote_command_len		" 9 2	      1       2      28
+par__--shellquote_command_len		" 9 3	      1       2      46
+par__--shellquote_command_len		" 9 4	      1       2     100
+par__--shellquote_command_len		" 9 5	      1       2     262
+par__--shellquote_command_len		" 9 6	      0       0       0
+par__--shellquote_command_len		" 9 7	      0       0       0
+par__--shellquote_command_len		" 9 8	      0       0       0
+par__--shellquote_command_len		" 9 9	      0       0       0
+par__--shellquote_command_len		" 9 10	      0       0       0
+par__--shellquote_command_len		" 10 1	      1       2      24
+par__--shellquote_command_len		" 10 2	      1       2      30
+par__--shellquote_command_len		" 10 3	      1       2      48
+par__--shellquote_command_len		" 10 4	      1       2     102
+par__--shellquote_command_len		" 10 5	      1       2     264
+par__--shellquote_command_len		" 10 6	      0       0       0
+par__--shellquote_command_len		" 10 7	      0       0       0
+par__--shellquote_command_len		" 10 8	      0       0       0
+par__--shellquote_command_len		" 10 9	      0       0       0
+par__--shellquote_command_len		" 10 10	      0       0       0
+par__--shellquote_command_len		' 1 1	      1       2       6
+par__--shellquote_command_len		' 1 2	      1       2      12
+par__--shellquote_command_len		' 1 3	      1       2      30
+par__--shellquote_command_len		' 1 4	      1       2      84
+par__--shellquote_command_len		' 1 5	      1       2     246
+par__--shellquote_command_len		' 1 6	      1       2     732
+par__--shellquote_command_len		' 1 7	      1       2    2190
+par__--shellquote_command_len		' 1 8	      0       0       0
+par__--shellquote_command_len		' 1 9	      0       0       0
+par__--shellquote_command_len		' 1 10	      0       0       0
+par__--shellquote_command_len		' 2 1	      1       2       8
+par__--shellquote_command_len		' 2 2	      1       2      14
+par__--shellquote_command_len		' 2 3	      1       2      32
+par__--shellquote_command_len		' 2 4	      1       2      86
+par__--shellquote_command_len		' 2 5	      1       2     248
+par__--shellquote_command_len		' 2 6	      1       2     734
+par__--shellquote_command_len		' 2 7	      1       2    2192
+par__--shellquote_command_len		' 2 8	      0       0       0
+par__--shellquote_command_len		' 2 9	      0       0       0
+par__--shellquote_command_len		' 2 10	      0       0       0
+par__--shellquote_command_len		' 3 1	      1       2      10
+par__--shellquote_command_len		' 3 2	      1       2      16
+par__--shellquote_command_len		' 3 3	      1       2      34
+par__--shellquote_command_len		' 3 4	      1       2      88
+par__--shellquote_command_len		' 3 5	      1       2     250
+par__--shellquote_command_len		' 3 6	      1       2     736
+par__--shellquote_command_len		' 3 7	      0       0       0
+par__--shellquote_command_len		' 3 8	      0       0       0
+par__--shellquote_command_len		' 3 9	      0       0       0
+par__--shellquote_command_len		' 3 10	      0       0       0
+par__--shellquote_command_len		' 4 1	      1       2      12
+par__--shellquote_command_len		' 4 2	      1       2      18
+par__--shellquote_command_len		' 4 3	      1       2      36
+par__--shellquote_command_len		' 4 4	      1       2      90
+par__--shellquote_command_len		' 4 5	      1       2     252
+par__--shellquote_command_len		' 4 6	      1       2     738
+par__--shellquote_command_len		' 4 7	      0       0       0
+par__--shellquote_command_len		' 4 8	      0       0       0
+par__--shellquote_command_len		' 4 9	      0       0       0
+par__--shellquote_command_len		' 4 10	      0       0       0
+par__--shellquote_command_len		' 5 1	      1       2      14
+par__--shellquote_command_len		' 5 2	      1       2      20
+par__--shellquote_command_len		' 5 3	      1       2      38
+par__--shellquote_command_len		' 5 4	      1       2      92
+par__--shellquote_command_len		' 5 5	      1       2     254
+par__--shellquote_command_len		' 5 6	      1       2     740
+par__--shellquote_command_len		' 5 7	      0       0       0
+par__--shellquote_command_len		' 5 8	      0       0       0
+par__--shellquote_command_len		' 5 9	      0       0       0
+par__--shellquote_command_len		' 5 10	      0       0       0
+par__--shellquote_command_len		' 6 1	      1       2      16
+par__--shellquote_command_len		' 6 2	      1       2      22
+par__--shellquote_command_len		' 6 3	      1       2      40
+par__--shellquote_command_len		' 6 4	      1       2      94
+par__--shellquote_command_len		' 6 5	      1       2     256
+par__--shellquote_command_len		' 6 6	      1       2     742
+par__--shellquote_command_len		' 6 7	      0       0       0
+par__--shellquote_command_len		' 6 8	      0       0       0
+par__--shellquote_command_len		' 6 9	      0       0       0
+par__--shellquote_command_len		' 6 10	      0       0       0
+par__--shellquote_command_len		' 7 1	      1       2      18
+par__--shellquote_command_len		' 7 2	      1       2      24
+par__--shellquote_command_len		' 7 3	      1       2      42
+par__--shellquote_command_len		' 7 4	      1       2      96
+par__--shellquote_command_len		' 7 5	      1       2     258
+par__--shellquote_command_len		' 7 6	      1       2     744
+par__--shellquote_command_len		' 7 7	      0       0       0
+par__--shellquote_command_len		' 7 8	      0       0       0
+par__--shellquote_command_len		' 7 9	      0       0       0
+par__--shellquote_command_len		' 7 10	      0       0       0
+par__--shellquote_command_len		' 8 1	      1       2      20
+par__--shellquote_command_len		' 8 2	      1       2      26
+par__--shellquote_command_len		' 8 3	      1       2      44
+par__--shellquote_command_len		' 8 4	      1       2      98
+par__--shellquote_command_len		' 8 5	      1       2     260
+par__--shellquote_command_len		' 8 6	      1       2     746
+par__--shellquote_command_len		' 8 7	      0       0       0
+par__--shellquote_command_len		' 8 8	      0       0       0
+par__--shellquote_command_len		' 8 9	      0       0       0
+par__--shellquote_command_len		' 8 10	      0       0       0
+par__--shellquote_command_len		' 9 1	      1       2      22
+par__--shellquote_command_len		' 9 2	      1       2      28
+par__--shellquote_command_len		' 9 3	      1       2      46
+par__--shellquote_command_len		' 9 4	      1       2     100
+par__--shellquote_command_len		' 9 5	      1       2     262
+par__--shellquote_command_len		' 9 6	      0       0       0
+par__--shellquote_command_len		' 9 7	      0       0       0
+par__--shellquote_command_len		' 9 8	      0       0       0
+par__--shellquote_command_len		' 9 9	      0       0       0
+par__--shellquote_command_len		' 9 10	      0       0       0
+par__--shellquote_command_len		' 10 1	      1       2      24
+par__--shellquote_command_len		' 10 2	      1       2      30
+par__--shellquote_command_len		' 10 3	      1       2      48
+par__--shellquote_command_len		' 10 4	      1       2     102
+par__--shellquote_command_len		' 10 5	      1       2     264
+par__--shellquote_command_len		' 10 6	      0       0       0
+par__--shellquote_command_len		' 10 7	      0       0       0
+par__--shellquote_command_len		' 10 8	      0       0       0
+par__--shellquote_command_len		' 10 9	      0       0       0
+par__--shellquote_command_len		' 10 10	      0       0       0
+par__--shellquote_command_len		" 1 8	parallel: Error: Command line too long (65xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len		" 1 9	parallel: Error: Command line too long (196xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len		" 1 10	parallel: Error: Command line too long (590xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len		" 2 8	parallel: Error: Command line too long (131xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len		" 2 9	parallel: Error: Command line too long (393xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len		" 2 10	parallel: Error: Command line too long (1180xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len		" 3 7	parallel: Error: Command line too long (65xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len		" 3 8	parallel: Error: Command line too long (196xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len		" 3 9	parallel: Error: Command line too long (590xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len		" 3 10	parallel: Error: Command line too long (1771xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len		" 4 7	parallel: Error: Command line too long (87xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len		" 4 8	parallel: Error: Command line too long (262xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len		" 4 9	parallel: Error: Command line too long (787xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len		" 4 10	parallel: Error: Command line too long (2361xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len		" 5 7	parallel: Error: Command line too long (109xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len		" 5 8	parallel: Error: Command line too long (328xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len		" 5 9	parallel: Error: Command line too long (984xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len		" 5 10	parallel: Error: Command line too long (2952xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len		" 6 7	parallel: Error: Command line too long (131xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len		" 6 8	parallel: Error: Command line too long (393xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len		" 6 9	parallel: Error: Command line too long (1180xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len		" 6 10	parallel: Error: Command line too long (3542xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len		" 7 7	parallel: Error: Command line too long (153xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len		" 7 8	parallel: Error: Command line too long (459xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len		" 7 9	parallel: Error: Command line too long (1377xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len		" 7 10	parallel: Error: Command line too long (4133xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len		" 8 7	parallel: Error: Command line too long (174xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len		" 8 8	parallel: Error: Command line too long (524xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len		" 8 9	parallel: Error: Command line too long (1574xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len		" 8 10	parallel: Error: Command line too long (4723xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len		" 9 6	parallel: Error: Command line too long (65xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len		" 9 7	parallel: Error: Command line too long (196xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len		" 9 8	parallel: Error: Command line too long (590xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len		" 9 9	parallel: Error: Command line too long (1771xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len		" 9 10	parallel: Error: Command line too long (5314xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len		" 10 6	parallel: Error: Command line too long (72xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len		" 10 7	parallel: Error: Command line too long (218xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len		" 10 8	parallel: Error: Command line too long (656xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len		" 10 9	parallel: Error: Command line too long (1968xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len		" 10 10	parallel: Error: Command line too long (5904xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len		' 1 8	parallel: Error: Command line too long (65xxx >= 63xxx) at input 0: '
+par__--shellquote_command_len		' 1 9	parallel: Error: Command line too long (196xxx >= 63xxx) at input 0: '
+par__--shellquote_command_len		' 1 10	parallel: Error: Command line too long (590xxx >= 63xxx) at input 0: '
+par__--shellquote_command_len		' 2 8	parallel: Error: Command line too long (131xxx >= 63xxx) at input 0: ''
+par__--shellquote_command_len		' 2 9	parallel: Error: Command line too long (393xxx >= 63xxx) at input 0: ''
+par__--shellquote_command_len		' 2 10	parallel: Error: Command line too long (1180xxx >= 63xxx) at input 0: ''
+par__--shellquote_command_len		' 3 7	parallel: Error: Command line too long (65xxx >= 63xxx) at input 0: '''
+par__--shellquote_command_len		' 3 8	parallel: Error: Command line too long (196xxx >= 63xxx) at input 0: '''
+par__--shellquote_command_len		' 3 9	parallel: Error: Command line too long (590xxx >= 63xxx) at input 0: '''
+par__--shellquote_command_len		' 3 10	parallel: Error: Command line too long (1771xxx >= 63xxx) at input 0: '''
+par__--shellquote_command_len		' 4 7	parallel: Error: Command line too long (87xxx >= 63xxx) at input 0: ''''
+par__--shellquote_command_len		' 4 8	parallel: Error: Command line too long (262xxx >= 63xxx) at input 0: ''''
+par__--shellquote_command_len		' 4 9	parallel: Error: Command line too long (787xxx >= 63xxx) at input 0: ''''
+par__--shellquote_command_len		' 4 10	parallel: Error: Command line too long (2361xxx >= 63xxx) at input 0: ''''
+par__--shellquote_command_len		' 5 7	parallel: Error: Command line too long (109xxx >= 63xxx) at input 0: '''''
+par__--shellquote_command_len		' 5 8	parallel: Error: Command line too long (328xxx >= 63xxx) at input 0: '''''
+par__--shellquote_command_len		' 5 9	parallel: Error: Command line too long (984xxx >= 63xxx) at input 0: '''''
+par__--shellquote_command_len		' 5 10	parallel: Error: Command line too long (2952xxx >= 63xxx) at input 0: '''''
+par__--shellquote_command_len		' 6 7	parallel: Error: Command line too long (131xxx >= 63xxx) at input 0: ''''''
+par__--shellquote_command_len		' 6 8	parallel: Error: Command line too long (393xxx >= 63xxx) at input 0: ''''''
+par__--shellquote_command_len		' 6 9	parallel: Error: Command line too long (1180xxx >= 63xxx) at input 0: ''''''
+par__--shellquote_command_len		' 6 10	parallel: Error: Command line too long (3542xxx >= 63xxx) at input 0: ''''''
+par__--shellquote_command_len		' 7 7	parallel: Error: Command line too long (153xxx >= 63xxx) at input 0: '''''''
+par__--shellquote_command_len		' 7 8	parallel: Error: Command line too long (459xxx >= 63xxx) at input 0: '''''''
+par__--shellquote_command_len		' 7 9	parallel: Error: Command line too long (1377xxx >= 63xxx) at input 0: '''''''
+par__--shellquote_command_len		' 7 10	parallel: Error: Command line too long (4133xxx >= 63xxx) at input 0: '''''''
+par__--shellquote_command_len		' 8 7	parallel: Error: Command line too long (174xxx >= 63xxx) at input 0: ''''''''
+par__--shellquote_command_len		' 8 8	parallel: Error: Command line too long (524xxx >= 63xxx) at input 0: ''''''''
+par__--shellquote_command_len		' 8 9	parallel: Error: Command line too long (1574xxx >= 63xxx) at input 0: ''''''''
+par__--shellquote_command_len		' 8 10	parallel: Error: Command line too long (4723xxx >= 63xxx) at input 0: ''''''''
+par__--shellquote_command_len		' 9 6	parallel: Error: Command line too long (65xxx >= 63xxx) at input 0: '''''''''
+par__--shellquote_command_len		' 9 7	parallel: Error: Command line too long (196xxx >= 63xxx) at input 0: '''''''''
+par__--shellquote_command_len		' 9 8	parallel: Error: Command line too long (590xxx >= 63xxx) at input 0: '''''''''
+par__--shellquote_command_len		' 9 9	parallel: Error: Command line too long (1771xxx >= 63xxx) at input 0: '''''''''
+par__--shellquote_command_len		' 9 10	parallel: Error: Command line too long (5314xxx >= 63xxx) at input 0: '''''''''
+par__--shellquote_command_len		' 10 6	parallel: Error: Command line too long (72xxx >= 63xxx) at input 0: ''''''''''
+par__--shellquote_command_len		' 10 7	parallel: Error: Command line too long (218xxx >= 63xxx) at input 0: ''''''''''
+par__--shellquote_command_len		' 10 8	parallel: Error: Command line too long (656xxx >= 63xxx) at input 0: ''''''''''
+par__--shellquote_command_len		' 10 9	parallel: Error: Command line too long (1968xxx >= 63xxx) at input 0: ''''''''''
+par__--shellquote_command_len		' 10 10	parallel: Error: Command line too long (5904xxx >= 63xxx) at input 0: ''''''''''
+par__basefile_cleanup	### bug #46520: --basefile cleans up without --cleanup
+par__basefile_cleanup	bug_46520
+par__basefile_cleanup	bug_46520
+par__basefile_cleanup	bug_46520
+par__basefile_cleanup	ls: cannot access 'bug_46520': No such file or directory
+par_controlmaster	### Check -M works if TMPDIR contains space
+par_controlmaster	1
+par_controlmaster	2
+par_controlmaster	3
+par_controlmaster	1
+par_controlmaster	2
+par_controlmaster	3
+par_controlmaster	Part2
+par_controlmaster	OK
+par_env_parallel_onall	bug #54352: env_parallel -Slo --nonall myfunc broken in 20180722
+par_env_parallel_onall	Myfunc works
+par_env_parallel_onall	Myfunc works
+par_fish_exit	### bug #64222: sshlogin --return and fish shell
+par_fish_exit	OK
+par_input_loss_pipe	### bug #36595: silent loss of input with --pipe and --sshlogin
+par_input_loss_pipe	      1   10000   48894
+par_pipe_retries	### bug #45025: --pipe --retries does not reschedule on other host
+par_pipe_retries	parallel: Warning: Could not figure out number of cpus on a.a (). Using 1.
+par_pipe_retries	 165668  165668 1048571
+par_pipe_retries	localhost-:
+par_pipe_retries	 134362  134362  940534
+par_pipe_retries	localhost-:
+par_pipe_retries	parallel: Error: --retries cannot be combined with --roundrobin.
+par_ssh_cmd_with_newline	### Check --ssh with \n works
+par_ssh_cmd_with_newline	uid=1003(sh) gid=1003(sh) groups=1003(sh)

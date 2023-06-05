@@ -57,7 +57,7 @@ document.
 
 Full installation of GNU Parallel is as simple as:
 
-    wget https://ftpmirror.gnu.org/parallel/parallel-20230522.tar.bz2
+    wget https://ftpmirror.gnu.org/parallel/parallel-20230622.tar.bz2
     wget https://ftpmirror.gnu.org/parallel/parallel-20230522.tar.bz2.sig
     gpg parallel-20230522.tar.bz2.sig
     bzip2 -dc parallel-20230522.tar.bz2 | tar xvf -
