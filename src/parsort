@@ -30,7 +30,7 @@ Same as B<sort>. Except:
 
 =over 4
 
-=item B<--parallel=>I<N> (beta testing)
+=item B<--parallel=>I<N>
 
 Change the number of sorts run concurrently to I<N>. I<N> will be
 increased to number of files if B<parsort> is given more than I<N>
@@ -137,7 +137,7 @@ GetOptions(
     "help" => \$opt::dummy,
     ) || exit(255);
 $Global::progname = ($0 =~ m:(^|/)([^/]+)$:)[1];
-$Global::version = 20230523;
+$Global::version = 20230622;
 if($opt::version) { version(); exit 0; }
 # Remove -D and --parallel=N
 my @s = (grep { ! /^-D$|^--parallel=\S+$/ }
