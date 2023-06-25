@@ -1,12 +1,21 @@
 #!/bin/bash
 
-# SPDX-FileCopyrightText: 2021-2022 Ole Tange, http://ole.tange.dk and Free Software and Foundation, Inc.
+# SPDX-FileCopyrightText: 2021-2023 Ole Tange, http://ole.tange.dk and Free Software and Foundation, Inc.
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 # Simple jobs that never fails
 # Each should be taking 1-3s and be possible to run in parallel
 # I.e.: No race conditions, no logins
+
+par_citation_no_config_dir() {
+    echo '### bug #64329: parallel --citation will loop forever unless the config dir exists'
+    t=$(mktemp -d)
+    echo "This should only ask once"
+    echo will cite | HOME="$t" stdout parallel --citation |
+    	grep "Type: 'will cite' and press enter."
+    rm -r "$t"
+}
 
 par_tagstring() {
     echo '### Test --tagstring'

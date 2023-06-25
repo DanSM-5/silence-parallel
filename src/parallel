@@ -18,7 +18,7 @@
 # or write to the Free Software Foundation, Inc., 51 Franklin St,
 # Fifth Floor, Boston, MA 02110-1301 USA
 #
-# SPDX-FileCopyrightText: 2021-2023 Ole Tange, http://ole.tange.dk and Free Software and Foundation, Inc.
+# SPDX-FileCopyrightText: 2007-2023 Ole Tange, http://ole.tange.dk and Free Software and Foundation, Inc.
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 # open3 used in Job::start
@@ -2800,7 +2800,7 @@ sub check_invalid_option_combinations() {
 
 sub init_globals() {
     # Defaults:
-    $Global::version = 20230622;
+    $Global::version = 20230623;
     $Global::progname = 'parallel';
     $::name = "GNU Parallel";
     $Global::infinity = 2**31;
@@ -5759,10 +5759,10 @@ sub usage() {
 	 "  Tange, O. (2023, June 22). GNU Parallel 20230622 ('Nova Kakhovka').",
 	 "  Zenodo. https://doi.org/10.5281/zenodo.8051271",
 	 "",
-	 # Before changing these lines,	 please read
+	 # Before changing these lines, please read
 	 # https://www.gnu.org/software/parallel/parallel_design.html#citation-notice
 	 # https://git.savannah.gnu.org/cgit/parallel.git/tree/doc/citation-notice-faq.txt
-	 # You accept to be put in a public hall of shame by removing
+	 # You accept to be put in a  public hall of shame  by removing
 	 # these lines
 	 "This helps funding further development; AND IT WON'T COST YOU A CENT.",
 	 "If you pay 10000 EUR you should feel free to use GNU Parallel without citing.",
@@ -5953,7 +5953,10 @@ sub citation() {
 	    exit(255);
 	}
 	if($input =~ /will cite/i) {
-	    mkdir $Global::config_dir;
+	    if(mkdir $Global::config_dir) {
+                # Recompute @Global::config_dirs so we can break out of the loop.
+                init_globals();
+            }
 	    if(open (my $fh, ">", $Global::config_dir."/will-cite")) {
 		close $fh;
 		::status(
@@ -8551,8 +8554,14 @@ sub sct_gnu_linux($) {
 	    /^Core.s. per socket:\s*(\d+)/ and $cores_per_socket = $1;
 	    /^(CPU )?Socket.s.:\s*(\d+)/i and $cpu->{'sockets'} = $2;
 	}
+	if($cores_per_socket and $cpu->{'sockets'}) {
+	    $cpu->{'cores'} = $cores_per_socket * $cpu->{'sockets'};
+	}
+	if($threads_per_core and $cpu->{'cores'}) {
+	    $cpu->{'threads'} = $threads_per_core * $cpu->{'cores'};
+	}
 	if($threads_per_core and $cpu->{'threads'}) {
-	    $cpu->{'cores'} =  $cpu->{'threads'} / $threads_per_core;
+	    $cpu->{'cores'} = $cpu->{'threads'} / $threads_per_core;
 	}
 	$cpu->{'cpus'} ||= $cpu->{'threads'};
     }
@@ -8593,7 +8602,9 @@ sub sct_gnu_linux($) {
 	    close $in_fh;
 	}
     }
-    if(-e "/proc/self/status" and not $ENV{'PARALLEL_CPUINFO'}) {
+    if(-e "/proc/self/status"
+       and not $ENV{'PARALLEL_CPUINFO'}
+       and not $ENV{'PARALLEL_LSCPU'}) {
 	# if 'taskset' is used to limit number of threads
 	if(open(my $in_fh, "<", "/proc/self/status")) {
 	    while(<$in_fh>) {

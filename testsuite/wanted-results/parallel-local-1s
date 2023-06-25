@@ -299,7 +299,7 @@ par__test_cpu_detection_cpuinfo	1 6 6 6
 par__test_cpu_detection_lscpu	2-8-8-8 Xeon 8 core server in Germany
 par__test_cpu_detection_lscpu	2 8 8 8
 par__test_cpu_detection_lscpu	4-64-64-64 Dell R815 4 CPU 64-core
-par__test_cpu_detection_lscpu	4 8 8 8
+par__test_cpu_detection_lscpu	4 32 64 32
 par__test_cpu_detection_lscpu	1-2-2-2 AMD Neo N36L Dual-Core Processor
 par__test_cpu_detection_lscpu	1 2 2 2
 par__test_cpu_detection_lscpu	1-1-1-1 Intel Xeon X5675 (mandriva.p)
@@ -313,7 +313,7 @@ par__test_cpu_detection_lscpu	1 2 4 2
 par__test_cpu_detection_lscpu	1-8-8-8 Huawei P Smart Octa-core (4x2.36 GHz Cortex-A53 & 4x1.7 GHz Cortex-A53)
 par__test_cpu_detection_lscpu	2 8 8 8
 par__test_cpu_detection_lscpu	1-4-4-4 x96 quad-core Android TV-box
-par__test_cpu_detection_lscpu	1 4 4 4
+par__test_cpu_detection_lscpu	1 1 1 1
 par_basic_halt	parallel: This job failed:
 par_basic_halt	false
 par_basic_halt	parallel: This job succeeded:
@@ -331,6 +331,9 @@ par_bug37042	a	tag_with_a
 par_bug37042	a	-J bug_37042_profile print_-J_bug_37042_profile
 par_bug37042	### Bug introduce by fixing bug #37042
 par_bug37042	abc
+par_citation_no_config_dir	### bug #64329: parallel --citation will loop forever unless the config dir exists
+par_citation_no_config_dir	This should only ask once
+par_citation_no_config_dir	Type: 'will cite' and press enter.
 par_commandline_with_newline	bug #51299: --retry-failed with command with newline
 par_commandline_with_newline	The format must remain the same
 par_commandline_with_newline	.	:	...	     ...	.	.	.	.	false "command<null>with<null>newlines" a

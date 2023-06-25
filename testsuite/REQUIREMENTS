@@ -107,6 +107,13 @@ install_oracle_client() {
     # test it works: sql oracle://
 }
 
+setup_virtual_box_network() {
+    echo "Adding IP-range to virtualbox"
+    sudo mkdir -p /etc/vbox
+    (cat; echo '* 172.27.27.0/24') < /etc/vbox/networks.conf | uniq |
+	sudo tee /etc/vbox/networks.conf
+}
+
 setup_databases() {
     # DATABASES
     echo '# Create PostgreSQL'
@@ -130,14 +137,30 @@ setup_databases() {
 }
 
 add_server_to_hosts() {
-    # Insert 127.1.2.3 server in /etc/hosts
-    if grep -q 127.1.2.3 /etc/hosts; then
-	# skip
-	true
-    else
-	printf "127.1.2.3\tserver\n" |
-	    sudo tee -a /etc/hosts
-    fi
+    insert_in_etc_hosts() {
+	ip=$1
+	host=$2
+	if grep -q $1 /etc/hosts && grep -q $2 /etc/hosts ; then
+	    # skip
+	    true
+	else
+	    printf "$1\t$2\n" |
+		sudo tee -a /etc/hosts
+	fi
+    }
+    export -f insert_in_etc_hosts
+    add_single_vagrant_to_etc_hosts() {
+	vagrant_ip() {
+	    cd vagrant/*/$1
+	    grep 172 Vagrantfile | grep -v '#' |
+		perl -pe 's/.*(172.27[\.0-9]+).*/$1/';
+	}
+	insert_in_etc_hosts $(vagrant_ip $1) $1
+    }
+    export -f add_single_vagrant_to_etc_hosts
+    
+    insert_in_etc_hosts 127.1.2.3 server
+    parallel add_single_vagrant_to_etc_hosts ::: centos8 freebsd11 freebsd12 rhel8 centos3 
 }
 
 shellsplus() {
