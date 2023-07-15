@@ -374,27 +374,28 @@ the arguments
 
 skip this job (see also B<--filter>)
 
-=item Z<> B<yyyy_mm_dd_hh_mm_ss()>
+=item Z<> B<yyyy_mm_dd_hh_mm_ss(sec)> (alpha testing)
 
-=item Z<> B<yyyy_mm_dd_hh_mm()>
+=item Z<> B<yyyy_mm_dd_hh_mm(sec)> (alpha testing)
 
-=item Z<> B<yyyy_mm_dd()>
+=item Z<> B<yyyy_mm_dd(sec)> (alpha testing)
 
-=item Z<> B<hh_mm_ss()>
+=item Z<> B<hh_mm_ss(sec)> (alpha testing)
 
-=item Z<> B<hh_mm()>
+=item Z<> B<hh_mm(sec)> (alpha testing)
 
-=item Z<> B<yyyymmddhhmmss()>
+=item Z<> B<yyyymmddhhmmss(sec)> (alpha testing)
 
-=item Z<> B<yyyymmddhhmm()>
+=item Z<> B<yyyymmddhhmm(sec)> (alpha testing)
 
-=item Z<> B<yyyymmdd()>
+=item Z<> B<yyyymmdd(sec)> (alpha testing)
 
-=item Z<> B<hhmmss()>
+=item Z<> B<hhmmss(sec)> (alpha testing)
 
-=item Z<> B<hhmm()>
+=item Z<> B<hhmm(sec)> (alpha testing)
 
-time functions
+time functions. I<sec> is number of seconds since epoch. If left out
+it will use current local time.
 
 =back
 
@@ -405,6 +406,7 @@ Example:
   seq 50 | parallel echo job {#} of {= '$_=total_jobs()' =}
 
 See also: B<--rpl> B<--parens> B<{}> B<{=>I<n> I<perl expression>B<=}>
+B<--filter>
 
 
 =item B<{=>I<n> I<perl expression>B<=}>

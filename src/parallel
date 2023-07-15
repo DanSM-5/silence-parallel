@@ -11695,38 +11695,37 @@ sub print_files($) {
 		if($opt::latestline) { $self->print_latest_line($out_fh); }
 	    }
 	    if(defined $self->{'exitstatus'}) {
-		if($opt::latestline) {
-		    # Force re-computing color if --colorfailed
-		    if($opt::colorfailed) { delete $self->{'color'}; }
-		    if($self->{$out_fh,'latestline'} ne "") {
-			$self->print_latest_line($out_fh);
-		    }
-		    if(@{$self->{'halfline'}{$fdno}}) {
-			my $l = join('', @{$self->{'halfline'}{$fdno}});
-			if($l ne "") {
-			    $self->{$out_fh,'latestline'} = $l;
-			}
-		    } else {
-			$self->{$out_fh,'latestline'} = undef;
-		    }
-		    # Print latest line from jobs that are already done
-		    while($print_later{$minvisible}) {
-			$print_later{$minvisible}->print_latest_line($out_fh);
-			delete $print_later{$minvisible};
-			$minvisible++;
-		    }
-		    # Print latest line from jobs that are on screen now
-		    for(my $row = $minvisible;
-			$row < $minvisible -1 + ::terminal_rows();
-			$row++) {
-			$print_later{$row} and
-			$print_later{$row}->print_latest_line($out_fh);
-		    }
-		}
 		if($Global::files or ($opt::results and not $Global::csvsep)) {
 		    $self->add_returnsize(-s $self->fh($fdno,"name"));
 		} else {
-		    if(not $opt::latestline) {
+		    if($opt::latestline) {
+			# Force re-computing color if --colorfailed
+			if($opt::colorfailed) { delete $self->{'color'}; }
+			if($self->{$out_fh,'latestline'} ne "") {
+			    $self->print_latest_line($out_fh);
+			}
+			if(@{$self->{'halfline'}{$fdno}}) {
+			    my $l = join('', @{$self->{'halfline'}{$fdno}});
+			    if($l ne "") {
+				$self->{$out_fh,'latestline'} = $l;
+			    }
+			} else {
+			    $self->{$out_fh,'latestline'} = undef;
+			}
+			# Print latest line from jobs that are already done
+			while($print_later{$minvisible}) {
+			    $print_later{$minvisible}->print_latest_line($out_fh);
+			    delete $print_later{$minvisible};
+			    $minvisible++;
+			}
+			# Print latest line from jobs that are on screen now
+			for(my $row = $minvisible;
+			    $row < $minvisible -1 + ::terminal_rows();
+			    $row++) {
+			    $print_later{$row} and
+				$print_later{$row}->print_latest_line($out_fh);
+			}
+		    } else {
 			# If the job is dead: print the remaining partial line
 			# read remaining (already done for $opt::latestline)
 			my $halfline_ref = $self->{'halfline'}{$fdno};
@@ -14185,45 +14184,45 @@ sub total_jobs() {
 	# Do not quote this arg
 	$Global::unquote_arg = 1;
     }
-    sub yyyy_mm_dd_hh_mm_ss() {
+    sub yyyy_mm_dd_hh_mm_ss(@) {
 	# ISO8601 2038-01-19T03:14:08
-	::strftime("%Y-%m-%dT%H:%M:%S", localtime(time()));
+	::strftime("%Y-%m-%dT%H:%M:%S", localtime(shift || time()));
     }
-    sub yyyy_mm_dd_hh_mm() {
+    sub yyyy_mm_dd_hh_mm(@) {
 	# ISO8601 2038-01-19T03:14
-	::strftime("%Y-%m-%dT%H:%M", localtime(time()));
+	::strftime("%Y-%m-%dT%H:%M", localtime(shift || time()));
     }
-    sub yyyy_mm_dd() {
+    sub yyyy_mm_dd(@) {
 	# ISO8601 2038-01-19
-	::strftime("%Y-%m-%d", localtime(time()));
+	::strftime("%Y-%m-%d", localtime(shift || time()));
     }
-    sub hh_mm_ss() {
+    sub hh_mm_ss(@) {
 	# ISO8601 03:14:08
-	::strftime("%H:%M:%S", localtime(time()));
+	::strftime("%H:%M:%S", localtime(shift || time()));
     }
-    sub hh_mm() {
+    sub hh_mm(@) {
 	# ISO8601 03:14
-	::strftime("%H:%M", localtime(time()));
+	::strftime("%H:%M", localtime(shift || time()));
     }
-    sub yyyymmddhhmmss() {
+    sub yyyymmddhhmmss(@) {
 	# ISO8601 20380119 + ISO8601 031408
-	::strftime("%Y%m%d%H%M%S", localtime(time()));
+	::strftime("%Y%m%d%H%M%S", localtime(shift || time()));
     }
-    sub yyyymmddhhmm() {
+    sub yyyymmddhhmm(@) {
 	# ISO8601 20380119 + ISO8601 0314
-	::strftime("%Y%m%d%H%M", localtime(time()));
+	::strftime("%Y%m%d%H%M", localtime(shift || time()));
     }
-    sub yyyymmdd() {
+    sub yyyymmdd(@) {
 	# ISO8601 20380119
-	::strftime("%Y%m%d", localtime(time()));
+	::strftime("%Y%m%d", localtime(shift || time()));
     }
-    sub hhmmss() {
+    sub hhmmss(@) {
 	# ISO8601 031408
-	::strftime("%H%M%S", localtime(time()));
+	::strftime("%H%M%S", localtime(shift || time()));
     }
-    sub hhmm() {
+    sub hhmm(@) {
 	# ISO8601 0314
-	::strftime("%H%M", localtime(time()));
+	::strftime("%H%M", localtime(shift || time()));
     }
 
     sub replace($$$$) {

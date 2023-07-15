@@ -4084,6 +4084,62 @@ https://github.com/binpash/pash
 (Last checked: 2023-05)
 
 
+=head2 DIFFERENCES BETWEEN korovkin-parallel AND GNU Parallel
+
+Summary (see legend above):
+
+=over
+
+=item I1 - - - - - -
+
+=item M1 - - - - M6
+
+=item - - O3 - - - - N/A N/A -
+
+=item E1 - - - - - -
+
+=item R1 - - - - R6 N/A N/A -
+
+=item - -
+
+=back
+
+B<korovkin-parallel> prepends all lines with some info.
+
+The output is colored with 6 color combinations, so job 1 and 7 will
+get the same color.
+
+You can get similar output with:
+
+  (echo ...) |
+    parallel --color -j 10 --lb --tagstring \
+      '[l:{#}:{=$_=sprintf("%7.03f",::now()-$^T)=} {=$_=hh_mm_ss($^T)=} {%}]'
+
+Lines longer than 8192 chars are broken into lines shorter than
+8192. B<korovkin-parallel> loses the last char for lines exactly 8193
+chars long.
+
+Short lines from different jobs do not mix, but long lines do:
+
+  fun() {
+    perl -e '$a="'$1'"x1000000; for(1..'$2') { print $a };';
+  }
+  export -f fun
+  (echo fun a 100;echo fun b 100) | ./parallel | tr -s abcdef
+
+There should be only one line of a's and one line of b's.
+
+Just like GNU B<parallel> B<korovkin-parallel> offers a master/slave
+model, so workers on other servers can do some of the tasks. But
+contrary to GNU B<parallel> you must manually start workers on these
+servers. The communication is neither authenticated nor encrypted.
+
+It caches output in RAM: a 1GB line uses ~2.5GB RAM
+
+https://github.com/korovkin/parallel
+(Last checked: 2023-07)
+
+
 =head2 Todo
 
 https://www.npmjs.com/package/concurrently
@@ -4136,7 +4192,7 @@ This test stresses whether output mixes.
 
   #!/bin/bash
 
-  paralleltool="parallel -j0"
+  paralleltool="parallel -j 30"
 
   cat <<-EOF > mycommand
   #!/bin/bash
