@@ -11,21 +11,18 @@ start_centos3() {
 	# If not run in dir parallel/testsuite: set testsuitedir to path of testsuite
 	testsuitedir=${testsuitedir:-$pwd}
 	cd "$testsuitedir"
-	cd testsuite/vagrant/tange/centos3/ 2>/dev/null
-	cd vagrant/tange/centos3/ 2>/dev/null
-	cd ../vagrant/tange/centos3/ 2>/dev/null
+	cd vagrant 2>/dev/null
+	cd FritsHoogland/centos3
 	vagrantssh() {
 	    port=$(perl -ne '/#/ and next; /config.vm.network.*host:\s*(\d+)/ and print $1' Vagrantfile)
 	    w4it-for-port-open localhost $port
-	    ssh -oKexAlgorithms=+diffie-hellman-group1-sha1 \
-		-oHostKeyAlgorithms=+ssh-rsa,ssh-dss \
-		-oPubkeyAcceptedAlgorithms=+ssh-dss -p$port vagrant@localhost "$@" |
+	    ssh -p $port -o DSAAuthentication=yes -o IdentitiesOnly=yes -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i /home/tange/.vagrant.d/insecure_private_key vagrant@localhost "$@" |
 		# Ignore empty ^M line
 		grep ..
 	}	    
 	(
-	    stdout vagrant up >/dev/null
-	    vagrantssh 'sudo /sbin/ifconfig eth1 172.27.27.3'
+	    stdout vagrant up >/dev/null &
+	    cat ~/.ssh/*.pub | vagrantssh 'sudo /sbin/ifconfig eth1 172.27.27.3; cat >> .ssh/authorized_keys'
 	) &
     )
 }
@@ -34,16 +31,20 @@ start_centos3
 stdout parallel --tag -k 'ping -w 1 -c 1 {} || (cd vagrant/*/{} && vagrant up)' ::: rhel8 centos3 |
 	grep -v 'default' | grep -v '==>' | grep -E '^$' &
 
-wssh vagrant@rhel8 true
-wssh vagrant@centos3 true
+parallel --timeout 30 -k wssh vagrant@{} echo {} is up ::: rhel8 centos3
 
 par_warning_on_centos3() {
     echo "### bug #37589: Red Hat 9 (Shrike) perl v5.8.0 built for i386-linux-thread-multi error"
+    echo 'Old version gave:'
+    echo '. Bareword found where operator expected at /tmp/parallel-20120822 line 1294, near "$Global::original_stderr init_progress"'
+    echo 'New versions should not give that.'
+
     testone() {
 	sshlogin="$1"
 	program="$2"
 	basename="$3"
 	scp "$program" "$sshlogin":/tmp/"$basename"
+	ssh "$sshlogin" sudo cp /tmp/"$basename" /usr/local/bin
 	stdout ssh "$sshlogin" perl /tmp/"$basename" echo \
 	       ::: Old_must_fail_New_must_be_OK
     }
@@ -63,7 +64,7 @@ compgen -A function | grep par_ | LC_ALL=C sort |
     # If not run in dir parallel/testsuite: set testsuitedir to path of testsuite
     testsuitedir=${testsuitedir:-$pwd}
     cd "$testsuitedir"
-    cd vagrant/tange/centos3/
+    cd vagrant/FritsHoogland/centos3
     stdout vagrant suspend |
 	grep -v '==> default: Saving VM state' |
 	grep -v 'An action .suspend. was attempted on the machine .default.,' |
@@ -76,5 +77,6 @@ compgen -A function | grep par_ | LC_ALL=C sort |
 	grep -v 'try again.' |
 	grep -v 'A new version of Vagrant is available:' |
 	grep -v 'To upgrade visit: ' |
+	grep -v '==> default: VM not created. Moving on...' |
 	grep .
 )

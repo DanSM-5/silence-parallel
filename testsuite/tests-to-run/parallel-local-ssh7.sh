@@ -1942,9 +1942,9 @@ _EOF
 par_environment_too_big_mksh() {
   myscript=$(cat <<'_EOF'
     echo 'bug #50815: env_parallel should warn if the environment is too big'
-    len_var=47
+    len_var=46
     len_var_remote=31
-    len_var_quote=47
+    len_var_quote=46
     len_var_quote_remote=31
     len_fun=28
     len_fun_remote=13
@@ -3325,13 +3325,14 @@ compgen -A function | grep par_ | LC_ALL=C sort |
 #    parallel --joblog /tmp/jl-`basename $0` --delay $D -j$P --tag -k '{} 2>&1'
     # 2019-07-14 200% too high for 16 GB/4 thread
     parallel --joblog /tmp/jl-`basename $0` -j75% --retries 2 --tag -k '{} 2>&1' |
-    perl -pe 's/line \d\d+/line XXX/g;
-              s/\d+ >= \d+/XXX >= XXX/;
-              s/sh:? \d?\d\d:/sh: XXX:/;
-              s/:\d?\d\d:/:XXX:/;
-              s/sh\[\d+\]/sh[XXX]/;
+    perl -pe 's/line \d\d+/line 99/g;
+              s/\d+ >= \d+/999 >= 999/;
+              s/sh:? \d?\d\d:/sh: 999:/;
+              s/:\d?\d\d:/:999:/;
+              s/sh\[\d+\]/sh[999]/;
 	      s/.*(tange|zenodo).*//i;
 	      s:/usr/bin:/bin:g;
 	      s:/tmp/par-job-\d+_.....\[\d+\]:script[9]:g;
 	      s!/tmp/par-job-\d+_.....!script!g;
+    	      s/script: \d\d+/script: 99/g;
 	      '

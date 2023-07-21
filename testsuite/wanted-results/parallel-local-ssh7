@@ -21,21 +21,21 @@ par_--env_underscore_bash	variables in aliases in and arrays in functions work
 par_--env_underscore_bash	variables in aliases in and arrays in functions work
 par_--env_underscore_bash	variables in aliases in and arrays in functions work
 par_--env_underscore_bash	variables in aliases in and arrays in functions work
-par_--env_underscore_bash	script: line XXX: not_copied_alias: command not found
-par_--env_underscore_bash	script: line XXX: not_copied_func: command not found
+par_--env_underscore_bash	script: line 99: not_copied_alias: command not found
+par_--env_underscore_bash	script: line 99: not_copied_func: command not found
 par_--env_underscore_bash	error=OK
 par_--env_underscore_bash	error=OK
 par_--env_underscore_bash	aliases in and arrays in functions work
 par_--env_underscore_bash	aliases in and arrays in functions work
 par_--env_underscore_bash	aliases in functions work
 par_--env_underscore_bash	aliases in functions work
-par_--env_underscore_bash	environment: line XXX: myecho: command not found
+par_--env_underscore_bash	environment: line 99: myecho: command not found
 par_--env_underscore_bash	OK if no myecho      ^^^^^^^^^^^^^^^^^^^^^^^^^
-par_--env_underscore_bash	script: line XXX: myecho: command not found
+par_--env_underscore_bash	script: line 99: myecho: command not found
 par_--env_underscore_bash	OK if no myecho      ^^^^^^^^^^^^^^^^^^^^^^^^^
-par_--env_underscore_bash	/bin/bash: line XXX: myfunc: command not found
+par_--env_underscore_bash	/bin/bash: line 99: myfunc: command not found
 par_--env_underscore_bash	OK if no myfunc      ^^^^^^^^^^^^^^^^^^^^^^^^^
-par_--env_underscore_bash	script: line XXX: myfunc: command not found
+par_--env_underscore_bash	script: line 99: myfunc: command not found
 par_--env_underscore_bash	OK if no myfunc      ^^^^^^^^^^^^^^^^^^^^^^^^^
 par_--env_underscore_csh	### csh
 par_--env_underscore_csh	### Testing of --env _par_--env_underscore_csh	
@@ -80,10 +80,10 @@ par_--env_underscore_fish	variables in aliases and arrays in functions work
 par_--env_underscore_fish	variables in aliases and arrays in functions work
 par_--env_underscore_fish	variables in aliases and arrays in functions work
 par_--env_underscore_fish	Test ignoring
-par_--env_underscore_fish	script (line XXX): 
+par_--env_underscore_fish	script (line 99): 
 par_--env_underscore_fish	not_copied_alias 'error=OK'
 par_--env_underscore_fish	^
-par_--env_underscore_fish	script (line XXX): 
+par_--env_underscore_fish	script (line 99): 
 par_--env_underscore_fish	not_copied_func 'error=OK'
 par_--env_underscore_fish	^
 par_--env_underscore_fish	error=OK
@@ -101,7 +101,7 @@ par_--env_underscore_fish	script (line 4):
 par_--env_underscore_fish	      myecho $myarray functions $argv
 par_--env_underscore_fish	      ^
 par_--env_underscore_fish	in function 'myfunc' with arguments 'work'
-par_--env_underscore_fish		called on line XXX of file script
+par_--env_underscore_fish		called on line 99 of file script
 par_--env_underscore_fish	OK if   ^^^^^^^^^^^^^^^^^ no myecho
 par_--env_underscore_fish	myfunc work
 par_--env_underscore_fish	^
@@ -547,9 +547,9 @@ par__man_ksh	work,
 par__man_ksh	too
 par__man_ksh	This may never work
 par__man_ksh	https://unix.stackexchange.com/questions/457031/extract-full-function-definitions
-par__man_ksh	/bin/ksh: line 3: syntax error at line XXX: `{' unmatched
-par__man_ksh	/bin/ksh: line 3: syntax error at line XXX: `{' unmatched
-par__man_ksh	/bin/ksh: line 3: syntax error at line XXX: `{' unmatched
+par__man_ksh	/bin/ksh: line 3: syntax error at line 99: `{' unmatched
+par__man_ksh	/bin/ksh: line 3: syntax error at line 99: `{' unmatched
+par__man_ksh	/bin/ksh: line 3: syntax error at line 99: `{' unmatched
 par__man_ksh	exit value 2 should be 2
 par__man_ksh	Unknown option: no-such-option
 par__man_ksh	exit value 255 should be 255
@@ -799,21 +799,21 @@ par__man_zsh	exit value 255 should be 255
 par_env_parallel_--session_ash	### Test env_parallel --session
 par_env_parallel_--session_ash	### level0 should be hidden, level1 should be transferred
 par_env_parallel_--session_ash	
-par_env_parallel_--session_ash	script: 33: level0func: not found
-par_env_parallel_--session_ash	script: 33: level0alias: not found
-par_env_parallel_--session_ash	script: 33: Bad substitution
+par_env_parallel_--session_ash	script: 99: level0func: not found
+par_env_parallel_--session_ash	script: 99: level0alias: not found
+par_env_parallel_--session_ash	script: 99: Bad substitution
 par_env_parallel_--session_ash	
-par_env_parallel_--session_ash	/bin/ash: XXX: level0func: not found
-par_env_parallel_--session_ash	/bin/ash: XXX: level0alias: not found
-par_env_parallel_--session_ash	/bin/ash: XXX: Bad substitution
+par_env_parallel_--session_ash	/bin/ash: 999: level0func: not found
+par_env_parallel_--session_ash	/bin/ash: 999: level0alias: not found
+par_env_parallel_--session_ash	/bin/ash: 999: Bad substitution
 par_env_parallel_--session_ash	l1var
 par_env_parallel_--session_ash	l1alias
-par_env_parallel_--session_ash	script: 33: level1func: not found
-par_env_parallel_--session_ash	script: 33: Bad substitution
+par_env_parallel_--session_ash	script: 99: level1func: not found
+par_env_parallel_--session_ash	script: 99: Bad substitution
 par_env_parallel_--session_ash	l1var
 par_env_parallel_--session_ash	l1alias
-par_env_parallel_--session_ash	/bin/ash: XXX: level1func: not found
-par_env_parallel_--session_ash	/bin/ash: XXX: Bad substitution
+par_env_parallel_--session_ash	/bin/ash: 999: level1func: not found
+par_env_parallel_--session_ash	/bin/ash: 999: Bad substitution
 par_env_parallel_--session_ash	### level0+1 should be hidden, level2 should be transferred
 par_env_parallel_--session_ash	
 par_env_parallel_--session_ash	script: 4: level0func: not found
@@ -841,54 +841,54 @@ par_env_parallel_--session_ash	/bin/ash: 3: level2func: not found
 par_env_parallel_--session_ash	/bin/ash: 3: Bad substitution
 par_env_parallel_--session_ash	### level0 should be hidden, level1+2 should be transferred
 par_env_parallel_--session_ash	
-par_env_parallel_--session_ash	script: 35: level0func: not found
-par_env_parallel_--session_ash	script: 35: level0alias: not found
-par_env_parallel_--session_ash	script: 35: Bad substitution
+par_env_parallel_--session_ash	script: 99: level0func: not found
+par_env_parallel_--session_ash	script: 99: level0alias: not found
+par_env_parallel_--session_ash	script: 99: Bad substitution
 par_env_parallel_--session_ash	
-par_env_parallel_--session_ash	/bin/ash: XXX: level0func: not found
-par_env_parallel_--session_ash	/bin/ash: XXX: level0alias: not found
-par_env_parallel_--session_ash	/bin/ash: XXX: Bad substitution
+par_env_parallel_--session_ash	/bin/ash: 999: level0func: not found
+par_env_parallel_--session_ash	/bin/ash: 999: level0alias: not found
+par_env_parallel_--session_ash	/bin/ash: 999: Bad substitution
 par_env_parallel_--session_ash	l1var
 par_env_parallel_--session_ash	l1alias
-par_env_parallel_--session_ash	script: 35: level1func: not found
-par_env_parallel_--session_ash	script: 35: Bad substitution
+par_env_parallel_--session_ash	script: 99: level1func: not found
+par_env_parallel_--session_ash	script: 99: Bad substitution
 par_env_parallel_--session_ash	l1var
 par_env_parallel_--session_ash	l1alias
-par_env_parallel_--session_ash	/bin/ash: XXX: level1func: not found
-par_env_parallel_--session_ash	/bin/ash: XXX: Bad substitution
+par_env_parallel_--session_ash	/bin/ash: 999: level1func: not found
+par_env_parallel_--session_ash	/bin/ash: 999: Bad substitution
 par_env_parallel_--session_ash	l2var
 par_env_parallel_--session_ash	l2alias
-par_env_parallel_--session_ash	script: 35: level2func: not found
-par_env_parallel_--session_ash	script: 35: Bad substitution
+par_env_parallel_--session_ash	script: 99: level2func: not found
+par_env_parallel_--session_ash	script: 99: Bad substitution
 par_env_parallel_--session_ash	l2var
 par_env_parallel_--session_ash	l2alias
-par_env_parallel_--session_ash	/bin/ash: XXX: level2func: not found
-par_env_parallel_--session_ash	/bin/ash: XXX: Bad substitution
+par_env_parallel_--session_ash	/bin/ash: 999: level2func: not found
+par_env_parallel_--session_ash	/bin/ash: 999: Bad substitution
 par_env_parallel_--session_ash	### level0+1+2 should be transferred
 par_env_parallel_--session_ash	l0var
 par_env_parallel_--session_ash	l0alias
-par_env_parallel_--session_ash	script: 30: level0func: not found
-par_env_parallel_--session_ash	script: 30: Bad substitution
+par_env_parallel_--session_ash	script: 99: level0func: not found
+par_env_parallel_--session_ash	script: 99: Bad substitution
 par_env_parallel_--session_ash	l0var
 par_env_parallel_--session_ash	l0alias
-par_env_parallel_--session_ash	/bin/ash: XXX: level0func: not found
-par_env_parallel_--session_ash	/bin/ash: XXX: Bad substitution
+par_env_parallel_--session_ash	/bin/ash: 999: level0func: not found
+par_env_parallel_--session_ash	/bin/ash: 999: Bad substitution
 par_env_parallel_--session_ash	l1var
 par_env_parallel_--session_ash	l1alias
-par_env_parallel_--session_ash	script: 30: level1func: not found
-par_env_parallel_--session_ash	script: 30: Bad substitution
+par_env_parallel_--session_ash	script: 99: level1func: not found
+par_env_parallel_--session_ash	script: 99: Bad substitution
 par_env_parallel_--session_ash	l1var
 par_env_parallel_--session_ash	l1alias
-par_env_parallel_--session_ash	/bin/ash: XXX: level1func: not found
-par_env_parallel_--session_ash	/bin/ash: XXX: Bad substitution
+par_env_parallel_--session_ash	/bin/ash: 999: level1func: not found
+par_env_parallel_--session_ash	/bin/ash: 999: Bad substitution
 par_env_parallel_--session_ash	l2var
 par_env_parallel_--session_ash	l2alias
-par_env_parallel_--session_ash	script: 30: level2func: not found
-par_env_parallel_--session_ash	script: 30: Bad substitution
+par_env_parallel_--session_ash	script: 99: level2func: not found
+par_env_parallel_--session_ash	script: 99: Bad substitution
 par_env_parallel_--session_ash	l2var
 par_env_parallel_--session_ash	l2alias
-par_env_parallel_--session_ash	/bin/ash: XXX: level2func: not found
-par_env_parallel_--session_ash	/bin/ash: XXX: Bad substitution
+par_env_parallel_--session_ash	/bin/ash: 999: level2func: not found
+par_env_parallel_--session_ash	/bin/ash: 999: Bad substitution
 par_env_parallel_--session_ash	/bin/ash: 1: aliasbefore: not found
 par_env_parallel_--session_ash	script: 2: aliasbefore: not found
 par_env_parallel_--session_ash	no_before
@@ -901,12 +901,12 @@ par_env_parallel_--session_bash	### Test env_parallel --session / --end-session
 par_env_parallel_--session_bash	### level0 should be hidden, level1 should be transferred
 par_env_parallel_--session_bash	
 par_env_parallel_--session_bash	fail
-par_env_parallel_--session_bash	script: line XXX: level0func: command not found
-par_env_parallel_--session_bash	script: line XXX: level0alias: command not found
+par_env_parallel_--session_bash	script: line 99: level0func: command not found
+par_env_parallel_--session_bash	script: line 99: level0alias: command not found
 par_env_parallel_--session_bash	
 par_env_parallel_--session_bash	fail
-par_env_parallel_--session_bash	/bin/bash: line XXX: level0func: command not found
-par_env_parallel_--session_bash	/bin/bash: line XXX: level0alias: command not found
+par_env_parallel_--session_bash	/bin/bash: line 99: level0func: command not found
+par_env_parallel_--session_bash	/bin/bash: line 99: level0alias: command not found
 par_env_parallel_--session_bash	l1var
 par_env_parallel_--session_bash	l1func
 par_env_parallel_--session_bash	l1alias
@@ -918,20 +918,20 @@ par_env_parallel_--session_bash	level1 array OK
 par_env_parallel_--session_bash	### level0+1 should be hidden, level2 should be transferred
 par_env_parallel_--session_bash	
 par_env_parallel_--session_bash	fail
-par_env_parallel_--session_bash	script: line XXX: level0func: command not found
-par_env_parallel_--session_bash	script: line XXX: level0alias: command not found
+par_env_parallel_--session_bash	script: line 99: level0func: command not found
+par_env_parallel_--session_bash	script: line 99: level0alias: command not found
 par_env_parallel_--session_bash	
 par_env_parallel_--session_bash	fail
-par_env_parallel_--session_bash	/bin/bash: line XXX: level0func: command not found
-par_env_parallel_--session_bash	/bin/bash: line XXX: level0alias: command not found
+par_env_parallel_--session_bash	/bin/bash: line 99: level0func: command not found
+par_env_parallel_--session_bash	/bin/bash: line 99: level0alias: command not found
 par_env_parallel_--session_bash	
 par_env_parallel_--session_bash	fail
-par_env_parallel_--session_bash	script: line XXX: level1func: command not found
-par_env_parallel_--session_bash	script: line XXX: level1alias: command not found
+par_env_parallel_--session_bash	script: line 99: level1func: command not found
+par_env_parallel_--session_bash	script: line 99: level1alias: command not found
 par_env_parallel_--session_bash	
 par_env_parallel_--session_bash	fail
-par_env_parallel_--session_bash	/bin/bash: line XXX: level1func: command not found
-par_env_parallel_--session_bash	/bin/bash: line XXX: level1alias: command not found
+par_env_parallel_--session_bash	/bin/bash: line 99: level1func: command not found
+par_env_parallel_--session_bash	/bin/bash: line 99: level1alias: command not found
 par_env_parallel_--session_bash	l2var
 par_env_parallel_--session_bash	l2func
 par_env_parallel_--session_bash	l2alias
@@ -943,12 +943,12 @@ par_env_parallel_--session_bash	level2 array OK
 par_env_parallel_--session_bash	### level0 should be hidden, level1+2 should be transferred
 par_env_parallel_--session_bash	
 par_env_parallel_--session_bash	fail
-par_env_parallel_--session_bash	script: line XXX: level0func: command not found
-par_env_parallel_--session_bash	script: line XXX: level0alias: command not found
+par_env_parallel_--session_bash	script: line 99: level0func: command not found
+par_env_parallel_--session_bash	script: line 99: level0alias: command not found
 par_env_parallel_--session_bash	
 par_env_parallel_--session_bash	fail
-par_env_parallel_--session_bash	/bin/bash: line XXX: level0func: command not found
-par_env_parallel_--session_bash	/bin/bash: line XXX: level0alias: command not found
+par_env_parallel_--session_bash	/bin/bash: line 99: level0func: command not found
+par_env_parallel_--session_bash	/bin/bash: line 99: level0alias: command not found
 par_env_parallel_--session_bash	l1var
 par_env_parallel_--session_bash	l1func
 par_env_parallel_--session_bash	l1alias
@@ -990,10 +990,10 @@ par_env_parallel_--session_bash	l2var
 par_env_parallel_--session_bash	l2func
 par_env_parallel_--session_bash	l2alias
 par_env_parallel_--session_bash	level2 array OK
-par_env_parallel_--session_bash	/bin/bash: line XXX: aliasl0: command not found
-par_env_parallel_--session_bash	script: line XXX: aliasl0: command not found
-par_env_parallel_--session_bash	/bin/bash: line XXX: funcl0: command not found
-par_env_parallel_--session_bash	script: line XXX: funcl0: command not found
+par_env_parallel_--session_bash	/bin/bash: line 99: aliasl0: command not found
+par_env_parallel_--session_bash	script: line 99: aliasl0: command not found
+par_env_parallel_--session_bash	/bin/bash: line 99: funcl0: command not found
+par_env_parallel_--session_bash	script: line 99: funcl0: command not found
 par_env_parallel_--session_bash	no_before
 par_env_parallel_--session_bash	no_before
 par_env_parallel_--session_bash	no_before
@@ -1010,21 +1010,21 @@ par_env_parallel_--session_csh	Not implemented
 par_env_parallel_--session_dash	### Test env_parallel --session
 par_env_parallel_--session_dash	### level0 should be hidden, level1 should be transferred
 par_env_parallel_--session_dash	
-par_env_parallel_--session_dash	script: 33: level0func: not found
-par_env_parallel_--session_dash	script: 33: level0alias: not found
-par_env_parallel_--session_dash	script: 33: Bad substitution
+par_env_parallel_--session_dash	script: 99: level0func: not found
+par_env_parallel_--session_dash	script: 99: level0alias: not found
+par_env_parallel_--session_dash	script: 99: Bad substitution
 par_env_parallel_--session_dash	
-par_env_parallel_--session_dash	/bin/dash: XXX: level0func: not found
-par_env_parallel_--session_dash	/bin/dash: XXX: level0alias: not found
-par_env_parallel_--session_dash	/bin/dash: XXX: Bad substitution
+par_env_parallel_--session_dash	/bin/dash: 999: level0func: not found
+par_env_parallel_--session_dash	/bin/dash: 999: level0alias: not found
+par_env_parallel_--session_dash	/bin/dash: 999: Bad substitution
 par_env_parallel_--session_dash	l1var
 par_env_parallel_--session_dash	l1alias
-par_env_parallel_--session_dash	script: 33: level1func: not found
-par_env_parallel_--session_dash	script: 33: Bad substitution
+par_env_parallel_--session_dash	script: 99: level1func: not found
+par_env_parallel_--session_dash	script: 99: Bad substitution
 par_env_parallel_--session_dash	l1var
 par_env_parallel_--session_dash	l1alias
-par_env_parallel_--session_dash	/bin/dash: XXX: level1func: not found
-par_env_parallel_--session_dash	/bin/dash: XXX: Bad substitution
+par_env_parallel_--session_dash	/bin/dash: 999: level1func: not found
+par_env_parallel_--session_dash	/bin/dash: 999: Bad substitution
 par_env_parallel_--session_dash	### level0+1 should be hidden, level2 should be transferred
 par_env_parallel_--session_dash	
 par_env_parallel_--session_dash	script: 4: level0func: not found
@@ -1052,54 +1052,54 @@ par_env_parallel_--session_dash	/bin/dash: 3: level2func: not found
 par_env_parallel_--session_dash	/bin/dash: 3: Bad substitution
 par_env_parallel_--session_dash	### level0 should be hidden, level1+2 should be transferred
 par_env_parallel_--session_dash	
-par_env_parallel_--session_dash	script: 35: level0func: not found
-par_env_parallel_--session_dash	script: 35: level0alias: not found
-par_env_parallel_--session_dash	script: 35: Bad substitution
+par_env_parallel_--session_dash	script: 99: level0func: not found
+par_env_parallel_--session_dash	script: 99: level0alias: not found
+par_env_parallel_--session_dash	script: 99: Bad substitution
 par_env_parallel_--session_dash	
-par_env_parallel_--session_dash	/bin/dash: XXX: level0func: not found
-par_env_parallel_--session_dash	/bin/dash: XXX: level0alias: not found
-par_env_parallel_--session_dash	/bin/dash: XXX: Bad substitution
+par_env_parallel_--session_dash	/bin/dash: 999: level0func: not found
+par_env_parallel_--session_dash	/bin/dash: 999: level0alias: not found
+par_env_parallel_--session_dash	/bin/dash: 999: Bad substitution
 par_env_parallel_--session_dash	l1var
 par_env_parallel_--session_dash	l1alias
-par_env_parallel_--session_dash	script: 35: level1func: not found
-par_env_parallel_--session_dash	script: 35: Bad substitution
+par_env_parallel_--session_dash	script: 99: level1func: not found
+par_env_parallel_--session_dash	script: 99: Bad substitution
 par_env_parallel_--session_dash	l1var
 par_env_parallel_--session_dash	l1alias
-par_env_parallel_--session_dash	/bin/dash: XXX: level1func: not found
-par_env_parallel_--session_dash	/bin/dash: XXX: Bad substitution
+par_env_parallel_--session_dash	/bin/dash: 999: level1func: not found
+par_env_parallel_--session_dash	/bin/dash: 999: Bad substitution
 par_env_parallel_--session_dash	l2var
 par_env_parallel_--session_dash	l2alias
-par_env_parallel_--session_dash	script: 35: level2func: not found
-par_env_parallel_--session_dash	script: 35: Bad substitution
+par_env_parallel_--session_dash	script: 99: level2func: not found
+par_env_parallel_--session_dash	script: 99: Bad substitution
 par_env_parallel_--session_dash	l2var
 par_env_parallel_--session_dash	l2alias
-par_env_parallel_--session_dash	/bin/dash: XXX: level2func: not found
-par_env_parallel_--session_dash	/bin/dash: XXX: Bad substitution
+par_env_parallel_--session_dash	/bin/dash: 999: level2func: not found
+par_env_parallel_--session_dash	/bin/dash: 999: Bad substitution
 par_env_parallel_--session_dash	### level0+1+2 should be transferred
 par_env_parallel_--session_dash	l0var
 par_env_parallel_--session_dash	l0alias
-par_env_parallel_--session_dash	script: 30: level0func: not found
-par_env_parallel_--session_dash	script: 30: Bad substitution
+par_env_parallel_--session_dash	script: 99: level0func: not found
+par_env_parallel_--session_dash	script: 99: Bad substitution
 par_env_parallel_--session_dash	l0var
 par_env_parallel_--session_dash	l0alias
-par_env_parallel_--session_dash	/bin/dash: XXX: level0func: not found
-par_env_parallel_--session_dash	/bin/dash: XXX: Bad substitution
+par_env_parallel_--session_dash	/bin/dash: 999: level0func: not found
+par_env_parallel_--session_dash	/bin/dash: 999: Bad substitution
 par_env_parallel_--session_dash	l1var
 par_env_parallel_--session_dash	l1alias
-par_env_parallel_--session_dash	script: 30: level1func: not found
-par_env_parallel_--session_dash	script: 30: Bad substitution
+par_env_parallel_--session_dash	script: 99: level1func: not found
+par_env_parallel_--session_dash	script: 99: Bad substitution
 par_env_parallel_--session_dash	l1var
 par_env_parallel_--session_dash	l1alias
-par_env_parallel_--session_dash	/bin/dash: XXX: level1func: not found
-par_env_parallel_--session_dash	/bin/dash: XXX: Bad substitution
+par_env_parallel_--session_dash	/bin/dash: 999: level1func: not found
+par_env_parallel_--session_dash	/bin/dash: 999: Bad substitution
 par_env_parallel_--session_dash	l2var
 par_env_parallel_--session_dash	l2alias
-par_env_parallel_--session_dash	script: 30: level2func: not found
-par_env_parallel_--session_dash	script: 30: Bad substitution
+par_env_parallel_--session_dash	script: 99: level2func: not found
+par_env_parallel_--session_dash	script: 99: Bad substitution
 par_env_parallel_--session_dash	l2var
 par_env_parallel_--session_dash	l2alias
-par_env_parallel_--session_dash	/bin/dash: XXX: level2func: not found
-par_env_parallel_--session_dash	/bin/dash: XXX: Bad substitution
+par_env_parallel_--session_dash	/bin/dash: 999: level2func: not found
+par_env_parallel_--session_dash	/bin/dash: 999: Bad substitution
 par_env_parallel_--session_dash	/bin/dash: 1: aliasbefore: not found
 par_env_parallel_--session_dash	script: 2: aliasbefore: not found
 par_env_parallel_--session_dash	no_before
@@ -1145,8 +1145,8 @@ par_env_parallel_--session_ksh	script[9]: level0func: not found
 par_env_parallel_--session_ksh	script[9]: level0alias: not found
 par_env_parallel_--session_ksh	
 par_env_parallel_--session_ksh	fail
-par_env_parallel_--session_ksh	/bin/ksh[XXX]: level0func: not found
-par_env_parallel_--session_ksh	/bin/ksh[XXX]: level0alias: not found
+par_env_parallel_--session_ksh	/bin/ksh[999]: level0func: not found
+par_env_parallel_--session_ksh	/bin/ksh[999]: level0alias: not found
 par_env_parallel_--session_ksh	l1var
 par_env_parallel_--session_ksh	l1func
 par_env_parallel_--session_ksh	l1alias
@@ -1162,16 +1162,16 @@ par_env_parallel_--session_ksh	script[9]: level0func: not found
 par_env_parallel_--session_ksh	script[9]: level0alias: not found
 par_env_parallel_--session_ksh	
 par_env_parallel_--session_ksh	fail
-par_env_parallel_--session_ksh	/bin/ksh[XXX]: level0func: not found
-par_env_parallel_--session_ksh	/bin/ksh[XXX]: level0alias: not found
+par_env_parallel_--session_ksh	/bin/ksh[999]: level0func: not found
+par_env_parallel_--session_ksh	/bin/ksh[999]: level0alias: not found
 par_env_parallel_--session_ksh	
 par_env_parallel_--session_ksh	fail
 par_env_parallel_--session_ksh	script[9]: level1func: not found
 par_env_parallel_--session_ksh	script[9]: level1alias: not found
 par_env_parallel_--session_ksh	
 par_env_parallel_--session_ksh	fail
-par_env_parallel_--session_ksh	/bin/ksh[XXX]: level1func: not found
-par_env_parallel_--session_ksh	/bin/ksh[XXX]: level1alias: not found
+par_env_parallel_--session_ksh	/bin/ksh[999]: level1func: not found
+par_env_parallel_--session_ksh	/bin/ksh[999]: level1alias: not found
 par_env_parallel_--session_ksh	l2var
 par_env_parallel_--session_ksh	l2func
 par_env_parallel_--session_ksh	l2alias
@@ -1187,8 +1187,8 @@ par_env_parallel_--session_ksh	script[9]: level0func: not found
 par_env_parallel_--session_ksh	script[9]: level0alias: not found
 par_env_parallel_--session_ksh	
 par_env_parallel_--session_ksh	fail
-par_env_parallel_--session_ksh	/bin/ksh[XXX]: level0func: not found
-par_env_parallel_--session_ksh	/bin/ksh[XXX]: level0alias: not found
+par_env_parallel_--session_ksh	/bin/ksh[999]: level0func: not found
+par_env_parallel_--session_ksh	/bin/ksh[999]: level0alias: not found
 par_env_parallel_--session_ksh	l1var
 par_env_parallel_--session_ksh	l1func
 par_env_parallel_--session_ksh	l1alias
@@ -1358,21 +1358,21 @@ par_env_parallel_--session_mksh	array after arrayafter_OK
 par_env_parallel_--session_sh	### Test env_parallel --session
 par_env_parallel_--session_sh	### level0 should be hidden, level1 should be transferred
 par_env_parallel_--session_sh	
-par_env_parallel_--session_sh	script: 30: level0func: not found
-par_env_parallel_--session_sh	script: 30: level0alias: not found
-par_env_parallel_--session_sh	script: 30: Bad substitution
+par_env_parallel_--session_sh	script: 99: level0func: not found
+par_env_parallel_--session_sh	script: 99: level0alias: not found
+par_env_parallel_--session_sh	script: 99: Bad substitution
 par_env_parallel_--session_sh	
-par_env_parallel_--session_sh	/bin/sh: XXX: level0func: not found
-par_env_parallel_--session_sh	/bin/sh: XXX: level0alias: not found
-par_env_parallel_--session_sh	/bin/sh: XXX: Bad substitution
+par_env_parallel_--session_sh	/bin/sh: 999: level0func: not found
+par_env_parallel_--session_sh	/bin/sh: 999: level0alias: not found
+par_env_parallel_--session_sh	/bin/sh: 999: Bad substitution
 par_env_parallel_--session_sh	l1var
-par_env_parallel_--session_sh	script: 30: level1func: not found
-par_env_parallel_--session_sh	script: 30: level1alias: not found
-par_env_parallel_--session_sh	script: 30: Bad substitution
+par_env_parallel_--session_sh	script: 99: level1func: not found
+par_env_parallel_--session_sh	script: 99: level1alias: not found
+par_env_parallel_--session_sh	script: 99: Bad substitution
 par_env_parallel_--session_sh	l1var
-par_env_parallel_--session_sh	/bin/sh: XXX: level1func: not found
-par_env_parallel_--session_sh	/bin/sh: XXX: level1alias: not found
-par_env_parallel_--session_sh	/bin/sh: XXX: Bad substitution
+par_env_parallel_--session_sh	/bin/sh: 999: level1func: not found
+par_env_parallel_--session_sh	/bin/sh: 999: level1alias: not found
+par_env_parallel_--session_sh	/bin/sh: 999: Bad substitution
 par_env_parallel_--session_sh	### level0+1 should be hidden, level2 should be transferred
 par_env_parallel_--session_sh	
 par_env_parallel_--session_sh	script: 3: level0func: not found
@@ -1400,54 +1400,54 @@ par_env_parallel_--session_sh	/bin/sh: 2: level2alias: not found
 par_env_parallel_--session_sh	/bin/sh: 2: Bad substitution
 par_env_parallel_--session_sh	### level0 should be hidden, level1+2 should be transferred
 par_env_parallel_--session_sh	
-par_env_parallel_--session_sh	script: 31: level0func: not found
-par_env_parallel_--session_sh	script: 31: level0alias: not found
-par_env_parallel_--session_sh	script: 31: Bad substitution
+par_env_parallel_--session_sh	script: 99: level0func: not found
+par_env_parallel_--session_sh	script: 99: level0alias: not found
+par_env_parallel_--session_sh	script: 99: Bad substitution
 par_env_parallel_--session_sh	
-par_env_parallel_--session_sh	/bin/sh: XXX: level0func: not found
-par_env_parallel_--session_sh	/bin/sh: XXX: level0alias: not found
-par_env_parallel_--session_sh	/bin/sh: XXX: Bad substitution
+par_env_parallel_--session_sh	/bin/sh: 999: level0func: not found
+par_env_parallel_--session_sh	/bin/sh: 999: level0alias: not found
+par_env_parallel_--session_sh	/bin/sh: 999: Bad substitution
 par_env_parallel_--session_sh	l1var
-par_env_parallel_--session_sh	script: 31: level1func: not found
-par_env_parallel_--session_sh	script: 31: level1alias: not found
-par_env_parallel_--session_sh	script: 31: Bad substitution
+par_env_parallel_--session_sh	script: 99: level1func: not found
+par_env_parallel_--session_sh	script: 99: level1alias: not found
+par_env_parallel_--session_sh	script: 99: Bad substitution
 par_env_parallel_--session_sh	l1var
-par_env_parallel_--session_sh	/bin/sh: XXX: level1func: not found
-par_env_parallel_--session_sh	/bin/sh: XXX: level1alias: not found
-par_env_parallel_--session_sh	/bin/sh: XXX: Bad substitution
+par_env_parallel_--session_sh	/bin/sh: 999: level1func: not found
+par_env_parallel_--session_sh	/bin/sh: 999: level1alias: not found
+par_env_parallel_--session_sh	/bin/sh: 999: Bad substitution
 par_env_parallel_--session_sh	l2var
-par_env_parallel_--session_sh	script: 31: level2func: not found
-par_env_parallel_--session_sh	script: 31: level2alias: not found
-par_env_parallel_--session_sh	script: 31: Bad substitution
+par_env_parallel_--session_sh	script: 99: level2func: not found
+par_env_parallel_--session_sh	script: 99: level2alias: not found
+par_env_parallel_--session_sh	script: 99: Bad substitution
 par_env_parallel_--session_sh	l2var
-par_env_parallel_--session_sh	/bin/sh: XXX: level2func: not found
-par_env_parallel_--session_sh	/bin/sh: XXX: level2alias: not found
-par_env_parallel_--session_sh	/bin/sh: XXX: Bad substitution
+par_env_parallel_--session_sh	/bin/sh: 999: level2func: not found
+par_env_parallel_--session_sh	/bin/sh: 999: level2alias: not found
+par_env_parallel_--session_sh	/bin/sh: 999: Bad substitution
 par_env_parallel_--session_sh	### level0+1+2 should be transferred
 par_env_parallel_--session_sh	l0var
-par_env_parallel_--session_sh	script: 27: level0func: not found
-par_env_parallel_--session_sh	script: 27: level0alias: not found
-par_env_parallel_--session_sh	script: 27: Bad substitution
+par_env_parallel_--session_sh	script: 99: level0func: not found
+par_env_parallel_--session_sh	script: 99: level0alias: not found
+par_env_parallel_--session_sh	script: 99: Bad substitution
 par_env_parallel_--session_sh	l0var
-par_env_parallel_--session_sh	/bin/sh: XXX: level0func: not found
-par_env_parallel_--session_sh	/bin/sh: XXX: level0alias: not found
-par_env_parallel_--session_sh	/bin/sh: XXX: Bad substitution
+par_env_parallel_--session_sh	/bin/sh: 999: level0func: not found
+par_env_parallel_--session_sh	/bin/sh: 999: level0alias: not found
+par_env_parallel_--session_sh	/bin/sh: 999: Bad substitution
 par_env_parallel_--session_sh	l1var
-par_env_parallel_--session_sh	script: 27: level1func: not found
-par_env_parallel_--session_sh	script: 27: level1alias: not found
-par_env_parallel_--session_sh	script: 27: Bad substitution
+par_env_parallel_--session_sh	script: 99: level1func: not found
+par_env_parallel_--session_sh	script: 99: level1alias: not found
+par_env_parallel_--session_sh	script: 99: Bad substitution
 par_env_parallel_--session_sh	l1var
-par_env_parallel_--session_sh	/bin/sh: XXX: level1func: not found
-par_env_parallel_--session_sh	/bin/sh: XXX: level1alias: not found
-par_env_parallel_--session_sh	/bin/sh: XXX: Bad substitution
+par_env_parallel_--session_sh	/bin/sh: 999: level1func: not found
+par_env_parallel_--session_sh	/bin/sh: 999: level1alias: not found
+par_env_parallel_--session_sh	/bin/sh: 999: Bad substitution
 par_env_parallel_--session_sh	l2var
-par_env_parallel_--session_sh	script: 27: level2func: not found
-par_env_parallel_--session_sh	script: 27: level2alias: not found
-par_env_parallel_--session_sh	script: 27: Bad substitution
+par_env_parallel_--session_sh	script: 99: level2func: not found
+par_env_parallel_--session_sh	script: 99: level2alias: not found
+par_env_parallel_--session_sh	script: 99: Bad substitution
 par_env_parallel_--session_sh	l2var
-par_env_parallel_--session_sh	/bin/sh: XXX: level2func: not found
-par_env_parallel_--session_sh	/bin/sh: XXX: level2alias: not found
-par_env_parallel_--session_sh	/bin/sh: XXX: Bad substitution
+par_env_parallel_--session_sh	/bin/sh: 999: level2func: not found
+par_env_parallel_--session_sh	/bin/sh: 999: level2alias: not found
+par_env_parallel_--session_sh	/bin/sh: 999: Bad substitution
 par_env_parallel_--session_sh	/bin/sh: 1: aliasbefore: not found
 par_env_parallel_--session_sh	script: 2: aliasbefore: not found
 par_env_parallel_--session_sh	/bin/sh: 1: funcbefore: not found
@@ -1747,10 +1747,10 @@ par_environment_too_big_ash	OK_bigfunc_remote
 par_environment_too_big_ash	OK_bigfunc_quote
 par_environment_too_big_ash	OK_bigfunc_quote_remote
 par_environment_too_big_ash	Rest should fail - functions not supported in ash
-par_environment_too_big_ash	parallel: Error: Command line too long (XXX >= XXX) at input 0: fail_bigvar
-par_environment_too_big_ash	parallel: Error: Command line too long (XXX >= XXX) at input 0: fail_bigvar_remote
-par_environment_too_big_ash	parallel: Error: Command line too long (XXX >= XXX) at input 0: fail_bigvar_quote
-par_environment_too_big_ash	parallel: Error: Command line too long (XXX >= XXX) at input 0: fail_bigvar_quote_remote
+par_environment_too_big_ash	parallel: Error: Command line too long (999 >= 999) at input 0: fail_bigvar
+par_environment_too_big_ash	parallel: Error: Command line too long (999 >= 999) at input 0: fail_bigvar_remote
+par_environment_too_big_ash	parallel: Error: Command line too long (999 >= 999) at input 0: fail_bigvar_quote
+par_environment_too_big_ash	parallel: Error: Command line too long (999 >= 999) at input 0: fail_bigvar_quote_remote
 par_environment_too_big_ash	fail_bigfunc-not-supported
 par_environment_too_big_ash	fail_bigfunc_remote-not-supported
 par_environment_too_big_ash	fail_bigfunc_quote-not-supported
@@ -1765,14 +1765,14 @@ par_environment_too_big_bash	OK_bigfunc_remote
 par_environment_too_big_bash	OK_bigfunc_quote
 par_environment_too_big_bash	OK_bigfunc_quote_remote
 par_environment_too_big_bash	Rest should fail
-par_environment_too_big_bash	parallel: Error: Command line too long (XXX >= XXX) at input 0: fail_bigvar
-par_environment_too_big_bash	parallel: Error: Command line too long (XXX >= XXX) at input 0: fail_bigvar_remote
-par_environment_too_big_bash	parallel: Error: Command line too long (XXX >= XXX) at input 0: fail_bigvar_quote
-par_environment_too_big_bash	parallel: Error: Command line too long (XXX >= XXX) at input 0: fail_bigvar_quote_remote
-par_environment_too_big_bash	parallel: Error: Command line too long (XXX >= XXX) at input 0: fail_bigfunc
-par_environment_too_big_bash	parallel: Error: Command line too long (XXX >= XXX) at input 0: fail_bigfunc_remote
-par_environment_too_big_bash	parallel: Error: Command line too long (XXX >= XXX) at input 0: fail_bigfunc_quote
-par_environment_too_big_bash	parallel: Error: Command line too long (XXX >= XXX) at input 0: fail_bigfunc_quote_remote
+par_environment_too_big_bash	parallel: Error: Command line too long (999 >= 999) at input 0: fail_bigvar
+par_environment_too_big_bash	parallel: Error: Command line too long (999 >= 999) at input 0: fail_bigvar_remote
+par_environment_too_big_bash	parallel: Error: Command line too long (999 >= 999) at input 0: fail_bigvar_quote
+par_environment_too_big_bash	parallel: Error: Command line too long (999 >= 999) at input 0: fail_bigvar_quote_remote
+par_environment_too_big_bash	parallel: Error: Command line too long (999 >= 999) at input 0: fail_bigfunc
+par_environment_too_big_bash	parallel: Error: Command line too long (999 >= 999) at input 0: fail_bigfunc_remote
+par_environment_too_big_bash	parallel: Error: Command line too long (999 >= 999) at input 0: fail_bigfunc_quote
+par_environment_too_big_bash	parallel: Error: Command line too long (999 >= 999) at input 0: fail_bigfunc_quote_remote
 par_environment_too_big_csh	Not implemented
 par_environment_too_big_dash	bug #50815: env_parallel should warn if the environment is too big
 par_environment_too_big_dash	OK_bigvar
@@ -1784,10 +1784,10 @@ par_environment_too_big_dash	OK_bigfunc_remote
 par_environment_too_big_dash	OK_bigfunc_quote
 par_environment_too_big_dash	OK_bigfunc_quote_remote
 par_environment_too_big_dash	Rest should fail - functions not supported in dash
-par_environment_too_big_dash	parallel: Error: Command line too long (XXX >= XXX) at input 0: fail_bigvar
-par_environment_too_big_dash	parallel: Error: Command line too long (XXX >= XXX) at input 0: fail_bigvar_remote
-par_environment_too_big_dash	parallel: Error: Command line too long (XXX >= XXX) at input 0: fail_bigvar_quote
-par_environment_too_big_dash	parallel: Error: Command line too long (XXX >= XXX) at input 0: fail_bigvar_quote_remote
+par_environment_too_big_dash	parallel: Error: Command line too long (999 >= 999) at input 0: fail_bigvar
+par_environment_too_big_dash	parallel: Error: Command line too long (999 >= 999) at input 0: fail_bigvar_remote
+par_environment_too_big_dash	parallel: Error: Command line too long (999 >= 999) at input 0: fail_bigvar_quote
+par_environment_too_big_dash	parallel: Error: Command line too long (999 >= 999) at input 0: fail_bigvar_quote_remote
 par_environment_too_big_dash	fail_bigfunc-not-supported
 par_environment_too_big_dash	fail_bigfunc_remote-not-supported
 par_environment_too_big_dash	fail_bigfunc_quote-not-supported
@@ -1803,14 +1803,14 @@ par_environment_too_big_ksh	OK_bigfunc_remote
 par_environment_too_big_ksh	OK_bigfunc_quote
 par_environment_too_big_ksh	OK_bigfunc_quote_remote
 par_environment_too_big_ksh	Rest should fail
-par_environment_too_big_ksh	parallel: Error: Command line too long (XXX >= XXX) at input 0: fail_bigvar
-par_environment_too_big_ksh	parallel: Error: Command line too long (XXX >= XXX) at input 0: fail_bigvar_remote
-par_environment_too_big_ksh	parallel: Error: Command line too long (XXX >= XXX) at input 0: fail_bigvar_quote
-par_environment_too_big_ksh	parallel: Error: Command line too long (XXX >= XXX) at input 0: fail_bigvar_quote_remote
-par_environment_too_big_ksh	parallel: Error: Command line too long (XXX >= XXX) at input 0: fail_bigfunc
-par_environment_too_big_ksh	parallel: Error: Command line too long (XXX >= XXX) at input 0: fail_bigfunc_remote
-par_environment_too_big_ksh	parallel: Error: Command line too long (XXX >= XXX) at input 0: fail_bigfunc_quote
-par_environment_too_big_ksh	parallel: Error: Command line too long (XXX >= XXX) at input 0: fail_bigfunc_quote_remote
+par_environment_too_big_ksh	parallel: Error: Command line too long (999 >= 999) at input 0: fail_bigvar
+par_environment_too_big_ksh	parallel: Error: Command line too long (999 >= 999) at input 0: fail_bigvar_remote
+par_environment_too_big_ksh	parallel: Error: Command line too long (999 >= 999) at input 0: fail_bigvar_quote
+par_environment_too_big_ksh	parallel: Error: Command line too long (999 >= 999) at input 0: fail_bigvar_quote_remote
+par_environment_too_big_ksh	parallel: Error: Command line too long (999 >= 999) at input 0: fail_bigfunc
+par_environment_too_big_ksh	parallel: Error: Command line too long (999 >= 999) at input 0: fail_bigfunc_remote
+par_environment_too_big_ksh	parallel: Error: Command line too long (999 >= 999) at input 0: fail_bigfunc_quote
+par_environment_too_big_ksh	parallel: Error: Command line too long (999 >= 999) at input 0: fail_bigfunc_quote_remote
 par_environment_too_big_mksh	bug #50815: env_parallel should warn if the environment is too big
 par_environment_too_big_mksh	OK_bigvar
 par_environment_too_big_mksh	OK_bigvar_remote
@@ -1821,14 +1821,14 @@ par_environment_too_big_mksh	OK_bigfunc_remote
 par_environment_too_big_mksh	OK_bigfunc_quote
 par_environment_too_big_mksh	OK_bigfunc_quote_remote
 par_environment_too_big_mksh	Rest should fail
-par_environment_too_big_mksh	parallel: Error: Command line too long (XXX >= XXX) at input 0: fail_bigvar
-par_environment_too_big_mksh	parallel: Error: Command line too long (XXX >= XXX) at input 0: fail_bigvar_remote
-par_environment_too_big_mksh	parallel: Error: Command line too long (XXX >= XXX) at input 0: fail_bigvar_quote
-par_environment_too_big_mksh	parallel: Error: Command line too long (XXX >= XXX) at input 0: fail_bigvar_quote_remote
-par_environment_too_big_mksh	parallel: Error: Command line too long (XXX >= XXX) at input 0: fail_bigfunc
-par_environment_too_big_mksh	parallel: Error: Command line too long (XXX >= XXX) at input 0: fail_bigfunc_remote
-par_environment_too_big_mksh	parallel: Error: Command line too long (XXX >= XXX) at input 0: fail_bigfunc_quote
-par_environment_too_big_mksh	parallel: Error: Command line too long (XXX >= XXX) at input 0: fail_bigfunc_quote_remote
+par_environment_too_big_mksh	parallel: Error: Command line too long (999 >= 999) at input 0: fail_bigvar
+par_environment_too_big_mksh	parallel: Error: Command line too long (999 >= 999) at input 0: fail_bigvar_remote
+par_environment_too_big_mksh	parallel: Error: Command line too long (999 >= 999) at input 0: fail_bigvar_quote
+par_environment_too_big_mksh	parallel: Error: Command line too long (999 >= 999) at input 0: fail_bigvar_quote_remote
+par_environment_too_big_mksh	parallel: Error: Command line too long (999 >= 999) at input 0: fail_bigfunc
+par_environment_too_big_mksh	parallel: Error: Command line too long (999 >= 999) at input 0: fail_bigfunc_remote
+par_environment_too_big_mksh	parallel: Error: Command line too long (999 >= 999) at input 0: fail_bigfunc_quote
+par_environment_too_big_mksh	parallel: Error: Command line too long (999 >= 999) at input 0: fail_bigfunc_quote_remote
 par_environment_too_big_sh	bug #50815: env_parallel should warn if the environment is too big
 par_environment_too_big_sh	OK_bigvar
 par_environment_too_big_sh	OK_bigvar_remote
@@ -1839,10 +1839,10 @@ par_environment_too_big_sh	OK_bigfunc_remote
 par_environment_too_big_sh	OK_bigfunc_quote
 par_environment_too_big_sh	OK_bigfunc_quote_remote
 par_environment_too_big_sh	Rest should fail - functions not supported in sh
-par_environment_too_big_sh	parallel: Error: Command line too long (XXX >= XXX) at input 0: fail_bigvar
-par_environment_too_big_sh	parallel: Error: Command line too long (XXX >= XXX) at input 0: fail_bigvar_remote
-par_environment_too_big_sh	parallel: Error: Command line too long (XXX >= XXX) at input 0: fail_bigvar_quote
-par_environment_too_big_sh	parallel: Error: Command line too long (XXX >= XXX) at input 0: fail_bigvar_quote_remote
+par_environment_too_big_sh	parallel: Error: Command line too long (999 >= 999) at input 0: fail_bigvar
+par_environment_too_big_sh	parallel: Error: Command line too long (999 >= 999) at input 0: fail_bigvar_remote
+par_environment_too_big_sh	parallel: Error: Command line too long (999 >= 999) at input 0: fail_bigvar_quote
+par_environment_too_big_sh	parallel: Error: Command line too long (999 >= 999) at input 0: fail_bigvar_quote_remote
 par_environment_too_big_sh	fail_bigfunc-not-supported
 par_environment_too_big_sh	fail_bigfunc_remote-not-supported
 par_environment_too_big_sh	fail_bigfunc_quote-not-supported
@@ -1858,7 +1858,7 @@ par_environment_too_big_zsh	OK_bigfunc_remote
 par_environment_too_big_zsh	OK_bigfunc_quote
 par_environment_too_big_zsh	OK_bigfunc_quote_remote
 par_environment_too_big_zsh	Rest should fail
-par_environment_too_big_zsh	_which_PAR:XXX: argument list too long: perl
+par_environment_too_big_zsh	_which_PAR:999: argument list too long: perl
 par_environment_too_big_zsh	env_parallel: Error: Your environment is too big.
 par_environment_too_big_zsh	env_parallel: Error: You can try 3 different approaches:
 par_environment_too_big_zsh	env_parallel: Error: 1. Run 'env_parallel --session' before you set
@@ -1868,7 +1868,7 @@ par_environment_too_big_zsh	env_parallel: Error: 3. Try running this in a clean 
 par_environment_too_big_zsh	env_parallel: Error:      env_parallel --record-env
 par_environment_too_big_zsh	env_parallel: Error:    And then use '--env _'
 par_environment_too_big_zsh	env_parallel: Error: For details see: man env_parallel
-par_environment_too_big_zsh	_which_PAR:XXX: argument list too long: perl
+par_environment_too_big_zsh	_which_PAR:999: argument list too long: perl
 par_environment_too_big_zsh	env_parallel: Error: Your environment is too big.
 par_environment_too_big_zsh	env_parallel: Error: You can try 3 different approaches:
 par_environment_too_big_zsh	env_parallel: Error: 1. Run 'env_parallel --session' before you set
@@ -1878,7 +1878,7 @@ par_environment_too_big_zsh	env_parallel: Error: 3. Try running this in a clean 
 par_environment_too_big_zsh	env_parallel: Error:      env_parallel --record-env
 par_environment_too_big_zsh	env_parallel: Error:    And then use '--env _'
 par_environment_too_big_zsh	env_parallel: Error: For details see: man env_parallel
-par_environment_too_big_zsh	_which_PAR:XXX: argument list too long: perl
+par_environment_too_big_zsh	_which_PAR:999: argument list too long: perl
 par_environment_too_big_zsh	env_parallel: Error: Your environment is too big.
 par_environment_too_big_zsh	env_parallel: Error: You can try 3 different approaches:
 par_environment_too_big_zsh	env_parallel: Error: 1. Run 'env_parallel --session' before you set
@@ -1888,7 +1888,7 @@ par_environment_too_big_zsh	env_parallel: Error: 3. Try running this in a clean 
 par_environment_too_big_zsh	env_parallel: Error:      env_parallel --record-env
 par_environment_too_big_zsh	env_parallel: Error:    And then use '--env _'
 par_environment_too_big_zsh	env_parallel: Error: For details see: man env_parallel
-par_environment_too_big_zsh	_which_PAR:XXX: argument list too long: perl
+par_environment_too_big_zsh	_which_PAR:999: argument list too long: perl
 par_environment_too_big_zsh	env_parallel: Error: Your environment is too big.
 par_environment_too_big_zsh	env_parallel: Error: You can try 3 different approaches:
 par_environment_too_big_zsh	env_parallel: Error: 1. Run 'env_parallel --session' before you set
@@ -1898,7 +1898,7 @@ par_environment_too_big_zsh	env_parallel: Error: 3. Try running this in a clean 
 par_environment_too_big_zsh	env_parallel: Error:      env_parallel --record-env
 par_environment_too_big_zsh	env_parallel: Error:    And then use '--env _'
 par_environment_too_big_zsh	env_parallel: Error: For details see: man env_parallel
-par_environment_too_big_zsh	_which_PAR:XXX: argument list too long: perl
+par_environment_too_big_zsh	_which_PAR:999: argument list too long: perl
 par_environment_too_big_zsh	env_parallel: Error: Your environment is too big.
 par_environment_too_big_zsh	env_parallel: Error: You can try 3 different approaches:
 par_environment_too_big_zsh	env_parallel: Error: 1. Run 'env_parallel --session' before you set
@@ -1908,7 +1908,7 @@ par_environment_too_big_zsh	env_parallel: Error: 3. Try running this in a clean 
 par_environment_too_big_zsh	env_parallel: Error:      env_parallel --record-env
 par_environment_too_big_zsh	env_parallel: Error:    And then use '--env _'
 par_environment_too_big_zsh	env_parallel: Error: For details see: man env_parallel
-par_environment_too_big_zsh	_which_PAR:XXX: argument list too long: perl
+par_environment_too_big_zsh	_which_PAR:999: argument list too long: perl
 par_environment_too_big_zsh	env_parallel: Error: Your environment is too big.
 par_environment_too_big_zsh	env_parallel: Error: You can try 3 different approaches:
 par_environment_too_big_zsh	env_parallel: Error: 1. Run 'env_parallel --session' before you set
@@ -1918,7 +1918,7 @@ par_environment_too_big_zsh	env_parallel: Error: 3. Try running this in a clean 
 par_environment_too_big_zsh	env_parallel: Error:      env_parallel --record-env
 par_environment_too_big_zsh	env_parallel: Error:    And then use '--env _'
 par_environment_too_big_zsh	env_parallel: Error: For details see: man env_parallel
-par_environment_too_big_zsh	_which_PAR:XXX: argument list too long: perl
+par_environment_too_big_zsh	_which_PAR:999: argument list too long: perl
 par_environment_too_big_zsh	env_parallel: Error: Your environment is too big.
 par_environment_too_big_zsh	env_parallel: Error: You can try 3 different approaches:
 par_environment_too_big_zsh	env_parallel: Error: 1. Run 'env_parallel --session' before you set
@@ -1928,7 +1928,7 @@ par_environment_too_big_zsh	env_parallel: Error: 3. Try running this in a clean 
 par_environment_too_big_zsh	env_parallel: Error:      env_parallel --record-env
 par_environment_too_big_zsh	env_parallel: Error:    And then use '--env _'
 par_environment_too_big_zsh	env_parallel: Error: For details see: man env_parallel
-par_environment_too_big_zsh	_which_PAR:XXX: argument list too long: perl
+par_environment_too_big_zsh	_which_PAR:999: argument list too long: perl
 par_environment_too_big_zsh	env_parallel: Error: Your environment is too big.
 par_environment_too_big_zsh	env_parallel: Error: You can try 3 different approaches:
 par_environment_too_big_zsh	env_parallel: Error: 1. Run 'env_parallel --session' before you set

@@ -4,6 +4,17 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+par_2jobs() {
+    echo '### Test similar example as from man page - run 2 jobs simultaneously'
+    echo 'Expect done: 1 2 5 3 4'
+    for i in 5 1 2 3 4 ; do
+	sleep 0.2
+	echo Scheduling $i
+	sem -j2 --id ex2jobs -u echo starting $i ";" sleep $i ";" echo done $i
+    done
+    sem --id ex2jobs --wait
+}
+
 par_change_content_--jobs_filename() {
     echo '### Test of -j filename with file content changing (missing -k is correct)'
     echo 1 >/tmp/jobs_to_run2

@@ -22,30 +22,30 @@ newline1.out
 tmp/parallel.file.
 newline2.out
 good if no file
+OK
+OK
 ls: cannot access 'tmp/parallel.file*': No such file or directory
-OK
 ls: tmp/parallel.file*: No such file or directory
-OK
 ### --transfer --return --cleanup - file with newline
 tmp/parallel.file.
 newline1.out
 tmp/parallel.file.
 newline2.out
 good if no file
+OK
+OK
 ls: cannot access 'tmp/parallel.file*': No such file or directory
-OK
 ls: tmp/parallel.file*: No such file or directory
-OK
 ### --trc - file with newline
 tmp/parallel.file.
 newline1.out
 tmp/parallel.file.
 newline2.out
 good if no file
+OK
+OK
 ls: cannot access 'tmp/parallel.file*': No such file or directory
-OK
 ls: tmp/parallel.file*: No such file or directory
-OK
 ### --trc - multiple file with newline
 tmp/parallel.file.
 newline1.out
@@ -56,10 +56,10 @@ newline2.out
 tmp/parallel.file.
 newline2.out2
 good if no file
+OK
+OK
 ls: cannot access 'tmp/parallel.file*': No such file or directory
-OK
 ls: tmp/parallel.file*: No such file or directory
-OK
 ### Test use special ssh
 tmp/parallel.file.
 newline1.out
@@ -70,10 +70,10 @@ newline2.out
 tmp/parallel.file.
 newline2.out2
 good if no file
+OK
+OK
 ls: cannot access 'tmp/parallel.file*': No such file or directory
-OK
 ls: tmp/parallel.file*: No such file or directory
-OK
 Input for ssh
 -l vagrant one-server -- exec mkdir -p ./.
 -l vagrant one-server rsync --server -lDrRze.iLsfxCIvu . ./.

@@ -264,22 +264,21 @@ from:tange@gnu.org
 to:parallel@gnu.org, bug-parallel@gnu.org
 stable-bcc: Jesse Alama <jessealama@fastmail.fm>
 
-Subject: GNU Parallel 20230722 ('French Riot/Nanterre/Приго́жин') released [stable]
+Subject: GNU Parallel 20230722 ('Приго́жин') released [stable]
 
-GNU Parallel 20230722 ('<<>>') has been released. It is available for download at: lbry://@GnuParallel:4
+GNU Parallel 20230722 ('Приго́жин') has been released. It is available for download at: lbry://@GnuParallel:4
 
 Quote of the month:
 
-  gnu parallel is actually like. really easy
-    -- tom (era) @slimefiend@twitter
+  GNU parallel is the greatest productivity hack of all time.
+    -- ashpool @solanobahn@twitter
+
 
 New in this release:
 
+* Time functions (e.g. yyyymmdd($secs) ) can now take secs since epoch as argument.
+
 * Bug fixes and man page updates.
-
-News about GNU Parallel:
-
-* Building an (Evil) Android Phone Bot Army http://blog.faucher.net/2023/05/building-evil-android-phone-bot-army.html
 
 GNU Parallel - For people who live life in the parallel lane.
 

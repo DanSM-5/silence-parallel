@@ -37,10 +37,13 @@ par_sshpass_with_password() {
 par_--ssh_ssh_in_ssh() {
     echo '### bug #61894: Pack ssh code in eval protection'
     echo Unquoted ssh should work
-    parallel --ssh 'ssh lo ssh' -S lo 'hostname;echo' ::: OK
-    parallel --ssh 'eval ssh lo ssh' -S lo 'hostname;echo' ::: OK
-    parallel --ssh 'eval ssh lo eval ssh' -S lo 'hostname;echo' ::: OK
-    parallel --ssh 'sshpass ssh bash@lo eval ssh' -S csh@lo 'hostname;echo' ::: OK
+    hostname=$(hostname)
+    (
+	parallel --ssh 'ssh -A lo ssh' -S lo 'hostname;echo' ::: OK
+	parallel --ssh 'eval ssh -A lo ssh' -S lo 'hostname;echo' ::: OK
+	parallel --ssh 'eval ssh -A lo eval ssh' -S lo 'hostname;echo' ::: OK
+	parallel --ssh 'sshpass ssh -A bash@lo eval ssh' -S csh@lo 'hostname;echo' ::: OK
+    ) | perl -pe "s/$hostname/myhostname/g"
 }
 
 par_stop_if_no_hosts_left() {

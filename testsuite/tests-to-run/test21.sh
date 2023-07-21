@@ -18,7 +18,7 @@ SSHLOGIN3=$SSHUSER3@$SERVER3
 #SERVER2=parallel-server2
 
 echo '### Test $PARALLEL - single line'
-echo | PARALLEL=--number-of-cpus parallel
+seq 300000 | PARALLEL='--pipe -k' parallel wc
 (echo 1; echo 1) | PARALLEL="-S$SSHLOGIN1 -Sssh\ -l\ $SSHUSER2\ $SERVER2 -j1" parallel -kv hostname\; echo | sort
 
 echo '### Test $PARALLEL - multi line'

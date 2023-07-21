@@ -16,8 +16,6 @@ par_END	include this
 par_END	include this
 par_END	include this
 par_END	include this
-par__keeporder_roundrobin	bug #50081: --keep-order --round-robin should give predictable results
-par__keeporder_roundrobin	OK
 par__load_from_PARALLEL	### Test reading load from PARALLEL
 par__load_from_PARALLEL	8a7095c1c23bfadc311fe6b16d950582  -
 par__load_from_PARALLEL	8a7095c1c23bfadc311fe6b16d950582  -
@@ -617,10 +615,10 @@ par_long_line_remote	### Deal with long command lines on remote servers
 par_long_line_remote	      1       6   30006
 par_long_line_remote	      6      50  250050
 par_maxlinelen_X_I	### Test max line length -X -I
-par_maxlinelen_X_I	a98747678a5d18c4470a073812437ab2  -
+par_maxlinelen_X_I	42d5c115907de0044ef988a0639204cd  -
 par_maxlinelen_X_I	Chars per line (817788/13): 62906
 par_maxlinelen_m_I	### Test max line length -m -I
-par_maxlinelen_m_I	a3c892de2524f32f78550b47336eadd0  -
+par_maxlinelen_m_I	2f0d9d11a071f5dbe6bd876a19499ff5  -
 par_maxlinelen_m_I	Chars per line (697810/11): 63437
 par_nice	Check that --nice works
 par_nice	load_10
@@ -704,53 +702,6 @@ par_opt_arg_eaten	2 OK
 par_opt_arg_eaten	3 OK
 par_opt_arg_eaten	4 OK
 par_opt_arg_eaten	5 OK
-par_perlexpr_repl	### {= and =} in different groups separated by space
-par_perlexpr_repl	b
-par_perlexpr_repl	b
-par_perlexpr_repl	bb
-par_perlexpr_repl	bb
-par_perlexpr_repl	b{= b
-par_perlexpr_repl	b{=b
-par_perlexpr_repl	b {=a
-par_perlexpr_repl	{=a
-par_perlexpr_repl	{= a
-par_perlexpr_repl	{= a =}
-par_perlexpr_repl	### bug #45842: Do not evaluate {= =} twice
-par_perlexpr_repl	1
-par_perlexpr_repl	2
-par_perlexpr_repl	3
-par_perlexpr_repl	4
-par_perlexpr_repl	1
-par_perlexpr_repl	2
-par_perlexpr_repl	3
-par_perlexpr_repl	4
-par_perlexpr_repl	1 2
-par_perlexpr_repl	3 4
-par_perlexpr_repl	5 6
-par_perlexpr_repl	7 8
-par_perlexpr_repl	9 10
-par_perlexpr_repl	11 12
-par_perlexpr_repl	13 14
-par_perlexpr_repl	15 16
-par_perlexpr_repl	17 18
-par_perlexpr_repl	19 20
-par_perlexpr_repl	21 22
-par_perlexpr_repl	23 24
-par_perlexpr_repl	1
-par_perlexpr_repl	2
-par_perlexpr_repl	3
-par_perlexpr_repl	4
-par_perlexpr_repl	5
-par_perlexpr_repl	6
-par_perlexpr_repl	7
-par_perlexpr_repl	8
-par_perlexpr_repl	9
-par_perlexpr_repl	10
-par_perlexpr_repl	11
-par_perlexpr_repl	12
-par_perlexpr_repl	### bug #45939: {2} in {= =} fails
-par_perlexpr_repl	OK
-par_perlexpr_repl	OK-OK
 par_pipe_line_buffer	### --pipe --line-buffer
 par_pipe_line_buffer	    200     400    1202
 par_pipe_line_buffer	These must diff: 1
@@ -791,7 +742,6 @@ par_quote_special_results	mkfs.btrfs	 ID SIZE PATH
 par_quote_special_results	mkfs.btrfs	 1 146.48MiB /dev/shm/par-test-loop
 par_quote_special_results	mkfs.btrfs	
 par_quote_special_results	mkfs.btrfs	Filesystem 1K-blocks Used Available Use% Mounted on
-par_quote_special_results	mkfs.btrfs	/dev/loop 150000 3616 67008 6% /tmp/par-test-loop
 par_quote_special_results	mkfs.btrfs	. ./++ ./++++ ./++_ ./++__ ./++m ./++z ./+_ ./+__ ./+m ./+z ./,. ./,..
 par_quote_special_results	mkfs.btrfs	
 par_quote_special_results	mkfs.btrfs	. ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./par_quote_special_results	mkfs.btrfs	 ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./! ./" ./# ./$ ./% ./& ./' ./( ./) ./* ./++ ./+_ ./+z ./, ./- ./0 ./1 ./2 ./3 ./4 ./5 ./6 ./7 ./8 ./9 ./: ./; ./< ./= ./> ./? ./@ ./A ./B ./C ./D ./E ./F ./G ./H ./I ./J ./K ./L ./M ./N ./O ./P ./Q ./R ./S ./T ./U ./V ./W ./X ./Y ./Z ./[ ./\ ./] ./^ ./_ ./` ./a ./b ./c ./d ./e ./f ./g ./h ./i ./j ./k ./l ./m ./n ./o ./p ./q ./r ./s ./t ./u ./v ./w ./x ./y ./z ./{ ./| ./} ./~ ./ ./Ä
@@ -983,8 +933,6 @@ par_quote_special_results	mkfs.f2fs	. ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ 
 par_quote_special_results	mkfs.f2fs	. ./Ä ./Å ./Ç ./É ./Ñ ./Ö ./Ü ./á ./à ./â ./ä ./ã ./å ./ç ./é ./è ./ê ./ë ./í ./ì ./î ./ï ./ñ ./ó ./ò ./ô ./ö ./õ ./ú ./ù ./û ./ü ./† ./° ./¢ ./£ ./§ ./• ./¶ ./ß ./® ./© ./™ ./´ ./¨ ./≠ ./Æ ./Ø ./∞ ./± ./≤ ./≥ ./¥ ./µ ./∂ ./∑ ./∏ ./π ./∫ ./ª ./º ./Ω ./æ ./ø ./¿ ./¡ ./¬ ./√ ./ƒ ./≈ ./∆ ./« ./» ./… ./  ./À ./Ã ./Õ ./Œ ./œ ./– ./— ./“ ./” ./‘ ./’ ./÷ ./◊ ./ÿ ./Ÿ ./⁄ ./€ ./‹ ./› ./ﬁ ./ﬂ ./‡ ./· ./‚ ./„ ./‰ ./Â ./Ê ./Á ./Ë ./È ./Í ./Î ./Ï ./Ì ./Ó ./Ô ./ ./Ò ./Ú ./Û ./Ù ./ı ./ˆ ./˜ ./¯ ./˘ ./˙ ./˚ ./¸ ./˝ ./˛ ./ˇ
 par_quote_special_results	mkfs.f2fs	150+0 records in
 par_quote_special_results	mkfs.f2fs	150+0 records out
-par_reload_slf_every_second	### --slf should reload every second
-par_reload_slf_every_second	OK
 par_results_csv	bug #: --results csv
 par_results_csv	--header : --tag --files0 --compress	Seq,Host,Starttime,JobRuntime,Send,Receive,Exitval,Signal,Command,H2,H1,Stdout,Stderr
 par_results_csv	--header : --tag --files0 --compress	1,:,999.999,999.999,0,15,0,0,"echo 22 11",22,11,"22 11	/TMP/tmpfile",
@@ -1224,13 +1172,26 @@ par_shellquote	tcsh	\\\\\\\\	"\
 par_shellquote	tcsh	"\\\par_shellquote	tcsh	\\\\\\\\\\\\\\ \!\"\#\$%\&\'\(\)\*+,-./0123456789:\;\<\=\>\?@ABCDEFGHIJKLMNOPQRSTUVWXYZ\[\\\]\^_\`abcdefghijklmnopqrstuvwxyz\{\|\}\~ÄÅ\Ç\É\Ñ\Ö\Ü\á\à\â\ä\ã\å\ç\é\è\ê\ë\í\ì\î\ï\ñ\ó\ò\ô\ö\õ\ú\ù\û\ü\†\°\¢\£\§\•\¶\ß\®\©\™\´\¨\≠\Æ\Ø\∞\±\≤\≥\¥\µ\∂\∑\∏\π\∫\ª\º\Ω\æ\ø\¿\¡\¬\√\ƒ\≈\∆\«\»\…\ \À\Ã\Õ\Œ\œ\–\—\“\”\‘\’\÷\◊\ÿ\Ÿ\⁄\€\‹\›\ﬁ\ﬂ\‡\·\‚\„\‰\Â\Ê\Á\Ë\È\Í\Î\Ï\Ì\Ó\Ô\\Ò\Ú\Û\Ù\ı\ˆ\˜\¯\˘\˙\˚\¸\˝\˛\ˇ
 par_sockets_cores_threads	### Test --number-of-sockets/cores/threads
 par_sockets_cores_threads	1
+par_sockets_cores_threads	2
 par_sockets_cores_threads	4
-par_sockets_cores_threads	8
-par_sockets_cores_threads	4
+par_sockets_cores_threads	2
 par_sockets_cores_threads	### Test --use-sockets-instead-of-threads
 par_sockets_cores_threads	threads done
 par_sockets_cores_threads	sockets done
 par_sockets_cores_threads	Threads should complete first on machines with less than 8 sockets
+par_tee_too_many_args	### Fail if there are more arguments than --jobs
+par_tee_too_many_args	1	1
+par_tee_too_many_args	1	10
+par_tee_too_many_args	1	11
+par_tee_too_many_args	2	2
+par_tee_too_many_args	3	3
+par_tee_too_many_args	4	4
+par_tee_too_many_args	parallel: Warning: Only enough file handles to run 999 jobs in parallel.
+par_tee_too_many_args	parallel: Warning: Try running 'parallel -j999 -N 999 --pipe parallel -j999'
+par_tee_too_many_args	parallel: Warning: or increasing 'ulimit -n' (try: ulimit -n `ulimit -Hn`)
+par_tee_too_many_args	parallel: Warning: or increasing 'nofile' in /etc/security/limits.conf
+par_tee_too_many_args	parallel: Warning: or increasing /proc/sys/fs/file-max
+par_tee_too_many_args	parallel: Error: --tee requires --jobs to be higher. Try --jobs 999.
 par_tmp_full	### Test --tmpdir running full. bug #40733 was caused by this
 par_tmp_full	parallel: Error: Output is incomplete.
 par_tmp_full	parallel: Error: Cannot append to buffer file in /tmp/shm/parallel.
@@ -1313,7 +1274,7 @@ par_xargs_compat	a_b c
 par_xargs_compat	d
 par_xargs_compat	e
 par_xargs_compat	### test too long args
-par_xargs_compat	parallel: Error: Command line too long (1000005 >= 63664) at input 0: zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz...
+par_xargs_compat	parallel: Error: Command line too long (1000005 >= 64031) at input 0: zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz...
 par_xargs_compat	xargs: argument line too long
 par_xargs_compat	parallel: Error: Command line too long (1000007 >= 10) at input 0: zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz...
 par_xargs_compat	1 2

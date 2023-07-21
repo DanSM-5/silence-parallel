@@ -1,6 +1,6 @@
 par_10000_m_X	### Test -m with 10000 args
 par_10000_m_X	      3   29994  186685
-par_10000_m_X	5642f8f374aa4881e96f4f49e932d109  -
+par_10000_m_X	68c56110ece48d4cd34af322ea65ebaf  -
 par_X_I_meta	### Test -X -I with shell meta chars
 par_X_I_meta	3
 par_X_I_meta	3
@@ -155,19 +155,6 @@ par__prefix_for_L_n_N_s	244
 par__prefix_for_L_n_N_s	246
 par__prefix_for_L_n_N_s	246
 par__prefix_for_L_n_N_s	273
-par__tee_too_many_args	### Fail if there are more arguments than --jobs
-par__tee_too_many_args	1	1
-par__tee_too_many_args	1	10
-par__tee_too_many_args	1	11
-par__tee_too_many_args	2	2
-par__tee_too_many_args	3	3
-par__tee_too_many_args	4	4
-par__tee_too_many_args	parallel: Warning: Only enough file handles to run 999 jobs in parallel.
-par__tee_too_many_args	parallel: Warning: Try running 'parallel -j999 -N 999 --pipe parallel -j999'
-par__tee_too_many_args	parallel: Warning: or increasing 'ulimit -n' (try: ulimit -n `ulimit -Hn`)
-par__tee_too_many_args	parallel: Warning: or increasing 'nofile' in /etc/security/limits.conf
-par__tee_too_many_args	parallel: Warning: or increasing /proc/sys/fs/file-max
-par__tee_too_many_args	parallel: Error: --tee requires --jobs to be higher. Try --jobs 999.
 par_children_receive_sig	### Do children receive --termseq signals
 par_children_receive_sig	parallel: Warning: This job was killed because it timed out:
 par_children_receive_sig	parallel: Warning: show_signals ''
@@ -244,7 +231,7 @@ par_eta	16
 par_eta	### Test of --eta with no jobs
 par_eta	
 par_eta	Computers / CPU cores / Max jobs to run
-par_eta	1:local / 8 / 8
+par_eta	1:local / 9 / 9
 par_eta	par_eta	ETA: 0s Left: 0 AVG: 0.00s  0
 par_exitval_signal	### Test --joblog with exitval and Test --joblog with signal -- timing dependent
 par_exitval_signal	exitval=128+6 OK
@@ -679,7 +666,7 @@ par_progress	16
 par_progress	### Test of --progress with no jobs
 par_progress	
 par_progress	Computers / CPU cores / Max jobs to run
-par_progress	1:local / 8 / 8
+par_progress	1:local / 9 / 9
 par_progress	par_progress	0
 par_replacement_slashslash	### Test {//}
 par_replacement_slashslash	. a
@@ -743,7 +730,7 @@ par_shebang	r	[1] "B"
 par_shebang	r	[1] "C"
 par_show_limits	### Test --show-limits
 par_show_limits	Maximal size of command: 130xxx
-par_show_limits	Maximal usable size of command: 63xxx
+par_show_limits	Maximal usable size of command: 64xxx
 par_show_limits	
 par_show_limits	Execution will continue now, and it will try to read its input
 par_show_limits	and run commands; if this is not what you wanted to happen, please
@@ -760,7 +747,7 @@ par_show_limits	press CTRL-D or CTRL-C
 par_show_limits	bar car far
 par_show_limits	### BUG: empty lines with --show-limit
 par_show_limits	Maximal size of command: 130xxx
-par_show_limits	Maximal usable size of command: 63xxx
+par_show_limits	Maximal usable size of command: 64xxx
 par_show_limits	
 par_show_limits	Execution will continue now, and it will try to read its input
 par_show_limits	and run commands; if this is not what you wanted to happen, please

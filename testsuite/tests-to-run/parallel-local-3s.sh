@@ -10,11 +10,11 @@
 
 par_process_slot_var() {
     echo '### bug #62310: xargs compatibility: --process-slot-var=name'
-    seq 0.1 0.3 1.5 |
+    seq 0.1 0.4 1.8 |
 	parallel -n1 -kP4 --process-slot-var=name -q bash -c 'sleep $1; echo "$name"' _
-    seq 0.1 0.3 1.5 |
+    seq 0.1 0.4 1.8 |
 	xargs -n1 -P4 --process-slot-var=name bash -c 'sleep $1; echo "$name"' _
-    seq 0.1 0.3 1.5 |
+    seq 0.1 0.4 1.8 |
 	parallel -kP4 --process-slot-var=name sleep {}\; echo '$name'
 }
 
@@ -374,7 +374,8 @@ par_eta() {
     seq 1 10 | stdout parallel --eta "sleep 1; echo {}" | wc -l
 
     echo '### Test of --eta with no jobs'
-    stdout parallel --eta "sleep 1; echo {}" < /dev/null
+    stdout parallel --eta "sleep 1; echo {}" < /dev/null |
+	perl -pe 's,1:local / \d / \d,1:local / 9 / 9,'
 }
 
 par_progress() {
@@ -382,7 +383,8 @@ par_progress() {
     seq 1 10 | stdout parallel --progress "sleep 1; echo {}" | wc -l
 
     echo '### Test of --progress with no jobs'
-    stdout parallel --progress "sleep 1; echo {}" < /dev/null
+    stdout parallel --progress "sleep 1; echo {}" < /dev/null |
+	perl -pe 's,1:local / \d / \d,1:local / 9 / 9,'
 }
 
 par_tee_with_premature_close() {
@@ -415,17 +417,6 @@ par_tee_with_premature_close() {
     fi
     rm "$tmpdir"/tee
     rmdir "$tmpdir"
-}
-
-par__tee_too_many_args() {
-    echo '### Fail if there are more arguments than --jobs'
-    seq 11 | stdout parallel -k --tag --pipe -j4 --tee grep {} ::: {1..4}
-    tmp=`mktemp`
-    seq 11 | parallel -k --tag --pipe -j0 --tee grep {} ::: {1..10000} 2> "$tmp"
-    cat "$tmp" | perl -pe 's/\d+/999/g' |
-	grep -v 'Warning: Starting' |
-	grep -v 'Warning: Consider'
-    rm "$tmp"
 }
 
 par_maxargs() {
@@ -574,7 +565,8 @@ echo finish {}' ::: 1 2 4
 
 par_sqlworker_hostname() {
     echo 'bug #50901: --sqlworker should use hostname in the joblog instead of :'
-
+    # Something like:
+    #   :mysqlunittest mysql://tange:tange@localhost/tange
     MY=:mysqlunittest
     parallel --sqlmaster $MY/hostname echo ::: 1 2 3
     parallel -k --sqlworker $MY/hostname

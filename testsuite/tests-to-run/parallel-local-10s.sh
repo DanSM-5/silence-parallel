@@ -8,6 +8,17 @@
 # Each should be taking 10-30s and be possible to run in parallel
 # I.e.: No race conditions, no logins
 
+par_tee_too_many_args() {
+    echo '### Fail if there are more arguments than --jobs'
+    seq 11 | stdout parallel -k --tag --pipe -j4 --tee grep {} ::: {1..4}
+    tmp=`mktemp`
+    seq 11 | parallel -k --tag --pipe -j0 --tee grep {} ::: {1..10000} 2> "$tmp"
+    cat "$tmp" | perl -pe 's/\d+/999/g' |
+	grep -v 'Warning: Starting' |
+	grep -v 'Warning: Consider'
+    rm "$tmp"
+}
+
 par_retries_0() {
     echo '--retries 0 = inf'
     echo this wraps at 256 and should retry until it wraps
@@ -44,36 +55,6 @@ par__print_in_blocks() {
 	median
 }
 
-par__keeporder_roundrobin() {
-    echo 'bug #50081: --keep-order --round-robin should give predictable results'
-    . `which env_parallel.bash`
-
-    run_roundrobin() {
-	random1G() {
-	    < /dev/zero openssl enc -aes-128-ctr -K 1234 -iv 1234 2>/dev/null |
-		head -c 1G;
-	}
-        random1G |
-	    parallel $1 -j13 --block 1m --pipe --roundrobin 'echo {#} $(md5sum)' |
-	    sort
-    }
-    env_parset a,b,c run_roundrobin ::: -k -k ''
-
-    if [ "$a" == "$b" ] ; then
-	# Good: -k should be == -k
-	if [ "$a" == "$c" ] ; then
-	    # Bad: without -k the command should give different output
-	    echo 'Broken: a == c'
-	    printf "$a\n$b\n$c\n"
-	else
-	    echo OK
-	fi
-    else
-	echo 'Broken: a <> b'
-	printf "$a\n$b\n$c\n"
-    fi
-}
-
 par__load_from_PARALLEL() {
     echo "### Test reading load from PARALLEL"
     export PARALLEL="--load 300%"
@@ -88,6 +69,7 @@ par__load_from_PARALLEL() {
 
 par_quote_special_results() {
     echo "### Test --results on file systems with limited UTF8 support"
+    export LC_ALL=C
     doit() {
 	mkfs=$1
 	img=$(mktemp /dev/shm/par-test-loop-XXXX.img)
@@ -115,12 +97,12 @@ par_quote_special_results() {
 	rm "$img"
     }
     export -f doit
-    stdout parallel -k --tag --plus doit ::: \
+    stdout parallel --timeout 1000% -k --tag --plus doit ::: \
 	   mkfs.btrfs mkfs.exfat mkfs.ext2 mkfs.ext3 mkfs.ext4 \
            "mkfs.reiserfs -fq" "mkfs.ntfs -F" "mkfs.xfs -f" mkfs.minix \
 	   mkfs.fat mkfs.vfat mkfs.msdos mkfs.f2fs |
 	perl -pe 's:(/dev/loop|par-test-loop)\S+:$1:g;s/ +/ /g' |
-	G --v MB/s GB/s UUID Binutils
+	G -v MB/s -v GB/s -v UUID -v Binutils -v 150000
     # Skip:
     #   mkfs.bfs - ro
     #   mkfs.cramfs - ro
@@ -157,23 +139,6 @@ par_ll_color_long_line() {
 	perl -ne 's/.\[A//g;
 		  /.\[K .{4}\[m/ and next;
                   /\S/ && print'| sort -u
-}
-
-par_reload_slf_every_second() {
-    echo "### --slf should reload every second"
-    tmp=$(mktemp)
-    echo 1/lo >"$tmp"
-    (
-	sleep 3
-	(echo 1/localhost
-	 echo 1/127.0.0.1) >>"$tmp"
-    ) &
-    # This used to take 20 seconds (version 20220322) because the
-    # updated --slf would only read after first job finished
-    seq 3 |
-	stdout /usr/bin/time -f %e parallel --slf "$tmp" 'true {};sleep 10' |
-        perl -ne '$_ < 20 and print "OK\n"'
-    rm "$tmp"
 }
 
 par_load_blocks() {
@@ -352,30 +317,6 @@ par_fifo_under_csh() {
     doit
     TMPDIR=/tmp
     doit
-}
-
-par_perlexpr_repl() {
-    echo '### {= and =} in different groups separated by space'
-    parallel echo {= s/a/b/ =} ::: a
-    parallel echo {= s/a/b/=} ::: a
-    parallel echo {= s/a/b/=}{= s/a/b/=} ::: a
-    parallel echo {= s/a/b/=}{=s/a/b/=} ::: a
-    parallel echo {= s/a/b/=}{= {= s/a/b/=} ::: a
-    parallel echo {= s/a/b/=}{={=s/a/b/=} ::: a
-    parallel echo {= s/a/b/ =} {={==} ::: a
-    parallel echo {={= =} ::: a
-    parallel echo {= {= =} ::: a
-    parallel echo {= {= =} =} ::: a
-
-    echo '### bug #45842: Do not evaluate {= =} twice'
-    parallel -k echo '{=  $_=++$::G =}' ::: {1001..1004}
-    parallel -k echo '{=1 $_=++$::G =}' ::: {1001..1004}
-    parallel -k echo '{=  $_=++$::G =}' ::: {1001..1004} ::: {a..c}
-    parallel -k echo '{=1 $_=++$::G =}' ::: {1001..1004} ::: {a..c}
-
-    echo '### bug #45939: {2} in {= =} fails'
-    parallel echo '{= s/O{2}//=}' ::: OOOK
-    parallel echo '{2}-{=1 s/O{2}//=}' ::: OOOK ::: OK
 }
 
 par_END() {

@@ -31,13 +31,13 @@ par_--onall_--transfer	ls: cannot access 'bug46519.cc': No such file or director
 par_--onall_--transfer	ls: cannot access 'bug46519.ccc': No such file or directory
 par_--ssh_ssh_in_ssh	### bug #61894: Pack ssh code in eval protection
 par_--ssh_ssh_in_ssh	Unquoted ssh should work
-par_--ssh_ssh_in_ssh	aspire
+par_--ssh_ssh_in_ssh	myhostname
 par_--ssh_ssh_in_ssh	OK
-par_--ssh_ssh_in_ssh	aspire
+par_--ssh_ssh_in_ssh	myhostname
 par_--ssh_ssh_in_ssh	OK
-par_--ssh_ssh_in_ssh	aspire
+par_--ssh_ssh_in_ssh	myhostname
 par_--ssh_ssh_in_ssh	OK
-par_--ssh_ssh_in_ssh	aspire
+par_--ssh_ssh_in_ssh	myhostname
 par_--ssh_ssh_in_ssh	OK
 par_PARALLEL_SSH_function	### use function as $PARALLEL_SSH
 par_PARALLEL_SSH_function	Run through FOOSSH?

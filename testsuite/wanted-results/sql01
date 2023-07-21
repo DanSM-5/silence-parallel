@@ -1,93 +1,93 @@
-### Test of #! -Y with file as input
-Testing if -Y works
-Yes it does
-### Test of #! --shebang with file as input
-Testing if --shebang works
-Yes it does
-### Test reading sql on command line
-Test reading SQL from command line
-Yes it does
-### Test reading sql from file
-Test reading SQL from file works
-Yes it does
-### Test dburl with username password host port
-Test reading SQL from file works
-Yes it does
-### Test .sql/aliases
-Test if .sql/aliases works
-Yes it does
-### Test sql:sql::alias
-Test sql:sql::alias
-Yes it works
-### Test --noheaders --no-headers -n
-abc 1
-def 3
-abc 1
-def 3
-abc 1
-def 3
-### Test --sep -s
-2 1
-2 1
-### Test --passthrough -p
-<TABLE BORDER=1><TR><TH>id</TH><TH>data</TH></TR><TR><TD>1</TD><TD>abc</TD></TR><TR><TD>3</TD><TD>def</TD></TR></TABLE>
-<TABLE BORDER=1><TR><TH>id</TH><TH>data</TH></TR><TR><TD>1</TD><TD>abc</TD></TR><TR><TD>3</TD><TD>def</TD></TR></TABLE>
-### Test --html
-<TABLE BORDER=1><TR><TH>id</TH><TH>data</TH></TR><TR><TD>1</TD><TD>abc</TD></TR><TR><TD>3</TD><TD>def</TD></TR></TABLE>
-### Test --show-processlist|proclist|listproc
-      2      17
-      2      17
-      2      17
-### Test --db-size --dbsize
-6
-6
-### Test --table-size --tablesize
-90
-90
-### Test --debug
-dburl mysql://tange:tange@localhost:3306/tange
-databasedriver mysql user tange password tange host localhost port 3306 database tange query 
-[ | ((sleep 1; rm /TMP/tmpfile') & mysql --defaults-extra-file=/TMP/tmpfile'     --host=localhost --user=tange --port=3306 tange)]
-Test if --debug works
-Yes it does
-### Test --version -V
-     13      74     535
-     13      74     535
-### Test -r
-dburl pg://nongood@127.0.0.3:2227/
-databasedriver pg user nongood password  host 127.0.0.3 port 2227 database nongood query 
-[ |   psql     -h 127.0.0.3 -U nongood -p 2227 -d nongood]
-psql: error: connection to server at "127.0.0.3", port 2227 failed: Connection refused
-	Is the server running on that host and accepting TCP/IP connections?
-[ |   psql     -h 127.0.0.3 -U nongood -p 2227 -d nongood]
-psql: error: connection to server at "127.0.0.3", port 2227 failed: Connection refused
-	Is the server running on that host and accepting TCP/IP connections?
-[ |   psql     -h 127.0.0.3 -U nongood -p 2227 -d nongood]
-psql: error: connection to server at "127.0.0.3", port 2227 failed: Connection refused
-	Is the server running on that host and accepting TCP/IP connections?
-### Test --retries=s
-dburl pg://nongood@127.0.0.3:2227/
-databasedriver pg user nongood password  host 127.0.0.3 port 2227 database nongood query 
-[ |   psql     -h 127.0.0.3 -U nongood -p 2227 -d nongood]
-psql: error: connection to server at "127.0.0.3", port 2227 failed: Connection refused
-	Is the server running on that host and accepting TCP/IP connections?
-[ |   psql     -h 127.0.0.3 -U nongood -p 2227 -d nongood]
-psql: error: connection to server at "127.0.0.3", port 2227 failed: Connection refused
-	Is the server running on that host and accepting TCP/IP connections?
-[ |   psql     -h 127.0.0.3 -U nongood -p 2227 -d nongood]
-psql: error: connection to server at "127.0.0.3", port 2227 failed: Connection refused
-	Is the server running on that host and accepting TCP/IP connections?
-[ |   psql     -h 127.0.0.3 -U nongood -p 2227 -d nongood]
-psql: error: connection to server at "127.0.0.3", port 2227 failed: Connection refused
-	Is the server running on that host and accepting TCP/IP connections?
-### Test --help -h
-Usage:
-sql [options] dburl [sqlcommand]
-sql [options] dburl < sql_command_file
-
-See 'man sql' for the options
-Usage:
-sql [options] dburl [sqlcommand]
-sql [options] dburl < sql_command_file
-
-See 'man sql' for the options
+par_--debug	### Test --debug
+par_--debug	dburl mysql://tange:tange@/
+par_--debug	databasedriver mysql user tange password tange host  port  database tange query 
+par_--debug	[ | ((sleep 1; rm /TMP/tmpfile') & mysql --defaults-extra-file=/TMP/tmpfile'      --user=tange  tange)]
+par_--debug	Test if --debug works
+par_--debug	Yes it does
+par_--help	### Test --help -h
+par_--help	Usage:
+par_--help	sql [options] dburl [sqlcommand]
+par_--help	sql [options] dburl < sql_command_file
+par_--help	
+par_--help	See 'man sql' for the options
+par_--help	Usage:
+par_--help	sql [options] dburl [sqlcommand]
+par_--help	sql [options] dburl < sql_command_file
+par_--help	
+par_--help	See 'man sql' for the options
+par_--html	### Test --html
+par_--html	<TABLE BORDER=1><TR><TH>id</TH><TH>data</TH></TR><TR><TD>1</TD><TD>abc</TD></TR><TR><TD>3</TD><TD>def</TD></TR></TABLE>
+par_--passthrough	### Test --passthrough -p
+par_--passthrough	<TABLE BORDER=1><TR><TH>id</TH><TH>data</TH></TR><TR><TD>1</TD><TD>abc</TD></TR><TR><TD>3</TD><TD>def</TD></TR></TABLE>
+par_--passthrough	<TABLE BORDER=1><TR><TH>id</TH><TH>data</TH></TR><TR><TD>1</TD><TD>abc</TD></TR><TR><TD>3</TD><TD>def</TD></TR></TABLE>
+par_--retries	### Test --retries=s
+par_--retries	dburl pg://nongood@127.0.0.3:2227/
+par_--retries	databasedriver pg user nongood password  host 127.0.0.3 port 2227 database nongood query 
+par_--retries	[ |   psql     -h 127.0.0.3 -U nongood -p 2227 -d nongood]
+par_--retries	psql: error: connection to server at "127.0.0.3", port 2227 failed: Connection refused
+par_--retries		Is the server running on that host and accepting TCP/IP connections?
+par_--retries	[ |   psql     -h 127.0.0.3 -U nongood -p 2227 -d nongood]
+par_--retries	psql: error: connection to server at "127.0.0.3", port 2227 failed: Connection refused
+par_--retries		Is the server running on that host and accepting TCP/IP connections?
+par_--retries	[ |   psql     -h 127.0.0.3 -U nongood -p 2227 -d nongood]
+par_--retries	psql: error: connection to server at "127.0.0.3", port 2227 failed: Connection refused
+par_--retries		Is the server running on that host and accepting TCP/IP connections?
+par_--retries	[ |   psql     -h 127.0.0.3 -U nongood -p 2227 -d nongood]
+par_--retries	psql: error: connection to server at "127.0.0.3", port 2227 failed: Connection refused
+par_--retries		Is the server running on that host and accepting TCP/IP connections?
+par_--sep	### Test --sep -s
+par_--sep	2 1
+par_--sep	2 1
+par_-_version	### Test --version -V
+par_-_version	     13      74     535
+par_-_version	     13      74     535
+par_-r	### Test -r - retry 3 times
+par_-r	dburl pg://nongood@127.0.0.3:2227/
+par_-r	databasedriver pg user nongood password  host 127.0.0.3 port 2227 database nongood query 
+par_-r	[ |   psql     -h 127.0.0.3 -U nongood -p 2227 -d nongood]
+par_-r	psql: error: connection to server at "127.0.0.3", port 2227 failed: Connection refused
+par_-r		Is the server running on that host and accepting TCP/IP connections?
+par_-r	[ |   psql     -h 127.0.0.3 -U nongood -p 2227 -d nongood]
+par_-r	psql: error: connection to server at "127.0.0.3", port 2227 failed: Connection refused
+par_-r		Is the server running on that host and accepting TCP/IP connections?
+par_-r	[ |   psql     -h 127.0.0.3 -U nongood -p 2227 -d nongood]
+par_-r	psql: error: connection to server at "127.0.0.3", port 2227 failed: Connection refused
+par_-r		Is the server running on that host and accepting TCP/IP connections?
+par_dbsize	### Test --db-size --dbsize
+par_dbsize	6
+par_dbsize	6
+par_dburl_user_password_host_port	### Test dburl with username password host port
+par_dburl_user_password_host_port	Test dburl with username password host port
+par_dburl_user_password_host_port	OK
+par_listproc	### Test --show-processlist|proclist|listproc
+par_listproc	      3      34
+par_listproc	      2      17
+par_listproc	      2      17
+par_noheaders	### Test --noheaders --no-headers -n
+par_noheaders	abc 1
+par_noheaders	def 3
+par_noheaders	abc 1
+par_noheaders	def 3
+par_noheaders	abc 1
+par_noheaders	def 3
+par_read_sql_from_file	### Test reading sql from file
+par_read_sql_from_file	Test reading SQL from file works
+par_read_sql_from_file	Yes it does
+par_shebang-Y	### Test of #! -Y with file as input
+par_shebang-Y	Testing if -Y works
+par_shebang-Y	Yes it does
+par_shebang_file	### Test of #! --shebang with file as input
+par_shebang_file	Testing if --shebang works
+par_shebang_file	Yes it does
+par_sql_aliases	### Test .sql/aliases
+par_sql_aliases	Test if .sql/aliases works
+par_sql_aliases	Yes it does
+par_sql_aliases	### Test sql:sql::alias
+par_sql_aliases	Test sql:sql::alias
+par_sql_aliases	Yes it works
+par_sql_on_cmdline	### Test reading sql on command line
+par_sql_on_cmdline	Test reading SQL from command line
+par_sql_on_cmdline	Yes it does
+par_tablesize	### Test --table-size --tablesize
+par_tablesize	94
+par_tablesize	94

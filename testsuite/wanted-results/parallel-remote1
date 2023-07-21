@@ -1,13 +1,16 @@
+par__filter_hosts_different_errors	### --filter-hosts - OK, non-such-user, connection refused, wrong host
+par__filter_hosts_different_errors	myhostname
+par__filter_hosts_no_ssh_nxserver	### test --filter-hosts with server w/o ssh, non-existing server
+par__filter_hosts_no_ssh_nxserver	vagrant@parallel-server1	
+par__filter_hosts_no_ssh_nxserver	vagrant@parallel-server2	
+par__filter_hosts_no_ssh_nxserver	vagrant@parallel-server3	
 par_controlmaster_is_faster	### bug #41964: --controlmaster not seems to reuse OpenSSH connections to the same host
 par_controlmaster_is_faster	-M should finish first - eventhough there are 2x jobs
 par_controlmaster_is_faster	With --controlmaster - finish first
 par_controlmaster_is_faster	No --controlmaster - finish last
-par_filter_hosts_different_errors	### --filter-hosts - OK, non-such-user, connection refused, wrong host
-par_filter_hosts_different_errors	aspire
-par_filter_hosts_no_ssh_nxserver	### test --filter-hosts with server w/o ssh, non-existing server
-par_filter_hosts_no_ssh_nxserver	vagrant@parallel-server1	
-par_filter_hosts_no_ssh_nxserver	vagrant@parallel-server3	
-par_filter_hosts_no_ssh_nxserver	vagrant@parallel-server4	
+par_force_number_of_cpu	### Check forced number of CPUs being respected
+par_force_number_of_cpu	7
+par_force_number_of_cpu	13
 par_special_ssh	### Test use special ssh
 par_special_ssh	TODO test ssh with > 9 simultaneous
 par_special_ssh	1
@@ -111,15 +114,11 @@ par_special_ssh	98
 par_special_ssh	99
 par_special_ssh	100
 par_timeout_retries	### test --timeout --retries
-par_timeout_retries	ssh: connect to host 192.168.1.197 port 22: No route to hostpar_timeout_retries	
 par_timeout_retries	parallel: Warning: This job was killed because it timed out:
-par_timeout_retries	parallel: Warning: ssh 8.8.8.8 echo 8.8.8.8
-par_timeout_retries	parallel: Warning: This job was killed because it timed out:
-par_timeout_retries	parallel: Warning: ssh 8.8.8.8 echo 8.8.8.8
-par_timeout_retries	parallel: Warning: This job was killed because it timed out:
+par_timeout_retries	parallel: Warning: ssh 192.168.1.197 echo 192.168.1.197
 par_timeout_retries	parallel: Warning: ssh 8.8.8.8 echo 8.8.8.8
 par_timeout_retries	vagrant@parallel-server1
-par_timeout_retries	vagrant@parallel-server4
+par_timeout_retries	vagrant@parallel-server2
 par_timeout_retries	vagrant@parallel-server3
 par_workdir_in_HOME	### test --workdir . in $HOME
 par_workdir_in_HOME	OK

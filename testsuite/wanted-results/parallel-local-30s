@@ -1525,6 +1525,8 @@ par__groupby_pipepart	csv , s/^(\d+[\t ,]+){2}(\d+).*/$2/	NewRec
 par__groupby_pipepart	csv , s/^(\d+[\t ,]+){2}(\d+).*/$2/	  90001   90001 1170031
 par__groupby_pipepart	csv , s/^(\d+[\t ,]+){2}(\d+).*/$2/	NewRec
 par__groupby_pipepart	csv , s/^(\d+[\t ,]+){2}(\d+).*/$2/	  90001   90001 1170031
+par__keeporder_roundrobin	bug #50081: --keep-order --round-robin should give predictable results
+par__keeporder_roundrobin	OK
 par__memory_leak	### Test for memory leaks
 par__memory_leak	Of 300 runs of 1 job at least one should be bigger than a 3000 job run
 par__memory_leak	Good: No memleak detected.
@@ -1625,22 +1627,17 @@ par_bin	      0       0       0
 par_bin	      5      10      21
 par_bin	      5      10      21
 par_bin	### Blocks in version 20220122
-par_bin	      0       0       0
-par_bin	      0       0       0
-par_bin	      0       0       0
-par_bin	      0       0       0
-par_bin	      0       0       0
-par_bin	      0       0       0
-par_bin	      0       0       0
-par_bin	      1       1       3
-par_bin	      1       2       4
-par_bin	      1       2       4
-par_bin	      1       2       4
-par_bin	      1       2       4
-par_bin	      1       2       4
-par_bin	      1       2       4
-par_bin	      2       4       9
-par_bin	      2       4       9
+par_bin	10
+par_bin	1	10
+par_bin	10	1
+par_bin	2	9
+par_bin	3	8
+par_bin	4	7
+par_bin	5	6
+par_bin	6	5
+par_bin	7	4
+par_bin	8	3
+par_bin	9	2
 par_exit_code	bug #52207: Exit status 0 when child job is killed, even with "now,fail=1"
 par_exit_code	# Ideally the command should return the same
 par_exit_code	#   with or without parallel
@@ -2728,8 +2725,8 @@ par_macron	¯<¯<¯>¯> -X	¯<¯<¯>¯> ¯<¯<¯>¯>
 par_macron	¯<¯<¯>¯> -X	¯<¯<¯>¯>¯<¯<¯>¯>
 par_macron	¯<¯<¯>¯> -X	/usr/bin/bash: -c: line 1: syntax error near unexpected token `newline'
 par_macron	¯<¯<¯>¯> -X	/usr/bin/bash: -c: line 1: `echo ¯<¯<¯>¯>'
-par_macron	¯<¯<¯>¯> -X	/usr/bin/bash: line 1: ¯: No such file or directory
-par_macron	¯<¯<¯>¯> -X	/usr/bin/bash: line 1: ¯: No such file or directory
+par_macron	¯<¯<¯>¯> -X	/usr/bin/bash: line 1: ¯: Invalid or incomplete multibyte or wide character
+par_macron	¯<¯<¯>¯> -X	/usr/bin/bash: line 1: ¯: Invalid or incomplete multibyte or wide character
 par_macron	¯<¯<¯>¯> -q	¯<¯<¯>¯>
 par_macron	¯<¯<¯>¯> -q	¯<¯<¯>¯> ¯<¯<¯>¯>
 par_macron	¯<¯<¯>¯> -q	"¯<¯<¯>¯>" ¯<¯<¯>¯>
@@ -2747,15 +2744,15 @@ par_macron	¯<¯<¯>¯> -k	¯<¯<¯>¯> ¯<¯<¯>¯>
 par_macron	¯<¯<¯>¯> -k	¯<¯<¯>¯>¯<¯<¯>¯>
 par_macron	¯<¯<¯>¯> -k	/usr/bin/bash: -c: line 1: syntax error near unexpected token `newline'
 par_macron	¯<¯<¯>¯> -k	/usr/bin/bash: -c: line 1: `echo ¯<¯<¯>¯>'
-par_macron	¯<¯<¯>¯> -k	/usr/bin/bash: line 1: ¯: No such file or directory
-par_macron	¯<¯<¯>¯> -k	/usr/bin/bash: line 1: ¯: No such file or directory
+par_macron	¯<¯<¯>¯> -k	/usr/bin/bash: line 1: ¯: Invalid or incomplete multibyte or wide character
+par_macron	¯<¯<¯>¯> -k	/usr/bin/bash: line 1: ¯: Invalid or incomplete multibyte or wide character
 par_max_length_len_128k	### BUG: The length for -X is not close to max (131072)
-par_max_length_len_128k	63xxx
-par_max_length_len_128k	63xxx
-par_max_length_len_128k	63xxx
-par_max_length_len_128k	63xxx
-par_max_length_len_128k	63xxx
-par_max_length_len_128k	63xxx
+par_max_length_len_128k	64xxx
+par_max_length_len_128k	64xxx
+par_max_length_len_128k	64xxx
+par_max_length_len_128k	64xxx
+par_max_length_len_128k	64xxx
+par_max_length_len_128k	64xxx
 par_memfree	### test memfree - it should be killed by timeout
 par_memfree	Free mem: 1k
 par_memfree	parallel: Warning: This job was killed because it timed out:
@@ -2777,6 +2774,53 @@ par_no_newline_compress	tagstring=-k compress=-k
 par_no_newline_compress	OK
 par_no_newline_compress	tagstring=-k compress=-k
 par_no_newline_compress	OK
+par_perlexpr_repl	### {= and =} in different groups separated by space
+par_perlexpr_repl	b
+par_perlexpr_repl	b
+par_perlexpr_repl	bb
+par_perlexpr_repl	bb
+par_perlexpr_repl	b{= b
+par_perlexpr_repl	b{=b
+par_perlexpr_repl	b {=a
+par_perlexpr_repl	{=a
+par_perlexpr_repl	{= a
+par_perlexpr_repl	{= a =}
+par_perlexpr_repl	### bug #45842: Do not evaluate {= =} twice
+par_perlexpr_repl	1
+par_perlexpr_repl	2
+par_perlexpr_repl	3
+par_perlexpr_repl	4
+par_perlexpr_repl	1
+par_perlexpr_repl	2
+par_perlexpr_repl	3
+par_perlexpr_repl	4
+par_perlexpr_repl	1 2
+par_perlexpr_repl	3 4
+par_perlexpr_repl	5 6
+par_perlexpr_repl	7 8
+par_perlexpr_repl	9 10
+par_perlexpr_repl	11 12
+par_perlexpr_repl	13 14
+par_perlexpr_repl	15 16
+par_perlexpr_repl	17 18
+par_perlexpr_repl	19 20
+par_perlexpr_repl	21 22
+par_perlexpr_repl	23 24
+par_perlexpr_repl	1
+par_perlexpr_repl	2
+par_perlexpr_repl	3
+par_perlexpr_repl	4
+par_perlexpr_repl	5
+par_perlexpr_repl	6
+par_perlexpr_repl	7
+par_perlexpr_repl	8
+par_perlexpr_repl	9
+par_perlexpr_repl	10
+par_perlexpr_repl	11
+par_perlexpr_repl	12
+par_perlexpr_repl	### bug #45939: {2} in {= =} fails
+par_perlexpr_repl	OK
+par_perlexpr_repl	OK-OK
 par_race_condition1	### Test race condition on 8 CPU (my laptop)
 par_race_condition1	1
 par_race_condition1	2
@@ -2788,6 +2832,8 @@ par_race_condition1	7
 par_race_condition1	8
 par_race_condition1	9
 par_race_condition1	10
+par_reload_slf_every_second	### --slf should reload every second
+par_reload_slf_every_second	OK
 par_shard	### --shard
 par_shard	OK
 par_shard	OK

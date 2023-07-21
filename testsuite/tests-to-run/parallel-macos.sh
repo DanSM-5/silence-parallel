@@ -171,7 +171,12 @@ par_big_var_func_name() {
 export PARALLEL="--_unsafe"
 macsshlogin=$(parallel --halt now,success=1 ssh {} echo {} ::: ota@mac macosx.p)
 
-scp /usr/local/bin/parallel $macsshlogin:bin/
+if scp /usr/local/bin/parallel $macsshlogin:bin/ ; then
+    true
+else
+    echo "Mac not found. Skip testing"
+    exit 1
+fi
 
 export LC_ALL=C
 export -f $(compgen -A function | grep par_)

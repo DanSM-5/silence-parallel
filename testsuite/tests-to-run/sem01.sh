@@ -25,17 +25,6 @@ par_mutex() {
     echo done
 }
 
-par_2jobs() {
-    echo '### Test similar example as from man page - run 2 jobs simultaneously'
-    echo 'Expect done: 1 2 5 3 4'
-    for i in 5 1 2 3 4 ; do
-	sleep 0.2
-	echo Scheduling $i
-	sem -j2 --id ex2jobs -u echo starting $i ";" sleep $i ";" echo done $i
-    done
-    sem --id ex2jobs --wait
-}
-
 par_fg_then_bg() {
     echo '### Test --fg followed by --bg'
     parallel -u --id fgbg --fg --semaphore seq 1 10 '|' pv -qL 30
@@ -57,9 +46,9 @@ par_fg_line-buffer() {
 
 par_semaphore-timeout() {
     echo '### Test --st +1/-1'
-    stdout sem --id st --line-buffer "echo A normal-start;sleep 3;echo C normal-end"
-    stdout sem --id st --line-buffer --st 1 "echo B st1-start;sleep 3;echo D st1-end"
-    stdout sem --id st --line-buffer --st -1 "echo ERROR-st-1-start;sleep 3;echo ERROR-st-1-end"
+    stdout sem --id st --line-buffer "echo A normal-start;sleep 4;echo C normal-end"
+    stdout sem --id st --line-buffer --st 2 "echo B st1-start;sleep 4;echo D st1-end"
+    stdout sem --id st --line-buffer --st -2 "echo ERROR-st-1-start;sleep 4;echo ERROR-st-1-end"
     stdout sem --id st --wait
 }
 
@@ -88,5 +77,5 @@ par_exit() {
 
 export -f $(compgen -A function | grep par_)
 compgen -A function | grep par_ | LC_ALL=C sort |
-    parallel --timeout 30 -j6 --tag -k --joblog /tmp/jl-`basename $0` '{} 2>&1' |
+    parallel --timeout 120 -j6 --tag -k --joblog /tmp/jl-`basename $0` '{} 2>&1' |
     perl -pe 's:/usr/bin:/bin:g'

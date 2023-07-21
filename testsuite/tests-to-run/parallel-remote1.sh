@@ -5,7 +5,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 SERVER1=parallel-server1
-SERVER2=parallel-server4
+SERVER2=parallel-server2
 SERVER3=parallel-server3
 SSHUSER1=vagrant
 SSHUSER2=vagrant
@@ -20,6 +20,14 @@ export SSHLOGIN3=$SSHUSER3@$SERVER3
 #SSHLOGIN2=parallel@lo
 #SSHLOGIN3=parallel@parallel-server2
 
+par_force_number_of_cpu() {
+    echo '### Check forced number of CPUs being respected'
+    echo 'ssh is slow, so should only get 7. : should get the rest'
+    seq 1 20 |
+	stdout parallel -k -j+0  -S 1/:,7/$SSHLOGIN1 "hostname; echo {} >/dev/null" |
+	sort | uniq -c | sort | field 1
+}
+
 par_special_ssh() {
     echo '### Test use special ssh'
     echo 'TODO test ssh with > 9 simultaneous'
@@ -29,20 +37,22 @@ par_special_ssh() {
     seq 1 100 | parallel --sshdelay 0.03 --retries 10 --sshlogin "/tmp/myssh1 $SSHLOGIN1,/tmp/myssh2 $SSHLOGIN2" -k echo
 }
 
-par_filter_hosts_different_errors() {
+par__filter_hosts_different_errors() {
     echo '### --filter-hosts - OK, non-such-user, connection refused, wrong host'
+    hostname=$(hostname)
     stdout parallel --nonall --filter-hosts -S localhost,NoUser@localhost,154.54.72.206,"ssh 5.5.5.5" hostname |
-	grep -v 'parallel: Warning: Removed'
+	grep -v 'parallel: Warning: Removed' |
+	perl -pe "s/$hostname/myhostname/g"
 }
 
 par_timeout_retries() {
     echo '### test --timeout --retries'
     stdout parallel -j0 --timeout 5 --retries 3 -k ssh {} echo {} \
 	   ::: 192.168.1.197 8.8.8.8 $SSHLOGIN1 $SSHLOGIN2 $SSHLOGIN3 |
-	grep -v 'Warning: Permanently added'
+	grep -v 'Warning: Permanently added' | puniq
 }
 
-par_filter_hosts_no_ssh_nxserver() {
+par__filter_hosts_no_ssh_nxserver() {
     echo '### test --filter-hosts with server w/o ssh, non-existing server'
     stdout parallel -S 192.168.1.197,8.8.8.8,$SSHLOGIN1,$SSHLOGIN2,$SSHLOGIN3 --filter-hosts --nonall -k --tag echo |
 	grep -v 'parallel: Warning: Removed'
@@ -73,7 +83,7 @@ par_workdir_in_HOME() {
 
 export -f $(compgen -A function | grep par_)
 compgen -A function | grep par_ | LC_ALL=C sort |
-    parallel --timeout 1000% -j6 --tag -k --joblog /tmp/jl-`basename $0` '{} 2>&1' |
+    parallel --timeout 3000% -j6 --tag -k --joblog /tmp/jl-`basename $0` '{} 2>&1' |
     perl -pe 's:/usr/bin:/bin:g'
 
   

@@ -4123,9 +4123,12 @@ Short lines from different jobs do not mix, but long lines do:
 
   fun() {
     perl -e '$a="'$1'"x1000000; for(1..'$2') { print $a };';
+    echo;
   }
   export -f fun
-  (echo fun a 100;echo fun b 100) | ./parallel | tr -s abcdef
+  (echo fun a 100;echo fun b 100) | korovkin-parallel | tr -s abcdef
+  # Compare to:
+  (echo fun a 100;echo fun b 100) | parallel | tr -s abcdef
 
 There should be only one line of a's and one line of b's.
 

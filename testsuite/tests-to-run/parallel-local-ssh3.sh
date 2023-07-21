@@ -14,18 +14,23 @@ par_trailing_space_sshlogin() {
 
 par_special_char_trc() {
     echo '### Special char file and dir transfer return and cleanup'
-    cd /tmp
+    srcdir=/dev/shm/par_special_char_trc
+    wd="$srcdir"_wd
+    mkdir "$srcdir"
+    cd "$srcdir"
     mkdir -p d"`perl -e 'print pack("c*",1..9,11..46,48..255)'`"
-    echo local > d"`perl -e 'print pack("c*",1..9,11..46,48..255)'`"/f"`perl -e 'print pack("c*",1..9,11..46,48..255)'`"
-    ssh parallel@lo rm -rf d'*'/
+    echo local OK > d"`perl -e 'print pack("c*",1..9,11..46,48..255)'`"/f"`perl -e 'print pack("c*",1..9,11..46,48..255)'`"
+    ssh parallel@lo rm -rf "$wd"/d'*'/
     mytouch() {
-	cat d"`perl -e 'print pack("c*",1..9,11..46,48..255)'`"/f"`perl -e 'print pack("c*",1..9,11..46,48..255)'`" > d"`perl -e 'print pack("c*",1..9,11..46,48..255)'`"/g"`perl -e 'print pack("c*",1..9,11..46,48..255)'`"
+	cat d"`perl -e 'print pack("c*",1..9,11..46,48..255)'`"/f"`perl -e 'print pack("c*",1..9,11..46,48..255)'`" \
+	    > d"`perl -e 'print pack("c*",1..9,11..46,48..255)'`"/g"`perl -e 'print pack("c*",1..9,11..46,48..255)'`"
 	echo remote OK >> d"`perl -e 'print pack("c*",1..9,11..46,48..255)'`"/g"`perl -e 'print pack("c*",1..9,11..46,48..255)'`"
     }
     export -f mytouch
-    parallel --env mytouch -Sparallel@lo --transfer --return {=s:/f:/g:=} mytouch \
+    parallel --env mytouch -Sparallel@lo --wd "$wd" --transfer --return {=s:/f:/g:=} mytouch \
 	     ::: d"`perl -e 'print pack("c*",1..9,11..46,48..255)'`"/f"`perl -e 'print pack("c*",1..9,11..46,48..255)'`"
     cat d"`perl -e 'print pack("c*",1..9,11..46,48..255)'`"/g"`perl -e 'print pack("c*",1..9,11..46,48..255)'`"
+    rm -rf "$srcdir"
     # TODO Should be changed to --return '{=s:/f:/g:=}' and tested with csh - is error code kept?
 }
 

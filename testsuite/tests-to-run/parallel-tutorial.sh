@@ -62,7 +62,7 @@ perl -ne '$/="\n\n"; /^Output/../^[^O]\S/ and next; /^  / and print;' "$testsuit
               # /usr/bin/time -f %e
               s/^(\d+)\.\d+$/$1/;
               # --workdir ...
-              s:parallel/tmp/aspire-\d+-1:TMPWORKDIR:g;
+              s:parallel/tmp/[a-z]+-\d+-1:TMPWORKDIR:g;
 	      # .../privat/parallel2/
 	      s='$srcdir'==;
               # + cat ... | (Bash outputs these in random order)
@@ -119,6 +119,8 @@ perl -ne '$/="\n\n"; /^Output/../^[^O]\S/ and next; /^  / and print;' "$testsuit
 	      s:/tmp/par-job-\S+:script:g;
 	      s:par......par:tempfile:g;
 	      s:^tempfile\n::g;
+	      # --progress => 1:local / 4 / 4
+	      s,1:local / . / .,1:local / 9 / 9,
 	      ' | uniq
 
 echo "### 3+3 .par files (from --files), 1 .tms-file from tmux attach"

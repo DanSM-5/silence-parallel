@@ -15,31 +15,42 @@ exec 2>&1
 # sql $MYSQL_ADMIN_DBURL "CREATE USER 'sqlunittest'@'localhost' IDENTIFIED BY 'CB5A1FFFA5A';"
 # sql $MYSQL_ADMIN_DBURL "GRANT ALL PRIVILEGES ON sqlunittest.* TO 'sqlunittest'@'localhost';"
 
-MYSQL_TEST_DBURL=mysql://tange:tange@/
+export MYSQL_TEST_DBURL=mysql://tange:tange@/
+export DBURL="$MYSQL_TEST_DBURL"
 
-echo '### Test of #! -Y with file as input'
-cat >/tmp/shebang <<EOF
+par_shebang-Y() {
+    echo '### Test of #! -Y with file as input'
+    shebang=/tmp/shebang-Y
+    cat >"$shebang" <<EOF
 #!/usr/local/bin/sql -Y $MYSQL_TEST_DBURL
 
 SELECT 'Yes it does' AS 'Testing if -Y works';
 EOF
-chmod 755 /tmp/shebang
-/tmp/shebang
+    chmod 755 "$shebang"
+    "$shebang"
+}
 
-echo '### Test of #! --shebang with file as input'
-cat >/tmp/shebang <<EOF
+par_shebang_file() {
+    echo '### Test of #! --shebang with file as input'
+    shebang=/tmp/shebang-file
+    cat >"$shebang" <<EOF
 #!/usr/local/bin/sql --shebang $MYSQL_TEST_DBURL
 
 SELECT 'Yes it does' AS 'Testing if --shebang works';
 EOF
-chmod 755 /tmp/shebang
-/tmp/shebang
+    chmod 755 "$shebang"
+    "$shebang"
+}
 
-echo '### Test reading sql on command line'
-sql $MYSQL_TEST_DBURL "SELECT 'Yes it does' as 'Test reading SQL from command line';"
+par_sql_on_cmdline() {
+    echo '### Test reading sql on command line'
+    sql $MYSQL_TEST_DBURL "SELECT 'Yes it does' as 'Test reading SQL from command line';"
+}
 
-echo '### Test reading sql from file'
-cat >/tmp/unittest.sql <<EOF
+par_read_sql_from_file() {
+    echo '### Test reading sql from file'
+    unittest=/tmp/unittest.sql
+    cat >"$unittest.sql" <<EOF
 DROP TABLE IF EXISTS unittest;
 CREATE TABLE unittest (
           id INT,
@@ -49,73 +60,128 @@ INSERT INTO unittest VALUES (1,'abc');
 INSERT INTO unittest VALUES (3,'def');
 SELECT 'Yes it does' as 'Test reading SQL from file works';
 EOF
-sql $MYSQL_TEST_DBURL/sqlunittest </tmp/unittest.sql
+    sql $MYSQL_TEST_DBURL/sqlunittest <"$unittest"
+}
 
-echo '### Test dburl with username password host port'
-sql mysql://tange:tange@localhost:3306/tange </tmp/unittest.sql
 
-echo "### Test .sql/aliases"
-mkdir -p ~/.sql
-echo :sqlunittest mysql://sqlunittest:CB5A1FFFA5A@localhost:3306/sqlunittest >> ~/.sql/aliases
-perl -i -ne '$seen{$_}++ || print' ~/.sql/aliases
-sql :sqlunittest "SELECT 'Yes it does' as 'Test if .sql/aliases works';"
+testtable() {
+    tbl=$1
+    cat <<EOF
+    DROP TABLE IF EXISTS $tbl;
+CREATE TABLE $tbl (
+          id INT,
+          data VARCHAR(100)
+        );
+INSERT INTO $tbl VALUES (1,'abc');
+INSERT INTO $tbl VALUES (3,'def');
+EOF
+}
+export -f testtable
 
-echo "### Test sql:sql::alias"
-sql sql:sql::sqlunittest "SELECT 'Yes it works' as 'Test sql:sql::alias';"
+par_dburl_user_password_host_port() {
+    echo '### Test dburl with username password host port'
+    (
+	testtable userpasshost;
+	echo "SELECT 'OK' as 'Test dburl with username password host port'";
+    ) | sql mysql://tange:tange@localhost:3306/tange
+}
 
-echo "### Test --noheaders --no-headers -n"
-sql -n :sqlunittest 'select * from unittest order by id' |
-    parallel -k --colsep '\t' echo {2} {1}
-sql --noheaders :sqlunittest 'select * from unittest order by id' |
-    parallel -k --colsep '\t' echo {2} {1}
-sql --no-headers :sqlunittest 'select * from unittest order by id' |
-    parallel -k --colsep '\t' echo {2} {1}
+par_sql_aliases() {
+    echo "### Test .sql/aliases"
+    mkdir -p ~/.sql
+    echo :sqlunittest mysql://sqlunittest:CB5A1FFFA5A@localhost:3306/sqlunittest >> ~/.sql/aliases
+    perl -i -ne '$seen{$_}++ || print' ~/.sql/aliases
+    sql :sqlunittest "SELECT 'Yes it does' as 'Test if .sql/aliases works';"
 
-echo "### Test --sep -s";
-sql --no-headers -s : pg:/// 'select 1,2' |
-    parallel --colsep ':' echo {2} {1}
-sql --no-headers --sep : pg:/// 'select 1,2' |
-    parallel --colsep ':' echo {2} {1}
+    echo "### Test sql:sql::alias"
+    sql sql:sql::sqlunittest "SELECT 'Yes it works' as 'Test sql:sql::alias';"
+}
 
-echo "### Test --passthrough -p";
-sql -p -H :sqlunittest 'select * from unittest'
-echo
-sql --passthrough -H :sqlunittest 'select * from unittest'
-echo
+par_noheaders() {
+    echo "### Test --noheaders --no-headers -n"
+    testtable noheader | sql "$DBURL"
+    sql -n "$DBURL" 'select * from noheader order by id' |
+	parallel -k --colsep '\t' echo {2} {1}
+    sql --noheaders "$DBURL" 'select * from noheader order by id' |
+	parallel -k --colsep '\t' echo {2} {1}
+    sql --no-headers "$DBURL" 'select * from noheader order by id' |
+	parallel -k --colsep '\t' echo {2} {1}
+}
 
-echo "### Test --html";
-sql --html $MYSQL_TEST_DBURL/sqlunittest 'select * from unittest'
-echo
+par_--sep() {
+    echo "### Test --sep -s";
+    sql --no-headers -s : pg:/// 'select 1,2' |
+	parallel --colsep ':' echo {2} {1}
+    sql --no-headers --sep : pg:/// 'select 1,2' |
+	parallel --colsep ':' echo {2} {1}
+}
 
-echo "### Test --show-processlist|proclist|listproc";
-sql --show-processlist :sqlunittest | wc -lw
-sql --proclist :sqlunittest | wc -lw
-sql --listproc :sqlunittest | wc -lw
+par_--passthrough() {
+    echo "### Test --passthrough -p";
+    testtable passthrough | sql "$DBURL"
+    sql -p -H "$DBURL" 'select * from passthrough'
+    echo
+    sql --passthrough -H "$DBURL" 'select * from passthrough'
+    echo
+}
 
-echo "### Test --db-size --dbsize";
-sql --dbsize :sqlunittest | wc -w
-sql --db-size :sqlunittest | wc -w
+par_--html() {
+    echo "### Test --html";
+    testtable html | sql "$DBURL"
+    sql --html "$DBURL" 'select * from html'
+    echo
+}
 
-echo "### Test --table-size --tablesize"
-sql --showtables :sqlunittest | grep TBL | parallel sql :sqlunittest drop table
-sql --tablesize :sqlunittest | wc -l
-sql --table-size :sqlunittest | wc -l
+par_listproc() {
+    echo "### Test --show-processlist|proclist|listproc";
+    sql --show-processlist "$DBURL" | wc -lw
+    sql --proclist "$DBURL" | wc -lw
+    sql --listproc "$DBURL" | wc -lw
+}
 
-echo "### Test --debug"
-stdout sql --debug :sqlunittest "SELECT 'Yes it does' as 'Test if --debug works';" |
-    replace_tmpdir |
-    perl -pe 's:/...........sql:/tmpfile:g'
+par_dbsize() {
+    echo "### Test --db-size --dbsize";
+    sql --dbsize "$DBURL" | wc -w
+    sql --db-size "$DBURL" | wc -w
+}
 
-echo "### Test --version -V"
-sql --version | wc
-sql -V | wc
+par_tablesize() {
+    echo "### Test --table-size --tablesize"
+    sql --showtables "$DBURL" | grep TBL | parallel sql "$DBURL" drop table
+    sql --tablesize "$DBURL" | wc -l
+    sql --table-size "$DBURL" | wc -l
+}
 
-echo "### Test -r"
-stdout sql -r --debug pg://nongood@127.0.0.3:2227/ "SELECT 'This should fail 3 times';"
+par_--debug() {
+    echo "### Test --debug"
+    stdout sql --debug "$DBURL" "SELECT 'Yes it does' as 'Test if --debug works';" |
+	replace_tmpdir |
+	perl -pe 's:/...........sql:/tmpfile:g'
+}
 
-echo "### Test --retries=s"
-stdout sql --retries=4 --debug pg://nongood@127.0.0.3:2227/ "SELECT 'This should fail 4 times';"
+par_-_version() {
+    echo "### Test --version -V"
+    sql --version | wc
+    sql -V | wc
+}
 
-echo "### Test --help -h"
-sql --help
-sql -h
+par_-r() {
+    echo "### Test -r - retry 3 times"
+    stdout sql -r --debug pg://nongood@127.0.0.3:2227/ "SELECT 'This should fail 3 times';"
+}
+
+par_--retries() {
+    echo "### Test --retries=s"
+    stdout sql --retries=4 --debug pg://nongood@127.0.0.3:2227/ "SELECT 'This should fail 4 times';"
+}
+
+par_--help() {
+    echo "### Test --help -h"
+    sql --help
+    sql -h
+}
+
+
+export -f $(compgen -A function | grep par_)
+compgen -A function | grep par_ | LC_ALL=C sort |
+    parallel --timeout 1000% -j6 --tag -k --joblog /tmp/jl-`basename $0` '{} 2>&1'

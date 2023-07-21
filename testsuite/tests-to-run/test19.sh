@@ -30,9 +30,11 @@ newline2'
 find tmp/parallel*newline* -print0 | stdout parallel -0 -k --transfer --sshlogin $SSHLOGIN1,$SSHLOGIN2 cat {}";"rm {}
 # Should give: No such file or directory
 echo good if no file
-stdout ssh $SSHLOGIN1 ls 'tmp/parallel.file*'
-# Should give: No such file or directory
-stdout ssh $SSHLOGIN2 ls 'tmp/parallel.file*'
+(
+    stdout ssh $SSHLOGIN1 ls 'tmp/parallel.file*'
+    # Should give: No such file or directory
+    stdout ssh $SSHLOGIN2 ls 'tmp/parallel.file*'
+) | sort
 
 echo '### --transfer --cleanup - file with newline'
 echo newline > '/tmp/parallel.file.
@@ -42,9 +44,11 @@ newline2'
 find tmp/parallel*newline* -print0 | stdout parallel -0 -k --transfer --cleanup --sshlogin $SSHLOGIN1,$SSHLOGIN2 cat {}
 # Should give: No such file or directory
 echo good if no file
-stdout ssh $SSHLOGIN1 ls 'tmp/parallel.file*'
-# Should give: No such file or directory
-stdout ssh $SSHLOGIN2 ls 'tmp/parallel.file*'
+(
+    stdout ssh $SSHLOGIN1 ls 'tmp/parallel.file*'
+    # Should give: No such file or directory
+    stdout ssh $SSHLOGIN2 ls 'tmp/parallel.file*'
+) | sort
 
 echo '### --return - file with newline'
 rm -rf /tmp/parallel.file.*newline*
@@ -68,9 +72,11 @@ find tmp/parallel*newline* -print0 | stdout parallel -0 -k --return {}.out --cle
 ls tmp/parallel*newline*out
 rm tmp/parallel*newline*out
 echo good if no file
-stdout ssh $SSHLOGIN1 ls 'tmp/parallel.file*' || echo OK
-# Should give: No such file or directory
-stdout ssh $SSHLOGIN2 ls 'tmp/parallel.file*' || echo OK
+(
+    stdout ssh $SSHLOGIN1 ls 'tmp/parallel.file*' || echo OK
+    # Should give: No such file or directory
+    stdout ssh $SSHLOGIN2 ls 'tmp/parallel.file*' || echo OK
+) | sort
 
 echo '### --transfer --return --cleanup - file with newline'
 echo newline > '/tmp/parallel.file.
@@ -81,9 +87,11 @@ find tmp/parallel*newline* -print0 | stdout parallel -0 -k --transfer --return {
 ls tmp/parallel*newline*out
 rm tmp/parallel*newline*out
 echo good if no file
-stdout ssh $SSHLOGIN1 ls 'tmp/parallel.file*' || echo OK
-# Should give: No such file or directory
-stdout ssh $SSHLOGIN2 ls 'tmp/parallel.file*' || echo OK
+(
+    stdout ssh $SSHLOGIN1 ls 'tmp/parallel.file*' || echo OK
+    # Should give: No such file or directory
+    stdout ssh $SSHLOGIN2 ls 'tmp/parallel.file*' || echo OK
+) | sort
 
 echo '### --trc - file with newline'
 echo newline > '/tmp/parallel.file.
@@ -94,9 +102,11 @@ find tmp/parallel*newline* -print0 | stdout parallel -0 -k --trc {}.out --sshlog
 ls tmp/parallel*newline*out
 rm tmp/parallel*newline*out
 echo good if no file
-stdout ssh $SSHLOGIN1 ls 'tmp/parallel.file*' || echo OK
-# Should give: No such file or directory
-stdout ssh $SSHLOGIN2 ls 'tmp/parallel.file*' || echo OK
+(
+    stdout ssh $SSHLOGIN1 ls 'tmp/parallel.file*' || echo OK
+    # Should give: No such file or directory
+    stdout ssh $SSHLOGIN2 ls 'tmp/parallel.file*' || echo OK
+) | sort
 
 echo '### --trc - multiple file with newline'
 echo newline > '/tmp/parallel.file.
@@ -107,9 +117,11 @@ find tmp/parallel*newline* -print0 | stdout parallel -0 -k --trc {}.out --trc {}
 ls tmp/parallel*newline*out*
 rm tmp/parallel*newline*out*
 echo good if no file
-stdout ssh $SSHLOGIN1 ls 'tmp/parallel.file*' || echo OK
-# Should give: No such file or directory
-stdout ssh $SSHLOGIN2 ls 'tmp/parallel.file*' || echo OK
+(
+    stdout ssh $SSHLOGIN1 ls 'tmp/parallel.file*' || echo OK
+    # Should give: No such file or directory
+    stdout ssh $SSHLOGIN2 ls 'tmp/parallel.file*' || echo OK
+) | sort
 
 echo '### Test use special ssh'
 echo 'ssh "$@"; echo "$@" >>/tmp/myssh1-run' >/tmp/myssh1
@@ -126,9 +138,11 @@ find tmp/parallel*newline* -print0 | stdout parallel -0 -k -j1 --trc {}.out --tr
 ls tmp/parallel*newline*out*
 rm tmp/parallel*newline*out*
 echo good if no file
-stdout ssh $SSHLOGIN1 ls 'tmp/parallel.file*' || echo OK
-# Should give: No such file or directory
-stdout ssh $SSHLOGIN2 ls 'tmp/parallel.file*' || echo OK
+(
+    stdout ssh $SSHLOGIN1 ls 'tmp/parallel.file*' || echo OK
+    # Should give: No such file or directory
+    stdout ssh $SSHLOGIN2 ls 'tmp/parallel.file*' || echo OK
+) | sort
 echo 'Input for ssh'
 cat /tmp/myssh1-run /tmp/myssh2-run | perl -pe 's/(PID.)\d+/${1}00000/g;s/(SEQ[ =]|line)\d/$1X/g;' | 
   perl -pe 's/\S*parallel-server\S*/one-server/;s:( [0-9a-f]{500,})+( [0-9a-f]+)?: hex:g;'

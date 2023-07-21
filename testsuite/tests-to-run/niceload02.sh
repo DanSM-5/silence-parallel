@@ -19,10 +19,16 @@ perl -e '$|=1;while($t++<3){sleep(1);print "."}' &
 # It should be suspended so it at least takes 5 seconds
 stdout /usr/bin/time -f %e niceload -l 8 -p $! | perl -ne '$_ >= 5 and print "OK\n"'
 
-echo "### Test --sensor -l negative"
-# When the size is bigger, then run
-SIZET=/tmp/parallel_sizetest
-rm -f $SIZET
-tmux new-session -d -n 10 "seq 10000 | pv -qL 1000 > $SIZET"
-niceload -t .01 --sensor "stat -c %b $SIZET" -l -10 "stat -c %b $SIZET"
-rm $SIZET
+par_sensor_-l_negative() {
+    echo "### Test --sensor -l negative"
+    # When the size is bigger, then run
+    TMPDIR=/tmp
+    sizet=$(mktemp)
+    rm -f "$sizet"
+    tmux new-session -d -n 10 "seq 10000 | pv -qL 1000 > $sizet"
+    niceload -t .01 --sensor "stat -c %b $sizet" -l -10 "stat -c %b $sizet" |
+	perl -ne 'print (($_ >= 10) ? "OK\n" : "Fail: $_\n" )'
+    rm "$sizet"
+}
+
+par_sensor_-l_negative

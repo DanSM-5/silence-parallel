@@ -90,12 +90,30 @@ par_--controlmaster_eats() {
 
 par_--ssh_lsh() {
     echo '### --ssh lsh'
+    # lsh: Protocol error: No common key exchange method.
+    #
+    # $ lsh --list-algorithms
+    # Supported hostkey algorithms: ssh-dss, spki, none
+    #
+    # $ nmap --script ssh2-enum-algos -sV -p 22 lo
+    # |   server_host_key_algorithms: (4)
+    # |       rsa-sha2-512
+    # |       rsa-sha2-256
+    # |       ecdsa-sha2-nistp256
+    # |       ssh-ed25519
+    # |
+    #
+    # There is no longer an overlap: LSH is unsupported until there is
+    # a common algorithm again
+    #
+    # Code is kept if lsh is upgraded in the future
     parallel --ssh 'lsh -c aes256-ctr' -S lo echo ::: OK
     echo OK | parallel --ssh 'lsh -c aes256-ctr' --pipe -S csh@lo cat
     parallel --ssh lsh -S lo echo ::: OK
     echo OK | parallel --ssh lsh --pipe -S csh@lo cat
-    # Todo rsync/trc csh@lo
-    # Test gl. parallel med --ssh lsh: Hvilke fejler? brug dem. Også hvis de fejler
+    # Todo:
+    # * rsync/--trc
+    # * csh@lo
 }
 
 par_pipe_retries() {

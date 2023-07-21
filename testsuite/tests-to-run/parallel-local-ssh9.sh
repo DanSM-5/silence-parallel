@@ -138,6 +138,8 @@ _EOF
 
 par_propagate_env() {
     echo '### bug #41805: Idea: propagate --env for parallel --number-of-cores'
+    # csh complains if MANPATH is unset. Provoke this.
+    unset MANPATH
     echo '** test_zsh'
     FOO=test_zsh parallel --env FOO,HOME -S zsh@lo -N0 env ::: "" |sort|egrep 'FOO|^HOME'
     echo '** test_zsh_filter'

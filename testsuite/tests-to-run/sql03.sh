@@ -8,11 +8,11 @@ mysqlrootpass=${mysqlrootpass:-M-b+Ydjq4ejT4E}
 MYSQL_ADMIN_DBURL=mysql://root:$mysqlrootpass@/mysql
 
 # Setup
-sql $MYSQL_ADMIN_DBURL "drop user 'sqlunittest'@'localhost'"
-sql $MYSQL_ADMIN_DBURL DROP DATABASE sqlunittest;
-sql $MYSQL_ADMIN_DBURL CREATE DATABASE sqlunittest;
-sql $MYSQL_ADMIN_DBURL "CREATE USER 'sqlunittest'@'localhost' IDENTIFIED BY 'CB5A1FFFA5A';"
-sql $MYSQL_ADMIN_DBURL "GRANT ALL PRIVILEGES ON sqlunittest.* TO 'sqlunittest'@'localhost';"
+sudo sql $MYSQL_ADMIN_DBURL "drop user 'sqlunittest'@'localhost'"
+sudo sql $MYSQL_ADMIN_DBURL DROP DATABASE sqlunittest;
+sudo sql $MYSQL_ADMIN_DBURL CREATE DATABASE sqlunittest;
+sudo sql $MYSQL_ADMIN_DBURL "CREATE USER 'sqlunittest'@'localhost' IDENTIFIED BY 'CB5A1FFFA5A';"
+sudo sql $MYSQL_ADMIN_DBURL "GRANT ALL PRIVILEGES ON sqlunittest.* TO 'sqlunittest'@'localhost';"
 
 MYSQL_TEST_DBURL=mysql://sqlunittest:CB5A1FFFA5A@/sqlunittest
 export MYSQL_TEST_DBURL

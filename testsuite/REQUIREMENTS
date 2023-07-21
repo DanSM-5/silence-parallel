@@ -317,6 +317,21 @@ lsh_setup() {
 	    ssh -l $1 lo 'cat >>.ssh/authorized_keys'
     }
     export -f export_key_to_local_users
+    # lsh: Protocol error: No common key exchange method.
+    # It seems
+    # $ lsh --list-algorithms
+    # Supported hostkey algorithms: ssh-dss, spki, none
+    #
+    # $ nmap --script ssh2-enum-algos -sV -p 22 lo
+    # |   server_host_key_algorithms: (4)
+    # |       rsa-sha2-512
+    # |       rsa-sha2-256
+    # |       ecdsa-sha2-nistp256
+    # |       ssh-ed25519
+    # |
+    #
+    # There is no longer an overlap: LSH is unsupported until there is
+    # a common algorithm again
     shellsplus | parallel --bar --timeout 5 export_key_to_local_users
     shellsplus | parallel --bar --timeout 5 'lsh -l {} lo true || export_key_to_local_users {}'
     shellsplus | parallel --bar --timeout 5 'lsh -l {} lo true || echo Fail {}'
@@ -413,6 +428,7 @@ rsync_versions() {
 	 s/AC_DEFINE.HAVE_FNMATCH.,/AC_DEFINE(HAVE_FNMATCH,[1],[dummy]),/;' configure.in
          autoreconf --install -W gnu
 	 # Make "lib/addrinfo.h" ?
+	 touch lib/addrinfo.h
 	 LDFLAGS=-static ./configure &&
 	     (make proto; make -j2) &&
 	     sudo cp rsync /usr/local/bin/rsync-$1

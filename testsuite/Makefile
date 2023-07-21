@@ -120,9 +120,9 @@ stop=(stdout ping -w 1 -c 1 {} && \
   grep -Ev "${ignore}"
 
 startvm:
-	parallel --tag -k '${start}' ::: centos8 freebsd11 freebsd12 rhel8 centos3 &
+	parallel -j0 --tag -k '${start}' ::: centos8 freebsd13 freebsd12 rhel8 centos3 &
 stopvm:
-	parallel --tag -k '${stop}' ::: centos8 freebsd11 freebsd12 rhel8 centos3 || true
+	parallel -j0 --tag -k '${stop}' ::: centos8 freebsd13 freebsd12 rhel8 centos3 || true
 
 startdb:
 	true TODO should start Oracle in vagrant

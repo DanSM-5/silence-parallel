@@ -6,7 +6,7 @@
 
 SERVER1=parallel-server1
 SERVER2=parallel-server2
-SERVER2=parallel-server3
+SERVER3=parallel-server3
 SSHUSER1=vagrant
 SSHUSER2=vagrant
 SSHUSER3=vagrant

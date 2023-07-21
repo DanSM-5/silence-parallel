@@ -5126,6 +5126,8 @@ sub parse_host_filtering() {
 	       /\tWarning: /
 	       or
 	       /\t(Host key fingerprint is|\+-.*-\+|\|.*\|)/
+	       or
+	       /\t\S+: Undefined variable./
 		) {
 		# Skip these (from perl):
 		#   perl: warning: Setting locale failed.
@@ -5145,6 +5147,9 @@ sub parse_host_filtering() {
 		#   +--[ED25519 256]--+
 		#   |               o |
 		#   +----[SHA256]-----+
+		#
+		# Skip these (from csh):
+		#   MANPATH: Undefined variable.
 	    } elsif(not defined $nsockets{$col[0]}) {
 		$nsockets{$col[0]} = $col[1];
 	    } elsif(not defined $ncores{$col[0]}) {
@@ -13482,7 +13487,7 @@ sub find_max($) {
     do {
 	if($len > $upper) { return $len };
 	$lower = $len;
-	$len *= 16;
+	$len *= 4;
 	::debug("init", "Maxlen: $lower<$len<$upper(".($upper-$lower)."): ");
     } while (is_acceptable_command_line_length($len,$string));
     # Then search for the actual max length between
@@ -13534,7 +13539,12 @@ sub binary_find_max($$$) {
 	}
 	# Force using non-built-in command
 	$prg ||= ::which("echo");
-	::qqx("$prg ".${string}x(($len-1-length $prg)/length $string));
+	my $l = length ::qqx("$prg ".${string}x(($len-1-length $prg)/length $string));
+	if($l < $len/2) {
+	    # The command returned OK, but did not output $len chars
+	    # => this failed (Centos3 does this craziness)
+	    return 0
+	}
 	::debug("init", "$len=$?\n");
 	return not $?;
     }

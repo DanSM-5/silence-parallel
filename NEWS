@@ -1,3 +1,25 @@
+20230722
+
+New in this release:
+
+* Time functions (e.g. yyyymmdd($secs) ) can now take secs since epoch as argument.
+
+* Bug fixes and man page updates.
+
+
+20230622
+
+New in this release:
+
+* Bug fixes and man page updates.
+
+News about GNU Parallel:
+
+* Run faster in the terminal with Gnu Parallel https://www.youtube.com/watch?v=fSYVYsKXWP0
+
+* Building an (Evil) Android Phone Bot Army http://blog.faucher.net/2023/05/building-evil-android-phone-bot-army.html
+
+
 20230522
 
 New in this release:

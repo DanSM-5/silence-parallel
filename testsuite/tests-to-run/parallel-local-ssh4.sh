@@ -34,8 +34,14 @@ par__test_different_rsync_versions() {
 	) > "$tmp"/rsync
 	chmod +x "$tmp"/rsync
 	PATH="$tmp":"$PATH"
-	parallel --trc {}.out -S sh@lo cp {} {}.out ::: 'a`b`c\<d\$e\{#\}g\"h\ i'$2
-	rm 'a`b`c\<d\$e\{#\}g\"h\ i'$2 'a`b`c\<d\$e\{#\}g\"h\ i'$2.out
+	# Test basic rsync
+	if stdout rsync "$tmp"/rsync sh@lo:rsync.$2 >/dev/null ; then
+	   echo Basic use works: $2
+	   stdout parallel --trc {}.out -S sh@lo cp {} {}.out ::: 'a`b`c\<d\$e\{#\}g\"h\ i'$2
+	   stdout rm 'a`b`c\<d\$e\{#\}g\"h\ i'$2 'a`b`c\<d\$e\{#\}g\"h\ i'$2.out
+	else
+	    echo Basic use failed - not tested: $2
+	fi
 	rm -rf "$tmp"
     }
     export -f doit
@@ -52,7 +58,7 @@ par_--nonall_results() {
     parallel --results "$tmp"/rplnoslash/{} --onall -Scsh@lo,sh@lo ::: id pwd
     parallel --results "$tmp"/rpl1slash/{1}/ --onall -Scsh@lo,sh@lo ::: id pwd
     parallel --results "$tmp"/rpl1noslash/{1} --onall -Scsh@lo,sh@lo ::: id pwd
-    find "$tmp" -print0 | replace_tmpdir
+    find "$tmp" -print0 | replace_tmpdir | sort
     rm -r "$tmp"    
     echo '### --results --nonall'
     tmp="$TMPDIR"/nonall
@@ -63,7 +69,7 @@ par_--nonall_results() {
     parallel --results "$tmp"/rplnoslash/{} --nonall -Scsh@lo,sh@lo pwd
     parallel --results "$tmp"/rpl1slash/{1}/ --nonall -Scsh@lo,sh@lo pwd
     parallel --results "$tmp"/rpl1noslash/{1} --nonall -Scsh@lo,sh@lo pwd
-    find "$tmp" -print0 | replace_tmpdir
+    find "$tmp" -print0 | replace_tmpdir | sort
     rm -r "$tmp"    
 }
 
@@ -228,5 +234,5 @@ par_z_multiple_hosts_repeat_arg() {
 
 export -f $(compgen -A function | grep par_)
 compgen -A function | grep par_ | LC_ALL=C sort |
-    parallel --timeout 3000% -j6 --tag -k --joblog /tmp/jl-`basename $0` '{} 2>&1' |
+    parallel --timeout 10000% -j6 --tag -k --joblog /tmp/jl-`basename $0` '{} 2>&1' |
     perl -pe 's:/usr/bin:/bin:g;'

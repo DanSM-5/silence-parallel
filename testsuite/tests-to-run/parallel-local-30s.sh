@@ -8,6 +8,53 @@
 # Each should be taking 30-100s and be possible to run in parallel
 # I.e.: No race conditions, no logins
 
+par__keeporder_roundrobin() {
+    echo 'bug #50081: --keep-order --round-robin should give predictable results'
+    . `which env_parallel.bash`
+
+    run_roundrobin() {
+	random1G() {
+	    < /dev/zero openssl enc -aes-128-ctr -K 1234 -iv 1234 2>/dev/null |
+		head -c 1G;
+	}
+        random1G |
+	    parallel $1 -j13 --block 1m --pipe --roundrobin 'echo {#} $(md5sum)' |
+	    sort
+    }
+    env_parset a,b,c run_roundrobin ::: -k -k ''
+
+    if [ "$a" == "$b" ] ; then
+	# Good: -k should be == -k
+	if [ "$a" == "$c" ] ; then
+	    # Bad: without -k the command should give different output
+	    echo 'Broken: a == c'
+	    printf "$a\n$b\n$c\n"
+	else
+	    echo OK
+	fi
+    else
+	echo 'Broken: a <> b'
+	printf "$a\n$b\n$c\n"
+    fi
+}
+
+par_reload_slf_every_second() {
+    echo "### --slf should reload every second"
+    tmp=$(mktemp)
+    echo 1/lo >"$tmp"
+    (
+	sleep 3
+	(echo 1/localhost
+	 echo 1/127.0.0.1) >>"$tmp"
+    ) &
+    # This used to take 40 seconds (version 20220322) because the
+    # updated --slf would only read after first job finished
+    seq 3 |
+	stdout /usr/bin/time -f %e parallel --slf "$tmp" 'true {};sleep 20' |
+        perl -ne 'print(($_ < 40) ? "OK\n" : "Too slow: $_\n")'
+    rm "$tmp"
+}
+
 par__groupby_big() {
     echo "### test --group-by on file bigger than block"
     groupcol() {
@@ -24,11 +71,11 @@ par__groupby_big() {
 	_pipe() { headtail; }
 	export -f _pipe
 	pipepart() {
-	    parallel $n -k --groupby $groupcol --colsep ' ' -v \
+	    parallel -j8 $n -k --groupby $groupcol --colsep ' ' -v \
 		     --pipepart -a "$sorted" _ppart
 	}
 	pipe() {
-	    parallel $n -k --groupby $groupcol --colsep ' ' -v \
+	    parallel -j8 $n -k --groupby $groupcol --colsep ' ' -v \
 		     < "$sorted" _pipe
 	}
 	export -f pipepart pipe
@@ -93,9 +140,34 @@ par_bin() {
     paste <(seq 10) <(seq 10 -1 1) |
 	parallel --pipe --colsep '\t' --bin '2 $_%=2' -j4 wc | sort
     echo '### Blocks in version 20220122'
-    echo 10 | parallel --pipe --bin 1 -j100% wc | sort
+    echo 10 | parallel --pipe --bin 1 -j100% cat | sort
     paste <(seq 10) <(seq 10 -1 1) |
-	parallel --pipe --colsep '\t' --bin 2 wc | sort
+	parallel --pipe --colsep '\t' --bin 2 cat | sort
+}
+
+par_perlexpr_repl() {
+    echo '### {= and =} in different groups separated by space'
+    parallel echo {= s/a/b/ =} ::: a
+    parallel echo {= s/a/b/=} ::: a
+    parallel echo {= s/a/b/=}{= s/a/b/=} ::: a
+    parallel echo {= s/a/b/=}{=s/a/b/=} ::: a
+    parallel echo {= s/a/b/=}{= {= s/a/b/=} ::: a
+    parallel echo {= s/a/b/=}{={=s/a/b/=} ::: a
+    parallel echo {= s/a/b/ =} {={==} ::: a
+    parallel echo {={= =} ::: a
+    parallel echo {= {= =} ::: a
+    parallel echo {= {= =} =} ::: a
+
+    echo '### bug #45842: Do not evaluate {= =} twice'
+    parallel -k echo '{=  $_=++$::G =}' ::: {1001..1004}
+    parallel -k echo '{=1 $_=++$::G =}' ::: {1001..1004}
+    parallel -k echo '{=  $_=++$::G =}' ::: {1001..1004} ::: {a..c}
+    parallel -k echo '{=1 $_=++$::G =}' ::: {1001..1004} ::: {a..c}
+
+    echo '### bug #45939: {2} in {= =} fails'
+    parallel echo '{= s/O{2}//=}' ::: OOOK
+    parallel echo '{2}-{=1 s/O{2}//=}' ::: OOOK ::: OK
+    true Dummy for emacs =}}}}}
 }
 
 par_shard() {

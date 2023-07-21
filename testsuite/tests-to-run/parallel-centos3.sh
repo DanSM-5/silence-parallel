@@ -14,6 +14,8 @@ echo 'vagrant@centos3'
 #     user vagrant
 
 # add this to: /etc/ssh/sshd_config on 172.27.27.1
+#   KexAlgorithms +diffie-hellman-group1-sha1,curve25519-sha256@libssh.org,ecdh-sha2-nistp256,ecdh-sha2-nistp384,ecdh-sha2-nistp521,diffie-hellman-group-exchange-sha256,diffie-hellman-group14-sha1
+#   Ciphers +3des-cbc,aes128-cbc,aes192-cbc,aes256-cbc,aes128-ctr,aes192-ctr,aes256-ctr,aes128-gcm@openssh.com,aes256-gcm@openssh.com,chacha20-poly1305@openssh.com
 #   HostKeyAlgorithms +ssh-rsa
 # and:
 #   systemctl restart sshd
@@ -57,13 +59,12 @@ start_centos3
     testsuitedir=${testsuitedir:-$pwd}
     cd $testsuitedir
     # Copy binaries to server
-    cd testsuite/vagrant/tange/centos3/ 2>/dev/null
-    cd vagrant/tange/centos3/ 2>/dev/null
-    cd ../vagrant/tange/centos3/ 2>/dev/null
-    cd ../../../..
+    cd testsuite/ 2>/dev/null
+    cd ..
     ssh $SSHLOGIN1 'mkdir -p .parallel bin; touch .parallel/will-cite'
     scp -q .*/src/{parallel,sem,sql,niceload,env_parallel*} $SSHLOGIN1:bin/
     ssh $SSHLOGIN1 'echo PATH=\$PATH:\$HOME/bin >> .bashrc'
+    ssh $SSHLOGIN1 '[ -e .ssh/id_rsa.pub ] || ssh-keygen -t rsa -P "" -f .ssh/id_rsa'
     # Allow login from centos3 to $SSHLOGIN2 (that is shellshock hardened)
     ssh $SSHLOGIN1 cat .ssh/id_rsa.pub | ssh $SSHLOGIN2 'cat >>.ssh/authorized_keys'
     ssh $SSHLOGIN1 'cat .ssh/id_rsa.pub >>.ssh/authorized_keys; chmod 600 .ssh/authorized_keys'

@@ -23,7 +23,7 @@ par_rpl_perlexpr_not_used_in_command	remote OK
 par_rplstr_return	### bug #45906: {= in header =}
 par_rplstr_return	returnfile45906
 par_special_char_trc	### Special char file and dir transfer return and cleanup
-par_special_char_trc	local
+par_special_char_trc	local OK
 par_special_char_trc	remote OK
 par_trailing_space_sshlogin	### trailing space in sshlogin
 par_trailing_space_sshlogin	sshlogin trailing space
