@@ -1,20 +1,3 @@
-par_2jobs	### Test similar example as from man page - run 2 jobs simultaneously
-par_2jobs	Expect done: 1 2 5 3 4
-par_2jobs	Scheduling 5
-par_2jobs	starting 5
-par_2jobs	Scheduling 1
-par_2jobs	starting 1
-par_2jobs	Scheduling 2
-par_2jobs	done 1
-par_2jobs	starting 2
-par_2jobs	Scheduling 3
-par_2jobs	done 2
-par_2jobs	starting 3
-par_2jobs	Scheduling 4
-par_2jobs	done 5
-par_2jobs	starting 4
-par_2jobs	done 3
-par_2jobs	done 4
 par_bg_p_should_error	### Test bug #33621: --bg -p should give an error message
 par_bg_p_should_error	parallel: Error: Jobs running in the background cannot be interactive.
 par_exit	### Exit values

@@ -9,6 +9,7 @@ par_controlmaster_is_faster	-M should finish first - eventhough there are 2x job
 par_controlmaster_is_faster	With --controlmaster - finish first
 par_controlmaster_is_faster	No --controlmaster - finish last
 par_force_number_of_cpu	### Check forced number of CPUs being respected
+par_force_number_of_cpu	ssh is slow, so should only get 7. : should get the rest
 par_force_number_of_cpu	7
 par_force_number_of_cpu	13
 par_special_ssh	### Test use special ssh

@@ -174,7 +174,9 @@ macsshlogin=$(parallel --halt now,success=1 ssh {} echo {} ::: ota@mac macosx.p)
 if scp /usr/local/bin/parallel $macsshlogin:bin/ ; then
     true
 else
-    echo "Mac not found. Skip testing"
+    echo "**"
+    echo "** Mac not found. Skip testing"
+    echo "**"
     exit 1
 fi
 

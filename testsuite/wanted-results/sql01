@@ -60,7 +60,7 @@ par_dburl_user_password_host_port	### Test dburl with username password host por
 par_dburl_user_password_host_port	Test dburl with username password host port
 par_dburl_user_password_host_port	OK
 par_listproc	### Test --show-processlist|proclist|listproc
-par_listproc	      3      34
+par_listproc	      3      32
 par_listproc	      2      17
 par_listproc	      2      17
 par_noheaders	### Test --noheaders --no-headers -n

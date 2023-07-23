@@ -1388,13 +1388,13 @@ If the host is long, you can use B<column -t> to pretty print it:
 See also: B<--resume> B<--resume-failed>
 
 
-=item B<--jobs> I<num> (beta testing)
+=item B<--jobs> I<num>
 
-=item B<-j> I<num> (beta testing)
+=item B<-j> I<num>
 
-=item B<--max-procs> I<num> (beta testing)
+=item B<--max-procs> I<num>
 
-=item B<-P> I<num> (beta testing)
+=item B<-P> I<num>
 
 Number of jobslots on each machine.
 
@@ -1905,7 +1905,7 @@ See also: B<--block> B<--block-timeout> B<--recstart> B<--recend>
 B<--fifo> B<--cat> B<--pipe-part> B<-N> B<-L> B<--round-robin>
 
 
-=item B<--pipe-part> (beta testing)
+=item B<--pipe-part>
 
 Pipe parts of a physical file.
 

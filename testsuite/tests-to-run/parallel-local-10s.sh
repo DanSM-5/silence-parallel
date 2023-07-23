@@ -297,7 +297,9 @@ par_failing_compressor() {
     }
     export -f doit
     stdout parallel -vk --header : --argsep ,,, \
-	     parallel -k {tag} {lb} {files} --compress --compress-program {comp} --decompress-program {decomp} doit ::: C={comp},D={decomp} \
+	   stdout parallel -k {tag} {lb} {files} --compress \
+	   --compress-program {comp} --decompress-program {decomp} doit \
+	   ::: C={comp},D={decomp} \
 	     ,,, tag --tag -k \
 	     ,,, lb --line-buffer -k \
 	     ,,, files --files0 -k \
@@ -416,17 +418,6 @@ par_xargs_compat() {
     (seq 1 10; echo 1234;  seq 12 15) | stdsort parallel -j1 -kX -s 10 -x echo
     echo '-x'
     (seq 1 10; echo 1234;  seq 12 15) | stdsort xargs -s 10 -x echo
-}
-
-par_sem_2jobs() {
-    echo '### Test semaphore 2 jobs running simultaneously'
-    parallel --semaphore --id 2jobs -u -j2 'echo job1a 1; sleep 4; echo job1b 3'
-    sleep 0.5
-    parallel --semaphore --id 2jobs -u -j2 'echo job2a 2; sleep 4; echo job2b 5'
-    sleep 0.5
-    parallel --semaphore --id 2jobs -u -j2 'echo job3a 4; sleep 4; echo job3b 6'
-    parallel --semaphore --id 2jobs --wait
-    echo done
 }
 
 par_line_buffer() {

@@ -4,6 +4,17 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+par_sem_2jobs() {
+    echo '### Test semaphore 2 jobs running simultaneously'
+    parallel --semaphore --id 2jobs -u -j2 'echo job1a 1; sleep 4; echo job1b 3'
+    sleep 0.5
+    parallel --semaphore --id 2jobs -u -j2 'echo job2a 2; sleep 4; echo job2b 5'
+    sleep 0.5
+    parallel --semaphore --id 2jobs -u -j2 'echo job3a 4; sleep 4; echo job3b 6'
+    parallel --semaphore --id 2jobs --wait
+    echo done
+}
+
 par_2jobs() {
     echo '### Test similar example as from man page - run 2 jobs simultaneously'
     echo 'Expect done: 1 2 5 3 4'
