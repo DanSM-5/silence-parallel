@@ -115,8 +115,8 @@ par_special_ssh	98
 par_special_ssh	99
 par_special_ssh	100
 par_timeout_retries	### test --timeout --retries
+par_timeout_retries	ssh: connect to host 192.168.1.197 port 22: No route to hostpar_timeout_retries	
 par_timeout_retries	parallel: Warning: This job was killed because it timed out:
-par_timeout_retries	parallel: Warning: ssh 192.168.1.197 echo 192.168.1.197
 par_timeout_retries	parallel: Warning: ssh 8.8.8.8 echo 8.8.8.8
 par_timeout_retries	vagrant@parallel-server1
 par_timeout_retries	vagrant@parallel-server2

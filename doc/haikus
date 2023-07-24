@@ -10,15 +10,7 @@ Quote of the month:
   Love to make a dual processor workstation absolutely whir running dozens of analysis scripts at once
     -- Best Catboy Key Grip @alamogordoglass@twitter
   
-  i really didn't expect it to be as simple as it is, took me all of 5 minutes to implement and the results are exactly what i wanted
   
-  gnu parallel babey, it's really simple actually lol
-    -- tom (era) @slimefiend@twitter
-
-  GNU parallel is your friend. Unleash your cores! #GNU
-    -- Blake L @BlakeDL@twitter
-  
-
 --line-buffer, a flag
 parallel, now more precise
 Output is in sync
@@ -226,6 +218,14 @@ https://negfeedback.blogspot.com/2020/05/indispensable-command-line-tools.html
     -- @alinajaf@twitter
 
 === Used ===
+
+  GNU parallel is your friend. Unleash your cores! #GNU
+    -- Blake L @BlakeDL@twitter
+
+  i really didn't expect it to be as simple as it is, took me all of 5 minutes to implement and the results are exactly what i wanted
+  
+  gnu parallel babey, it's really simple actually lol
+    -- tom (era) @slimefiend@twitter
 
   GNU parallel is the greatest productivity hack of all time.
     -- ashpool @solanobahn@twitter

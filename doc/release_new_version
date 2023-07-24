@@ -264,21 +264,24 @@ from:tange@gnu.org
 to:parallel@gnu.org, bug-parallel@gnu.org
 stable-bcc: Jesse Alama <jessealama@fastmail.fm>
 
-Subject: GNU Parallel 20230722 ('Приго́жин') released [stable]
+Subject: GNU Parallel 20230822 ('Chandrayaan') released [stable]
 
-GNU Parallel 20230722 ('Приго́жин') has been released. It is available for download at: lbry://@GnuParallel:4
+GNU Parallel 20230822 ('Chandrayaan') has been released. It is available for download at: lbry://@GnuParallel:4
 
 Quote of the month:
 
-  GNU parallel is the greatest productivity hack of all time.
-    -- ashpool @solanobahn@twitter
-
+  GNU parallel is your friend. Unleash your cores! #GNU
+    -- Blake L @BlakeDL@twitter
 
 New in this release:
 
-* Time functions (e.g. yyyymmdd($secs) ) can now take secs since epoch as argument.
-
 * Bug fixes and man page updates.
+
+News about GNU Parallel:
+
+* GNU Parallel, where have you been all my life? https://alexplescan.com/posts/2023/08/20/gnu-parallel/
+
+* Parallel (multithreaded) music download from Youtube https://hrna.moe/?p=parallel-multithread-music-download
 
 
 GNU Parallel - For people who live life in the parallel lane.

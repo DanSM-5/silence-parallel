@@ -330,72 +330,100 @@ change $_ but you have full access to all of GNU B<parallel>'s
 internal functions and data structures.
 
 The expression must give the same result if evaluated twice -
-otherwise the behaviour is undefined. E.g. this will not work as expected:
+otherwise the behaviour is undefined. E.g. in some versions of GNU
+B<parallel> this will not work as expected:
 
     parallel echo '{= $_= ++$wrong_counter =}' ::: a b c
 
 A few convenience functions and data structures have been made:
 
-=over 15
+=over 2
 
 =item Z<> B<Q(>I<string>B<)>
 
-shell quote a string
+Shell quote a string. Example:
+
+  parallel echo {} is quoted as '{= $_=Q($_) =}' ::: \$PWD
 
 =item Z<> B<pQ(>I<string>B<)>
 
-perl quote a string
+Perl quote a string. Example:
+
+  parallel echo {} is quoted as '{= $_=pQ($_) =}' ::: \$PWD
 
 =item Z<> B<uq()> (or B<uq>)
 
-do not quote current replacement string
+Do not quote current replacement string. Example:
+
+  parallel echo {} has the value '{= uq =}' ::: \$PWD
 
 =item Z<> B<hash(val)>
 
-compute B::hash(val)
+Compute B::hash(val). Example:
+
+  parallel echo Hash of {} is '{= $_=hash($_) =}' ::: a b c
 
 =item Z<> B<total_jobs()>
 
-number of jobs in total
+Number of jobs in total. Example:
+
+  parallel echo Number of jobs: '{= $_=total_jobs() =}' ::: a b c
 
 =item Z<> B<slot()>
 
-slot number of job
+Slot number of job. Example:
+
+  parallel echo Job slot of {} is '{= $_=slot() =}' ::: a b c
 
 =item Z<> B<seq()>
 
-sequence number of job
+Sequence number of job. Example:
+
+  parallel echo Seq number of {} is '{= $_=seq() =}' ::: a b c
 
 =item Z<> B<@arg>
 
-the arguments
+The arguments counting from 1 ($arg[1] = {1} = first argument). Example:
+
+  parallel echo {1}+{2}='{=1 $_=$arg[1]+$arg[2] =}' \
+    ::: 1 2 3 ::: 2 3 4
+
+('{=1' forces this to be a positional replacement string, and
+therefore will not repeat the value for each arg.)
 
 =item Z<> B<skip()>
 
-skip this job (see also B<--filter>)
+Skip this job (see also B<--filter>). Example:
 
-=item Z<> B<yyyy_mm_dd_hh_mm_ss(sec)> (alpha testing)
+  parallel echo '{= $arg[1] >= $arg[2] and skip =}' \
+    ::: 1 2 3 ::: 2 3 4
 
-=item Z<> B<yyyy_mm_dd_hh_mm(sec)> (alpha testing)
+=item Z<> B<yyyy_mm_dd_hh_mm_ss(sec)> (beta testing)
 
-=item Z<> B<yyyy_mm_dd(sec)> (alpha testing)
+=item Z<> B<yyyy_mm_dd_hh_mm(sec)> (beta testing)
 
-=item Z<> B<hh_mm_ss(sec)> (alpha testing)
+=item Z<> B<yyyy_mm_dd(sec)> (beta testing)
 
-=item Z<> B<hh_mm(sec)> (alpha testing)
+=item Z<> B<hh_mm_ss(sec)> (beta testing)
 
-=item Z<> B<yyyymmddhhmmss(sec)> (alpha testing)
+=item Z<> B<hh_mm(sec)> (beta testing)
 
-=item Z<> B<yyyymmddhhmm(sec)> (alpha testing)
+=item Z<> B<yyyymmddhhmmss(sec)> (beta testing)
 
-=item Z<> B<yyyymmdd(sec)> (alpha testing)
+=item Z<> B<yyyymmddhhmm(sec)> (beta testing)
 
-=item Z<> B<hhmmss(sec)> (alpha testing)
+=item Z<> B<yyyymmdd(sec)> (beta testing)
 
-=item Z<> B<hhmm(sec)> (alpha testing)
+=item Z<> B<hhmmss(sec)> (beta testing)
 
-time functions. I<sec> is number of seconds since epoch. If left out
-it will use current local time.
+=item Z<> B<hhmm(sec)> (beta testing)
+
+Time functions. I<sec> is number of seconds since epoch. If left out
+it will use current local time. Example:
+
+  parallel echo 'Now: {= $_=yyyy_mm_dd_hh_mm_ss() =}' ::: Dummy
+  parallel echo 'The end: {= $_=yyyy_mm_dd_hh_mm_ss($_) =}' \
+    ::: 2147483648
 
 =back
 

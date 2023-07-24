@@ -751,6 +751,8 @@ BASH_FUNC_replace_tmpdir%%
 BASH_FUNC_run_once%%
 BASH_FUNC_run_test%%
 _
+mysqlrootpass
+oracle_password
 qTMPDIR
 qqTMPDIR
 testsuitedir

@@ -615,10 +615,10 @@ par_long_line_remote	### Deal with long command lines on remote servers
 par_long_line_remote	      1       6   30006
 par_long_line_remote	      6      50  250050
 par_maxlinelen_X_I	### Test max line length -X -I
-par_maxlinelen_X_I	42d5c115907de0044ef988a0639204cd  -
+par_maxlinelen_X_I	859ed2964e82dba118e92b1bedd2f84a  -
 par_maxlinelen_X_I	Chars per line (817788/13): 62906
 par_maxlinelen_m_I	### Test max line length -m -I
-par_maxlinelen_m_I	2f0d9d11a071f5dbe6bd876a19499ff5  -
+par_maxlinelen_m_I	183794839f45c8f7e38fe7c677c49958  -
 par_maxlinelen_m_I	Chars per line (697810/11): 63437
 par_nice	Check that --nice works
 par_nice	load_10
@@ -1164,9 +1164,9 @@ par_shellquote	tcsh	\\\\\\\\	"\
 par_shellquote	tcsh	"\\\par_shellquote	tcsh	\\\\\\\\\\\\\\ \!\"\#\$%\&\'\(\)\*+,-./0123456789:\;\<\=\>\?@ABCDEFGHIJKLMNOPQRSTUVWXYZ\[\\\]\^_\`abcdefghijklmnopqrstuvwxyz\{\|\}\~€\‚\ƒ\„\…\†\‡\ˆ\‰\Š\‹\Œ\\Ž\\\‘\’\“\”\•\–\—\˜\™\š\›\œ\\ž\Ÿ\ \¡\¢\£\¤\¥\¦\§\¨\©\ª\«\¬\­\®\¯\°\±\²\³\´\µ\¶\·\¸\¹\º\»\¼\½\¾\¿\À\Á\Â\Ã\Ä\Å\Æ\Ç\È\É\Ê\Ë\Ì\Í\Î\Ï\Ð\Ñ\Ò\Ó\Ô\Õ\Ö\×\Ø\Ù\Ú\Û\Ü\Ý\Þ\ß\à\á\â\ã\ä\å\æ\ç\è\é\ê\ë\ì\í\î\ï\ð\ñ\ò\ó\ô\õ\ö\÷\ø\ù\ú\û\ü\ý\þ\ÿ
 par_sockets_cores_threads	### Test --number-of-sockets/cores/threads
 par_sockets_cores_threads	1
-par_sockets_cores_threads	2
 par_sockets_cores_threads	4
-par_sockets_cores_threads	2
+par_sockets_cores_threads	8
+par_sockets_cores_threads	4
 par_sockets_cores_threads	### Test --use-sockets-instead-of-threads
 par_sockets_cores_threads	threads done
 par_sockets_cores_threads	sockets done
@@ -1266,7 +1266,7 @@ par_xargs_compat	a_b c
 par_xargs_compat	d
 par_xargs_compat	e
 par_xargs_compat	### test too long args
-par_xargs_compat	parallel: Error: Command line too long (1000005 >= 64031) at input 0: zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz...
+par_xargs_compat	parallel: Error: Command line too long (1000005 >= 63543) at input 0: zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz...
 par_xargs_compat	xargs: argument line too long
 par_xargs_compat	parallel: Error: Command line too long (1000007 >= 10) at input 0: zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz...
 par_xargs_compat	1 2

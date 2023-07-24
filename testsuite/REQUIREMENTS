@@ -179,7 +179,7 @@ debug2: MACs stoc: umac-64-etm@openssh.com,umac-128-etm@openssh.com,hmac-sha2-25
     
     add_ssh_key_to_authorized
     insert_in_etc_hosts 127.1.2.3 server
-    parallel add_single_vagrant_to_etc_hosts ::: centos8 freebsd11 freebsd12 rhel8 centos3 centos39-oracle817
+    parallel add_single_vagrant_to_etc_hosts ::: centos8 freebsd11 freebsd12 freebsd13 rhel8 centos3 centos39-oracle817
 }
 
 shellsplus() {

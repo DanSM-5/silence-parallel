@@ -1,5 +1,6 @@
+dir ~/privat/parallel/testsuite
 par_2gb_record_reading	### Trouble reading a record > 2 GB for certain versions of Perl (substr($a,0,2G+1)="fails")
-par_2gb_record_reading	### perl -e $buf=("x"x(2**31))."x"; substr($buf,0,2**31+1)=""; print length $buf
+par_2gb_record_reading	### perl -e $buf=("x"x(2**31))."x"; substr($buf,0,2**31+1)="; print length $buf
 par_2gb_record_reading	Eats 4 GB
 par_2gb_record_reading	0
 par_2gb_record_reading	Eats 4.7 GB

@@ -40,22 +40,10 @@ par_--ssh_autossh	rsync: connection unexpectedly closed (0 bytes received so far
 par_--ssh_autossh	rsync error: error in rsync protocol data stream (code 12) at io.c(231) [Receiver=3.2.7]
 par_--ssh_autossh	foo_autossh
 par_--ssh_lsh	### --ssh lsh
-par_--ssh_lsh	parallel: Warning: Could not figure out number of cpus on lo (). Using 1.
-par_--ssh_lsh	lsh: Server's hostkey is not trusted. Disconnecting.
-par_--ssh_lsh	lsh: Protocol error: Bad server host keypar_--ssh_lsh	
-par_--ssh_lsh	
-par_--ssh_lsh	parallel: Warning: Could not figure out number of cpus on csh@lo (). Using 1.
-par_--ssh_lsh	lsh: Server's hostkey is not trusted. Disconnecting.
-par_--ssh_lsh	lsh: Protocol error: Bad server host keypar_--ssh_lsh	
-par_--ssh_lsh	
-par_--ssh_lsh	parallel: Warning: Could not figure out number of cpus on lo (). Using 1.
-par_--ssh_lsh	lsh: Server's hostkey is not trusted. Disconnecting.
-par_--ssh_lsh	lsh: Protocol error: Bad server host keypar_--ssh_lsh	
-par_--ssh_lsh	
-par_--ssh_lsh	parallel: Warning: Could not figure out number of cpus on csh@lo (). Using 1.
-par_--ssh_lsh	lsh: Server's hostkey is not trusted. Disconnecting.
-par_--ssh_lsh	lsh: Protocol error: Bad server host keypar_--ssh_lsh	
-par_--ssh_lsh	
+par_--ssh_lsh	OK
+par_--ssh_lsh	OK
+par_--ssh_lsh	OK
+par_--ssh_lsh	OK
 par__--shellquote_command_len	### test quoting will not cause a crash if too long
 par__--shellquote_command_len	-Slo -j10	" 1 1	      1       1       4
 par__--shellquote_command_len	-Slo -j10	" 1 2	      1       1      10
@@ -257,74 +245,74 @@ par__--shellquote_command_len	-Slo -j10	' 10 7	      0       0       0
 par__--shellquote_command_len	-Slo -j10	' 10 8	      0       0       0
 par__--shellquote_command_len	-Slo -j10	' 10 9	      0       0       0
 par__--shellquote_command_len	-Slo -j10	' 10 10	      0       0       0
-par__--shellquote_command_len	-Slo -j10	" 1 9	parallel: Error: Command line too long (98xxx >= 64xxx) at input 0: "
-par__--shellquote_command_len	-Slo -j10	" 1 10	parallel: Error: Command line too long (295xxx >= 64xxx) at input 0: "
-par__--shellquote_command_len	-Slo -j10	" 2 8	parallel: Error: Command line too long (65xxx >= 64xxx) at input 0: "
-par__--shellquote_command_len	-Slo -j10	" 2 9	parallel: Error: Command line too long (196xxx >= 64xxx) at input 0: "
-par__--shellquote_command_len	-Slo -j10	" 2 10	parallel: Error: Command line too long (590xxx >= 64xxx) at input 0: "
-par__--shellquote_command_len	-Slo -j10	" 3 8	parallel: Error: Command line too long (98xxx >= 64xxx) at input 0: "
-par__--shellquote_command_len	-Slo -j10	" 3 9	parallel: Error: Command line too long (295xxx >= 64xxx) at input 0: "
-par__--shellquote_command_len	-Slo -j10	" 3 10	parallel: Error: Command line too long (885xxx >= 64xxx) at input 0: "
-par__--shellquote_command_len	-Slo -j10	" 4 8	parallel: Error: Command line too long (131xxx >= 64xxx) at input 0: "
-par__--shellquote_command_len	-Slo -j10	" 4 9	parallel: Error: Command line too long (393xxx >= 64xxx) at input 0: "
-par__--shellquote_command_len	-Slo -j10	" 4 10	parallel: Error: Command line too long (1180xxx >= 64xxx) at input 0: "
-par__--shellquote_command_len	-Slo -j10	" 5 8	parallel: Error: Command line too long (164xxx >= 64xxx) at input 0: "
-par__--shellquote_command_len	-Slo -j10	" 5 9	parallel: Error: Command line too long (492xxx >= 64xxx) at input 0: "
-par__--shellquote_command_len	-Slo -j10	" 5 10	parallel: Error: Command line too long (1476xxx >= 64xxx) at input 0: "
-par__--shellquote_command_len	-Slo -j10	" 6 7	parallel: Error: Command line too long (65xxx >= 64xxx) at input 0: "
-par__--shellquote_command_len	-Slo -j10	" 6 8	parallel: Error: Command line too long (196xxx >= 64xxx) at input 0: "
-par__--shellquote_command_len	-Slo -j10	" 6 9	parallel: Error: Command line too long (590xxx >= 64xxx) at input 0: "
-par__--shellquote_command_len	-Slo -j10	" 6 10	parallel: Error: Command line too long (1771xxx >= 64xxx) at input 0: "
-par__--shellquote_command_len	-Slo -j10	" 7 7	parallel: Error: Command line too long (76xxx >= 64xxx) at input 0: "
-par__--shellquote_command_len	-Slo -j10	" 7 8	parallel: Error: Command line too long (229xxx >= 64xxx) at input 0: "
-par__--shellquote_command_len	-Slo -j10	" 7 9	parallel: Error: Command line too long (688xxx >= 64xxx) at input 0: "
-par__--shellquote_command_len	-Slo -j10	" 7 10	parallel: Error: Command line too long (2066xxx >= 64xxx) at input 0: "
-par__--shellquote_command_len	-Slo -j10	" 8 7	parallel: Error: Command line too long (87xxx >= 64xxx) at input 0: "
-par__--shellquote_command_len	-Slo -j10	" 8 8	parallel: Error: Command line too long (262xxx >= 64xxx) at input 0: "
-par__--shellquote_command_len	-Slo -j10	" 8 9	parallel: Error: Command line too long (787xxx >= 64xxx) at input 0: "
-par__--shellquote_command_len	-Slo -j10	" 8 10	parallel: Error: Command line too long (2361xxx >= 64xxx) at input 0: "
-par__--shellquote_command_len	-Slo -j10	" 9 7	parallel: Error: Command line too long (98xxx >= 64xxx) at input 0: "
-par__--shellquote_command_len	-Slo -j10	" 9 8	parallel: Error: Command line too long (295xxx >= 64xxx) at input 0: "
-par__--shellquote_command_len	-Slo -j10	" 9 9	parallel: Error: Command line too long (885xxx >= 64xxx) at input 0: "
-par__--shellquote_command_len	-Slo -j10	" 9 10	parallel: Error: Command line too long (2657xxx >= 64xxx) at input 0: "
-par__--shellquote_command_len	-Slo -j10	" 10 7	parallel: Error: Command line too long (109xxx >= 64xxx) at input 0: "
-par__--shellquote_command_len	-Slo -j10	" 10 8	parallel: Error: Command line too long (328xxx >= 64xxx) at input 0: "
-par__--shellquote_command_len	-Slo -j10	" 10 9	parallel: Error: Command line too long (984xxx >= 64xxx) at input 0: "
-par__--shellquote_command_len	-Slo -j10	" 10 10	parallel: Error: Command line too long (2952xxx >= 64xxx) at input 0: "
-par__--shellquote_command_len	-Slo -j10	' 1 9	parallel: Error: Command line too long (98xxx >= 64xxx) at input 0: '
-par__--shellquote_command_len	-Slo -j10	' 1 10	parallel: Error: Command line too long (295xxx >= 64xxx) at input 0: '
-par__--shellquote_command_len	-Slo -j10	' 2 8	parallel: Error: Command line too long (65xxx >= 64xxx) at input 0: ''
-par__--shellquote_command_len	-Slo -j10	' 2 9	parallel: Error: Command line too long (196xxx >= 64xxx) at input 0: ''
-par__--shellquote_command_len	-Slo -j10	' 2 10	parallel: Error: Command line too long (590xxx >= 64xxx) at input 0: ''
-par__--shellquote_command_len	-Slo -j10	' 3 8	parallel: Error: Command line too long (98xxx >= 64xxx) at input 0: '''
-par__--shellquote_command_len	-Slo -j10	' 3 9	parallel: Error: Command line too long (295xxx >= 64xxx) at input 0: '''
-par__--shellquote_command_len	-Slo -j10	' 3 10	parallel: Error: Command line too long (885xxx >= 64xxx) at input 0: '''
-par__--shellquote_command_len	-Slo -j10	' 4 8	parallel: Error: Command line too long (131xxx >= 64xxx) at input 0: ''''
-par__--shellquote_command_len	-Slo -j10	' 4 9	parallel: Error: Command line too long (393xxx >= 64xxx) at input 0: ''''
-par__--shellquote_command_len	-Slo -j10	' 4 10	parallel: Error: Command line too long (1180xxx >= 64xxx) at input 0: ''''
-par__--shellquote_command_len	-Slo -j10	' 5 8	parallel: Error: Command line too long (164xxx >= 64xxx) at input 0: '''''
-par__--shellquote_command_len	-Slo -j10	' 5 9	parallel: Error: Command line too long (492xxx >= 64xxx) at input 0: '''''
-par__--shellquote_command_len	-Slo -j10	' 5 10	parallel: Error: Command line too long (1476xxx >= 64xxx) at input 0: '''''
-par__--shellquote_command_len	-Slo -j10	' 6 7	parallel: Error: Command line too long (65xxx >= 64xxx) at input 0: ''''''
-par__--shellquote_command_len	-Slo -j10	' 6 8	parallel: Error: Command line too long (196xxx >= 64xxx) at input 0: ''''''
-par__--shellquote_command_len	-Slo -j10	' 6 9	parallel: Error: Command line too long (590xxx >= 64xxx) at input 0: ''''''
-par__--shellquote_command_len	-Slo -j10	' 6 10	parallel: Error: Command line too long (1771xxx >= 64xxx) at input 0: ''''''
-par__--shellquote_command_len	-Slo -j10	' 7 7	parallel: Error: Command line too long (76xxx >= 64xxx) at input 0: '''''''
-par__--shellquote_command_len	-Slo -j10	' 7 8	parallel: Error: Command line too long (229xxx >= 64xxx) at input 0: '''''''
-par__--shellquote_command_len	-Slo -j10	' 7 9	parallel: Error: Command line too long (688xxx >= 64xxx) at input 0: '''''''
-par__--shellquote_command_len	-Slo -j10	' 7 10	parallel: Error: Command line too long (2066xxx >= 64xxx) at input 0: '''''''
-par__--shellquote_command_len	-Slo -j10	' 8 7	parallel: Error: Command line too long (87xxx >= 64xxx) at input 0: ''''''''
-par__--shellquote_command_len	-Slo -j10	' 8 8	parallel: Error: Command line too long (262xxx >= 64xxx) at input 0: ''''''''
-par__--shellquote_command_len	-Slo -j10	' 8 9	parallel: Error: Command line too long (787xxx >= 64xxx) at input 0: ''''''''
-par__--shellquote_command_len	-Slo -j10	' 8 10	parallel: Error: Command line too long (2361xxx >= 64xxx) at input 0: ''''''''
-par__--shellquote_command_len	-Slo -j10	' 9 7	parallel: Error: Command line too long (98xxx >= 64xxx) at input 0: '''''''''
-par__--shellquote_command_len	-Slo -j10	' 9 8	parallel: Error: Command line too long (295xxx >= 64xxx) at input 0: '''''''''
-par__--shellquote_command_len	-Slo -j10	' 9 9	parallel: Error: Command line too long (885xxx >= 64xxx) at input 0: '''''''''
-par__--shellquote_command_len	-Slo -j10	' 9 10	parallel: Error: Command line too long (2657xxx >= 64xxx) at input 0: '''''''''
-par__--shellquote_command_len	-Slo -j10	' 10 7	parallel: Error: Command line too long (109xxx >= 64xxx) at input 0: ''''''''''
-par__--shellquote_command_len	-Slo -j10	' 10 8	parallel: Error: Command line too long (328xxx >= 64xxx) at input 0: ''''''''''
-par__--shellquote_command_len	-Slo -j10	' 10 9	parallel: Error: Command line too long (984xxx >= 64xxx) at input 0: ''''''''''
-par__--shellquote_command_len	-Slo -j10	' 10 10	parallel: Error: Command line too long (2952xxx >= 64xxx) at input 0: ''''''''''
+par__--shellquote_command_len	-Slo -j10	" 1 9	parallel: Error: Command line too long (98xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len	-Slo -j10	" 1 10	parallel: Error: Command line too long (295xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len	-Slo -j10	" 2 8	parallel: Error: Command line too long (65xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len	-Slo -j10	" 2 9	parallel: Error: Command line too long (196xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len	-Slo -j10	" 2 10	parallel: Error: Command line too long (590xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len	-Slo -j10	" 3 8	parallel: Error: Command line too long (98xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len	-Slo -j10	" 3 9	parallel: Error: Command line too long (295xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len	-Slo -j10	" 3 10	parallel: Error: Command line too long (885xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len	-Slo -j10	" 4 8	parallel: Error: Command line too long (131xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len	-Slo -j10	" 4 9	parallel: Error: Command line too long (393xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len	-Slo -j10	" 4 10	parallel: Error: Command line too long (1180xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len	-Slo -j10	" 5 8	parallel: Error: Command line too long (164xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len	-Slo -j10	" 5 9	parallel: Error: Command line too long (492xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len	-Slo -j10	" 5 10	parallel: Error: Command line too long (1476xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len	-Slo -j10	" 6 7	parallel: Error: Command line too long (65xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len	-Slo -j10	" 6 8	parallel: Error: Command line too long (196xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len	-Slo -j10	" 6 9	parallel: Error: Command line too long (590xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len	-Slo -j10	" 6 10	parallel: Error: Command line too long (1771xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len	-Slo -j10	" 7 7	parallel: Error: Command line too long (76xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len	-Slo -j10	" 7 8	parallel: Error: Command line too long (229xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len	-Slo -j10	" 7 9	parallel: Error: Command line too long (688xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len	-Slo -j10	" 7 10	parallel: Error: Command line too long (2066xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len	-Slo -j10	" 8 7	parallel: Error: Command line too long (87xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len	-Slo -j10	" 8 8	parallel: Error: Command line too long (262xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len	-Slo -j10	" 8 9	parallel: Error: Command line too long (787xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len	-Slo -j10	" 8 10	parallel: Error: Command line too long (2361xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len	-Slo -j10	" 9 7	parallel: Error: Command line too long (98xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len	-Slo -j10	" 9 8	parallel: Error: Command line too long (295xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len	-Slo -j10	" 9 9	parallel: Error: Command line too long (885xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len	-Slo -j10	" 9 10	parallel: Error: Command line too long (2657xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len	-Slo -j10	" 10 7	parallel: Error: Command line too long (109xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len	-Slo -j10	" 10 8	parallel: Error: Command line too long (328xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len	-Slo -j10	" 10 9	parallel: Error: Command line too long (984xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len	-Slo -j10	" 10 10	parallel: Error: Command line too long (2952xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len	-Slo -j10	' 1 9	parallel: Error: Command line too long (98xxx >= 63xxx) at input 0: '
+par__--shellquote_command_len	-Slo -j10	' 1 10	parallel: Error: Command line too long (295xxx >= 63xxx) at input 0: '
+par__--shellquote_command_len	-Slo -j10	' 2 8	parallel: Error: Command line too long (65xxx >= 63xxx) at input 0: ''
+par__--shellquote_command_len	-Slo -j10	' 2 9	parallel: Error: Command line too long (196xxx >= 63xxx) at input 0: ''
+par__--shellquote_command_len	-Slo -j10	' 2 10	parallel: Error: Command line too long (590xxx >= 63xxx) at input 0: ''
+par__--shellquote_command_len	-Slo -j10	' 3 8	parallel: Error: Command line too long (98xxx >= 63xxx) at input 0: '''
+par__--shellquote_command_len	-Slo -j10	' 3 9	parallel: Error: Command line too long (295xxx >= 63xxx) at input 0: '''
+par__--shellquote_command_len	-Slo -j10	' 3 10	parallel: Error: Command line too long (885xxx >= 63xxx) at input 0: '''
+par__--shellquote_command_len	-Slo -j10	' 4 8	parallel: Error: Command line too long (131xxx >= 63xxx) at input 0: ''''
+par__--shellquote_command_len	-Slo -j10	' 4 9	parallel: Error: Command line too long (393xxx >= 63xxx) at input 0: ''''
+par__--shellquote_command_len	-Slo -j10	' 4 10	parallel: Error: Command line too long (1180xxx >= 63xxx) at input 0: ''''
+par__--shellquote_command_len	-Slo -j10	' 5 8	parallel: Error: Command line too long (164xxx >= 63xxx) at input 0: '''''
+par__--shellquote_command_len	-Slo -j10	' 5 9	parallel: Error: Command line too long (492xxx >= 63xxx) at input 0: '''''
+par__--shellquote_command_len	-Slo -j10	' 5 10	parallel: Error: Command line too long (1476xxx >= 63xxx) at input 0: '''''
+par__--shellquote_command_len	-Slo -j10	' 6 7	parallel: Error: Command line too long (65xxx >= 63xxx) at input 0: ''''''
+par__--shellquote_command_len	-Slo -j10	' 6 8	parallel: Error: Command line too long (196xxx >= 63xxx) at input 0: ''''''
+par__--shellquote_command_len	-Slo -j10	' 6 9	parallel: Error: Command line too long (590xxx >= 63xxx) at input 0: ''''''
+par__--shellquote_command_len	-Slo -j10	' 6 10	parallel: Error: Command line too long (1771xxx >= 63xxx) at input 0: ''''''
+par__--shellquote_command_len	-Slo -j10	' 7 7	parallel: Error: Command line too long (76xxx >= 63xxx) at input 0: '''''''
+par__--shellquote_command_len	-Slo -j10	' 7 8	parallel: Error: Command line too long (229xxx >= 63xxx) at input 0: '''''''
+par__--shellquote_command_len	-Slo -j10	' 7 9	parallel: Error: Command line too long (688xxx >= 63xxx) at input 0: '''''''
+par__--shellquote_command_len	-Slo -j10	' 7 10	parallel: Error: Command line too long (2066xxx >= 63xxx) at input 0: '''''''
+par__--shellquote_command_len	-Slo -j10	' 8 7	parallel: Error: Command line too long (87xxx >= 63xxx) at input 0: ''''''''
+par__--shellquote_command_len	-Slo -j10	' 8 8	parallel: Error: Command line too long (262xxx >= 63xxx) at input 0: ''''''''
+par__--shellquote_command_len	-Slo -j10	' 8 9	parallel: Error: Command line too long (787xxx >= 63xxx) at input 0: ''''''''
+par__--shellquote_command_len	-Slo -j10	' 8 10	parallel: Error: Command line too long (2361xxx >= 63xxx) at input 0: ''''''''
+par__--shellquote_command_len	-Slo -j10	' 9 7	parallel: Error: Command line too long (98xxx >= 63xxx) at input 0: '''''''''
+par__--shellquote_command_len	-Slo -j10	' 9 8	parallel: Error: Command line too long (295xxx >= 63xxx) at input 0: '''''''''
+par__--shellquote_command_len	-Slo -j10	' 9 9	parallel: Error: Command line too long (885xxx >= 63xxx) at input 0: '''''''''
+par__--shellquote_command_len	-Slo -j10	' 9 10	parallel: Error: Command line too long (2657xxx >= 63xxx) at input 0: '''''''''
+par__--shellquote_command_len	-Slo -j10	' 10 7	parallel: Error: Command line too long (109xxx >= 63xxx) at input 0: ''''''''''
+par__--shellquote_command_len	-Slo -j10	' 10 8	parallel: Error: Command line too long (328xxx >= 63xxx) at input 0: ''''''''''
+par__--shellquote_command_len	-Slo -j10	' 10 9	parallel: Error: Command line too long (984xxx >= 63xxx) at input 0: ''''''''''
+par__--shellquote_command_len	-Slo -j10	' 10 10	parallel: Error: Command line too long (2952xxx >= 63xxx) at input 0: ''''''''''
 par__--shellquote_command_len		" 1 1	      1       2       6
 par__--shellquote_command_len		" 1 2	      1       2      12
 par__--shellquote_command_len		" 1 3	      1       2      30
@@ -525,86 +513,86 @@ par__--shellquote_command_len		' 10 7	      0       0       0
 par__--shellquote_command_len		' 10 8	      0       0       0
 par__--shellquote_command_len		' 10 9	      0       0       0
 par__--shellquote_command_len		' 10 10	      0       0       0
-par__--shellquote_command_len		" 1 8	parallel: Error: Command line too long (65xxx >= 64xxx) at input 0: "
-par__--shellquote_command_len		" 1 9	parallel: Error: Command line too long (196xxx >= 64xxx) at input 0: "
-par__--shellquote_command_len		" 1 10	parallel: Error: Command line too long (590xxx >= 64xxx) at input 0: "
-par__--shellquote_command_len		" 2 8	parallel: Error: Command line too long (131xxx >= 64xxx) at input 0: "
-par__--shellquote_command_len		" 2 9	parallel: Error: Command line too long (393xxx >= 64xxx) at input 0: "
-par__--shellquote_command_len		" 2 10	parallel: Error: Command line too long (1180xxx >= 64xxx) at input 0: "
-par__--shellquote_command_len		" 3 7	parallel: Error: Command line too long (65xxx >= 64xxx) at input 0: "
-par__--shellquote_command_len		" 3 8	parallel: Error: Command line too long (196xxx >= 64xxx) at input 0: "
-par__--shellquote_command_len		" 3 9	parallel: Error: Command line too long (590xxx >= 64xxx) at input 0: "
-par__--shellquote_command_len		" 3 10	parallel: Error: Command line too long (1771xxx >= 64xxx) at input 0: "
-par__--shellquote_command_len		" 4 7	parallel: Error: Command line too long (87xxx >= 64xxx) at input 0: "
-par__--shellquote_command_len		" 4 8	parallel: Error: Command line too long (262xxx >= 64xxx) at input 0: "
-par__--shellquote_command_len		" 4 9	parallel: Error: Command line too long (787xxx >= 64xxx) at input 0: "
-par__--shellquote_command_len		" 4 10	parallel: Error: Command line too long (2361xxx >= 64xxx) at input 0: "
-par__--shellquote_command_len		" 5 7	parallel: Error: Command line too long (109xxx >= 64xxx) at input 0: "
-par__--shellquote_command_len		" 5 8	parallel: Error: Command line too long (328xxx >= 64xxx) at input 0: "
-par__--shellquote_command_len		" 5 9	parallel: Error: Command line too long (984xxx >= 64xxx) at input 0: "
-par__--shellquote_command_len		" 5 10	parallel: Error: Command line too long (2952xxx >= 64xxx) at input 0: "
-par__--shellquote_command_len		" 6 7	parallel: Error: Command line too long (131xxx >= 64xxx) at input 0: "
-par__--shellquote_command_len		" 6 8	parallel: Error: Command line too long (393xxx >= 64xxx) at input 0: "
-par__--shellquote_command_len		" 6 9	parallel: Error: Command line too long (1180xxx >= 64xxx) at input 0: "
-par__--shellquote_command_len		" 6 10	parallel: Error: Command line too long (3542xxx >= 64xxx) at input 0: "
-par__--shellquote_command_len		" 7 7	parallel: Error: Command line too long (153xxx >= 64xxx) at input 0: "
-par__--shellquote_command_len		" 7 8	parallel: Error: Command line too long (459xxx >= 64xxx) at input 0: "
-par__--shellquote_command_len		" 7 9	parallel: Error: Command line too long (1377xxx >= 64xxx) at input 0: "
-par__--shellquote_command_len		" 7 10	parallel: Error: Command line too long (4133xxx >= 64xxx) at input 0: "
-par__--shellquote_command_len		" 8 7	parallel: Error: Command line too long (174xxx >= 64xxx) at input 0: "
-par__--shellquote_command_len		" 8 8	parallel: Error: Command line too long (524xxx >= 64xxx) at input 0: "
-par__--shellquote_command_len		" 8 9	parallel: Error: Command line too long (1574xxx >= 64xxx) at input 0: "
-par__--shellquote_command_len		" 8 10	parallel: Error: Command line too long (4723xxx >= 64xxx) at input 0: "
-par__--shellquote_command_len		" 9 6	parallel: Error: Command line too long (65xxx >= 64xxx) at input 0: "
-par__--shellquote_command_len		" 9 7	parallel: Error: Command line too long (196xxx >= 64xxx) at input 0: "
-par__--shellquote_command_len		" 9 8	parallel: Error: Command line too long (590xxx >= 64xxx) at input 0: "
-par__--shellquote_command_len		" 9 9	parallel: Error: Command line too long (1771xxx >= 64xxx) at input 0: "
-par__--shellquote_command_len		" 9 10	parallel: Error: Command line too long (5314xxx >= 64xxx) at input 0: "
-par__--shellquote_command_len		" 10 6	parallel: Error: Command line too long (72xxx >= 64xxx) at input 0: "
-par__--shellquote_command_len		" 10 7	parallel: Error: Command line too long (218xxx >= 64xxx) at input 0: "
-par__--shellquote_command_len		" 10 8	parallel: Error: Command line too long (656xxx >= 64xxx) at input 0: "
-par__--shellquote_command_len		" 10 9	parallel: Error: Command line too long (1968xxx >= 64xxx) at input 0: "
-par__--shellquote_command_len		" 10 10	parallel: Error: Command line too long (5904xxx >= 64xxx) at input 0: "
-par__--shellquote_command_len		' 1 8	parallel: Error: Command line too long (65xxx >= 64xxx) at input 0: '
-par__--shellquote_command_len		' 1 9	parallel: Error: Command line too long (196xxx >= 64xxx) at input 0: '
-par__--shellquote_command_len		' 1 10	parallel: Error: Command line too long (590xxx >= 64xxx) at input 0: '
-par__--shellquote_command_len		' 2 8	parallel: Error: Command line too long (131xxx >= 64xxx) at input 0: ''
-par__--shellquote_command_len		' 2 9	parallel: Error: Command line too long (393xxx >= 64xxx) at input 0: ''
-par__--shellquote_command_len		' 2 10	parallel: Error: Command line too long (1180xxx >= 64xxx) at input 0: ''
-par__--shellquote_command_len		' 3 7	parallel: Error: Command line too long (65xxx >= 64xxx) at input 0: '''
-par__--shellquote_command_len		' 3 8	parallel: Error: Command line too long (196xxx >= 64xxx) at input 0: '''
-par__--shellquote_command_len		' 3 9	parallel: Error: Command line too long (590xxx >= 64xxx) at input 0: '''
-par__--shellquote_command_len		' 3 10	parallel: Error: Command line too long (1771xxx >= 64xxx) at input 0: '''
-par__--shellquote_command_len		' 4 7	parallel: Error: Command line too long (87xxx >= 64xxx) at input 0: ''''
-par__--shellquote_command_len		' 4 8	parallel: Error: Command line too long (262xxx >= 64xxx) at input 0: ''''
-par__--shellquote_command_len		' 4 9	parallel: Error: Command line too long (787xxx >= 64xxx) at input 0: ''''
-par__--shellquote_command_len		' 4 10	parallel: Error: Command line too long (2361xxx >= 64xxx) at input 0: ''''
-par__--shellquote_command_len		' 5 7	parallel: Error: Command line too long (109xxx >= 64xxx) at input 0: '''''
-par__--shellquote_command_len		' 5 8	parallel: Error: Command line too long (328xxx >= 64xxx) at input 0: '''''
-par__--shellquote_command_len		' 5 9	parallel: Error: Command line too long (984xxx >= 64xxx) at input 0: '''''
-par__--shellquote_command_len		' 5 10	parallel: Error: Command line too long (2952xxx >= 64xxx) at input 0: '''''
-par__--shellquote_command_len		' 6 7	parallel: Error: Command line too long (131xxx >= 64xxx) at input 0: ''''''
-par__--shellquote_command_len		' 6 8	parallel: Error: Command line too long (393xxx >= 64xxx) at input 0: ''''''
-par__--shellquote_command_len		' 6 9	parallel: Error: Command line too long (1180xxx >= 64xxx) at input 0: ''''''
-par__--shellquote_command_len		' 6 10	parallel: Error: Command line too long (3542xxx >= 64xxx) at input 0: ''''''
-par__--shellquote_command_len		' 7 7	parallel: Error: Command line too long (153xxx >= 64xxx) at input 0: '''''''
-par__--shellquote_command_len		' 7 8	parallel: Error: Command line too long (459xxx >= 64xxx) at input 0: '''''''
-par__--shellquote_command_len		' 7 9	parallel: Error: Command line too long (1377xxx >= 64xxx) at input 0: '''''''
-par__--shellquote_command_len		' 7 10	parallel: Error: Command line too long (4133xxx >= 64xxx) at input 0: '''''''
-par__--shellquote_command_len		' 8 7	parallel: Error: Command line too long (174xxx >= 64xxx) at input 0: ''''''''
-par__--shellquote_command_len		' 8 8	parallel: Error: Command line too long (524xxx >= 64xxx) at input 0: ''''''''
-par__--shellquote_command_len		' 8 9	parallel: Error: Command line too long (1574xxx >= 64xxx) at input 0: ''''''''
-par__--shellquote_command_len		' 8 10	parallel: Error: Command line too long (4723xxx >= 64xxx) at input 0: ''''''''
-par__--shellquote_command_len		' 9 6	parallel: Error: Command line too long (65xxx >= 64xxx) at input 0: '''''''''
-par__--shellquote_command_len		' 9 7	parallel: Error: Command line too long (196xxx >= 64xxx) at input 0: '''''''''
-par__--shellquote_command_len		' 9 8	parallel: Error: Command line too long (590xxx >= 64xxx) at input 0: '''''''''
-par__--shellquote_command_len		' 9 9	parallel: Error: Command line too long (1771xxx >= 64xxx) at input 0: '''''''''
-par__--shellquote_command_len		' 9 10	parallel: Error: Command line too long (5314xxx >= 64xxx) at input 0: '''''''''
-par__--shellquote_command_len		' 10 6	parallel: Error: Command line too long (72xxx >= 64xxx) at input 0: ''''''''''
-par__--shellquote_command_len		' 10 7	parallel: Error: Command line too long (218xxx >= 64xxx) at input 0: ''''''''''
-par__--shellquote_command_len		' 10 8	parallel: Error: Command line too long (656xxx >= 64xxx) at input 0: ''''''''''
-par__--shellquote_command_len		' 10 9	parallel: Error: Command line too long (1968xxx >= 64xxx) at input 0: ''''''''''
-par__--shellquote_command_len		' 10 10	parallel: Error: Command line too long (5904xxx >= 64xxx) at input 0: ''''''''''
+par__--shellquote_command_len		" 1 8	parallel: Error: Command line too long (65xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len		" 1 9	parallel: Error: Command line too long (196xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len		" 1 10	parallel: Error: Command line too long (590xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len		" 2 8	parallel: Error: Command line too long (131xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len		" 2 9	parallel: Error: Command line too long (393xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len		" 2 10	parallel: Error: Command line too long (1180xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len		" 3 7	parallel: Error: Command line too long (65xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len		" 3 8	parallel: Error: Command line too long (196xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len		" 3 9	parallel: Error: Command line too long (590xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len		" 3 10	parallel: Error: Command line too long (1771xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len		" 4 7	parallel: Error: Command line too long (87xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len		" 4 8	parallel: Error: Command line too long (262xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len		" 4 9	parallel: Error: Command line too long (787xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len		" 4 10	parallel: Error: Command line too long (2361xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len		" 5 7	parallel: Error: Command line too long (109xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len		" 5 8	parallel: Error: Command line too long (328xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len		" 5 9	parallel: Error: Command line too long (984xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len		" 5 10	parallel: Error: Command line too long (2952xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len		" 6 7	parallel: Error: Command line too long (131xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len		" 6 8	parallel: Error: Command line too long (393xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len		" 6 9	parallel: Error: Command line too long (1180xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len		" 6 10	parallel: Error: Command line too long (3542xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len		" 7 7	parallel: Error: Command line too long (153xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len		" 7 8	parallel: Error: Command line too long (459xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len		" 7 9	parallel: Error: Command line too long (1377xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len		" 7 10	parallel: Error: Command line too long (4133xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len		" 8 7	parallel: Error: Command line too long (174xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len		" 8 8	parallel: Error: Command line too long (524xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len		" 8 9	parallel: Error: Command line too long (1574xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len		" 8 10	parallel: Error: Command line too long (4723xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len		" 9 6	parallel: Error: Command line too long (65xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len		" 9 7	parallel: Error: Command line too long (196xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len		" 9 8	parallel: Error: Command line too long (590xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len		" 9 9	parallel: Error: Command line too long (1771xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len		" 9 10	parallel: Error: Command line too long (5314xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len		" 10 6	parallel: Error: Command line too long (72xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len		" 10 7	parallel: Error: Command line too long (218xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len		" 10 8	parallel: Error: Command line too long (656xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len		" 10 9	parallel: Error: Command line too long (1968xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len		" 10 10	parallel: Error: Command line too long (5904xxx >= 63xxx) at input 0: "
+par__--shellquote_command_len		' 1 8	parallel: Error: Command line too long (65xxx >= 63xxx) at input 0: '
+par__--shellquote_command_len		' 1 9	parallel: Error: Command line too long (196xxx >= 63xxx) at input 0: '
+par__--shellquote_command_len		' 1 10	parallel: Error: Command line too long (590xxx >= 63xxx) at input 0: '
+par__--shellquote_command_len		' 2 8	parallel: Error: Command line too long (131xxx >= 63xxx) at input 0: ''
+par__--shellquote_command_len		' 2 9	parallel: Error: Command line too long (393xxx >= 63xxx) at input 0: ''
+par__--shellquote_command_len		' 2 10	parallel: Error: Command line too long (1180xxx >= 63xxx) at input 0: ''
+par__--shellquote_command_len		' 3 7	parallel: Error: Command line too long (65xxx >= 63xxx) at input 0: '''
+par__--shellquote_command_len		' 3 8	parallel: Error: Command line too long (196xxx >= 63xxx) at input 0: '''
+par__--shellquote_command_len		' 3 9	parallel: Error: Command line too long (590xxx >= 63xxx) at input 0: '''
+par__--shellquote_command_len		' 3 10	parallel: Error: Command line too long (1771xxx >= 63xxx) at input 0: '''
+par__--shellquote_command_len		' 4 7	parallel: Error: Command line too long (87xxx >= 63xxx) at input 0: ''''
+par__--shellquote_command_len		' 4 8	parallel: Error: Command line too long (262xxx >= 63xxx) at input 0: ''''
+par__--shellquote_command_len		' 4 9	parallel: Error: Command line too long (787xxx >= 63xxx) at input 0: ''''
+par__--shellquote_command_len		' 4 10	parallel: Error: Command line too long (2361xxx >= 63xxx) at input 0: ''''
+par__--shellquote_command_len		' 5 7	parallel: Error: Command line too long (109xxx >= 63xxx) at input 0: '''''
+par__--shellquote_command_len		' 5 8	parallel: Error: Command line too long (328xxx >= 63xxx) at input 0: '''''
+par__--shellquote_command_len		' 5 9	parallel: Error: Command line too long (984xxx >= 63xxx) at input 0: '''''
+par__--shellquote_command_len		' 5 10	parallel: Error: Command line too long (2952xxx >= 63xxx) at input 0: '''''
+par__--shellquote_command_len		' 6 7	parallel: Error: Command line too long (131xxx >= 63xxx) at input 0: ''''''
+par__--shellquote_command_len		' 6 8	parallel: Error: Command line too long (393xxx >= 63xxx) at input 0: ''''''
+par__--shellquote_command_len		' 6 9	parallel: Error: Command line too long (1180xxx >= 63xxx) at input 0: ''''''
+par__--shellquote_command_len		' 6 10	parallel: Error: Command line too long (3542xxx >= 63xxx) at input 0: ''''''
+par__--shellquote_command_len		' 7 7	parallel: Error: Command line too long (153xxx >= 63xxx) at input 0: '''''''
+par__--shellquote_command_len		' 7 8	parallel: Error: Command line too long (459xxx >= 63xxx) at input 0: '''''''
+par__--shellquote_command_len		' 7 9	parallel: Error: Command line too long (1377xxx >= 63xxx) at input 0: '''''''
+par__--shellquote_command_len		' 7 10	parallel: Error: Command line too long (4133xxx >= 63xxx) at input 0: '''''''
+par__--shellquote_command_len		' 8 7	parallel: Error: Command line too long (174xxx >= 63xxx) at input 0: ''''''''
+par__--shellquote_command_len		' 8 8	parallel: Error: Command line too long (524xxx >= 63xxx) at input 0: ''''''''
+par__--shellquote_command_len		' 8 9	parallel: Error: Command line too long (1574xxx >= 63xxx) at input 0: ''''''''
+par__--shellquote_command_len		' 8 10	parallel: Error: Command line too long (4723xxx >= 63xxx) at input 0: ''''''''
+par__--shellquote_command_len		' 9 6	parallel: Error: Command line too long (65xxx >= 63xxx) at input 0: '''''''''
+par__--shellquote_command_len		' 9 7	parallel: Error: Command line too long (196xxx >= 63xxx) at input 0: '''''''''
+par__--shellquote_command_len		' 9 8	parallel: Error: Command line too long (590xxx >= 63xxx) at input 0: '''''''''
+par__--shellquote_command_len		' 9 9	parallel: Error: Command line too long (1771xxx >= 63xxx) at input 0: '''''''''
+par__--shellquote_command_len		' 9 10	parallel: Error: Command line too long (5314xxx >= 63xxx) at input 0: '''''''''
+par__--shellquote_command_len		' 10 6	parallel: Error: Command line too long (72xxx >= 63xxx) at input 0: ''''''''''
+par__--shellquote_command_len		' 10 7	parallel: Error: Command line too long (218xxx >= 63xxx) at input 0: ''''''''''
+par__--shellquote_command_len		' 10 8	parallel: Error: Command line too long (656xxx >= 63xxx) at input 0: ''''''''''
+par__--shellquote_command_len		' 10 9	parallel: Error: Command line too long (1968xxx >= 63xxx) at input 0: ''''''''''
+par__--shellquote_command_len		' 10 10	parallel: Error: Command line too long (5904xxx >= 63xxx) at input 0: ''''''''''
 par__basefile_cleanup	### bug #46520: --basefile cleans up without --cleanup
 par__basefile_cleanup	bug_46520
 par__basefile_cleanup	bug_46520

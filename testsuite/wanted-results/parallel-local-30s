@@ -2725,8 +2725,8 @@ par_macron	¯<¯<¯>¯> -X	¯<¯<¯>¯> ¯<¯<¯>¯>
 par_macron	¯<¯<¯>¯> -X	¯<¯<¯>¯>¯<¯<¯>¯>
 par_macron	¯<¯<¯>¯> -X	/usr/bin/bash: -c: line 1: syntax error near unexpected token `newline'
 par_macron	¯<¯<¯>¯> -X	/usr/bin/bash: -c: line 1: `echo ¯<¯<¯>¯>'
-par_macron	¯<¯<¯>¯> -X	/usr/bin/bash: line 1: ¯: Invalid or incomplete multibyte or wide character
-par_macron	¯<¯<¯>¯> -X	/usr/bin/bash: line 1: ¯: Invalid or incomplete multibyte or wide character
+par_macron	¯<¯<¯>¯> -X	/usr/bin/bash: line 1: ¯: No such file or directory
+par_macron	¯<¯<¯>¯> -X	/usr/bin/bash: line 1: ¯: No such file or directory
 par_macron	¯<¯<¯>¯> -q	¯<¯<¯>¯>
 par_macron	¯<¯<¯>¯> -q	¯<¯<¯>¯> ¯<¯<¯>¯>
 par_macron	¯<¯<¯>¯> -q	"¯<¯<¯>¯>" ¯<¯<¯>¯>
@@ -2744,15 +2744,15 @@ par_macron	¯<¯<¯>¯> -k	¯<¯<¯>¯> ¯<¯<¯>¯>
 par_macron	¯<¯<¯>¯> -k	¯<¯<¯>¯>¯<¯<¯>¯>
 par_macron	¯<¯<¯>¯> -k	/usr/bin/bash: -c: line 1: syntax error near unexpected token `newline'
 par_macron	¯<¯<¯>¯> -k	/usr/bin/bash: -c: line 1: `echo ¯<¯<¯>¯>'
-par_macron	¯<¯<¯>¯> -k	/usr/bin/bash: line 1: ¯: Invalid or incomplete multibyte or wide character
-par_macron	¯<¯<¯>¯> -k	/usr/bin/bash: line 1: ¯: Invalid or incomplete multibyte or wide character
+par_macron	¯<¯<¯>¯> -k	/usr/bin/bash: line 1: ¯: No such file or directory
+par_macron	¯<¯<¯>¯> -k	/usr/bin/bash: line 1: ¯: No such file or directory
 par_max_length_len_128k	### BUG: The length for -X is not close to max (131072)
-par_max_length_len_128k	64xxx
-par_max_length_len_128k	64xxx
-par_max_length_len_128k	64xxx
-par_max_length_len_128k	64xxx
-par_max_length_len_128k	64xxx
-par_max_length_len_128k	64xxx
+par_max_length_len_128k	63xxx
+par_max_length_len_128k	63xxx
+par_max_length_len_128k	63xxx
+par_max_length_len_128k	63xxx
+par_max_length_len_128k	63xxx
+par_max_length_len_128k	63xxx
 par_memfree	### test memfree - it should be killed by timeout
 par_memfree	Free mem: 1k
 par_memfree	parallel: Warning: This job was killed because it timed out:

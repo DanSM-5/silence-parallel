@@ -223,6 +223,12 @@ par__test_different_rsync_versions	rsync-v2.6.6	Basic use works: rsync-v2.6.6
 par__test_different_rsync_versions	rsync-v2.6.7	Basic use works: rsync-v2.6.7
 par__test_different_rsync_versions	rsync-v2.6.8	Basic use works: rsync-v2.6.8
 par__test_different_rsync_versions	rsync-v2.6.9	Basic use works: rsync-v2.6.9
+par__test_different_rsync_versions	rsync-v3.0.0	Basic use works: rsync-v3.0.0
+par__test_different_rsync_versions	rsync-v3.0.1	Basic use works: rsync-v3.0.1
+par__test_different_rsync_versions	rsync-v3.0.2	Basic use works: rsync-v3.0.2
+par__test_different_rsync_versions	rsync-v3.0.3	Basic use works: rsync-v3.0.3
+par__test_different_rsync_versions	rsync-v3.0.4	Basic use works: rsync-v3.0.4
+par__test_different_rsync_versions	rsync-v3.0.5	Basic use works: rsync-v3.0.5
 par__test_different_rsync_versions	rsync-v3.0.6	Basic use works: rsync-v3.0.6
 par__test_different_rsync_versions	rsync-v3.0.7	Basic use works: rsync-v3.0.7
 par__test_different_rsync_versions	rsync-v3.0.8	Basic use works: rsync-v3.0.8
