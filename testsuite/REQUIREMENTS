@@ -7,18 +7,18 @@
 install_packages() {
     # After first run, set this:
     #   export INSTALL=echo
-    INSTALL=${INSTALL:-"sudo aptitude -y install"}
+    INSTALL=${INSTALL:-"sudo apt -y install"}
 
     # The testsuite depends on this:
     test_pkgs="imagemagick expect autossh sshpass jq libpod-simple-perl"
     test_pkgs="$test_pkgs pod2pdf gawk lua5.3 clisp php-cli nodejs"
     test_pkgs="$test_pkgs mono-csharp-shell libevent-dev tcl libtext-csv-perl"
-    test_pkgs="$test_pkgs xterm libc6-i386 libcrypt1:i386"
-    test_pkgs="$test_pkgs libtest-nowarnings-perl xemacs21-bin"
+    test_pkgs="$test_pkgs xterm libc6-i386 libcrypt1:i386 vagrant virtualbox"
+    test_pkgs="$test_pkgs libtest-nowarnings-perl xemacs21 pv zenity"
 
     # Debian package
-    packaging_pkgs="dpkg-dev build-essential debhelper osc cvs automake-1.15"
-    packaging_pkgs="$packaging_pkgs python3-m2crypto alien"
+    packaging_pkgs="dpkg-dev build-essential debhelper osc cvs automake"
+    packaging_pkgs="$packaging_pkgs python3-m2crypto alien python3-pip"
 
     # Shebang Tools
     shebang_pkgs="gnuplot octave ruby r-base-core"
@@ -34,7 +34,8 @@ install_packages() {
 
     # Shells
     # (csh = bsd-csh that is broken)
-    shell_pkgs="ash dash fdclone fish fizsh ksh ksh93u+m ksh93 mksh posh rc rush sash"
+    # (ksh93 gone)
+    shell_pkgs="ash dash fdclone fish fizsh ksh ksh93u+m mksh posh rc rush sash"
     shell_pkgs="$shell_pkgs tcsh yash zsh busybox-static"
 
     # Databases
@@ -42,10 +43,10 @@ install_packages() {
 
     # Build Tools
     build_pkgs="bison libxxhash-dev libzstd-dev liblz4-dev libssl-dev"
-    build_pkgs="$build_pkgs python3-cmarkgfm graphviz"
+    build_pkgs="$build_pkgs python3-cmarkgfm libpod-pom-view-restructured-perl"
+    build_pkgs="$build_pkgs graphviz"
 
     sudo dpkg --add-architecture i386; sudo apt update
-    pip install sphinx-rtd-theme
     if $INSTALL $test_pkgs $packaging_pkgs $shebang_pkgs $sql_pkgs \
 		$compression_pkgs $shell_pkgs $database_pkgs $build_pkgs ; then
 	# OK
@@ -54,6 +55,7 @@ install_packages() {
 	echo Packages missing
 	return 1
     fi
+    pip install sphinx-rtd-theme
     sudo apt update &
 }
 
@@ -117,6 +119,10 @@ setup_virtual_box_network() {
 setup_databases() {
     # DATABASES
     echo '# Create PostgreSQL'
+    sudo em /etc/postgresql/*/main/postgresql.conf
+    # listen_addresses = '*'
+    sudo service postgresql restart
+    
     # Drop database and user if needed
     sudo su - postgres -c 'dropdb '`whoami`
     sudo su - postgres -c 'dropuser '`whoami`
@@ -146,13 +152,13 @@ add_server_to_hosts() {
 	# could not settle on kex algorithm
 	# Server kex preferences: diffie-hellman-group-exchange-sha1,diffie-hellman-group1-sha1
 	# Client kex preferences: ecdh-sha2-nistp521,ecdh-sha2-nistp384,ecdh-sha2-nistp256,diffie-hellman-group-exchange-sha256,diffie-hellman-group14-sha1>
-debug2: KEX algorithms: curve25519-sha256,curve25519-sha256@libssh.org,ecdh-sha2-nistp256,ecdh-sha2-nistp384,ecdh-sha2-nistp521,sntrup761x25519-sha512@openssh.com,diffie-hellman-group-exchange-sha256,diffie-hellman-group16-sha512,diffie-hellman-group18-sha512,diffie-hellman-group14-sha256,diffie-hellman-group1-sha1,ext-info-c
-debug2: host key algorithms: ssh-dss,ssh-ed25519-cert-v01@openssh.com,ecdsa-sha2-nistp256-cert-v01@openssh.com,ecdsa-sha2-nistp384-cert-v01@openssh.com,ecdsa-sha2-nistp521-cert-v01@openssh.com,sk-ssh-ed25519-cert-v01@openssh.com,sk-ecdsa-sha2-nistp256-cert-v01@openssh.com,rsa-sha2-512-cert-v01@openssh.com,rsa-sha2-256-cert-v01@openssh.com,ssh-ed25519,ecdsa-sha2-nistp256,ecdsa-sha2-nistp384,ecdsa-sha2-nistp521,sk-ssh-ed25519@openssh.com,sk-ecdsa-sha2-nistp256@openssh.com,rsa-sha2-512,rsa-sha2-256
-debug2: ciphers ctos: aes128-ctr,aes192-ctr,aes256-ctr,aes256-cbc,aes192-cbc,aes128-cbc,3des-cbc
-debug2: ciphers stoc: aes128-ctr,aes192-ctr,aes256-ctr,aes256-cbc,aes192-cbc,aes128-cbc,3des-cbc
-debug2: MACs ctos: umac-64-etm@openssh.com,umac-128-etm@openssh.com,hmac-sha2-256-etm@openssh.com,hmac-sha2-512-etm@openssh.com,hmac-sha1-etm@openssh.com,umac-64@openssh.com,umac-128@openssh.com,hmac-sha2-256,hmac-sha2-512,hmac-sha1
-debug2: MACs stoc: umac-64-etm@openssh.com,umac-128-etm@openssh.com,hmac-sha2-256-etm@openssh.com,hmac-sha2-512-etm@openssh.com,hmac-sha1-etm@openssh.com,umac-64@openssh.com,umac-128@openssh.com,hmac-sha2-256,hmac-sha2-512,hmac-sha1
-	
+#debug2: KEX algorithms: curve25519-sha256,curve25519-sha256@libssh.org,ecdh-sha2-nistp256,ecdh-sha2-nistp384,ecdh-sha2-nistp521,sntrup761x25519-sha512@openssh.com,diffie-hellman-group-exchange-sha256,diffie-hellman-group16-sha512,diffie-hellman-group18-sha512,diffie-hellman-group14-sha256,diffie-hellman-group1-sha1,ext-info-c
+#debug2: host key algorithms: ssh-dss,ssh-ed25519-cert-v01@openssh.com,ecdsa-sha2-nistp256-cert-v01@openssh.com,ecdsa-sha2-nistp384-cert-v01@openssh.com,ecdsa-sha2-nistp521-cert-v01@openssh.com,sk-ssh-ed25519-cert-v01@openssh.com,sk-ecdsa-sha2-nistp256-cert-v01@openssh.com,rsa-sha2-512-cert-v01@openssh.com,rsa-sha2-256-cert-v01@openssh.com,ssh-ed25519,ecdsa-sha2-nistp256,ecdsa-sha2-nistp384,ecdsa-sha2-nistp521,sk-ssh-ed25519@openssh.com,sk-ecdsa-sha2-nistp256@openssh.com,rsa-sha2-512,rsa-sha2-256
+#debug2: ciphers ctos: aes128-ctr,aes192-ctr,aes256-ctr,aes256-cbc,aes192-cbc,aes128-cbc,3des-cbc
+#debug2: ciphers stoc: aes128-ctr,aes192-ctr,aes256-ctr,aes256-cbc,aes192-cbc,aes128-cbc,3des-cbc
+#debug2: MACs ctos: umac-64-etm@openssh.com,umac-128-etm@openssh.com,hmac-sha2-256-etm@openssh.com,hmac-sha2-512-etm@openssh.com,hmac-sha1-etm@openssh.com,umac-64@openssh.com,umac-128@openssh.com,hmac-sha2-256,hmac-sha2-512,hmac-sha1
+#debug2: MACs stoc: umac-64-etm@openssh.com,umac-128-etm@openssh.com,hmac-sha2-256-etm@openssh.com,hmac-sha2-512-etm@openssh.com,hmac-sha1-etm@openssh.com,umac-64@openssh.com,umac-128@openssh.com,hmac-sha2-256,hmac-sha2-512,hmac-sha1
+#	
     }
     
     insert_in_etc_hosts() {
@@ -170,6 +176,8 @@ debug2: MACs stoc: umac-64-etm@openssh.com,umac-128-etm@openssh.com,hmac-sha2-25
     add_single_vagrant_to_etc_hosts() {
 	vagrant_ip() {
 	    cd vagrant/*/$1
+	    # .vagrant can contain dirt
+	    rm -rf .vagrant
 	    grep 172 Vagrantfile | grep -v '#' |
 		perl -pe 's/.*(172.27[\.0-9]+).*/$1/';
 	}
@@ -179,11 +187,36 @@ debug2: MACs stoc: umac-64-etm@openssh.com,umac-128-etm@openssh.com,hmac-sha2-25
     
     add_ssh_key_to_authorized
     insert_in_etc_hosts 127.1.2.3 server
+    
+    insert_in_etc_hosts 127.0.0.2 lo
     parallel add_single_vagrant_to_etc_hosts ::: centos8 freebsd11 freebsd12 freebsd13 rhel8 centos3 centos39-oracle817
+    # TODO alias
+    # 172.27.27.8     centos8 parallel-server1 server1
+    # 172.27.27.72    freebsd12 parallel-server3 server3
+    # 172.27.27.108   rhel8 parallel-server4 server4
+    # 172.27.27.73    freebsd13 parallel-server2 server2
+    # TODO
+    # $ cat /etc/vbox/networks.conf
+    # * 172.27.0.0/16
+    # TODO
+    sshaddvagrant() {
+	cat ~/.ssh/*.pub | (cd vagrant/*/$1 && vagrant ssh -c 'cat >>.ssh/authorized_keys')
+	sshpass -p vagrant ssh-copy-id -o StrictHostKeyChecking=accept-new vagrant@$1
+	ssh vagrant@$1 echo vagrant@$1 OK
+    }
+    export -f sshaddvagrant
+    parallel sshaddvagrant ::: centos8 freebsd11 freebsd12 freebsd13 rhel8 centos3 centos39-oracle817
+    parallel ssh -o StrictHostKeyChecking=accept-new vagrant@{} ::: parallel-server{1..4} centos3
+    # TODO find ipv6
+    ipv6=
+    parallel ssh -o StrictHostKeyChecking=accept-new {} ::: lo localhost 172.27.27.1 127.0.0.1 ::1 $ipv6
+    # parallel sshpass -p vagrant ssh-copy-id vagrant@{} ::: parallel-server{1..4} centos3
+
+    # ssh-copy-id vagrant@parallel-server1..4 centos3
 }
 
 shellsplus() {
-    shells="bash sh csh ash dash tcsh zsh ksh ksh2020 ksh93 fish fizsh mksh"
+    shells="bash sh csh ash dash tcsh zsh ksh ksh93 fish fizsh mksh"
     shells="$shells posh rc sash yash nopathbash nopathcsh"
     shellsplus="parallel $shells"
     parallel -k echo ::: $shellsplus
@@ -213,15 +246,15 @@ create_shell_logins() {
 	sudo killall -u $shell
 	sudo deluser $shell && sudo mv /home/$shell /tmp/$shell.$RANDOM
 	sudo groupdel $shell
-	if echo $shell | grep -q parallel; then
-	    # User parallel should have /bin/bash
+	if echo $shell | grep -qE "parallel|withpassword"; then
+	    # User parallel+withpassword should have /bin/bash
 	    loginshell=/bin/bash
 	else
 	    # Other users should have `which $shell` with nopath removed
 	    loginshell=$(which $shell || which ${shell#"nopath"})
 	fi
 	sudo adduser --shell $loginshell --disabled-password --gecos "$shell for parallel,,," $shell &&
-	    echo "$shell:$SSHPASS" | sudo chpasswd && 
+	    echo "$shell:$SSHPASS" | sudo chpasswd &&
 	    sshpass -e ssh-copy-id $shell@lo &&
 	    echo "$shell created"
     }
@@ -444,10 +477,12 @@ rsync_versions() {
 }
 
 install_tangetools() {
-    git clone https://gitlab.com/ole.tange/tangetools.git
-    cd tangetools &&
-	make &&
-	sudo make install
+    (
+	git clone https://codeberg.org/tange/tangetools
+	cd tangetools &&
+	    make &&
+	    sudo make install
+    )
 }
 
 misc() {

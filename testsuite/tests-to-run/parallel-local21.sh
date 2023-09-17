@@ -216,6 +216,7 @@ EOF
 
 par_shebang_wrap_octave() {
     script="$TMPDIR"/shebang_wrap_octave
+    unset DISPLAY
     cat <<'EOF' > "$script"
 #!/usr/local/bin/parallel --shebang-wrap -k /usr/bin/octave
 

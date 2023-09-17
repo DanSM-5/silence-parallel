@@ -26,7 +26,8 @@
 # Run commands in tty2 to set clipboard to next command
 
 manuscript() {
-    # <digit> sleep this many seconds before executing command
+    # S <digit>; sleep this many seconds before executing command
+    # T <digit>; sleep this many seconds before pressing enter
     cat <<'_'
 ###
 # Definitions
@@ -34,64 +35,66 @@ PS1='$ '
 S() { sleep $@; }
 T() { echo -n '$ '; sleep $@; echo; }
 # Wait for asciinema to read all input
-sleep 5
+sleep 1
 ###
 S 0; # Make some files
-S 3; seq 100 | parallel --bar seq {}0000 '>' file-{}
-T 1;
+S 1; seq 100 | parallel --bar seq {}0000 '>' file-{}
+T 2;
 S 0; # gzip files with -1 .. -7 Note how all combinations are made
-S 3; parallel --bar gzip  {1} '<{2}' '>{2}{1}.gz' ::: -{1..7} ::: *
+S 1; parallel --bar gzip {1} '<{2}' '>{2}{1}.gz' ::: -{1..7} ::: *
 T 1;
 S 0; # Count the bytes in some files. Each job gets its own color
-S 3; parallel --color --tag wc {} ::: file-99*
-T 1;
+S 1; parallel --color --tag wc {} ::: file-99*
+T 2;
 S 0; # Remove .gz-files
-S 3; rm *.gz
-T 1;
+S 1; rm *.gz
+T 3;
 S 0; # Make a big file
-S 3; seq 10000000 > bigfile
-T 1;
+S 1; seq 10000000 > bigfile
+T 3;
 S 0; # Chop bigfile into parts with 100000 lines (slow)
-S 3; cat bigfile | parallel --pipe -n100000 cat '>lines-{#}'
-S 3; ls lines-*
+S 0; cat bigfile | parallel --pipe -n100000 cat '>lines-{#}'
 T 1;
+S 1; ls lines-*
+T 3;
 S 0; # Chop bigfile into parts each ~10mb (faster)
-S 3; cat bigfile | parallel --pipe --block 10m cat '>10mb-{#}'
+S 0; cat bigfile | parallel --pipe --block 10m cat '>10mb-{#}'
 S 3; ls -l 10mb-*
 T 1;
 S 0; # Chop bigfile into one part per CPU thread (fastest)
-S 3; parallel --pipepart -a bigfile --block -1 \
+S 0; parallel --pipepart -a bigfile --block -1 \
         cat '>thread-part-{#}'
 S 3; ls -l thread-part-*
 T 1;
 S 0; # Chop bigfile into one part per CPU thread - chop at 000\n
-S 3; parallel --pipepart -a bigfile --block -1 --recend '000\n' \
+S 0; parallel --pipepart -a bigfile --block -1 --recend '000\n' \
         cat '>p000-{#}'
-S 3; head -1 p000-*
-T 1;
+T 3;
+S 1; head -1 p000-*
+T 3;
 S 0; # Rename all files to UPPERCASE using a {= perl expr =}
 S 3; parallel mv {} {= tr/a-z/A-Z/ =} ::: *
-S 3; ls
-T 1;
+S 1; ls
+T 3;
 S 0; # Move files into dirs named after the last char in the name
-S 3; parallel 'mkdir -p {= $_=chop =}; mv {} {= $_=chop =}' ::: *
-S 3; ls
-T 1;
+S 1; parallel 'mkdir -p {= $_=chop =}; mv {} {= $_=chop =}' ::: *
+S 1; ls
+T 3;
 S 0; # Zip dirs into files
-S 3; parallel --ll --color --tag zip -r '{= s:/$:: =}'.zip {} ::: */
-T 1;
+S 1; parallel --ll --color --tag zip -r '{= s:/$:: =}'.zip {} ::: */
+T 3;
 S 0; # Remove the dirs
-S 3; rm -r */
-T 1;
+S 1; rm -r */
+T 3;
 S 0; # Unzip zip files into dirs
-S 3; parallel --ll --tag 'mkdir {.}; cd {.}; unzip ../{}' ::: *.zip
-T 1;
+S 1; parallel --ll --tag 'mkdir {.}; cd {.}; unzip ../{}' ::: *.zip
+T 3;
 S 0; # Remove zip and dirs
-S 3; rm -r *.zip ?
-T 1;
+S 1; rm -r *.zip ?
+T 3;
 S 0; # Paint output of the failing commands
-S 3; parallel --colorfailed echo Arg:{} ';' exit {} ::: 0 0 1 2 0
-T 1;
+S 1; parallel --colorfailed echo Arg:{} ';' exit {} ::: 0 0 1 2 0
+T 3;
 S 0; # Use a bash function with one argument
 doit() {
   echo Doing it for $1
@@ -99,8 +102,8 @@ doit() {
   echo Done with $1
 }
 export -f doit
-S 3; parallel doit ::: 1 2 3
-T 1;
+S 1; parallel doit ::: 1 2 3
+T 3;
 S 0; # Use a bash function with two argument
 doubleit() {
   echo Doing it for $1 $2
@@ -108,11 +111,11 @@ doubleit() {
   echo Done with $1 $2
 }
 export -f doubleit
-S 3; parallel doubleit ::: 1 2 3 ::: a b
-T 1;
+S 1; parallel doubleit ::: 1 2 3 ::: a b
+T 3;
 S 0; # Make some logfiles
 S 1; touch log
-S 3; parallel seq {} '>' log.{} ::: {1..10}
+S 1; parallel seq {} '>' log.{} ::: {1..10}
 S 3; ls -l
 T 1;
 S 0; # Simple log rotate
@@ -123,20 +126,25 @@ T 1;
 S 0; # Monitor progress of multiple jobs in parallel
 slowseq() { seq "$@" | pv -qL 20; }
 export -f slowseq
-S 3; parallel --ll --color --tag slowseq {} ::: 150 {1..60}
+S 1; parallel --ll --color --tag slowseq {} ::: 150 {1..60}
 T 3;
 ###
 exit
 _
 }
 
+#                    $sleep = $sleep/2+100.001;
+#                    $sleep = $sleep/2+100.001;
+#            $sleep = $sleep/2+100.001;
+#        return $ms/2+100.001;
+#             if($something_printed) { $ms = $ms/2+100.001; }
+
 pwd=$(pwd)
 tmp=$(mktemp -d)
 cd "$tmp" &&
     manuscript |
-    parallel -j1 echo '{= s/^(\d+)\s/sleep($1);""/e; =}' |
-    asciinema rec - |
-    perl -ne 's/[ST] \d;\s?//;
+	asciinema rec - | tee /tmp/parallel.c |
+	    perl -ne 's/;?[ST] \d;\s?//;s/; [ST] \d//;
 	      /###/ and $mark++ and next;
-	      ($mark == 0 or $mark == 5) and print;
+	      ($mark == 0 or $mark == 4) and print;
               ' > "$pwd"/parallel.cast

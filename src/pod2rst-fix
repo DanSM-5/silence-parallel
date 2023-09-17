@@ -25,12 +25,17 @@
 
 # Conversion errors:
 
+# B<foo `bar` baz>
+
 # Fixed:
 # ... B<foo>
 # bar
 
 # Fixed:
 # =item - - a
+
+# Fixed:
+# \\` => \`
 
 # Not fixed (RST does not support Bold-Italic):
 # B<cat | xargs -d "\n" -n1 I<command>>
@@ -98,6 +103,8 @@ sub post {
 	s/\\\\[*]/\\*/g;
 	# - -
 	s/^-(\s+)\001/-$1\\-/g;
+	# \\` => \`
+	s/\\\\`/\\`/g;
 	print;
     }
 }
