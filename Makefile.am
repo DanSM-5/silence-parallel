@@ -9,6 +9,8 @@ test:
 
 web:
 	cd src; make web
+	cp -r src/*.pdf src/sphinx/build/html/* ../parallel-web/parallel
+	cp ../parallel-web/parallel/parallel.html  ../parallel-web/parallel/man.html
 
 upload:
 	eval `gpg-agent --daemon`

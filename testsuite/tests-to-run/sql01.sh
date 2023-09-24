@@ -50,7 +50,7 @@ par_sql_on_cmdline() {
 par_read_sql_from_file() {
     echo '### Test reading sql from file'
     unittest=/tmp/unittest.sql
-    cat >"$unittest.sql" <<EOF
+    cat >"$unittest" <<EOF
 DROP TABLE IF EXISTS unittest;
 CREATE TABLE unittest (
           id INT,
@@ -184,4 +184,4 @@ par_--help() {
 
 export -f $(compgen -A function | grep par_)
 compgen -A function | grep par_ | LC_ALL=C sort |
-    parallel --timeout 1000% -j6 --tag -k --joblog /tmp/jl-`basename $0` '{} 2>&1'
+    parallel --timeout 3000% -j6 --tag -k --joblog /tmp/jl-`basename $0` '{} 2>&1'

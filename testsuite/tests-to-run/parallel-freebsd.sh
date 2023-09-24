@@ -105,7 +105,7 @@ unset TMPDIR
 #   We can safely ignore those.
 
 export LC_ALL=C
-PARALLEL_SHELL=sh env_parallel --env _ -vj9 -k --joblog /tmp/jl-`basename $0` --retries 3 \
+PARALLEL_SHELL=sh env_parallel --timeout 100 --env _ -vj9 -k --joblog /tmp/jl-`basename $0` --retries 3 \
 	     -S $SSHLOGIN1 --tag '{} 2>&1' \
 	     ::: $(compgen -A function | grep par_ | sort) \
 	     2> >(grep -Ev 'shopt: not found|declare: not found')

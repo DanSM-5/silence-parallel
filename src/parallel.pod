@@ -398,25 +398,25 @@ Skip this job (see also B<--filter>). Example:
   parallel echo '{= $arg[1] >= $arg[2] and skip =}' \
     ::: 1 2 3 ::: 2 3 4
 
-=item Z<> B<yyyy_mm_dd_hh_mm_ss(sec)> (beta testing)
+=item Z<> B<yyyy_mm_dd_hh_mm_ss(sec)>
 
-=item Z<> B<yyyy_mm_dd_hh_mm(sec)> (beta testing)
+=item Z<> B<yyyy_mm_dd_hh_mm(sec)>
 
-=item Z<> B<yyyy_mm_dd(sec)> (beta testing)
+=item Z<> B<yyyy_mm_dd(sec)>
 
-=item Z<> B<hh_mm_ss(sec)> (beta testing)
+=item Z<> B<hh_mm_ss(sec)>
 
-=item Z<> B<hh_mm(sec)> (beta testing)
+=item Z<> B<hh_mm(sec)>
 
-=item Z<> B<yyyymmddhhmmss(sec)> (beta testing)
+=item Z<> B<yyyymmddhhmmss(sec)>
 
-=item Z<> B<yyyymmddhhmm(sec)> (beta testing)
+=item Z<> B<yyyymmddhhmm(sec)>
 
-=item Z<> B<yyyymmdd(sec)> (beta testing)
+=item Z<> B<yyyymmdd(sec)>
 
-=item Z<> B<hhmmss(sec)> (beta testing)
+=item Z<> B<hhmmss(sec)>
 
-=item Z<> B<hhmm(sec)> (beta testing)
+=item Z<> B<hhmm(sec)>
 
 Time functions. I<sec> is number of seconds since epoch. If left out
 it will use current local time. Example:

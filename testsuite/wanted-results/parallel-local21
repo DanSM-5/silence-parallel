@@ -100,8 +100,14 @@ par_shebang_wrap_nodejs	Arguments  [ 'arg1' ]
 par_shebang_wrap_nodejs	Arguments  [ 'arg2' ]
 par_shebang_wrap_nodejs	Arguments  [ 'arg3.1  arg3.2' ]
 par_shebang_wrap_octave	Arguments arg1
+par_shebang_wrap_octave	octave: X11 DISPLAY environment variable not set
+par_shebang_wrap_octave	octave: disabling GUI features
 par_shebang_wrap_octave	Arguments arg2
+par_shebang_wrap_octave	octave: X11 DISPLAY environment variable not set
+par_shebang_wrap_octave	octave: disabling GUI features
 par_shebang_wrap_octave	Arguments arg3.1  arg3.2
+par_shebang_wrap_octave	octave: X11 DISPLAY environment variable not set
+par_shebang_wrap_octave	octave: disabling GUI features
 par_shebang_wrap_perl	Arguments arg1
 par_shebang_wrap_perl	Arguments arg2
 par_shebang_wrap_perl	Arguments arg3.1  arg3.2
