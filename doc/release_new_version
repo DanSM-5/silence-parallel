@@ -24,22 +24,32 @@ With the same things that goes in the announce mail
 Start termux on Android
 Start: wssh mac ping fi.dk
 niceload --prg firefox &
-cd testsuite; make mem; make polar; make long; make short
+cd testsuite;
+# With 23 GB RAM free this takes 3m43s
+make mem;
+make polar;
+# Estimated time: 13m
+make long
+# Estimated time: 42m
+make short
 
 == Update version ==
 
 https://zenodo.org/deposit/new
 
-(*) Software
+Do you already have a DOI for this upload? No
 (Reserve DOI)
+Resource type: Software
 GNU Parallel 20xxxx22 ('Xxxx')
+Add creator: Person
 Tange, Ole
 https://orcid.org/0000-0002-6345-1437
+Role: Contact person
 Description
 GNU Parallel is a general parallelizer to run multiple serial command line programs in parallel without changing them.
 
 License:
-gpl v3
+gpl
 
 [Save]
 
@@ -79,7 +89,7 @@ make alphaupload
 cd ~/privat/parallel/packager/obs
 
 find home-tange/parallel/* -type f |
-  grep -Ev '(PKGBUILD|parallel.spec)' |
+  grep -Ev '(PKGBUILD|parallel.spec|Makefile)' |
   parallel -j1 'osc rm {} || rm {}'
 # This should not create new files
 osc up home-tange/parallel/
@@ -264,24 +274,24 @@ from:tange@gnu.org
 to:parallel@gnu.org, bug-parallel@gnu.org
 stable-bcc: Jesse Alama <jessealama@fastmail.fm>
 
-Subject: GNU Parallel 20230922 ('Derna') released [stable]
+Subject: GNU Parallel 20231022 ('Al-Aqsa Deluge') released [stable]
 
-GNU Parallel 20230922 ('Derna') has been released. It is available for download at: lbry://@GnuParallel:4
+GNU Parallel 20231022 ('Al-Aqsa Deluge') has been released. It is available for download at: lbry://@GnuParallel:4
 
 Quote of the month:
 
-  Parallel is so damn good! You’ve got to use it.
-    -- @ThePrimeTimeagen@youtube.com
-
+  Love to make a dual processor workstation absolutely whir running dozens of analysis scripts at once
+    -- Best Catboy Key Grip @alamogordoglass@twitter
+  
 New in this release:
 
 * Bug fixes and man page updates.
 
 News about GNU Parallel:
 
-* This CLI Tool is AMAZING | Prime Reacts https://www.youtube.com/watch?v=ry49BZA-tgg
+* Resume long parallel jobs https://ginolhac.github.io/posts/2023-10-02_resume-parallel/index.html 
 
-* New Data Engineering Stack - GNU parallel https://www.linkedin.com/feed/update/urn:li:activity:7100509073149743104?updateEntityUrn=urn%3Ali%3Afs_feedUpdate%3A%28V2%2Curn%3Ali%3Aactivity%3A7100509073149743104%29
+* Efficiency and Speed with GNU Parallel https://dev.to/0xog_pg/efficiency-and-speed-with-gnu-parallel-loo 
 
 
 GNU Parallel - For people who live life in the parallel lane.

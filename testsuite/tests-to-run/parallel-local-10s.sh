@@ -36,25 +36,6 @@ par_seqreplace_long_line() {
 	uniq -c
 }
 
-par__print_in_blocks() {
-    echo '### bug #41565: Print happens in blocks - not after each job complete'
-    median() { perl -e '@a=sort {$a<=>$b} <>;print $a[$#a/2]';}
-    export -f median
-
-    echo 'The timing here is important: a full second between each'
-    perl -e 'for(1..30){print("$_\n");`sleep 1`}' |
-	parallel -j3  'echo {#}' |
-	timestamp -dd |
-	perl -pe '$_=int($_+0.3)."\n"' |
-	median
-    echo '300 ms jobs:'
-    perl -e 'for(1..30){print("$_\n");`sleep .3`}' |
-	parallel -j3 --delay 0.3 echo |
-	timestamp -d -d |
-	perl -pe 's/(.....).*/int($1*10+0.2)/e' |
-	median
-}
-
 par__load_from_PARALLEL() {
     echo "### Test reading load from PARALLEL"
     export PARALLEL="--load 300%"
@@ -102,7 +83,7 @@ par_quote_special_results() {
            "mkfs.reiserfs -fq" "mkfs.ntfs -F" "mkfs.xfs -f" mkfs.minix \
 	   mkfs.fat mkfs.vfat mkfs.msdos mkfs.f2fs |
 	perl -pe 's:(/dev/loop|par-test-loop)\S+:$1:g;s/ +/ /g' |
-	G -v MB/s -v GB/s -v UUID -v Binutils -v 150000
+	G -v MB/s -v GB/s -v UUID -v Binutils -v 150000 -v exfatprogs
     # Skip:
     #   mkfs.bfs - ro
     #   mkfs.cramfs - ro

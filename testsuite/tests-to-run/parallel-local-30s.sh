@@ -8,6 +8,25 @@
 # Each should be taking 30-100s and be possible to run in parallel
 # I.e.: No race conditions, no logins
 
+par__print_in_blocks() {
+    echo '### bug #41565: Print happens in blocks - not after each job complete'
+    median() { perl -e '@a=sort {$a<=>$b} <>;print $a[$#a/2]';}
+    export -f median
+
+    echo 'The timing here is important: a full second between each'
+    perl -e 'for(1..30){print("$_\n");`sleep 1`}' |
+	parallel -j3  'echo {#}' |
+	timestamp -dd |
+	perl -pe '$_=int($_+0.3)."\n"' |
+	median
+    echo '300 ms jobs:'
+    perl -e 'for(1..30){print("$_\n");`sleep .3`}' |
+	parallel -j3 --delay 0.3 echo |
+	timestamp -d -d |
+	perl -pe 's/(.....).*/int($1*10+0.2)/e' |
+	median
+}
+
 par__keeporder_roundrobin() {
     echo 'bug #50081: --keep-order --round-robin should give predictable results'
     . `which env_parallel.bash`

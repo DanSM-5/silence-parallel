@@ -1607,6 +1607,11 @@ par__plus_dyn_repl	abcabcdefdef abcdefdef
 par__plus_dyn_repl	abcabcdefdef abcdefdef
 par__plus_dyn_repl	abcabcdefdef abcabcdef
 par__plus_dyn_repl	abcabcdefdef abcabcdef
+par__print_in_blocks	### bug #41565: Print happens in blocks - not after each job complete
+par__print_in_blocks	The timing here is important: a full second between each
+par__print_in_blocks	1
+par__print_in_blocks	300 ms jobs:
+par__print_in_blocks	3
 par_bin	### Test --bin
 par_bin	      2       2       4
 par_bin	      2       2       4

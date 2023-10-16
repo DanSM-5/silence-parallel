@@ -1466,6 +1466,8 @@ Evaluate I<expr>. E.g. '12/2' to get 6, '+25%' gives the same as
 multiply 3 by log(55), multiply that by the number of CPU threads and
 divide by 100, add this to the number of CPU threads.
 
+An expression that evalutates to less that 1 is replaced with 1.
+
 =item I<procfile>
 
 Read parameter from file.

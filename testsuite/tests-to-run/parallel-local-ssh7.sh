@@ -1720,7 +1720,7 @@ _EOF
 par_environment_too_big_bash() {
   myscript=$(cat <<'_EOF'
     echo 'bug #50815: env_parallel should warn if the environment is too big'
-    len_overhead=-$( (shopt;alias;typeset -f;typeset -p) | wc -c)/1000
+    len_overhead=-10-$( (shopt;alias;typeset -f;typeset -p) | wc -c)/1000
     len_var=$len_overhead+56
     len_var_remote=$len_overhead+40
     len_var_quote=$len_overhead+31

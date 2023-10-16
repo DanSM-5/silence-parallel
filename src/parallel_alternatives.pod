@@ -814,7 +814,7 @@ Summary (see legend above):
 
 =item M1 (M2) M3 (M4) M5 M6
 
-=item - O2 O3 - O5 - - N/A N/A O10
+=item - O2 O3 - O5 - - x x O10
 
 =item E1 - - - - - -
 
@@ -2697,7 +2697,7 @@ Summary (see legend above):
 
 =item M1 - M3 - - M6
 
-=item O1 - O3 - O5 - - N/A N/A
+=item O1 - O3 - O5 - - x x
 
 =item E1 - - E4 - - -
 
@@ -2730,7 +2730,7 @@ Summary (see legend above):
 
 =item M1 - (M3) - - M6
 
-=item O1 O2 O3 - O5 O6 - N/A N/A -
+=item O1 O2 O3 - O5 O6 - x x -
 
 =item E1 - - - - - -
 
@@ -2869,7 +2869,7 @@ Summary (see legend above):
 
 =item M1 - M3 - - M6
 
-=item - - O3 - O5 - - N/A N/A O10
+=item - - O3 - O5 - - x x O10
 
 =item E1 - - E4 - - -
 
@@ -2926,7 +2926,7 @@ Summary (see legend above):
 
 =item - - - - - M6
 
-=item - O2 O3 - O5 O6 - N/A N/A O10
+=item - O2 O3 - O5 O6 - x x O10
 
 =item E1 - - E4 - E6 -
 
@@ -3448,7 +3448,7 @@ Summary (see legend above):
 
 =over
 
-=item - - - I4 - - N/A
+=item - - - I4 - - x
 
 =item - - - - - M6
 
@@ -3662,11 +3662,11 @@ Summary (see legend above):
 
 =over
 
-=item - - - I4 - - N/A
+=item - - - I4 - - x
 
 =item M1 - - - - M6
 
-=item - - O3 - - - - N/A - -
+=item - - O3 - - - - x - -
 
 =item E1 - E3 - E5 - -
 
@@ -3781,7 +3781,7 @@ Summary (see legend above):
 
 =item - - - - - M6
 
-=item O1 O2 O3 - O5 O6 - N/A - O10
+=item O1 O2 O3 - O5 O6 - x - O10
 
 =item E1 - - E4 - - -
 
@@ -3850,7 +3850,7 @@ Summary (see legend above):
 
 =item M1 - - - - M6
 
-=item O1 - O3 - - - - N/A - -
+=item O1 - O3 - - - - x - -
 
 =item E1 - - E4 - - -
 
@@ -4094,11 +4094,11 @@ Summary (see legend above):
 
 =item M1 - - - - M6
 
-=item - - O3 - - - - N/A N/A -
+=item - - O3 - - - - x x -
 
 =item E1 - - - - - -
 
-=item R1 - - - - R6 N/A N/A -
+=item R1 - - - - R6 x x -
 
 =item - -
 
@@ -4143,7 +4143,144 @@ https://github.com/korovkin/parallel
 (Last checked: 2023-07)
 
 
+=head2 DIFFERENCES BETWEEN xe AND GNU Parallel
+
+Summary (see legend above):
+
+=over
+
+=item I1 I2 - I4 - - I7
+
+=item M1 - M3 M4 - M6
+
+=item - O2 O3 - O5 O6 - O8 - O10
+
+=item E1 - - E4 - - -
+
+=item - - - - - - - - -
+
+=item - -
+
+=back
+
+B<xe> has a peculiar limitation:
+
+  echo /bin/echo | xe {} OK
+  echo echo | xe /bin/{} fails
+
+
+=head3 EXAMPLES
+
+Compress all .c files in the current directory, using all CPU cores:
+
+  1$ xe -a -j0 gzip -- *.c
+
+  1$ parallel gzip ::: *.c
+
+Remove all empty files, using lr(1):
+
+  2$ lr -U -t 'size == 0' | xe -N0 rm
+
+  2$ lr -U -t 'size == 0' | parallel -X rm
+
+Convert .mp3 to .ogg, using all CPU cores:
+
+  3$ xe -a -j0 -s 'ffmpeg -i "${1}" "${1%.mp3}.ogg"' -- *.mp3
+
+  3$ parallel ffmpeg -i {} {.}.ogg ::: *.mp3
+
+Same, using percent rules:
+
+  4$ xe -a -j0 -p %.mp3 ffmpeg -i %.mp3 %.ogg -- *.mp3
+
+  4$ parallel --rpl '% s/\.mp3// or skip' ffmpeg -i %.mp3 %.ogg ::: *.mp3
+
+Similar, but hiding output of ffmpeg, instead showing spawned jobs:
+
+  5$ xe -ap -j0 -vvq '%.{m4a,ogg,opus}' ffmpeg -y -i {} out/%.mp3 -- *
+
+  5$ parallel -v --rpl '% s/\.(m4a|ogg|opus)// or skip' \
+       ffmpeg -y -i {} out/%.mp3 '2>/dev/null' ::: *
+
+  5$ parallel -v ffmpeg -y -i {} out/{.}.mp3 '2>/dev/null' ::: *
+
+https://github.com/leahneukirchen/xe
+(Last checked: 2023-08)
+
+
+=head2 DIFFERENCES BETWEEN sp AND GNU Parallel
+
+Summary (see legend above):
+
+=over
+
+=item - - - I4 - - -
+
+=item M1 - M3 - - M6
+
+=item - O2 O3 - O5 (O6) - x x O10
+
+=item E1 - - - - - -
+
+=item - - - - - - - - -
+
+=item - -
+
+=back
+
+B<sp> has very few options.
+
+It can either be used like:
+
+  sp command {} option :: arg1 arg2 arg3
+
+which is similar to:
+
+  parallel command {} option ::: arg1 arg2 arg3
+
+Or:
+
+  sp command1 :: "command2 -option" :: "command3 foo bar"
+
+which is similar to:
+
+  parallel ::: command1 "command2 -option" "command3 foo bar"
+
+B<sp> deals badly with too many commands: This causes B<sp> to run out
+of file handles and gives data loss.
+
+For each command that fails, B<sp> will print an error message on
+stderr (standard error).
+
+You cannot used exported shell functions as commands.
+
+=head3 EXAMPLES
+
+  1$ sp echo {} :: 1 2 3
+
+  1$ parallel echo {} ::: 1 2 3
+
+  2$ sp echo {} {} :: 1 2 3
+
+  2$ parallel echo {} {} :: 1 2 3
+
+  3$ sp echo 1 :: echo 2 :: echo 3
+
+  3$ parallel ::: 'echo 1' 'echo 2' 'echo 3'
+
+  4$ sp a foo bar :: "b 'baz  bar'" :: c
+
+  4$ parallel ::: 'a foo bar' "b 'baz  bar'" :: c
+
+https://github.com/SergioBenitez/sp
+(Last checked: 2023-10)
+
+
 =head2 Todo
+
+https://github.com/justanhduc/task-spooler
+
+https://manpages.ubuntu.com/manpages/xenial/man1/tsp.1.html
 
 https://www.npmjs.com/package/concurrently
 
@@ -4166,8 +4303,6 @@ https://github.com/bahmutov/with-package
 https://github.com/flesler/parallel
 
 https://github.com/Julian/Verge
-
-https://manpages.ubuntu.com/manpages/xenial/man1/tsp.1.html
 
 https://vicerveza.homeunix.net/~viric/soft/ts/
 

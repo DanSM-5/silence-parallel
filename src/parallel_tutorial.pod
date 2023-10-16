@@ -20,8 +20,7 @@ or download it at: https://doi.org/10.5281/zenodo.1146014
 Otherwise start by watching the intro videos for a quick introduction:
 https://www.youtube.com/playlist?list=PL284C9FF2488BC6D1
 
-Then browse through the B<EXAMPLE>s after the list of B<OPTIONS> in
-B<man parallel> (Use B<LESS=+/EXAMPLE: man parallel>). That will give
+Then browse through the examples (B<man parallel_examples>). That will give
 you an idea of what GNU B<parallel> is capable of.
 
 If you want to dive even deeper: spend a couple of hours walking
@@ -51,12 +50,12 @@ security reasons), the way described in README, or with this command:
   $ (wget -O - pi.dk/3 || lynx -source pi.dk/3 || curl pi.dk/3/ || \
      fetch -o - http://pi.dk/3 ) > install.sh
   $ sha1sum install.sh
-  12345678 3374ec53 bacb199b 245af2dd a86df6c9
+  12345678 51621b7f 1ee103c0 0783aae4 ef9889f8
   $ md5sum install.sh
-  029a9ac0 6e8b5bc6 052eac57 b2c3c9ca
+  62eada78 703b5500 241b8e50 baf62758
   $ sha512sum install.sh
-  40f53af6 9e20dae5 713ba06c f517006d 9897747b ed8a4694 b1acba1b 1464beb4
-  60055629 3f2356f3 3e9c4e3c 76e3f3af a9db4b32 bd33322b 975696fc e6b23cfb
+  160d3159 9480cf5c a101512f 150b7ac0 206a65dc 86f2bb6b bdf1a2bc 96bc6d06
+  7f8237c2 0964b67f bccf8a93 332528fa 11e5ab43 2a6226a6 ceb197ab 7f03c061
   $ bash install.sh
 
 This will also install the newest version of the tutorial which you
@@ -145,7 +144,7 @@ So you must be able to do this without entering a password:
   ssh $SERVER1 echo works
   ssh $SERVER2 echo works
 
-It can be setup by running 'ssh-keygen -t dsa; ssh-copy-id $SERVER1'
+It can be setup by running B<ssh-keygen -t dsa; ssh-copy-id $SERVER1>
 and using an empty passphrase, or you can use B<ssh-agent>.
 
 =back

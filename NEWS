@@ -1,3 +1,18 @@
+20231022
+
+New in this release:
+
+* Bug fixes and man page updates.
+
+News about GNU Parallel:
+
+* Resume long parallel jobs
+  https://ginolhac.github.io/posts/2023-10-02_resume-parallel/index.html
+
+* Efficiency and Speed with GNU Parallel
+  https://dev.to/0xog_pg/efficiency-and-speed-with-gnu-parallel-loo
+
+
 20230922
 
 New in this release:
