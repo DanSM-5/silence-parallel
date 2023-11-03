@@ -8,6 +8,53 @@
 # Each should be taking 3-10s and be possible to run in parallel
 # I.e.: No race conditions, no logins
 
+par__argfile_plus() {
+    tmp=$(mktemp -d)
+    (
+	p() {
+	    echo -- -a $1 $2 $3
+	    stdout parallel -k -a $1 -a $2 -a $3 echo;
+	}
+	q() {
+	    echo :::: $1 $2 $3
+	    stdout parallel -k echo :::: $1 $2 $3;
+	}
+	cd "$tmp"
+	seq 3 > file
+	seq 4 6 > +file
+	seq 7 9 > ++file
+
+	p file +file ++file
+	p file +./file ++file
+	p file ./+file ++file
+
+	p file +file +./+file
+	p file +./file +./+file
+	p file ./+file +./+file
+
+	p file +file ./++file
+	p file +./file ./++file
+	p file ./+file ./++file
+
+	q file +file ++file
+	q file +./file ++file
+	q file ./+file ++file
+
+	q file +file +./+file
+	q file +./file +./+file
+	q file ./+file +./+file
+
+	q file +file ./++file
+	q file +./file ./++file
+	q file ./+file ./++file
+	
+	seq 10 12 | p ./file ./++file -
+	seq 10 12 | p ./file +./+file +-
+	seq 10 12 | p ./file +- ./+file
+    )
+    rm -r "$tmp"
+}
+
 par_process_slot_var() {
     echo '### bug #62310: xargs compatibility: --process-slot-var=name'
     seq 0.1 0.4 1.8 |

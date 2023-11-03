@@ -1,3 +1,15 @@
+20231122
+
+New in this release:
+
+* -a file1 -a +file2 will link file2 to file1 similar to ::::+
+
+* Bug fixes and man page updates.
+
+News about GNU Parallel:
+
+
+
 20231022
 
 New in this release:

@@ -2522,10 +2522,8 @@ sub parse_options(@) {
        not ($opt::xargs or $opt::m)) {
 	$Global::ContextReplace = 1;
     }
-    if(grep /^$Global::arg_sep\+?$|^$Global::arg_file_sep\+?$/o, @ARGV) {
-	# Deal with ::: :::+ :::: and ::::+
-	@ARGV = read_args_from_command_line();
-    }
+    # Deal with ::: :::+ :::: ::::+ and -a +file
+    @ARGV = read_args_from_command_line();
     parse_semaphore();
 
     if(defined $opt::eta) { $opt::progress = $opt::eta; }
@@ -3524,76 +3522,136 @@ sub read_args_from_command_line() {
     #	@opt::a
     # Returns:
     #	@argv_no_argsep = @::ARGV without ::: and :::: and following args
-    my @new_argv = ();
-    for(my $arg = shift @ARGV; @ARGV; $arg = shift @ARGV) {
-	if($arg eq $Global::arg_sep
-	   or
-	   $arg eq $Global::arg_sep."+"
-	   or
-	   $arg eq $Global::arg_file_sep
-	   or
-	   $arg eq $Global::arg_file_sep."+") {
-	    my $group_sep = $arg; # This group of args is args or argfiles
-	    my @group;
-	    while(defined ($arg = shift @ARGV)) {
-		if($arg eq $Global::arg_sep
-		   or
-		   $arg eq $Global::arg_sep."+"
-		   or
-		   $arg eq $Global::arg_file_sep
-		   or
-		   $arg eq $Global::arg_file_sep."+") {
-		    # exit while loop if finding new separator
-		    last;
+    my %group_sep = ($Global::arg_sep => ":::",
+		     $Global::arg_sep."+" => ":::+",
+		     $Global::arg_file_sep => "::::",
+		     $Global::arg_file_sep."+" => "::::+");
+    sub is_linked($) {
+	# file is linked if file starts with +
+	local $_ = shift;
+	if(/^\+(.*)/) {
+	    my $noplus = $1;
+	    if(-e $_ and -e $noplus) {
+		::error("It is unclear whether you mean +./$noplus or ./+$noplus");
+		wait_and_exit(255);
+	    } elsif(-e $_ and not -e $noplus) {
+		# This is ./+file = this is not linked
+		return 0;
+	    } elsif(not -e $_ and -e $noplus) {
+		# This is +./file = this is linked
+		return 1;
+	    } elsif(not -e $_ and not -e $noplus) {
+		# File does not exist, maybe it is stdin?
+		if($_ eq "-") {
+		    # This is - = this is not linked
+		    return 0;
+		} elsif($_ eq "+-") {
+		    # This is +- = this is linked
+		    return 1;
 		} else {
-		    # If not hitting ::: :::+ :::: or ::::+
-		    # Append it to the group
-		    push @group, $arg;
+		    ::error("File not found: $_");
+		    wait_and_exit(255);
 		}
-	    }
-	    my $is_linked = ($group_sep =~ /\+$/) ? 1 : 0;
-	    my $is_file = ($group_sep eq $Global::arg_file_sep
-			   or
-			   $group_sep eq $Global::arg_file_sep."+");
-	    if($is_file) {
-		# :::: / ::::+
-		push @opt::linkinputsource, map { $is_linked } @group;
 	    } else {
-		# ::: / :::+
-		push @opt::linkinputsource, $is_linked;
-	    }
-	    if($is_file
-	       or ($opt::_pipe_means_argfiles and $opt::pipe)
-		) {
-		# Group of file names on the command line.
-		# Append args into -a
-		push @opt::a, @group;
-	    } else {
-		# Group of arguments on the command line.
-		# Put them into a file.
-		# Create argfile
-		my ($outfh,$name) = ::tmpfile(SUFFIX => ".arg");
-		unlink($name);
-		# Put args into argfile
-		print $outfh map { $_,$/ } @group;
-		seek $outfh, 0, 0;
-		exit_if_disk_full();
-		# Append filehandle to -a
-		push @opt::a, $outfh;
-	    }
-	    if(defined($arg)) {
-		# $arg is ::: :::+ :::: or ::::+
-		# so there is another group
-		redo;
-	    } else {
-		# $arg is undef -> @ARGV empty
-		last;
+		::die_bug("noplus: $noplus $_");
 	    }
 	}
-	push @new_argv, $arg;
+	# not linked
+	return 0;
     }
-    # Output: @ARGV = command to run with options
-    return @new_argv;
+    sub cmd_template() {
+	# remove command template from @ARGV
+	# keep ::: / :::: in @ARGV if any
+	my @cmd_template;
+	while(@ARGV) {
+	    my $arg = shift @ARGV;
+	    if($group_sep{$arg}) {
+		# Found separator: push it back and exit loop
+		unshift @ARGV, $arg;
+		last;
+	    }
+	    push @cmd_template, $arg;
+	}
+	return @cmd_template;
+    }
+    sub divide_into_groups() {
+	# Split arguments from @ARGV into groups:
+	#   ::: 1 2 3 :::: a b c ::::+ d e f
+	# =>
+	#   [ ::: 1 2 3 ], [ :::: a b c ], [ ::::+ d e f ]
+	my @g;
+	my @grp;
+	while(@ARGV) {
+	    my $arg = shift @ARGV;
+	    if($group_sep{$arg}) {
+		# start a new group
+		push @grp, [@g];
+		@g = ($group_sep{$arg});
+	    } else {
+		push @g, $arg;
+	    }
+	}
+	push @grp, [@g];
+	shift @grp; # The first will always be empty
+	return @grp;
+    }
+    sub save_to_file(@) {
+	# Put args into a file, return open file handle of file
+	# Create argfile
+	my ($fh,$name) = ::tmpfile(SUFFIX => ".arg");
+	unlink($name);
+	# Put args into argfile
+	print $fh map { $_,$/ } @_;
+	seek $fh, 0, 0;
+	exit_if_disk_full();
+	return $fh;
+    }
+    my @cmd = cmd_template();
+    # The rest of @ARGV is ::: / :::: args
+    # If there are any -a: Rewrite them to use ::::
+    if(@opt::a) { unshift @ARGV, $Global::arg_file_sep, @opt::a; }
+    @opt::a = ();
+    # Convert ::: and :::: into (linked) files and put those into @opt::a
+    for my $g_ref (divide_into_groups()) {
+	my $group_sep = shift @$g_ref;
+	if($group_sep eq ":::" or $group_sep eq ":::+") {
+	    # Group starts with ::: / :::+
+	    if($opt::_pipe_means_argfiles and $#$g_ref < 0) {
+		# TODO
+		# Deal with --shebang-wrap and ::: on the shebang line
+	    } else {
+		push @opt::a, save_to_file(@$g_ref);
+		# if $group_sep == ":::+": it is linked
+		push @opt::linkinputsource, ($group_sep eq ":::+");
+	    }
+	} elsif($group_sep eq "::::" or $group_sep eq "::::+") {
+	    # Group starts with :::: / ::::+
+	    for my $f (@$g_ref) {
+		if($group_sep eq "::::+") {
+		    # Linking forced
+		    push @opt::a, $f;
+		    push @opt::linkinputsource, 1;
+		} elsif($group_sep eq "::::") {
+		    # Auto detect linking
+		    if(is_linked($f)) {
+			# +file
+			push @opt::linkinputsource, 1;
+			$f =~ s/^\+//;
+		    } else {
+			# file (no plus)
+			push @opt::linkinputsource, 0;
+		    }
+		    push @opt::a, $f;
+		} else {
+		    ::die_bug("arg link error");
+		}
+	    }
+	} else {
+	    ::die_bug("arg link error");
+	}
+    }
+    # Output: command to run with options
+    return @cmd;
 }
 
 sub cleanup() {

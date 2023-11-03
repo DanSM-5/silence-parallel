@@ -50,4 +50,4 @@ par_load_file_more_10s() {
 export -f $(compgen -A function | grep par_)
 #compgen -A function | grep par_ | sort | parallel --delay $D -j$P --tag -k '{} 2>&1'
 compgen -A function | grep par_ | sort |
-    parallel --joblog /tmp/jl-`basename $0` -j200% --tag -k '{} 2>&1'
+    parallel --timeout 30s --joblog /tmp/jl-`basename $0` -j200% --tag -k '{} 2>&1'

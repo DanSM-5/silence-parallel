@@ -536,15 +536,11 @@ Shorthand for B<--delimiter '\0'>.
 See also: B<--delimiter>
 
 
-=item B<--arg-file> I<input-file>
+=item B<--arg-file> I<input-file> (alpha testing)
 
-=item B<-a> I<input-file>
+=item B<-a> I<input-file> (alpha testing)
 
 Use I<input-file> as input source.
-
-If you use this option, stdin (standard input) is given to the first
-process run.  Otherwise, stdin (standard input) is redirected from
-/dev/null.
 
 If multiple B<--arg-file> are given, each I<input-file> will be treated as an
 input source, and all combinations of input sources will be
@@ -552,6 +548,12 @@ generated. E.g. The file B<foo> contains B<1 2>, the file
 B<bar> contains B<a b c>.  B<-a foo> B<-a bar> will result in the combinations
 (1,a) (1,b) (1,c) (2,a) (2,b) (2,c). This is useful for replacing
 nested for-loops.
+
+If I<input-file> starts with B<+> the file will be linked to the
+previous B<--arg-file> E.g. The file B<foo> contains B<1 2>, the file
+B<bar> contains B<a b>.  B<-a foo> B<-a +bar> will result in the
+combinations (1,a) (2,b) like B<--link> instead of generating all
+combinations.
 
 See also: B<--link> B<{>I<n>B<}> B<::::> B<::::+> B<:::>
 

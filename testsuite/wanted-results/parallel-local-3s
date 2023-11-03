@@ -12,6 +12,172 @@ par__10000_5_rpl_X	4
 par__10000_5_rpl_X	4
 par__10000_5_rpl_X	3
 par__10000_5_rpl_X	2
+par__argfile_plus	-- -a file +file ++file
+par__argfile_plus	parallel: Error: It is unclear whether you mean +./file or ./+file
+par__argfile_plus	-- -a file +./file ++file
+par__argfile_plus	parallel: Error: It is unclear whether you mean +./+file or ./++file
+par__argfile_plus	-- -a file ./+file ++file
+par__argfile_plus	parallel: Error: It is unclear whether you mean +./+file or ./++file
+par__argfile_plus	-- -a file +file +./+file
+par__argfile_plus	parallel: Error: It is unclear whether you mean +./file or ./+file
+par__argfile_plus	-- -a file +./file +./+file
+par__argfile_plus	1 1 4
+par__argfile_plus	2 2 5
+par__argfile_plus	3 3 6
+par__argfile_plus	-- -a file ./+file +./+file
+par__argfile_plus	1 4 4
+par__argfile_plus	1 5 5
+par__argfile_plus	1 6 6
+par__argfile_plus	2 4 4
+par__argfile_plus	2 5 5
+par__argfile_plus	2 6 6
+par__argfile_plus	3 4 4
+par__argfile_plus	3 5 5
+par__argfile_plus	3 6 6
+par__argfile_plus	-- -a file +file ./++file
+par__argfile_plus	parallel: Error: It is unclear whether you mean +./file or ./+file
+par__argfile_plus	-- -a file +./file ./++file
+par__argfile_plus	1 1 7
+par__argfile_plus	1 1 8
+par__argfile_plus	1 1 9
+par__argfile_plus	2 2 7
+par__argfile_plus	2 2 8
+par__argfile_plus	2 2 9
+par__argfile_plus	3 3 7
+par__argfile_plus	3 3 8
+par__argfile_plus	3 3 9
+par__argfile_plus	-- -a file ./+file ./++file
+par__argfile_plus	1 4 7
+par__argfile_plus	1 4 8
+par__argfile_plus	1 4 9
+par__argfile_plus	1 5 7
+par__argfile_plus	1 5 8
+par__argfile_plus	1 5 9
+par__argfile_plus	1 6 7
+par__argfile_plus	1 6 8
+par__argfile_plus	1 6 9
+par__argfile_plus	2 4 7
+par__argfile_plus	2 4 8
+par__argfile_plus	2 4 9
+par__argfile_plus	2 5 7
+par__argfile_plus	2 5 8
+par__argfile_plus	2 5 9
+par__argfile_plus	2 6 7
+par__argfile_plus	2 6 8
+par__argfile_plus	2 6 9
+par__argfile_plus	3 4 7
+par__argfile_plus	3 4 8
+par__argfile_plus	3 4 9
+par__argfile_plus	3 5 7
+par__argfile_plus	3 5 8
+par__argfile_plus	3 5 9
+par__argfile_plus	3 6 7
+par__argfile_plus	3 6 8
+par__argfile_plus	3 6 9
+par__argfile_plus	:::: file +file ++file
+par__argfile_plus	parallel: Error: It is unclear whether you mean +./file or ./+file
+par__argfile_plus	:::: file +./file ++file
+par__argfile_plus	parallel: Error: It is unclear whether you mean +./+file or ./++file
+par__argfile_plus	:::: file ./+file ++file
+par__argfile_plus	parallel: Error: It is unclear whether you mean +./+file or ./++file
+par__argfile_plus	:::: file +file +./+file
+par__argfile_plus	parallel: Error: It is unclear whether you mean +./file or ./+file
+par__argfile_plus	:::: file +./file +./+file
+par__argfile_plus	1 1 4
+par__argfile_plus	2 2 5
+par__argfile_plus	3 3 6
+par__argfile_plus	:::: file ./+file +./+file
+par__argfile_plus	1 4 4
+par__argfile_plus	1 5 5
+par__argfile_plus	1 6 6
+par__argfile_plus	2 4 4
+par__argfile_plus	2 5 5
+par__argfile_plus	2 6 6
+par__argfile_plus	3 4 4
+par__argfile_plus	3 5 5
+par__argfile_plus	3 6 6
+par__argfile_plus	:::: file +file ./++file
+par__argfile_plus	parallel: Error: It is unclear whether you mean +./file or ./+file
+par__argfile_plus	:::: file +./file ./++file
+par__argfile_plus	1 1 7
+par__argfile_plus	1 1 8
+par__argfile_plus	1 1 9
+par__argfile_plus	2 2 7
+par__argfile_plus	2 2 8
+par__argfile_plus	2 2 9
+par__argfile_plus	3 3 7
+par__argfile_plus	3 3 8
+par__argfile_plus	3 3 9
+par__argfile_plus	:::: file ./+file ./++file
+par__argfile_plus	1 4 7
+par__argfile_plus	1 4 8
+par__argfile_plus	1 4 9
+par__argfile_plus	1 5 7
+par__argfile_plus	1 5 8
+par__argfile_plus	1 5 9
+par__argfile_plus	1 6 7
+par__argfile_plus	1 6 8
+par__argfile_plus	1 6 9
+par__argfile_plus	2 4 7
+par__argfile_plus	2 4 8
+par__argfile_plus	2 4 9
+par__argfile_plus	2 5 7
+par__argfile_plus	2 5 8
+par__argfile_plus	2 5 9
+par__argfile_plus	2 6 7
+par__argfile_plus	2 6 8
+par__argfile_plus	2 6 9
+par__argfile_plus	3 4 7
+par__argfile_plus	3 4 8
+par__argfile_plus	3 4 9
+par__argfile_plus	3 5 7
+par__argfile_plus	3 5 8
+par__argfile_plus	3 5 9
+par__argfile_plus	3 6 7
+par__argfile_plus	3 6 8
+par__argfile_plus	3 6 9
+par__argfile_plus	-- -a ./file ./++file -
+par__argfile_plus	1 7 10
+par__argfile_plus	1 7 11
+par__argfile_plus	1 7 12
+par__argfile_plus	1 8 10
+par__argfile_plus	1 8 11
+par__argfile_plus	1 8 12
+par__argfile_plus	1 9 10
+par__argfile_plus	1 9 11
+par__argfile_plus	1 9 12
+par__argfile_plus	2 7 10
+par__argfile_plus	2 7 11
+par__argfile_plus	2 7 12
+par__argfile_plus	2 8 10
+par__argfile_plus	2 8 11
+par__argfile_plus	2 8 12
+par__argfile_plus	2 9 10
+par__argfile_plus	2 9 11
+par__argfile_plus	2 9 12
+par__argfile_plus	3 7 10
+par__argfile_plus	3 7 11
+par__argfile_plus	3 7 12
+par__argfile_plus	3 8 10
+par__argfile_plus	3 8 11
+par__argfile_plus	3 8 12
+par__argfile_plus	3 9 10
+par__argfile_plus	3 9 11
+par__argfile_plus	3 9 12
+par__argfile_plus	-- -a ./file +./+file +-
+par__argfile_plus	1 4 10
+par__argfile_plus	2 5 11
+par__argfile_plus	3 6 12
+par__argfile_plus	-- -a ./file +- ./+file
+par__argfile_plus	1 10 4
+par__argfile_plus	1 10 5
+par__argfile_plus	1 10 6
+par__argfile_plus	2 11 4
+par__argfile_plus	2 11 5
+par__argfile_plus	2 11 6
+par__argfile_plus	3 12 4
+par__argfile_plus	3 12 5
+par__argfile_plus	3 12 6
 par__parset_assoc_arr	bash@lo	parset into an assoc array
 par__parset_assoc_arr	bash@lo	val  1 val  2 val  3
 par__parset_assoc_arr	bash@lo	val  1 val  2 val  3

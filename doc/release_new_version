@@ -274,24 +274,23 @@ from:tange@gnu.org
 to:parallel@gnu.org, bug-parallel@gnu.org
 stable-bcc: Jesse Alama <jessealama@fastmail.fm>
 
-Subject: GNU Parallel 20231022 ('Al-Aqsa Deluge') released [stable]
+Subject: GNU Parallel 20231122 ('Perry<<>>') released <<[stable]>>
 
-GNU Parallel 20231022 ('Al-Aqsa Deluge') has been released. It is available for download at: lbry://@GnuParallel:4
+GNU Parallel 20231122 ('<<>>') has been released. It is available for download at: lbry://@GnuParallel:4
 
 Quote of the month:
 
-  Love to make a dual processor workstation absolutely whir running dozens of analysis scripts at once
-    -- Best Catboy Key Grip @alamogordoglass@twitter
-  
+<<>>
+
 New in this release:
+
+* -a file1 -a +file2 will link file2 to file1 similar to ::::+
 
 * Bug fixes and man page updates.
 
 News about GNU Parallel:
 
-* Resume long parallel jobs https://ginolhac.github.io/posts/2023-10-02_resume-parallel/index.html 
-
-* Efficiency and Speed with GNU Parallel https://dev.to/0xog_pg/efficiency-and-speed-with-gnu-parallel-loo 
+<<>>
 
 
 GNU Parallel - For people who live life in the parallel lane.

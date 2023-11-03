@@ -8,7 +8,6 @@
   160d3159 9480cf5c a101512f 150b7ac0 206a65dc 86f2bb6b bdf1a2bc 96bc6d06
   7f8237c2 0964b67f bccf8a93 332528fa 11e5ab43 2a6226a6 ceb197ab 7f03c061
   $ bash install.sh
-/usr/bin/bash: -c: line 1: syntax error near unexpected token `)'
 /usr/bin/bash: -c: line 1: `     fetch -o - http://pi.dk/3 ) > install.sh'
   parallel -k echo ::: A B C > abc-file
   parallel -k echo ::: D E F > def-file
@@ -23,7 +22,6 @@ sleep .3
 /usr/bin/bash: -c: line 3: syntax error: unexpected end of file
 sleep .3
    perl -e 'for(1..10){print "$_\n"}') > num_%header
-/usr/bin/bash: -c: line 1: syntax error near unexpected token `)'
 /usr/bin/bash: -c: line 1: `   perl -e 'for(1..10){print "$_\n"}') > num_%header'
   perl -e 'print "HHHHAAABBBCCC"' > fixedlen
   parallel echo ::: A B C
@@ -351,7 +349,6 @@ foo
   perl -e 'print "@ARGV\n"'
   [CTRL-D]
 /usr/bin/bash: line 2: Warning:: command not found
-/usr/bin/bash: -c: line 3: syntax error near unexpected token `('
 /usr/bin/bash: -c: line 3: `  Warning: are doing (in which case: YOU ARE AWESOME!) or you forgot'
   parallel --trim r echo pre-{}-post ::: ' A '
 pre- A-post
@@ -364,26 +361,6 @@ pre-A-post
 =bash
 =ls
   parallel 'set a="{}"; if( { test -d "$a" } ) echo "$a is a dir"' ::: *
-/usr/bin/bash: -c: line 1: syntax error near unexpected token `)'
-/usr/bin/bash: -c: line 1: `set a="abc-file"; if( { test -d "$a" } ) echo "$a is a dir"'
-/usr/bin/bash: -c: line 1: syntax error near unexpected token `)'
-/usr/bin/bash: -c: line 1: `set a="abc0-file"; if( { test -d "$a" } ) echo "$a is a dir"'
-/usr/bin/bash: -c: line 1: syntax error near unexpected token `)'
-/usr/bin/bash: -c: line 1: `set a="abc_-file"; if( { test -d "$a" } ) echo "$a is a dir"'
-/usr/bin/bash: -c: line 1: syntax error near unexpected token `)'
-/usr/bin/bash: -c: line 1: `set a="def-file"; if( { test -d "$a" } ) echo "$a is a dir"'
-/usr/bin/bash: -c: line 1: syntax error near unexpected token `)'
-/usr/bin/bash: -c: line 1: `set a="fixedlen"; if( { test -d "$a" } ) echo "$a is a dir"'
-/usr/bin/bash: -c: line 1: syntax error near unexpected token `)'
-/usr/bin/bash: -c: line 1: `set a="num1000000"; if( { test -d "$a" } ) echo "$a is a dir"'
-/usr/bin/bash: -c: line 1: syntax error near unexpected token `)'
-/usr/bin/bash: -c: line 1: `set a="num30000"; if( { test -d "$a" } ) echo "$a is a dir"'
-/usr/bin/bash: -c: line 1: syntax error near unexpected token `)'
-/usr/bin/bash: -c: line 1: `set a="num8"; if( { test -d "$a" } ) echo "$a is a dir"'
-/usr/bin/bash: -c: line 1: syntax error near unexpected token `)'
-/usr/bin/bash: -c: line 1: `set a="outdir"; if( { test -d "$a" } ) echo "$a is a dir"'
-/usr/bin/bash: -c: line 1: syntax error near unexpected token `)'
-/usr/bin/bash: -c: line 1: `set a="tsv-file.tsv"; if( { test -d "$a" } ) echo "$a is a dir"'
   parallel --tag echo foo-{} ::: A B C
 A	foo-A
 B	foo-B
@@ -644,21 +621,17 @@ run_on_grp1
 run_on_grp2
   echo This is input_file > input_file
   parallel -S $SERVER1 --transferfile {} cat ::: input_file
-This is input_file
   echo This is input_file > input_file
   parallel -S $SERVER1 --transferfile {} --return {}.out \
     cat {} ">"{}.out ::: input_file
   cat input_file.out
-This is input_file
   echo This is input_file > input_file
   parallel -S $SERVER1 --transferfile {} --return {}.out --cleanup \
     cat {} ">"{}.out ::: input_file
   cat input_file.out
-This is input_file
   echo This is input_file > input_file
   parallel -S $SERVER1 --trc {}.out cat {} ">"{}.out ::: input_file
   cat input_file.out
-This is input_file
   echo common data > common_file
   parallel --basefile common_file -S $SERVER1 \
     cat common_file\; echo {} ::: foo
@@ -1107,7 +1080,6 @@ Warning: unknown mime-type for "Arguments @ARGV\n" -- using "application/octet-s
 Error: no such file "Arguments @ARGV\n"
   #!/usr/bin/parallel --shebang-wrap /usr/bin/python
   print 'Arguments', str(sys.argv)
-/usr/bin/bash: -c: line 4: syntax error near unexpected token `('
 /usr/bin/bash: -c: line 4: `  print 'Arguments', str(sys.argv)'
   #!/usr/bin/parallel --shebang-wrap /bin/bash
   echo Arguments "$@"
@@ -1121,11 +1093,9 @@ Arguments
   #!/usr/bin/parallel --shebang-wrap /usr/bin/Rscript --vanilla --slave
   args <- commandArgs(trailingOnly = TRUE)
   print(paste("Arguments ",args))
-/usr/bin/bash: -c: line 3: syntax error near unexpected token `('
 /usr/bin/bash: -c: line 3: `  args <- commandArgs(trailingOnly = TRUE)'
   #!/usr/bin/parallel --shebang-wrap ARG={} /usr/bin/gnuplot
   print "Arguments ", system('echo $ARG')
-/usr/bin/bash: -c: line 3: syntax error near unexpected token `('
 /usr/bin/bash: -c: line 3: `  print "Arguments ", system('echo $ARG')'
   #!/usr/bin/parallel --shebang-wrap /usr/bin/ruby
   print "Arguments "
@@ -1140,7 +1110,6 @@ Error: no such file "Arguments "
     printf (" %s", arg_list{i});
   endfor
   printf ("\n");
-/usr/bin/bash: -c: line 3: syntax error near unexpected token `"Arguments"'
 /usr/bin/bash: -c: line 3: `  printf ("Arguments");'
   #!/usr/bin/parallel --shebang-wrap /usr/bin/clisp
   (format t "~&~S~&" 'Arguments)
@@ -1158,12 +1127,10 @@ Error: no such file "Arguments "
   ?>
 Arguments
 /usr/bin/bash: line 2: ?php: No such file or directory
-/usr/bin/bash: -c: line 4: syntax error near unexpected token `array_slice'
 /usr/bin/bash: -c: line 4: `  foreach(array_slice($argv,1) as $v)'
   #!/usr/bin/parallel --shebang-wrap /usr/bin/node
   var myArgs = process.argv.slice(2);
   console.log('Arguments ', myArgs);
-/usr/bin/bash: -c: line 1: syntax error near unexpected token `('
 /usr/bin/bash: -c: line 1: `  var myArgs = process.argv.slice(2);'
   #!/usr/bin/parallel --shebang-wrap /usr/bin/lua
   io.write "Arguments"
@@ -1173,12 +1140,10 @@ Arguments
   end
   print(")
 /usr/bin/bash: line 3: io.write: command not found
-/usr/bin/bash: -c: line 4: syntax error near unexpected token `='
 /usr/bin/bash: -c: line 4: `  for a = 1, #arg do'
   #!/usr/bin/parallel --shebang-wrap ARGV={} /usr/bin/csharp
   var argv = Environment.GetEnvironmentVariable("ARGV");
   print("Arguments "+argv);
-/usr/bin/bash: -c: line 3: syntax error near unexpected token `('
 /usr/bin/bash: -c: line 3: `  var argv = Environment.GetEnvironmentVariable("ARGV");'
   sem 'sleep 1; echo The first finished' &&
     echo The first is now running in the background &&

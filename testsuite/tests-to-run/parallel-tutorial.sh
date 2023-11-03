@@ -120,7 +120,13 @@ perl -ne '$/="\n\n"; /^Output/../^[^O]\S/ and next; /^  / and print;' "$testsuit
 	      s:par......par:tempfile:g;
 	      s:^tempfile\n::g;
 	      # --progress => 1:local / 4 / 4
-	      s,1:local / . / .,1:local / 9 / 9,
+	      s,1:local / . / .,1:local / 9 / 9,;
+	      # bash: -c: line 1: .set a="tempfile"; if( { test -d "$a" } ) echo "$a is a dir"
+	      s{.*bash: .*set a=".*".*test -d.*is a dir.*\n}{};
+	      # /usr/bin/bash: -c: line 1: syntax error near unexpected token .)
+	      s{.*bash: .*syntax error near unexpected token.*\n}{};
+	      # This is input_file
+	      s{^This is input_file.*\n}{};
 	      ' | uniq
 
 echo "### 3+3 .par files (from --files), 1 .tms-file from tmux attach"
