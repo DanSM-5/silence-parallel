@@ -4296,6 +4296,7 @@ sub drain_job_queue(@) {
 	     not $Global::start_no_new_jobs and not $Global::JobQueue->empty()
 	     or
 	     $opt::sqlmaster and not $Global::sql->finished());
+    $Global::all_jobs_done = 1;
     if($opt::progress) {
 	my %progress = progress();
 	::status("\r".$progress{'status'});
@@ -4523,6 +4524,7 @@ sub progress() {
 	$reset ||= "\033[0m";
 	my($total, $completed, $left, $pctcomplete, $avgtime, $eta) =
 	    compute_eta();
+	if($Global::all_jobs_done) { $eta = now()-$Global::start_time; }
 	my $arg = $Global::newest_job ?
 	    $Global::newest_job->{'commandline'}->
 	    replace_placeholders(["\257<\257>"],0,0) : "";
@@ -15203,6 +15205,7 @@ sub main() {
 	$opt::sqlworker = undef;
     }
 
+    $Global::start_time = ::now();
     if($opt::nonall or $opt::onall) {
 	onall(\@input_source_fh,@command);
 	wait_and_exit(min(undef_as_zero($Global::exitstatus),254));
