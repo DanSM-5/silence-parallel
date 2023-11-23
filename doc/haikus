@@ -15,8 +15,6 @@ Output is in sync
 write a haiku about gnu parallel and the :::+  option
 
 
-  Got around to using GNU parallel for the first time from a suggestion by @jdwasmuth ... now I'm wishing I started using this years ago
-    -- Stefan Gavriliuc @GavriliucStefan@twitter
 
   I’m a big fan of GNU parallel!
     -- Scott Cain @scottjcain@twitter
@@ -214,6 +212,9 @@ https://negfeedback.blogspot.com/2020/05/indispensable-command-line-tools.html
     -- @alinajaf@twitter
 
 === Used ===
+
+  Got around to using GNU parallel for the first time from a suggestion by @jdwasmuth ... now I'm wishing I started using this years ago
+    -- Stefan Gavriliuc @GavriliucStefan@twitter
 
   Love to make a dual processor workstation absolutely whir running dozens of analysis scripts at once
     -- Best Catboy Key Grip @alamogordoglass@twitter

@@ -4,10 +4,14 @@ New in this release:
 
 * -a file1 -a +file2 will link file2 to file1 similar to ::::+
 
+* --bar shows total time when all jobs are done.
+
 * Bug fixes and man page updates.
 
 News about GNU Parallel:
 
+* Using GNU Parallel in bash scripts to optimize python processes
+  https://climate-cms.org/posts/2023-11-02-gnu-parallel.html
 
 
 20231022
