@@ -42,6 +42,17 @@ ctrlz_should_suspend_children() {
 }
 ctrlz_should_suspend_children
 
+par_totaljob_repl() {
+    echo '{##} bug #45841: Replacement string for total no of jobs'
+
+    parallel -k --plus echo {##} ::: {a..j};
+    parallel -k 'echo {= $::G++ > 3 and ($_=$Global::JobQueue->total_jobs());=}' ::: {1..10}
+    parallel -k -N7 --plus echo {#} {##} ::: {1..14}
+    parallel -k -N7 --plus echo {#} {##} ::: {1..15}
+    parallel -k -S 8/: -X --plus echo {#} {##} ::: {1..15}
+    parallel -k --plus --delay 0.01 -j 10 'sleep 2; echo {0#}/{##}:{0%}' ::: {1..5} ::: {1..4}
+}
+
 par_semaphore() {
     echo '### Test if parallel invoked as sem will run parallel --semaphore'
     sem --id as_sem -u -j2 'echo job1a 1; sleep 3; echo job1b 3'

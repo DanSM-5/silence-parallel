@@ -8,6 +8,29 @@
 # Each should be taking 3-10s and be possible to run in parallel
 # I.e.: No race conditions, no logins
 
+par_combineexec() {
+    combineexec() {
+	stderr=$(mktemp)
+	parallel --combineexec "$combo" "$@" 2>"$stderr"
+	# Redirected stderr should give no output
+	cat "$stderr"
+	rm "$stderr"
+    }
+    combo=$(mktemp)
+
+    echo '### Check that "--pipe -k" works'
+    combineexec -j 2 -k --pipe wc
+    seq 920000 | "$combo"
+
+    echo '### Check that "-k" is kept'
+    combineexec -k bash -c :::
+    "$combo" 'sleep 0.$RANDOM; echo 1' 'sleep 0.$RANDOM; echo 2' 'sleep 0.$RANDOM; echo 3'
+
+    echo '### Check that "--tagstring {1}" is kept'
+    combineexec --tagstring {1} -k perl -e :::
+    "$combo" 'print("1\n")' 'print("2\n")' 'print("3\n")'
+}
+
 par__argfile_plus() {
     tmp=$(mktemp -d)
     (
@@ -481,17 +504,6 @@ par_maxargs() {
     (echo line 1;echo line 1;echo line 2) | parallel -k --max-args 2 -X echo
     (echo line 1;echo line 2;echo line 3) | parallel -k --max-args 1 echo
     (echo line 1;echo line 1;echo line 2) | parallel -k --max-args 2 echo
-}
-
-par_totaljob_repl() {
-    echo '{##} bug #45841: Replacement string for total no of jobs'
-
-    parallel -k --plus echo {##} ::: {a..j};
-    parallel -k 'echo {= $::G++ > 3 and ($_=$Global::JobQueue->total_jobs());=}' ::: {1..10}
-    parallel -k -N7 --plus echo {#} {##} ::: {1..14}
-    parallel -k -N7 --plus echo {#} {##} ::: {1..15}
-    parallel -k -S 8/: -X --plus echo {#} {##} ::: {1..15}
-    parallel -k --plus --delay 0.01 -j 10 'sleep 2; echo {0#}/{##}:{0%}' ::: {1..5} ::: {1..4}
 }
 
 par_jobslot_repl() {

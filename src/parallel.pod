@@ -536,9 +536,9 @@ Shorthand for B<--delimiter '\0'>.
 See also: B<--delimiter>
 
 
-=item B<--arg-file> I<input-file> (alpha testing)
+=item B<--arg-file> I<input-file> (beta testing)
 
-=item B<-a> I<input-file> (alpha testing)
+=item B<-a> I<input-file> (beta testing)
 
 Use I<input-file> as input source.
 
@@ -839,6 +839,50 @@ I<regexp> is a Perl Regular Expression:
 https://perldoc.perl.org/perlre.html
 
 See also: B<--csv> B<{>I<n>B<}> B<--trim> B<--link>
+
+
+=item B<--combineexec> I<name> (alpha testing)
+
+=item B<--combine-executable> I<name> (alpha testing)
+
+Combine GNU B<parallel> with another program into a single executable.
+
+Let us say you have developed I<myprg> which takes a single
+argument. You do not want to parallelize it yourself.
+
+You could write a wrapper that uses GNU B<parallel> called B<myparprg>:
+
+   #!/bin/sh
+
+   parallel myprg ::: "$@"
+
+But for others to use this, they need to install: GNU B<parallel>,
+B<myprg>, and B<myparprg>.
+
+It would be easier to install if all could be packed into a single
+executable.
+
+If B<myprg> is written in shell, you can use B<--embed>.
+
+If B<myprg> is a binary you can use B<--combineexec>.
+
+Here we use B<gzip> as example:
+
+   parallel --combineexec pargzip gzip -9 :::
+
+You can now do:
+
+   ./pargzip foo bar baz
+
+If you want to pass options to B<gzip> you can do:
+
+   parallel --combineexec pargzip gzip
+
+Followed by:
+
+   ./pargzip -1 ::: foo bar baz
+
+See also: B<--embed> B<--shebang> B<--shebang-wrap>
 
 
 =item B<--compress>

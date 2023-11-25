@@ -299,7 +299,7 @@ sub parcat_script() {
 	    my $file = shift;
 	    my $output_fd = shift;
 	    open(my $fh, "<", $file) || do {
-		print STDERR "parcat: Cannot open $file\n";
+		print STDERR "parcat: Cannot open $file: $!\n";
 		exit(1);
 	    };
 	    # Remove file when it has been opened
@@ -597,9 +597,9 @@ sub pipe_shard_setup() {
 }
 
 sub pipe_part_files(@) {
-    # Given the bigfile
-    # find header and split positions
-    # make commands that 'cat's the partial file
+    # Given the bigfile:
+    # - find header and split positions
+    # - make commands that 'cat's the partial file
     # Input:
     #	$file = the file to read
     # Returns:
@@ -612,7 +612,7 @@ sub pipe_part_files(@) {
 	::wait_and_exit(255);
     }
 
-    my $fh = open_or_exit($file);
+    my $fh = open_or_exit("<",$file);
     my $firstlinelen = 0;
     if($opt::skip_first_line) {
 	my $newline;
@@ -694,7 +694,7 @@ sub find_split_positions($$$) {
     my @pos;
     my ($recstart,$recend) = recstartrecend();
     my $recendrecstart = $recend.$recstart;
-    my $fh = ::open_or_exit($file);
+    my $fh = ::open_or_exit("<",$file);
     push(@pos,$skiplen);
     for(my $pos = $block+$skiplen; $pos < $size; $pos += $block) {
 	my $buf;
@@ -812,7 +812,7 @@ sub split_positions_for_group_by($$$$) {
 
     my ($file,$size,$block,$header,$firstlinelen) = @_;
     my @pos;
-    $fh = open_or_exit($file);
+    $fh = open_or_exit("<",$file);
     # Set $Global::group_by_column $Global::group_by_perlexpr
     group_by_loop($fh,$opt::recsep);
     if($opt::max_args) {
@@ -2132,6 +2132,10 @@ sub options_completion_hash() {
 	 "embed[Embed GNU parallel in a shell script]" => \$opt::embed,
 	 ("filter=s[Only run jobs where filter is true]:filter"
 	  => \@opt::filter),
+	 "combineexec|combine-exec|combineexecutable|combine-executable=s".
+	 "[Embed GNU parallel in a shell script]" => \$opt::combineexec,
+	 ("filter=s[Only run jobs where filter is true]:filter"
+	  => \@opt::filter),
 	 "_parset=s[Generate shell code for parset]" => \$opt::_parset,
 	 ("shell-completion|shellcompletion=s".
 	  "[Generate shell code for shell completion]:shell:(bash zsh)"
@@ -2222,7 +2226,6 @@ sub parse_options(@) {
     init_globals();
     my @argv_before = @ARGV;
     @ARGV = read_options();
-
     # Before changing these line, please read
     # https://www.gnu.org/software/parallel/parallel_design.html#citation-notice
     # https://git.savannah.gnu.org/cgit/parallel.git/tree/doc/citation-notice-faq.txt
@@ -2367,16 +2370,8 @@ sub parse_options(@) {
     push @Global::transfer_files, @opt::transfer_files;
     if(%opt::template) {
 	while (my ($source, $template_name) = each %opt::template) {
-	    if(open(my $tmpl, "<", $source)) {
-		local $/; # $/ = undef => slurp whole file
-		my $content = <$tmpl>;
-		push @Global::template_names, $template_name;
-		push @Global::template_contents, $content;
-		::debug("tmpl","Name: $template_name\n$content\n");
-	    } else {
-		::error("Cannot open '$source'.");
-		wait_and_exit(255);
-	    }
+	    push @Global::template_names, $template_name;
+	    push @Global::template_contents, slurp_or_exit($source);
 	}
     }
     if(not defined $opt::recstart and
@@ -2523,7 +2518,12 @@ sub parse_options(@) {
 	$Global::ContextReplace = 1;
     }
     # Deal with ::: :::+ :::: ::::+ and -a +file
+    my @ARGV_with_argsep = @ARGV;
     @ARGV = read_args_from_command_line();
+    if(defined $opt::combineexec) {
+	pack_combined_executable(\@argv_before,\@ARGV_with_argsep,\@ARGV);
+	exit(0);
+    }
     parse_semaphore();
 
     if(defined $opt::eta) { $opt::progress = $opt::eta; }
@@ -2652,11 +2652,7 @@ sub parse_options(@) {
 	delete $ENV{'PARALLEL_ENV'};
 	if(-e $penv) {
 	    # This is a file/fifo: Replace envvar with content of file
-	    open(my $parallel_env, "<", $penv) ||
-		::die_bug("Cannot read parallel_env from $penv");
-	    local $/; # Put <> in slurp mode
-	    $penv = <$parallel_env>;
-	    close $parallel_env;
+	    $penv = slurp_or_exit($penv);
 	}
 	# Map \001 to \n to make it easer to quote \n in $PARALLEL_ENV
 	$penv =~ s/\001/\n/g;
@@ -3143,12 +3139,7 @@ sub record_env() {
     # Record current %ENV-keys in $PARALLEL_HOME/ignored_vars
     # Returns: N/A
     my $ignore_filename = $Global::config_dir . "/ignored_vars";
-    if(open(my $vars_fh, ">", $ignore_filename)) {
-	print $vars_fh map { $_,"\n" } keys %ENV;
-    } else {
-	::error("Cannot write to $ignore_filename.");
-	::wait_and_exit(255);
-    }
+    write_or_exit($ignore_filename,map { $_,"\n" } keys %ENV);
 }
 
 sub open_joblog() {
@@ -3256,24 +3247,17 @@ sub open_joblog() {
 	}
 	if($opt::dryrun) {
 	    # Do not write to joblog in a dry-run
-	    if(not open($Global::joblog, ">", "/dev/null")) {
-		::error("Cannot write to --joblog $opt::joblog.");
-		::wait_and_exit(255);
-	    }
+
 	} elsif($append) {
 	    # Append to joblog
-	    if(not open($Global::joblog, ">>", $opt::joblog)) {
-		::error("Cannot append to --joblog $opt::joblog.");
-		::wait_and_exit(255);
-	    }
+	    $Global::joblog = open_or_exit(">>", $opt::joblog);
 	} else {
 	    if($opt::joblog eq "-") {
 		# Use STDOUT as joblog
 		$Global::joblog = $Global::fh{1};
-	    } elsif(not open($Global::joblog, ">", $opt::joblog)) {
+	    } else {
 		# Overwrite the joblog
-		::error("Cannot write to --joblog $opt::joblog.");
-		::wait_and_exit(255);
+		$Global::joblog = open_or_exit(">", $opt::joblog);
 	    }
 	    print $Global::joblog
 		join("\t", "Seq", "Host", "Starttime", "JobRuntime",
@@ -3301,11 +3285,7 @@ sub open_json_csv() {
 	    $Global::fh{1} = $fd;
 	    $Global::fh{2} = $fd;
 	} elsif($Global::csvsep or $Global::jsonout) {
-	    if(not open($Global::csv_fh,">",$opt::results)) {
-		::error("Cannot open results file `$opt::results': ".
-			"$!.");
-		wait_and_exit(255);
-	    }
+	    $Global::csv_fh = open_or_exit(">",$opt::results);
 	}
     }
 }
@@ -3486,7 +3466,7 @@ sub read_options() {
     return @ARGV;
 }
 
-sub arrayindex() {
+sub arrayindex($$) {
     # Similar to Perl's index function, but for arrays
     # Input:
     #	$arr_ref1 = ref to @array1 to search in
@@ -3894,28 +3874,65 @@ sub enough_file_handles() {
     }
 }
 
-sub open_or_exit($) {
+sub open_or_exit($$) {
     # Open a file name or exit if the file cannot be opened
     # Inputs:
+    #	$mode = read:"<" write:">"
     #	$file = filehandle or filename to open
     # Uses:
     #	$Global::original_stdin
     # Returns:
-    #	$fh = file handle to read-opened file
+    #	$fh = file handle to opened file
+    my $mode = shift;
     my $file = shift;
     if($file eq "-") {
-	return ($Global::original_stdin || *STDIN);
+	if($mode eq "<") {
+	    return ($Global::original_stdin || *STDIN);
+	} else {
+	    return ($Global::original_stderr || *STDERR);
+	}
     }
     if(ref $file eq "GLOB") {
 	# This is an open filehandle
 	return $file;
     }
     my $fh = gensym;
-    if(not open($fh, "<", $file)) {
-	::error("Cannot open input file `$file': No such file or directory.");
+    if(not open($fh, $mode, $file)) {
+	::error("Cannot open `$file': $!");
 	wait_and_exit(255);
     }
     return $fh;
+}
+
+sub slurp_or_exit($) {
+    # Read content of a file or exit if the file cannot be opened
+    # Inputs:
+    #	$file = filehandle or filename to open
+    # Returns:
+    #	$content = content as scalar
+    my $fh = open_or_exit("<",shift);
+    # $/ = undef => slurp whole file
+    local $/;
+    my $content = <$fh>;
+    close $fh;
+    return $content;
+}
+
+sub write_or_exit(@) {
+    # Write content to a file or exit if the file cannot be opened
+    # Inputs:
+    #	$file = filehandle or filename to open
+    #	@content = content to be written
+    # Returns:
+    #	N/A
+    my $file = shift;
+    sub failed {
+	error("Cannot write to `$file': $!");
+	wait_and_exit(255);
+    }
+    my $fh = open_or_exit(">",$file);
+    print($fh @_) or failed();
+    close($fh) or failed();
 }
 
 sub set_fh_blocking($) {
@@ -4805,11 +4822,7 @@ sub read_sshloginfile($) {
 	$in_fh = *STDIN;
 	$close = 0;
     } else {
-	if(not open($in_fh, "<", $file)) {
-	    # Try the filename
-	    ::error("Cannot open $file.");
-	    ::wait_and_exit(255);
-	}
+	$in_fh = open_or_exit("<", $file);
     }
     while(<$in_fh>) {
 	chomp;
@@ -5469,8 +5482,7 @@ sub onall($@) {
     my %seen;
     for my $joblog (@joblogs) {
 	# Append to $joblog
-	open(my $fh, "<", $joblog) ||
-	    ::die_bug("Cannot open tmp joblog $joblog");
+	my $fh = open_or_exit("<", $joblog);
 	# Skip first line (header);
 	<$fh>;
 	print $Global::joblog (<$fh>);
@@ -6075,22 +6087,19 @@ sub embed() {
 	::error("--embed only works if parallel is a readable file");
 	exit(255);
     }
-    if(open(my $fh, "<", $0)) {
-	# Read the source from $0
-	my @source = <$fh>;
-	my $user = $ENV{LOGNAME} || $ENV{USERNAME} || $ENV{USER};
-	my @env_parallel_source = ();
-	my $shell = $Global::shell;
-	$shell =~ s:.*/::;
-	for(which("env_parallel.$shell")) {
-	    -r $_ or next;
-	    # Read the source of env_parallel.shellname
-	    open(my $env_parallel_source_fh, $_) || die;
-	    @env_parallel_source = <$env_parallel_source_fh>;
-	    close $env_parallel_source_fh;
-	    last;
-	}
-	print "#!$Global::shell
+    # Read the source from $0
+    my $source = slurp_or_exit($0);
+    my $user = $ENV{LOGNAME} || $ENV{USERNAME} || $ENV{USER};
+    my $env_parallel_source;
+    my $shell = $Global::shell;
+    $shell =~ s:.*/::;
+    for(which("env_parallel.$shell")) {
+	-r $_ or next;
+	# Read the source of env_parallel.shellname
+	$env_parallel_source .= slurp_or_exit($_);
+	last;
+    }
+    print "#!$Global::shell
 
 # Copyright (C) 2007-2023 $user, Ole Tange, http://ole.tange.dk
 # and Free Software Foundation, Inc.
@@ -6137,7 +6146,7 @@ parallel() {
     _file_with_GNU_Parallel_source=`mktemp`;
 !,
 	"cat <<'$randomstring' > \$_file_with_GNU_Parallel_source\n",
-	@source,
+	$source,
 	$randomstring,"\n",
 	q!
     # Copy the source code from the file to the fifo
@@ -6150,7 +6159,7 @@ parallel() {
     perl $_fifo_with_GNU_Parallel_source "$@"
 }
 !,
-	@env_parallel_source,
+	$env_parallel_source,
 	q!
 
 # This will call the functions above
@@ -6162,12 +6171,143 @@ echo $p $y $c $h
 echo You can also activate GNU Parallel for interactive use by:
 echo . "$0"
 !;
-    } else {
-	::error("Cannot open $0");
-	exit(255);
-    }
     ::status("Redirect the output to a file and add your changes at the end:",
 	"  $0 --embed > new_script");
+}
+
+sub pack_combined_executable {
+    my ($before_ref,$with_argsep_ref,$argv_ref) = @_;
+    my @parallelopts;
+    my $skip_next;
+    # Remove '--combine-exec file' from options
+    for(@{$before_ref}[0..(arrayindex($before_ref,$with_argsep_ref))-1]) {
+	if (/^--combine-?exec(utable)?$/ || $skip_next) {
+	    # Also skip the filename given to --combine-exec
+	    $skip_next = !$skip_next;
+	    next;
+	}
+	push @parallelopts, $_;
+    }
+    # From ::: and to end
+    my @argsep = @{$with_argsep_ref}[($#ARGV+1)..$#$with_argsep_ref];
+    # The executable is now the first in @ARGV
+    my $execname = shift @ARGV;
+    # The rest of @ARGV are options for $execname
+    my @execopts = @ARGV;
+    debug("combine",
+	  "Parallel opts: @parallelopts ",
+	  "Executable: $execname ",
+	  "Execopts: @execopts ",
+	  "Argsep: @argsep\n");
+    # Read the the executable
+    my $exec = slurp_or_exit(which($execname));
+    # Read the source of GNU Parallel and the executable
+    my $parallel = slurp_or_exit($0);
+    # Remove possibly __END__ from GNU Parallel
+    $parallel =~ s/^__END__.*//s;
+    if(-t $Global::original_stderr) {
+	::status(
+	      "Please be aware that combining GNU Parallel and '$execname'",
+	      "into a combined executable will make the whole executable",
+	      "licensed under GPLv3 (section 5.c).",
+	      "",
+	      "If the license of '$execname' is incompatible with GPLv3,",
+	      "you cannot legally convey copies of the combined executable",
+	      "to others. You can, however, still run them yourself.",
+	      "",
+	      "The combined executable will not have a citation notice,",
+	      "so it is your resposibilty to advice that academic tradition",
+	      "requires the users to cite GNU Parallel.",
+	      ""
+	    );
+	my $input;
+	do {
+	    ::status_no_nl("\nType: 'I agree' and press enter.\n> ");
+	    $input = <STDIN>;
+	    if(not defined $input) {
+		exit(255);
+	    }
+	} until($input =~ /I agree/i);
+    }
+    write_or_exit($opt::combineexec,
+		  $parallel,
+		  "\n__END__\n",
+		  (map { "$_\0\n" } @parallelopts), "\0\0\n",
+		  $execname, "\0\0\n",
+		  (map { "$_\0\n" } @execopts), "\0\0\n",
+		  (map { "$_\0\n" } @argsep), "\0\0\n",
+		  $exec);
+    # Set +x permission
+    chmod 0700, $opt::combineexec;
+    exit(0);
+}
+
+sub unpack_combined_executable {
+    # If the script is a combined executable,
+    # it will have stuff in <DATA> (I.e. after __END__)
+    my $combine_exec = join("",<DATA>);
+    if(length $combine_exec) {
+	# Parse the <DATA>
+	#
+	# __END__
+	# Option for GNU Parallel\0\n
+	# Option for GNU Parallel\0\n
+	# \0\0\n
+	# Name of executable\0\0\n
+	# Option for executable\0\n
+	# Option for executable\0\n
+	# \0\0\n
+	# argsep + args if any\0\n
+	# argsep + args if any\0\n
+	# \0\0\n
+	# <<binary of exec>>
+	#
+	# parallel --combine --pipe -j10% --recend '' myscript --myopt myval
+	# __END__
+	# --pipe\0\n       --pipe
+	# -j10%\0\n        -j10%
+	# --recend\0\n     --recend
+	# \0\n             ''
+	# \0\0\n           end-of-parallel-options
+	# myscript\0\0\n   myscript
+	# --myopt\0\n      --myopt
+	# myval\0\n        myval
+	# \0\0\n           end-of-myscript-options
+	# \0\0\n           no argsep
+	# <<binary of myscript>>
+	#
+	# parallel --combine -j10% myscript :::
+	# __END__
+	# -j10%\0\n
+	# \0\0\n           end-of-parallel-options
+	# myscript\0\0\n
+	# \0\0\n           end-of-myscript-options
+	# :::\0\n
+	# \0\0\n
+	# <<binary of myscript>>
+
+	my ($opts,$execname,$execopts,$argsep,$exec) =
+	    split /\0\0\n/,$combine_exec,5;
+	# Make a tmpdir with a file called $execname
+	local %ENV;
+	$ENV{TMPDIR} ||= "/tmp";
+	my $dir = File::Temp::tempdir($ENV{'TMPDIR'} . "/parXXXXX", CLEANUP => 1);
+	my $script = $dir."/".$execname;
+	write_or_exit($script,$exec);
+	# Set +x permission
+	chmod 0700, $script;
+	# Mark it for unlinking later
+	$Global::unlink{$script}++;
+	$Global::unlink{$dir}++;
+	# pass the options for GNU Parallel
+	my @opts = split /\0\n/, $opts;
+	my @execopts = split /\0\n/, $execopts;
+	if(length $argsep) {
+	    # Only add argsep if set
+	    unshift(@ARGV, split(/\0\n/,$argsep));
+	}
+	unshift(@ARGV,@opts,$script,@execopts);
+    }
 }
 
 
@@ -6245,15 +6385,11 @@ sub size_of_block_dev() {
     # Returns:
     #	$size = in bytes, undef if error
     my $blockdev = shift;
-    if(open(my $fh, "<", $blockdev)) {
-	seek($fh,0,2) || ::die_bug("cannot seek $blockdev");
-	my $size = tell($fh);
-	close $fh;
-	return $size;
-    } else {
-	::error("cannot open $blockdev");
-	wait_and_exit(255);
-    }
+    my $fh = open_or_exit("<", $blockdev);
+    seek($fh,0,2) || ::die_bug("cannot seek $blockdev");
+    my $size = tell($fh);
+    close $fh;
+    return $size;
 }
 
 sub qqx(@) {
@@ -8014,14 +8150,9 @@ sub compute_max_loadavg($) {
 	} elsif (-f $loadspec) {
 	    $Global::max_load_file = $loadspec;
 	    $Global::max_load_file_last_mod = (stat($Global::max_load_file))[9];
-	    if(open(my $in_fh, "<", $Global::max_load_file)) {
-		my $opt_load_file = join("",<$in_fh>);
-		close $in_fh;
-		$load = $self->compute_max_loadavg($opt_load_file);
-	    } else {
-		::error("Cannot open $loadspec.");
-		::wait_and_exit(255);
-	    }
+	    $load = $self->compute_max_loadavg(
+		::slurp_or_exit($Global::max_load_file)
+		);
 	} else {
 	    ::error("Parsing of --load failed.");
 	    ::die_usage();
@@ -8358,19 +8489,13 @@ sub user_requested_processes($) {
     if(defined $opt_P) {
 	if (-f $opt_P) {
 	    $Global::max_procs_file = $opt_P;
-	    if(open(my $in_fh, "<", $Global::max_procs_file)) {
-		my $opt_P_file = join("",<$in_fh>);
-		close $in_fh;
-		if($opt_P_file !~ /\S/) {
-		    ::warning_once("$Global::max_procs_file is empty. ".
-				   "Treated as 100%");
-		    $opt_P_file = "100%";
-		}
-		$processes = $self->user_requested_processes($opt_P_file);
-	    } else {
-		::error("Cannot open $opt_P.");
-		::wait_and_exit(255);
+	    my $opt_P_file = ::slurp_or_exit($Global::max_procs_file);
+	    if($opt_P_file !~ /\S/) {
+		::warning_once("$Global::max_procs_file is empty. ".
+			       "Treated as 100%");
+		$opt_P_file = "100%";
 	    }
+	    $processes = $self->user_requested_processes($opt_P_file);
 	} else {
 	    if($opt_P eq "0") {
 		# -P 0 = infinity (or at least close)
@@ -8561,20 +8686,14 @@ sub sct_gnu_linux($) {
 	for($thread = 0;
 	    -r "$prefix/cpu$thread/topology/physical_package_id";
 	    $thread++) {
-	    open(my $fh,"<",
-		 "$prefix/cpu$thread/topology/physical_package_id")
-		|| die;
-	    $socket{<$fh>}++;
-	    close $fh;
+	    $socket{slurp_or_exit(
+			"$prefix/cpu$thread/topology/physical_package_id")}++;
 	}
 	for($thread = 0;
 	    -r "$prefix/cpu$thread/topology/thread_siblings";
 	    $thread++) {
-	    open(my $fh,"<",
-		 "$prefix/cpu$thread/topology/thread_siblings")
-		|| die;
-	    $sibiling{<$fh>}++;
-	    close $fh;
+	    $sibiling{slurp_or_exit(
+			  "$prefix/cpu$thread/topology/thread_siblings")}++;
 	}
 	$cpu->{'sockets'} = keys %socket;
 	$cpu->{'cores'} = keys %sibiling;
@@ -9417,21 +9536,9 @@ sub openoutputfiles($) {
 	    $errname = "$out.err";
 	    $seqname = "$out.seq";
 	}
-	my $seqfhw;
-	if(not open($seqfhw, "+>", $seqname)) {
-	    ::error("Cannot write to `$seqname'.");
-	    ::wait_and_exit(255);
-	}
-	print $seqfhw $self->seq();
-	close $seqfhw;
-	if(not open($outfhw, "+>", $outname)) {
-	    ::error("Cannot write to `$outname'.");
-	    ::wait_and_exit(255);
-	}
-	if(not open($errfhw, "+>", $errname)) {
-	    ::error("Cannot write to `$errname'.");
-	    ::wait_and_exit(255);
-	}
+	::write_or_exit($seqname, $self->seq());
+	$outfhw = ::open_or_exit("+>", $outname);
+	$errfhw = ::open_or_exit("+>", $errname);
 	$self->set_fh(1,"unlink","");
 	$self->set_fh(2,"unlink","");
 	if($opt::sqlworker) {
@@ -9530,8 +9637,7 @@ sub grouped($) {
 	# Re-open the file for reading
 	# so fdw can be closed seperately
 	# and fdr can be seeked seperately (for --line-buffer)
-	open(my $fdr,"<", $self->fh($fdno,'name')) ||
-	    ::die_bug("fdr: Cannot open ".$self->fh($fdno,'name'));
+	my $fdr = ::open_or_exit("<", $self->fh($fdno,'name'));
 	$self->set_fh($fdno,'r',$fdr);
 	# Unlink if not debugging
 	$Global::debug or ::rm($self->fh($fdno,"unlink"));
@@ -10367,9 +10473,7 @@ sub sshlogin_wrap($) {
 	    if(-r $_ and not -d) {
 		# Read as environment definition bug #44041
 		# TODO parse this
-		my $fh = ::open_or_exit($_);
-		$Global::envdef = join("",<$fh>);
-		close $fh;
+		$Global::envdef = ::slurp_or_exit($_);
 	    }
 	}
 	if(grep { /^_$/ } @vars) {
@@ -10549,11 +10653,11 @@ sub fill_templates($) {
 	@{$self->{'commandline'}{'template_names'}};
 	::debug("tmpl","Names: @template_name\n");
 	for(my $i = 0; $i <= $#template_name; $i++) {
-	    open(my $fh, ">", $template_name[$i]) || die;
-	    print $fh $self->{'commandline'}->
-		replace_placeholders([$self->{'commandline'}
-				      {'template_contents'}[$i]],0,0);
-	    close $fh;
+	    ::write_or_exit
+		($template_name[$i],
+		 $self->{'commandline'}->
+		 replace_placeholders([$self->{'commandline'}
+				       {'template_contents'}[$i]],0,0));
 	}
 	if($opt::cleanup) {
 	    $self->add_rm(@template_name);
@@ -11036,7 +11140,7 @@ sub interactive_start($) {
 	my $answer;
 	::status_no_nl("$command ?...");
 	do{
-	    open(my $tty_fh, "<", "/dev/tty") || ::die_bug("interactive-tty");
+	    my $tty_fh = ::open_or_exit("<","/dev/tty");
 	    $answer = <$tty_fh>;
 	    close $tty_fh;
 	    # Sometime we get an empty string (not even \n)
@@ -14590,7 +14694,7 @@ sub get_alias($) {
 	# local $/ needed if -0 set
 	local $/ = "\n";
 	if(-r $alias_file) {
-	    open(my $in, "<", $alias_file) || die;
+	    my $in = ::open_or_exit("<",$alias_file);
 	    push @urlalias, <$in>;
 	    close $in;
 	}
@@ -15211,7 +15315,9 @@ $Global::max_slot_number = $opt::session;
 
 package main;
 
+
 sub main() {
+    unpack_combined_executable();
     save_stdin_stdout_stderr();
     save_original_signal_handler();
     parse_options();
@@ -15229,7 +15335,7 @@ sub main() {
     my @input_source_fh;
     if($opt::pipepart) {
 	if($opt::tee) {
-	    @input_source_fh = map { open_or_exit($_) } @opt::a;
+	    @input_source_fh = map { open_or_exit("<",$_) } @opt::a;
 	    # Remove the first: It will be the file piped.
 	    shift @input_source_fh;
 	    if(not @input_source_fh and not $opt::pipe) {
@@ -15237,10 +15343,10 @@ sub main() {
 	    }
 	} else {
 	    # -a is used for data - not for command line args
-	    @input_source_fh = map { open_or_exit($_) } "/dev/null";
+	    @input_source_fh = map { open_or_exit("<",$_) } "/dev/null";
 	}
     } else {
-	@input_source_fh = map { open_or_exit($_) } @opt::a;
+	@input_source_fh = map { open_or_exit("<",$_) } @opt::a;
 	if(not @input_source_fh and not $opt::pipe) {
 	    @input_source_fh = (*STDIN);
 	}

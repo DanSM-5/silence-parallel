@@ -199,7 +199,7 @@ seq 0 7 | $XAP -kN3 echo {1} {2} {3}
 echo '### Test :::: on nonexistent'
 ### Test :::: on nonexistent
 stdout $XAP -k echo {1} {2} {3} :::: nonexistent
-parallel: Error: Cannot open input file `nonexistent': No such file or directory.
+parallel: Error: Cannot open `nonexistent': No such file or directory
 echo '### Test :::: two files'
 ### Test :::: two files
 $XAP -k echo {1} {2} :::: <(seq 1 10) <(seq 5 15)
@@ -313,9 +313,9 @@ b a
 echo '### Multiple -a: nonexistent'
 ### Multiple -a: nonexistent
 stdout $XAP -kv echo {2} {1} :::: nonexist nonexist2
-parallel: Error: Cannot open input file `nonexist': No such file or directory.
+parallel: Error: Cannot open `nonexist': No such file or directory
 stdout $XAP -kv -a nonexist -a nonexist2 echo {2} {1}
-parallel: Error: Cannot open input file `nonexist': No such file or directory.
+parallel: Error: Cannot open `nonexist': No such file or directory
 echo '### Test {#.}'
 ### Test {#.}
 $XAP -kv -a <(echo a-noext) -a <(echo b-withext.extension) -a <(echo c-ext.gif) echo {3.} {2.} {1.}
