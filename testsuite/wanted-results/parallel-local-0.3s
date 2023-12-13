@@ -18,7 +18,7 @@ par_PARALLEL_HOME_with_+	bug #59453: PARALLEL_HOME with plus sign causes error: 
 par_PARALLEL_HOME_with_+	parallel: Warning: $PARALLEL_HOME can only contain [-a-z0-9_+,.%:/= ].
 par_PARALLEL_HOME_with_+	Parallel_home_with+
 par_X_eta_div_zero	### bug #34422: parallel -X --eta crashes with div by zero
-par_X_eta_div_zero	Computers / CPU cores / Max jobs to run
+par_X_eta_div_zero	Computers / CPU threads / Max jobs to run
 par_X_eta_div_zero	0:local / 0 / 0
 par_append_joblog	### can you append to a joblog using +
 par_append_joblog	1

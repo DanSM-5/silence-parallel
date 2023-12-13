@@ -412,9 +412,11 @@ par_eta	### Test of --eta
 par_eta	16
 par_eta	### Test of --eta with no jobs
 par_eta	
-par_eta	Computers / CPU cores / Max jobs to run
+par_eta	Computers / CPU threads / Max jobs to run
 par_eta	1:local / 9 / 9
-par_eta	par_eta	ETA: 0s Left: 0 AVG: 0.00s  0
+par_eta	
+par_eta	Computer:jobs running/jobs completed/%of started jobs/Average seconds to complete
+par_eta	par_eta	ETA: 0s Left: 0 AVG: 0.00s  local:0/0/0%/0.0s [K
 par_exitval_signal	### Test --joblog with exitval and Test --joblog with signal -- timing dependent
 par_exitval_signal	exitval=128+6 OK
 par_exitval_signal	signal OK
@@ -847,9 +849,11 @@ par_progress	### Test of --progress
 par_progress	16
 par_progress	### Test of --progress with no jobs
 par_progress	
-par_progress	Computers / CPU cores / Max jobs to run
+par_progress	Computers / CPU threads / Max jobs to run
 par_progress	1:local / 9 / 9
-par_progress	par_progress	0
+par_progress	
+par_progress	Computer:jobs running/jobs completed/%of started jobs/Average seconds to complete
+par_progress	par_progress	local:0/0/0%/0.0s [K
 par_replacement_slashslash	### Test {//}
 par_replacement_slashslash	. a
 par_replacement_slashslash	a a/b

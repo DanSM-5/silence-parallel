@@ -8,6 +8,14 @@
 # Each should be taking 1-3s and be possible to run in parallel
 # I.e.: No race conditions, no logins
 
+par_progress() {
+    (
+	parallel --progress --use-sockets-instead-of-threads  true ::: a b c
+	parallel --progress --use-cores-instead-of-threads    true ::: a b c
+	parallel --progress --use-cpus-instead-of-cores       true ::: a b c
+    ) 2>&1 | perl -pe 's/.*\r//; s/\d.\ds/9.9s/'
+}
+
 par_citation_no_config_dir() {
     echo '### bug #64329: parallel --citation will loop forever unless the config dir exists'
     t=$(mktemp -d)

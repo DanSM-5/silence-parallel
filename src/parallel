@@ -4272,9 +4272,11 @@ sub init_progress() {
     if($opt::bar) {
 	return("","");
     }
-    my %progress = progress();
-    return ("\nComputers / CPU cores / Max jobs to run\n",
-	    $progress{'workerlist'});
+    my $progress = progress();
+    my $cpu_units = $opt::use_sockets_instead_of_threads ? "CPU sockets" :
+	($opt::use_cores_instead_of_threads ? "CPU cores" : "CPU threads");
+    return ("\nComputers / $cpu_units / Max jobs to run\n",
+	    $progress->{'workerlist'},"\n",$progress->{'header'});
 }
 
 sub drain_job_queue(@) {
@@ -4288,10 +4290,6 @@ sub drain_job_queue(@) {
     #	$Global::start_no_new_jobs
     # Returns: N/A
     my @command = @_;
-    if($opt::progress) {
-	::status_no_nl(init_progress());
-    }
-    my $last_header = "";
     my $sleep = 0.2;
     my $sleepsum = 0;
     do {
@@ -4306,12 +4304,8 @@ sub drain_job_queue(@) {
 		}
 	    }
 	    if($opt::progress) {
-		my %progress = progress();
-		if($last_header ne $progress{'header'}) {
-		    ::status("", $progress{'header'});
-		    $last_header = $progress{'header'};
-		}
-		::status_no_nl("\r",$progress{'status'});
+		my $progress = progress();
+		::status_no_nl("\r",$progress->{'status'});
 	    }
 	    if($Global::total_running < $Global::max_jobs_running
 	       and not $Global::JobQueue->empty()) {
@@ -4373,8 +4367,8 @@ sub drain_job_queue(@) {
 	     $opt::sqlmaster and not $Global::sql->finished());
     $Global::all_jobs_done = 1;
     if($opt::progress) {
-	my %progress = progress();
-	::status("\r".$progress{'status'});
+	my $progress = progress();
+	::status("\r".$progress->{'status'});
     }
 }
 
@@ -4389,165 +4383,148 @@ sub toggle_progress() {
     }
 }
 
-sub progress() {
-    # Uses:
-    #	$opt::bar
-    #	$opt::eta
-    #	%Global::host
-    #	$Global::total_started
-    # Returns:
-    #	$workerlist = list of workers
-    #	$header = that will fit on the screen
-    #	$status = message that will fit on the screen
-    if($opt::bar) {
-	return ("workerlist" => "", "header" => "", "status" => bar());
+{
+    my $last_header;
+    my $eol;
+
+    sub progress() {
+	# Uses:
+	#	$opt::bar
+	#	$opt::eta
+	#	%Global::host
+	#	$Global::total_started
+	# Returns:
+	#	$workerlist = list of workers
+	#	$header = that will fit on the screen
+	#	$status = message that will fit on the screen
+	if($opt::bar) {
+	    return {"workerlist" => "", "header" => "", "status" => bar()};
+	}
+	my $eta = "";
+	my ($status,$header)=("","");
+	if($opt::eta) {
+	    my($total, $completed, $left, $pctcomplete, $avgtime, $this_eta) =
+		compute_eta();
+	    $eta = sprintf("ETA: %ds Left: %d AVG: %.2fs  ",
+			   $this_eta, $left, $avgtime);
+	}
+	my $termcols = terminal_columns();
+	my @workers = sort keys %Global::host;
+	my $workerno = 1;
+	my %wrk;
+	for my $w (@workers) {
+	    my %i;
+	    $i{'sshlogin'} = $w eq ":" ? "local" : $w;
+	    $i{'no'} = $workerno++;
+	    $i{'ncpu'} = ($Global::host{$w}->ncpus() || "-");
+	    $i{'jobslots'} = $Global::host{$w}->max_jobs_running();
+	    $i{'completed'} = ($Global::host{$w}->jobs_completed() || 0);
+	    $i{'running'} = $Global::host{$w}->jobs_running();
+	    $i{'pct'} = $Global::total_started ?
+		(($i{'running'}+$i{'completed'})*100 /
+		 $Global::total_started) : 0;
+	    $i{'time'} = $i{'completed'} ? (time-$^T)/($i{'completed'}) : 0;
+	    $wrk{$w} = \%i;
+	}
+
+	my $workerlist = "";
+	for my $w (@workers) {
+	    $workerlist .=
+		$wrk{$w}{'no'}.":".$wrk{$w}{'sshlogin'} ." / ".
+		$wrk{$w}{'ncpu'}." / ".
+		$wrk{$w}{'jobslots'}."\n";
+	}
+	# Force $status to select one of the below formats
+	$status = "c"x($termcols+1);
+	# Select an output format that will fit on a single line
+	if(length $status > $termcols) {
+	    # sshlogin1:XX/XX/XX%/XX.Xs s2:XX/XX/XX%/XX.Xs s3:XX/XX/XX%/XX.Xs
+	    $header = "Computer:jobs running/jobs completed/".
+		"%of started jobs/Average seconds to complete";
+	    $status = $eta . join(" ",map {
+		sprintf("%s:%d/%d/%d%%/%.1fs ",
+			@{$wrk{$_}}
+			{'sshlogin','running','completed','pct','time'}
+		    ); } @workers);
+	}
+	if(length $status > $termcols) {
+	    # 1:XX/XX/XX%/X.Xs 2:XX/XX/XX%/X.Xs 3:XX/XX/XX%/X.Xs
+	    $header = "Computer:jobs running/jobs completed/%of started jobs";
+	    $status = $eta . join(" ",map {
+		sprintf("%s:%d/%d/%d%%/%.1fs ",
+			@{$wrk{$_}}
+			{'no','running','completed','pct','time'}
+		    ); } @workers);
+	}
+	if(length $status > $termcols) {
+	    # sshlogin1:XX/XX/XX% sshlogin2:XX/XX/XX% sshlogin3:XX/XX/XX%
+	    $header = "Computer:jobs running/jobs completed/%of started jobs";
+	    $status = $eta . join(" ",map {
+		sprintf("%s:%d/%d/%d%%",
+			@{$wrk{$_}}
+			{'sshlogin','running','completed','pct'}
+		    ); } @workers);
+	}
+	if(length $status > $termcols) {
+	    # 1:XX/XX/XX% 2:XX/XX/XX% 3:XX/XX/XX% 4:XX/XX/XX% 5:XX/XX/XX%
+	    $header = "Computer:jobs running/jobs completed/%of started jobs";
+	    $status = $eta . join(" ",map {
+		sprintf("%s:%d/%d/%d%%",
+			@{$wrk{$_}}
+			{'no','running','completed','pct'}
+		    ); } @workers);
+	}
+	if(length $status > $termcols) {
+	    # sshlogin1:XX/XX sshlogin2:XX/XX sshlogin3:XX/XX
+	    $header = "Computer:jobs running/jobs completed";
+	    $status = $eta . join(" ", map {
+		sprintf("%s:%d/%d",
+			@{$wrk{$_}}
+			{'sshlogin','running','completed'}
+		    ); } @workers);
+	}
+	if(length $status > $termcols) {
+	    # 1:XX/XX 2:XX/XX 3:XX/XX 4:XX/XX 5:XX/XX 6:XX/XX
+	    $header = "Computer:jobs running/jobs completed";
+	    $status = $eta . join(" ", map {
+		sprintf("%s:%d/%d",
+			@{$wrk{$_}}
+			{'no','running','completed'}
+		    ); } @workers);
+	}
+	if(length $status > $termcols) {
+	    # sshlogin1:XX sshlogin2:XX sshlogin3:XX sshlogin4:XX sshlogin5:XX
+	    $header = "Computer:jobs completed";
+	    $status = $eta . join(" ", map {
+		sprintf("%s:%d",
+			@{$wrk{$_}}
+			{'sshlogin','completed'}
+		    ); } @workers);
+	}
+	if(length $status > $termcols) {
+	    # 1:XX 2:XX 3:XX 4:XX 5:XX 6:XX
+	    $header = "Computer:jobs completed";
+	    $status = $eta . join(" ", map {
+		sprintf("%s:%d",
+			@{$wrk{$_}}
+			{'no','completed'}
+		    ); } @workers);
+	}
+	if($last_header ne $header) {
+	    $header .= "\n";
+	    $last_header = $header;
+	} else {
+	    $header = "";
+	}
+	if(not $eol) {
+	    $eol = `sh -c "tput el </dev/tty" 2>/dev/null`;
+	    chomp($eol);
+	    if($eol eq "") { $eol = "\033[K"; }
+	}
+
+	return {"workerlist" => $workerlist, "header" => $header,
+		    "status" => $status.$eol};
     }
-    my $eta = "";
-    my ($status,$header)=("","");
-    if($opt::eta) {
-	my($total, $completed, $left, $pctcomplete, $avgtime, $this_eta) =
-	    compute_eta();
-	$eta = sprintf("ETA: %ds Left: %d AVG: %.2fs  ",
-		       $this_eta, $left, $avgtime);
-    }
-    my $termcols = terminal_columns();
-    my @workers = sort keys %Global::host;
-    my %sshlogin = map { $_ eq ":" ? ($_ => "local") : ($_ => $_) } @workers;
-    my $workerno = 1;
-    my %workerno = map { ($_=>$workerno++) } @workers;
-    my $workerlist = "";
-    for my $w (@workers) {
-	$workerlist .=
-	$workerno{$w}.":".$sshlogin{$w} ." / ".
-	    ($Global::host{$w}->ncpus() || "-")." / ".
-	    $Global::host{$w}->max_jobs_running()."\n";
-    }
-    $status = "c"x($termcols+1);
-    # Select an output format that will fit on a single line
-    if(length $status > $termcols) {
-	# sshlogin1:XX/XX/XX%/XX.Xs s2:XX/XX/XX%/XX.Xs s3:XX/XX/XX%/XX.Xs
-	$header = "Computer:jobs running/jobs completed/".
-	    "%of started jobs/Average seconds to complete";
-	$status = $eta .
-	    join(" ",map
-		 {
-		     if($Global::total_started) {
-			 my $completed =
-			     ($Global::host{$_}->jobs_completed()||0);
-			 my $running = $Global::host{$_}->jobs_running();
-			 my $time = $completed ? (time-$^T)/($completed) : "0";
-			 sprintf("%s:%d/%d/%d%%/%.1fs ",
-				 $sshlogin{$_}, $running, $completed,
-				 ($running+$completed)*100
-				 / $Global::total_started, $time);
-		     }
-		 } @workers);
-    }
-    if(length $status > $termcols) {
-	# 1:XX/XX/XX%/X.Xs 2:XX/XX/XX%/X.Xs 3:XX/XX/XX%/X.Xs 4:XX/XX/XX%/X.Xs
-	$header = "Computer:jobs running/jobs completed/%of started jobs";
-	$status = $eta .
-	    join(" ",map
-		 {
-		     if($Global::total_started) {
-			 my $completed =
-			     ($Global::host{$_}->jobs_completed()||0);
-			 my $running = $Global::host{$_}->jobs_running();
-			 my $time = $completed ? (time-$^T)/($completed) : "0";
-			 sprintf("%s:%d/%d/%d%%/%.1fs ",
-				 $workerno{$_}, $running, $completed,
-				 ($running+$completed)*100
-				 / $Global::total_started, $time);
-		     }
-		 } @workers);
-    }
-    if(length $status > $termcols) {
-	# sshlogin1:XX/XX/XX% sshlogin2:XX/XX/XX% sshlogin3:XX/XX/XX%
-	$header = "Computer:jobs running/jobs completed/%of started jobs";
-	$status = $eta .
-	    join(" ",map
-		 {
-		     if($Global::total_started) {
-			 sprintf("%s:%d/%d/%d%%",
-				 $sshlogin{$_},
-				 $Global::host{$_}->jobs_running(),
-				 ($Global::host{$_}->jobs_completed()||0),
-				 ($Global::host{$_}->jobs_running()+
-				  ($Global::host{$_}->jobs_completed()||0))*100
-				 / $Global::total_started)
-		     }
-		 }
-		 @workers);
-    }
-    if(length $status > $termcols) {
-	# 1:XX/XX/XX% 2:XX/XX/XX% 3:XX/XX/XX% 4:XX/XX/XX% 5:XX/XX/XX%
-	$header = "Computer:jobs running/jobs completed/%of started jobs";
-	$status = $eta .
-	    join(" ",map
-		 {
-		     if($Global::total_started) {
-			 sprintf("%s:%d/%d/%d%%",
-				 $workerno{$_},
-				 $Global::host{$_}->jobs_running(),
-				 ($Global::host{$_}->jobs_completed()||0),
-				 ($Global::host{$_}->jobs_running()+
-				  ($Global::host{$_}->jobs_completed()||0))*100
-				 / $Global::total_started)
-		     }
-		 }
-		 @workers);
-    }
-    if(length $status > $termcols) {
-	# sshlogin1:XX/XX/XX% sshlogin2:XX/XX/XX% sshlogin3:XX/XX
-	$header = "Computer:jobs running/jobs completed";
-	$status = $eta .
-	    join(" ",
-		 map { sprintf("%s:%d/%d",
-			       $sshlogin{$_}, $Global::host{$_}->jobs_running(),
-			       ($Global::host{$_}->jobs_completed()||0)) }
-		 @workers);
-    }
-    if(length $status > $termcols) {
-	# sshlogin1:XX/XX sshlogin2:XX/XX sshlogin3:XX/XX sshlogin4:XX/XX
-	$header = "Computer:jobs running/jobs completed";
-	$status = $eta .
-	    join(" ",
-		 map { sprintf("%s:%d/%d",
-			       $sshlogin{$_}, $Global::host{$_}->jobs_running(),
-			       ($Global::host{$_}->jobs_completed()||0)) }
-		 @workers);
-    }
-    if(length $status > $termcols) {
-	# 1:XX/XX 2:XX/XX 3:XX/XX 4:XX/XX 5:XX/XX 6:XX/XX
-	$header = "Computer:jobs running/jobs completed";
-	$status = $eta .
-	    join(" ",
-		 map { sprintf("%s:%d/%d", $workerno{$_},
-			       $Global::host{$_}->jobs_running(),
-			       ($Global::host{$_}->jobs_completed()||0)) }
-		 @workers);
-    }
-    if(length $status > $termcols) {
-	# sshlogin1:XX sshlogin2:XX sshlogin3:XX sshlogin4:XX sshlogin5:XX
-	$header = "Computer:jobs completed";
-	$status = $eta .
-	    join(" ",
-		 map { sprintf("%s:%d", $sshlogin{$_},
-			       ($Global::host{$_}->jobs_completed()||0)) }
-		 @workers);
-    }
-    if(length $status > $termcols) {
-	# 1:XX 2:XX 3:XX 4:XX 5:XX 6:XX
-	$header = "Computer:jobs completed";
-	$status = $eta .
-	    join(" ",
-		 map { sprintf("%s:%d",
-			       $workerno{$_},
-			       ($Global::host{$_}->jobs_completed()||0)) }
-		 @workers);
-    }
-    return ("workerlist" => $workerlist, "header" => $header,
-	    "status" => $status);
 }
 
 {
@@ -5691,8 +5668,8 @@ sub reaper() {
     $job->cleanup();
 
     if($opt::progress) {
-	my %progress = progress();
-	::status_no_nl("\r",$progress{'status'});
+	my $progress = progress();
+	::status_no_nl("\r",$progress->{'status'});
     }
 
     debug("run", "jobdone \n");
@@ -15426,6 +15403,9 @@ sub main() {
     $SIG{TERM} = $Global::original_sig{TERM};
     $SIG{HUP} = \&start_no_new_jobs;
 
+    if($opt::progress) {
+	::status_no_nl(init_progress());
+    }
     if($opt::tee or $opt::shard or $opt::bin) {
 	# All jobs must be running in parallel for --tee/--shard/--bin
 	while(start_more_jobs()) {}

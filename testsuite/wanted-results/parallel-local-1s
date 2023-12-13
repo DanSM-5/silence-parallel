@@ -699,6 +699,24 @@ par_profiles_with_space	/bin/bash=/bin/bash
 par_profiles_with_space	echo '/bin/bash=/bin/bash'
 par_profiles_with_space	/bin/bash=/bin/bash
 par_profiles_with_space	With script in $PARALLEL /bin/bash=/TMP
+par_progress	
+par_progress	Computers / CPU sockets / Max jobs to run
+par_progress	1:local / 1 / 1
+par_progress	
+par_progress	Computer:jobs running/jobs completed/%of started jobs/Average seconds to complete
+par_progress	local:0/3/100%/9.9s [K
+par_progress	
+par_progress	Computers / CPU cores / Max jobs to run
+par_progress	1:local / 4 / 4
+par_progress	
+par_progress	Computer:jobs running/jobs completed/%of started jobs/Average seconds to complete
+par_progress	local:0/3/100%/9.9s [K
+par_progress	
+par_progress	Computers / CPU threads / Max jobs to run
+par_progress	1:local / 8 / 8
+par_progress	
+par_progress	Computer:jobs running/jobs completed/%of started jobs/Average seconds to complete
+par_progress	local:0/3/100%/9.9s [K
 par_pxz_complains	bug #44250: pxz complains File format not recognized but decompresses anyway
 par_pxz_complains	ls: cannot access '/OK-if-missing-file': No such file or directory
 par_pxz_complains	can not seek in input: Illegal seek
