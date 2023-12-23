@@ -2794,7 +2794,7 @@ sub check_invalid_option_combinations() {
 
 sub init_globals() {
     # Defaults:
-    $Global::version = 20231122;
+    $Global::version = 20231222;
     $Global::progname = 'parallel';
     $::name = "GNU Parallel";
     $Global::infinity = 2**31;
@@ -5810,8 +5810,8 @@ sub usage() {
 	 "If you use programs that use GNU Parallel to process data for an article in a",
 	 "scientific publication, please cite:",
 	 "",
-	 "  Tange, O. (2023, November 22). GNU Parallel 20231122 ('Grindavík').",
-	 "  Zenodo. https://doi.org/10.5281/zenodo.10199085",
+	 "  Tange, O. (2023, December 22). GNU Parallel 20231222 ('Sundhnúkagígur').",
+	 "  Zenodo. https://doi.org/10.5281/zenodo.10428184",
 	 "",
 	 # Before changing these lines, please read
 	 # https://www.gnu.org/software/parallel/parallel_design.html#citation-notice
@@ -5843,8 +5843,8 @@ sub citation_notice() {
 	     "If you use programs that use GNU Parallel to process data for an article in a",
 	     "scientific publication, please cite:",
 	     "",
-	     "  Tange, O. (2023, November 22). GNU Parallel 20231122 ('Grindavík').",
-	     "  Zenodo. https://doi.org/10.5281/zenodo.10199085",
+	     "  Tange, O. (2023, December 22). GNU Parallel 20231222 ('Sundhnúkagígur').",
+	     "  Zenodo. https://doi.org/10.5281/zenodo.10428184",
 	     "",
 	     # Before changing these line,  please read
 	     # https://www.gnu.org/software/parallel/parallel_design.html#citation-notice and
@@ -5971,20 +5971,20 @@ sub citation() {
 	"If you use programs that use GNU Parallel to process data for an article in a",
 	"scientific publication, please cite:",
 	"",
-	"\@software{tange_2023_10199085,",
+	"\@software{tange_2023_10428184,",
 	"      author       = {Tange, Ole},",
-	"      title        = {GNU Parallel 20231122 ('Grindavík')},",
-	"      month        = Nov,",
+	"      title        = {GNU Parallel 20231222 ('Sundhnúkagígur')},",
+	"      month        = Dec,",
 	"      year         = 2023,",
 	"      note         = {{GNU Parallel is a general parallelizer to run",
 	"                       multiple serial command line programs in parallel",
 	"                       without changing them.}},",
 	"      publisher    = {Zenodo},",
-	"      doi          = {10.5281/zenodo.10199085},",
-	"      url          = {https://doi.org/10.5281/zenodo.10199085}",
+	"      doi          = {10.5281/zenodo.10428184},",
+	"      url          = {https://doi.org/10.5281/zenodo.10428184}",
 	"}",
 	"",
-	"(Feel free to use \\nocite{tange_2023_10199085})",
+	"(Feel free to use \\nocite{tange_2023_10428184})",
 	"",
 	# Before changing these lines, please read
 	# https://www.gnu.org/software/parallel/parallel_design.html#citation-notice and

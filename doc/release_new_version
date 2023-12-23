@@ -38,7 +38,7 @@ make short
 https://zenodo.org/deposit/new
 
 Do you already have a DOI for this upload? No
-(Reserve DOI)
+(Get a DOI now!)
 Resource type: Software
 GNU Parallel 20xxxx22 ('Xxxx')
 Add creator: Person
@@ -54,8 +54,7 @@ gpl
 [Save]
 
 
-10.5281/zenodo.4381888
-DOINO=3956817
+DOI=10.5281/zenodo.4381888
 SPCTAG='Privacy Shield'
 
 # Update version
@@ -274,27 +273,26 @@ from:tange@gnu.org
 to:parallel@gnu.org, bug-parallel@gnu.org
 stable-bcc: Jesse Alama <jessealama@fastmail.fm>
 
-Subject: GNU Parallel 20231122 ('Perry<<>>') released <<[stable]>>
+Subject: GNU Parallel 20231222 ('Sundhnúkagígur') released
 
-GNU Parallel 20231122 ('<<>>') has been released. It is available for download at: lbry://@GnuParallel:4
+GNU Parallel 20231222 ('Sundhnúkagígur') has been released. It is available for download at: lbry://@GnuParallel:4
 
 Quote of the month:
 
-  Got around to using GNU parallel for the first time from a suggestion by @jdwasmuth ... now I'm wishing I started using this years ago
-    -- Stefan Gavriliuc @GavriliucStefan@twitter
-
+  Parallel is so damn good! You’ve got to use it.
+    -- @ThePrimeTimeagen@youtube.com
+ 
 New in this release:
 
-* -a file1 -a +file2 will link file2 to file1 similar to ::::+
-
-* --bar shows total time when all jobs are done.
+* --combine-exec combines GNU Parallel with any executable.
 
 * Bug fixes and man page updates.
 
 News about GNU Parallel:
 
-* Using GNU Parallel in bash scripts to optimize python processes
-  https://climate-cms.org/posts/2023-11-02-gnu-parallel.html
+* The first video that seems to be completely AI generated: https://www.youtube.com/watch?v=Ie8eAhlEHOg
+
+* GNU Parallel and “fail immediately if any fails” problem https://antiarchitect.medium.com/gnu-parallel-and-fail-immediately-if-any-fails-problem-481ddea690ba
 
 
 GNU Parallel - For people who live life in the parallel lane.

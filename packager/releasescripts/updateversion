@@ -3,25 +3,31 @@
 # SPDX-FileCopyrightText: 2021-2022 Ole Tange, http://ole.tange.dk and Free Software and Foundation, Inc.
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+# Set DOI and SPCTAG then run this
+
 updater() {
-  export DOINO
+  export DOI
   export TAG
   export SPCTAG
   export YYYYMMDD=`yyyymmdd`
-  export DOI=10.5281/zenodo.$DOINO
   export YYYY=${YYYYMMDD:0:4}
   export YYYYMM=${YYYYMMDD:0:6}
   export YYYYMMDD=${YYYYMM}22
   export MON=`date +%b`
   export MONTH=`date +%B`
+  # Space Tag => SpaceTag
   TAG=$(echo $SPCTAG | perl -pe 's/ //g')
-  echo Tag=$TAG=\"$SPCTAG\" Date:$YYYYMMDD Year:$YYYY Mon:$MON Month:$MONTH DOI:$DOI
+  # DOI=10.5281/zenodo.
+  # DOINO=10428184
+  DOINO=$(echo $DOI | perl -pe 's/.*\.//')
+  export DOINO
+  echo Tag=$TAG=\"$SPCTAG\" Date:$YYYYMMDD Year:$YYYY Mon:$MON Month:$MONTH DOI:$DOI DOINO=$DOINO
   export TITLE="GNU Parallel $YYYYMMDD ('$SPCTAG')"
 
-  if [ -z "$DOINO" ] ; then
-      echo '*** Set DOINO and try again ***'
-      echo 'https://zenodo.org/deposit/new (Reserve DOI)'
-      echo '[Save]'
+  if [ -z "$DOI" ] ; then
+      echo '*** Set DOI and try again ***'
+      echo 'https://zenodo.org/deposit/new (Get a DOI now!)'
+      echo '[Save draft]'
       cat .last-doitag.txt
       echo . .last-doitag.txt
       return
@@ -32,11 +38,12 @@ updater() {
       echo . .last-doitag.txt
       return
   fi
-  echo "export DOINO=$DOINO" > .last-doitag.txt
+  echo "export DOI=$DOI" > .last-doitag.txt
+  echo "export DOINO=$DOINO" >> .last-doitag.txt
   echo "export TAG='$TAG'" >> .last-doitag.txt
   echo "export SPCTAG='$SPCTAG'" >> .last-doitag.txt
   echo "export YYYYMMDD=$YYYYMMDD" >> .last-doitag.txt
-  echo 'echo "$DOINO $YYYYMMDD ($TAG)"' >> .last-doitag.txt
+  echo 'echo "$DOINO $DOI $YYYYMMDD ($TAG)"' >> .last-doitag.txt
   
   perl -i -pe "s/20\d\d\d\d\d\d/$YYYYMMDD/" configure.ac
   perl -i -pe "/version/ and s/20\d\d\d\d\d\d/$YYYYMMDD/" src/sql

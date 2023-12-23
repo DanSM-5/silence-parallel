@@ -4276,6 +4276,87 @@ https://github.com/SergioBenitez/sp
 (Last checked: 2023-10)
 
 
+=head2 DIFFERENCES BETWEEN repeater AND GNU Parallel
+
+Summary (see legend above):
+
+=over
+
+=item - - - - - - -
+
+=item - - - - - -
+
+=item - O2 O3 N/A - O6 - x x ?O10
+
+=item E1 - - - E5 - -
+
+=item - - - - - - - - -
+
+=item - -
+
+=back
+
+B<repeater> runs the same job repeatedly. In other words: It does not
+read arguments, thus is it an alternative for GNU B<parallel> for only
+quite limited applications.
+
+B<repeater> has an overhead of around 0.23 ms/job. Compared to GNU
+B<parallel>'s 2-3 ms this is fast. Compared to B<bash-parallel>'s 0.05
+ms/job it is slow.
+
+=head3 Memory use and run time for large output
+
+Output takes O(n^2) time for output of size n. 10 MB takes ~1 second,
+30 MB takes ~7 seconds, 100 MB takes ~60 seconds, 300 MB takes ~480
+seconds, 1000 GB takes
+
+100 MB of output takes around 1 GB of RAM.
+
+    # Run time = 15 sec
+    # Memory use = 20 MB
+    # Output = 1 GB per job
+    \time -v parallel -j1 seq ::: 120000000 120000000 >/dev/null
+
+    # Run time = 4.7 sec
+    # Memory use = 95 MB
+    # Output = 8 MB per job
+    \time -v repeater -w 1 -n 2 -reportFile ./run_output seq 1200000 >/dev/null
+
+    # Run time = 42 sec
+    # Memory use = 277 MB
+    # Output = 27 MB per job
+    \time -v repeater -w 1 -n 2 -reportFile ./run_output seq 3600000 >/dev/null
+
+    # Run time = 530 sec
+    # Memory use = 1000 MB
+    # Output = 97 MB per job
+    \time -v repeater -w 1 -n 2 -reportFile ./run_output seq 12000000 >/dev/null
+
+    # Run time = 2h41m
+    # Memory use = 8.6 GB
+    # Output = 1 GB per job
+    \time -v repeater -w 1 -n 2 -reportFile ./run_output seq 120000000 >/dev/null
+
+For even just moderate sized outputs GNU B<parallel> will be faster
+and use less memory.
+
+
+=head3 EXAMPLES
+
+  1$ repeater -n 100 -w 10 -reportFile ./run_output
+       -output REPORT_FILE -progress BOTH curl example.com
+
+  1$ seq 100 | parallel --joblog run.log --eta curl example.com > output
+
+  2$ repeater -n 100 -increment -progress HIDDEN -reportFile foo
+       echo "this is increment: " INC
+  2$ seq 100 | parallel echo {}
+  2$ seq 100 | parallel echo '{= $_ = ++$myvar =}'
+
+https://github.com/baalimago/repeater
+(Last checked: 2023-12)
+
+
 =head2 Todo
 
 https://github.com/justanhduc/task-spooler

@@ -1,3 +1,20 @@
+20231222
+
+New in this release:
+
+* --combine-exec combines GNU Parallel with any executable.
+
+* Bug fixes and man page updates.
+
+News about GNU Parallel:
+
+* The first GNU Parallel video that seems to be completely AI
+  generated: https://www.youtube.com/watch?v=Ie8eAhlEHOg
+
+* GNU Parallel and “fail immediately if any fails” problem
+  https://antiarchitect.medium.com/gnu-parallel-and-fail-immediately-if-any-fails-problem-481ddea690ba
+
+
 20231122
 
 New in this release:

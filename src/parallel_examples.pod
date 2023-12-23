@@ -1867,7 +1867,7 @@ If you have downloaded source and tried compiling it, you may have seen:
 
 Often it is not obvious which package you should install to get that
 file. Debian has `apt-file` to search for a file. `tracefile` from
-https://gitlab.com/ole.tange/tangetools can tell which files a program
+https://codeberg.org/tange/tangetools can tell which files a program
 tried to access. In this case we are interested in one of the last
 files:
 

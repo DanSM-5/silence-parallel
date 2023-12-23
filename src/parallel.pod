@@ -1799,10 +1799,10 @@ If the available memory falls below 2 * I<size>, GNU B<parallel> will
 suspend some of the running jobs. If the available memory falls below
 I<size>, only one job will be running.
 
-If a single job takes up at most I<size> RAM, all jobs will complete
-without running out of memory. If you have swap available, you can
-usually lower I<size> to around half the size of a single job - with
-the slight risk of swapping a little.
+If a single job fits in the given size, all jobs will complete without
+running out of memory. If you have swap available, you can usually
+lower I<size> to around half the size of a single job - with the slight
+risk of swapping a little.
 
 Jobs will be resumed when more RAM is available - typically when the
 oldest job completes.
