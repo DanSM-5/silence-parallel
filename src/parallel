@@ -4825,6 +4825,31 @@ sub parse_sshlogin() {
     #	@opt::basefile
     #	@opt::trc
     # Returns: N/A
+    sub expand_range($) {
+	# Expand host[9-11,15]a[09-11]b
+	# [9-11,15] => 9 10 11 15
+	# [09-11] => 09 10 11
+	my ($in) = @_;
+	my ($prefix, $range, $suffix);
+	if(($prefix, $range, $suffix) = $in =~ /^(.*?)\[([-0-9,]*)\](.*)$/) {
+	    my @res;
+	    while(length $range) {
+		if($range =~ s/^,//) {
+		    # skip
+		} elsif($range =~ s/^(\d+)-(\d+)//) {
+		    my ($start, $end) = ($1, $2);
+		    push @res, map { $prefix . $_ . $suffix } $start..$end;
+		} elsif($range =~ s/^(\d+)//) {
+		    push @res, map { $prefix . $_ . $suffix } $1;
+		} else {
+		    die "Cannot parse $in (at $range)";
+		}
+	    }
+	    return map { expand_range($_) } @res;
+	} else {
+	    return $in;
+	}
+    }    
     my @login;
     if(not @Global::sshlogin) { @Global::sshlogin = (":"); }
     for my $sshlogin (@Global::sshlogin) {
@@ -4835,6 +4860,8 @@ sub parse_sshlogin() {
 	#     host2
 	# Protect \, and ,, as \0
 	$sshlogin =~ s/\\,|,,/\0/g;
+	# Protect , in ranges: [___,___] => [___\0___]
+	while($sshlogin =~ s/(\[[-0-9\0]*),(.*\])/$1\0$2/g) {}
 	for my $s (split /,|\n/, $sshlogin) {
 	    # Replace \0 => ,
 	    $s =~ s/\0/,/g;
@@ -4843,7 +4870,8 @@ sub parse_sshlogin() {
 		read_sshloginfile(expand_slf_shorthand($s));
 	    } else {
 		$s =~ s/\s*$//;
-		push (@login, $s);
+		# Expand host[1-12,15]a[01-10]b
+		push @login, expand_range($s);
 	    }
 	}
     }

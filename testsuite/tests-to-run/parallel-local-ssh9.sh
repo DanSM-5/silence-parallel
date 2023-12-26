@@ -136,7 +136,7 @@ _EOF
       grep -v .zshenv:.:1
 }
 
-par_propagate_env() {
+par__propagate_env() {
     echo '### bug #41805: Idea: propagate --env for parallel --number-of-cores'
     # csh complains if MANPATH is unset. Provoke this.
     unset MANPATH
@@ -217,7 +217,7 @@ par_filter_hosts_parallel_not_installed() {
     parallel --nonall -S nopathbash@lo --filter-hosts echo OK
 }
 
-par_d_filter_hosts() {
+par__d_filter_hosts() {
     echo '### --filter-hosts and -0'
     echo '### https://lists.gnu.org/archive/html/parallel/2022-07/msg00002.html'
     printf 'OKa OKb ' | parallel -k -d ' ' --filter-hosts -S lo echo
@@ -225,6 +225,16 @@ par_d_filter_hosts() {
     printf 'OKa0OKb0' | parallel -k -d 0 --filter-hosts -S lo echo
     printf 'OKa\0OKb\0' | parallel -k -d '\0' --filter-hosts -S lo echo
     printf 'OKa\0OKb\0' | parallel -k -0 --filter-hosts -S lo echo
+}
+
+par_sshlogin_range() {
+    echo '### --sshlogin with ranges'
+    echo '### Jobs fail, but the important is the name of the hosts'
+    doit() {
+	stdout parallel --dr "$@" echo ::: 1 | sort
+    }
+    doit -S a[000-123].nx-dom,b[2,3,5,7-11]c[1,4,6].nx-dom
+    doit -S{prod,dev}[000-100].nx-dom
 }
 
 export -f $(compgen -A function | grep par_)

@@ -241,6 +241,23 @@ If B<my_program> fails a red FAIL will be printed followed by the failing
 command; otherwise a green OK will be printed followed by the command.
 
 
+=head2 EXAMPLE: Identify few failing jobs
+
+B<--bar> works best if jobs have no output. If the failing jobs have
+output you can identify the jobs like this:
+
+  job-with-few-failures() {
+      # Force reproducibility
+      RANDOM=$1
+      # This fails 1% (328 of 32768)
+      if [ $RANDOM -lt 328 ] ; then
+        echo Failed $1
+      fi
+  }
+  export -f job-with-few-failures
+  seq 1000 | parallel --bar --tag job-with-few-failures
+
+
 =head2 EXAMPLE: Continously show the latest line of output
 
 It can be useful to monitor the output of running jobs.

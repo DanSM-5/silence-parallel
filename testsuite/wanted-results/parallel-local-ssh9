@@ -26,6 +26,360 @@ par_zsh_embed	Put your code here
 par_zsh_embed	You can also activate GNU Parallel for interactive use by:
 par_zsh_embed	. ./parallel-embed
 par_tcsh_embed	Not implemented
+par_sshlogin_range	### --sshlogin with ranges
+par_sshlogin_range	### Jobs fail, but the important is the name of the hosts
+par_sshlogin_range	echo 1
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on a000.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on a001.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on a002.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on a003.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on a004.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on a005.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on a006.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on a007.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on a008.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on a009.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on a010.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on a011.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on a012.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on a013.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on a014.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on a015.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on a016.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on a017.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on a018.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on a019.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on a020.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on a021.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on a022.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on a023.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on a024.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on a025.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on a026.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on a027.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on a028.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on a029.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on a030.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on a031.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on a032.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on a033.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on a034.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on a035.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on a036.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on a037.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on a038.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on a039.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on a040.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on a041.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on a042.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on a043.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on a044.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on a045.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on a046.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on a047.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on a048.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on a049.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on a050.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on a051.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on a052.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on a053.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on a054.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on a055.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on a056.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on a057.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on a058.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on a059.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on a060.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on a061.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on a062.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on a063.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on a064.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on a065.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on a066.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on a067.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on a068.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on a069.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on a070.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on a071.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on a072.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on a073.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on a074.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on a075.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on a076.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on a077.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on a078.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on a079.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on a080.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on a081.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on a082.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on a083.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on a084.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on a085.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on a086.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on a087.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on a088.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on a089.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on a090.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on a091.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on a092.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on a093.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on a094.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on a095.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on a096.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on a097.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on a098.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on a099.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on a100.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on a101.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on a102.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on a103.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on a104.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on a105.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on a106.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on a107.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on a108.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on a109.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on a110.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on a111.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on a112.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on a113.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on a114.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on a115.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on a116.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on a117.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on a118.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on a119.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on a120.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on a121.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on a122.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on a123.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on b10c1.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on b10c4.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on b10c6.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on b11c1.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on b11c4.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on b11c6.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on b2c1.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on b2c4.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on b2c6.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on b3c1.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on b3c4.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on b3c6.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on b5c1.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on b5c4.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on b5c6.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on b7c1.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on b7c4.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on b7c6.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on b8c1.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on b8c4.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on b8c6.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on b9c1.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on b9c4.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on b9c6.nx-dom (). Using 1.
+par_sshlogin_range	echo 1
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on dev000.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on dev001.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on dev002.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on dev003.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on dev004.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on dev005.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on dev006.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on dev007.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on dev008.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on dev009.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on dev010.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on dev011.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on dev012.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on dev013.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on dev014.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on dev015.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on dev016.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on dev017.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on dev018.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on dev019.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on dev020.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on dev021.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on dev022.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on dev023.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on dev024.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on dev025.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on dev026.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on dev027.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on dev028.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on dev029.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on dev030.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on dev031.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on dev032.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on dev033.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on dev034.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on dev035.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on dev036.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on dev037.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on dev038.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on dev039.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on dev040.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on dev041.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on dev042.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on dev043.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on dev044.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on dev045.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on dev046.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on dev047.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on dev048.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on dev049.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on dev050.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on dev051.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on dev052.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on dev053.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on dev054.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on dev055.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on dev056.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on dev057.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on dev058.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on dev059.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on dev060.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on dev061.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on dev062.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on dev063.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on dev064.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on dev065.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on dev066.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on dev067.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on dev068.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on dev069.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on dev070.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on dev071.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on dev072.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on dev073.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on dev074.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on dev075.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on dev076.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on dev077.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on dev078.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on dev079.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on dev080.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on dev081.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on dev082.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on dev083.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on dev084.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on dev085.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on dev086.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on dev087.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on dev088.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on dev089.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on dev090.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on dev091.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on dev092.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on dev093.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on dev094.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on dev095.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on dev096.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on dev097.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on dev098.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on dev099.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on dev100.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on prod000.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on prod001.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on prod002.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on prod003.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on prod004.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on prod005.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on prod006.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on prod007.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on prod008.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on prod009.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on prod010.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on prod011.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on prod012.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on prod013.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on prod014.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on prod015.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on prod016.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on prod017.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on prod018.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on prod019.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on prod020.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on prod021.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on prod022.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on prod023.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on prod024.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on prod025.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on prod026.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on prod027.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on prod028.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on prod029.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on prod030.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on prod031.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on prod032.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on prod033.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on prod034.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on prod035.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on prod036.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on prod037.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on prod038.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on prod039.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on prod040.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on prod041.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on prod042.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on prod043.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on prod044.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on prod045.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on prod046.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on prod047.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on prod048.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on prod049.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on prod050.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on prod051.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on prod052.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on prod053.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on prod054.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on prod055.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on prod056.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on prod057.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on prod058.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on prod059.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on prod060.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on prod061.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on prod062.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on prod063.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on prod064.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on prod065.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on prod066.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on prod067.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on prod068.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on prod069.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on prod070.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on prod071.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on prod072.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on prod073.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on prod074.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on prod075.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on prod076.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on prod077.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on prod078.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on prod079.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on prod080.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on prod081.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on prod082.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on prod083.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on prod084.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on prod085.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on prod086.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on prod087.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on prod088.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on prod089.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on prod090.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on prod091.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on prod092.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on prod093.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on prod094.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on prod095.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on prod096.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on prod097.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on prod098.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on prod099.nx-dom (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on prod100.nx-dom (). Using 1.
 par_sh_embed	--embed
 par_sh_embed	Redirect the output to a file and add your changes at the end:
 par_sh_embed	  /usr/local/bin/parallel --embed > new_script
@@ -44,20 +398,6 @@ par_sh_embed	here
 par_sh_embed	Put your code here
 par_sh_embed	You can also activate GNU Parallel for interactive use by:
 par_sh_embed	. ./parallel-embed
-par_propagate_env	### bug #41805: Idea: propagate --env for parallel --number-of-cores
-par_propagate_env	** test_zsh
-par_propagate_env	FOO=test_zsh
-par_propagate_env	HOME=~
-par_propagate_env	** test_zsh_filter
-par_propagate_env	FOO=test_zsh_filter
-par_propagate_env	HOME=~
-par_propagate_env	** test_csh
-par_propagate_env	FOO=test_csh
-par_propagate_env	HOME=~
-par_propagate_env	** test_csh_filter
-par_propagate_env	FOO=test_csh_filter
-par_propagate_env	HOME=~
-par_propagate_env	** bug #41805 done
 par_no_route_to_host	### no route to host with | and -j0 causes inf loop
 par_no_route_to_host	ssh: connect to host i.p.n.r port 22: No route to hostpar_no_route_to_host	
 par_no_route_to_host	parallel: This job finished:
@@ -105,18 +445,6 @@ par_filter_hosts_parallel_not_installed	OK
 par_env_parallel_big_env	### bug #54128: command too long when exporting big env
 par_env_parallel_big_env	should not fail
 par_env_parallel_big_env	OK
-par_d_filter_hosts	### --filter-hosts and -0
-par_d_filter_hosts	### https://lists.gnu.org/archive/html/parallel/2022-07/msg00002.html
-par_d_filter_hosts	OKa
-par_d_filter_hosts	OKb
-par_d_filter_hosts	OKa
-par_d_filter_hosts	OKb
-par_d_filter_hosts	OKa
-par_d_filter_hosts	OKb
-par_d_filter_hosts	OKa
-par_d_filter_hosts	OKb
-par_d_filter_hosts	OKa
-par_d_filter_hosts	OKb
 par_csh_embed	Not implemented
 par_bash_embed	--embed
 par_bash_embed	Redirect the output to a file and add your changes at the end:
@@ -163,6 +491,32 @@ par_ash_embed	here
 par_ash_embed	Put your code here
 par_ash_embed	You can also activate GNU Parallel for interactive use by:
 par_ash_embed	. ./parallel-embed
+par__propagate_env	### bug #41805: Idea: propagate --env for parallel --number-of-cores
+par__propagate_env	** test_zsh
+par__propagate_env	FOO=test_zsh
+par__propagate_env	HOME=~
+par__propagate_env	** test_zsh_filter
+par__propagate_env	FOO=test_zsh_filter
+par__propagate_env	HOME=~
+par__propagate_env	** test_csh
+par__propagate_env	FOO=test_csh
+par__propagate_env	HOME=~
+par__propagate_env	** test_csh_filter
+par__propagate_env	FOO=test_csh_filter
+par__propagate_env	HOME=~
+par__propagate_env	** bug #41805 done
+par__d_filter_hosts	### --filter-hosts and -0
+par__d_filter_hosts	### https://lists.gnu.org/archive/html/parallel/2022-07/msg00002.html
+par__d_filter_hosts	OKa
+par__d_filter_hosts	OKb
+par__d_filter_hosts	OKa
+par__d_filter_hosts	OKb
+par__d_filter_hosts	OKa
+par__d_filter_hosts	OKb
+par__d_filter_hosts	OKa
+par__d_filter_hosts	OKb
+par__d_filter_hosts	OKa
+par__d_filter_hosts	OKb
 par_PARALLEL_SSHLOGIN_SSHHOST	### bug #56554: Introduce $PARALLEL_SSHLOGIN $PARALLEL_SSHHOST
 par_PARALLEL_SSHLOGIN_SSHHOST	/usr/bin/ssh csh@lo	/usr/bin/ssh csh@lo lo
 par_PARALLEL_SSHLOGIN_SSHHOST	/usr/bin/ssh csh@lo	csh
