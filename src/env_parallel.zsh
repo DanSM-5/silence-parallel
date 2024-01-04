@@ -504,6 +504,7 @@ env_parallel() {
 	`"
     fi
     export PARALLEL_ENV
+    # Free up some env space
     unset _list_alias_BODIES _list_variable_VALUES _list_function_BODIES
     unset _bodies_of_ALIASES _bodies_of_VARIABLES _bodies_of_FUNCTIONS
     unset _names_of_ALIASES _names_of_VARIABLES _names_of_FUNCTIONS

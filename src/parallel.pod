@@ -2041,6 +2041,10 @@ B<{0%}> zero-padded jobslot.
 
 B<{0#}> zero-padded sequence number.
 
+B<{slot-1}> jobslot - 1 (i.e. counting from 0).
+
+B<{seq-1}> sequence number - 1 (i.e. counting from 0).
+
 B<{choose_k}> is inspired by n choose k: Given a list of n elements,
 choose k. k is the number of input sources and n is the number of
 arguments in an input source.  The content of the input sources must
@@ -2686,6 +2690,8 @@ The B<--plus> replacement strings are implemented as:
                           log(10))); $_=sprintf("%0${f}d",slot())'
   --rpl '{0#} 1 $f=1+int((log(total_jobs())/log(10)));
               $_=sprintf("%0${f}d",seq())'
+  --rpl '{seq(.*?)} $_=eval q{$job->seq()}.qq{$$1}'
+  --rpl '{slot(.*?)} $_=eval q{$job->slot()}.qq{$$1}'
 
   --rpl '{:-([^}]+?)} $_ ||= $$1'
   --rpl '{:(\d+?)} substr($_,0,$$1) = ""'

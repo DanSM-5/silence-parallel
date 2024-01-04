@@ -2842,12 +2842,16 @@ sub init_globals() {
 	 '{uniq}' => 'if(::uniq(@arg) != @arg) { skip(); }',
 	 # {##} = number of jobs
 	 '{##}' => '1 $_=total_jobs()',
+	 # {0#} = 0-padded seq
+	 '{0#}' => ('1 $f=1+int((log(total_jobs())/log(10)));'.
+		    '$_=sprintf("%0${f}d",seq())'),
 	 # {0%} = 0-padded jobslot
 	 '{0%}' => ('1 $f=1+int((log($Global::max_jobs_running||1)/log(10)));'.
 		    '$_=sprintf("%0${f}d",slot())'),
-	 # {0%} = 0-padded seq
-	 '{0#}' => ('1 $f=1+int((log(total_jobs())/log(10)));'.
-		    '$_=sprintf("%0${f}d",seq())'),
+	 # {seq-1} = seq-1 = counting from 0
+	 '{seq(.*?)}' => '$_=eval q{$job->seq()}.qq{$$1}',
+	 # {seq-1} = jobslot-1 = counting from 0
+	 '{slot(.*?)}' => '$_=eval q{$job->slot()}.qq{$$1}',
 
 	 ## Bash inspired replacement strings
 	 # Bash ${a:-myval}

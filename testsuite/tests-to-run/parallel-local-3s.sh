@@ -416,9 +416,12 @@ par_sshdelay() {
 par_plus_slot_replacement() {
     echo '### show {slot} {0%} {0#}'
     parallel -k --plus 'sleep 0.{%};echo {slot}=$PARALLEL_JOBSLOT={%}' ::: A B C
-    parallel -j15 -k --plus 'echo Seq: {0#} {#}' ::: {1..100} | sort
-    parallel -j15 -k --plus 'sleep 0.{}; echo Slot: {0%} {%}' ::: {1..100} |
-	sort -u
+    doit() {
+	parallel -j15 -k --plus "$@" ::: {1..100} | sort -u
+    }
+    export -f doit
+    parallel doit ::: 'echo Seq: {0#} {#} {seq-1}*2={seq*2-2}' \
+	     'sleep 0.{}; echo Slot: {0%} {%}={slot-1}+1'
 }
 
 par_replacement_slashslash() {
