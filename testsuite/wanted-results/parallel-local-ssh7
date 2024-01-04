@@ -547,9 +547,9 @@ par__man_ksh	work,
 par__man_ksh	too
 par__man_ksh	This may never work
 par__man_ksh	https://unix.stackexchange.com/questions/457031/extract-full-function-definitions
-par__man_ksh	/bin/ksh: line 3: syntax error at line 99: `{' unmatched
-par__man_ksh	/bin/ksh: line 3: syntax error at line 99: `{' unmatched
-par__man_ksh	/bin/ksh: line 3: syntax error at line 99: `{' unmatched
+par__man_ksh	/bin/ksh: line 99: syntax error at line 99: `{' unmatched
+par__man_ksh	/bin/ksh: line 99: syntax error at line 99: `{' unmatched
+par__man_ksh	/bin/ksh: line 99: syntax error at line 99: `{' unmatched
 par__man_ksh	exit value 2 should be 2
 par__man_ksh	Unknown option: no-such-option
 par__man_ksh	exit value 255 should be 255
@@ -1230,10 +1230,10 @@ par_env_parallel_--session_ksh	l2var
 par_env_parallel_--session_ksh	l2func
 par_env_parallel_--session_ksh	l2alias
 par_env_parallel_--session_ksh	level2 array OK
-par_env_parallel_--session_ksh	/bin/ksh: line 3: aliasbefore: not found
-par_env_parallel_--session_ksh	script: line 4: aliasbefore: not found
-par_env_parallel_--session_ksh	/bin/ksh: line 3: funcbefore: not found
-par_env_parallel_--session_ksh	script: line 4: funcbefore: not found
+par_env_parallel_--session_ksh	/bin/ksh: line 2: aliasbefore: not found
+par_env_parallel_--session_ksh	script: line 3: aliasbefore: not found
+par_env_parallel_--session_ksh	/bin/ksh: line 2: funcbefore: not found
+par_env_parallel_--session_ksh	script: line 3: funcbefore: not found
 par_env_parallel_--session_ksh	no_before
 par_env_parallel_--session_ksh	no_before
 par_env_parallel_--session_ksh	no_before

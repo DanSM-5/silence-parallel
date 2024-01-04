@@ -153,10 +153,11 @@ par__propagate_env() {
 
 par_env_parallel_big_env() {
     echo '### bug #54128: command too long when exporting big env'
-    . `which env_parallel.bash`
-    a=`rand | perl -pe 's/\0//g'| head -c 15000`
+    . env_parallel.bash
+    env_parallel --session
+    a=`rand | perl -pe 's/\0//g'| head -c 40000`
     env_parallel -Slo echo should not ::: fail 2>&1
-    a=`rand | perl -pe 's/\0//g'| head -c 25000`
+    a=`rand | perl -pe 's/\0//g'| head -c 45000`
     env_parallel -Slo echo should ::: fail 2>/dev/null || echo OK
 }
 
@@ -235,6 +236,8 @@ par_sshlogin_range() {
     }
     doit -S a[000-123].nx-dom,b[2,3,5,7-11]c[1,4,6].nx-dom
     doit -S{prod,dev}[000-100].nx-dom
+    doit -S'2[49-51].0.[9-11].1[09-11]'
+
 }
 
 export -f $(compgen -A function | grep par_)

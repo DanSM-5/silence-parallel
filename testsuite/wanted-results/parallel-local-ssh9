@@ -380,6 +380,34 @@ par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on pro
 par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on prod098.nx-dom (). Using 1.
 par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on prod099.nx-dom (). Using 1.
 par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on prod100.nx-dom (). Using 1.
+par_sshlogin_range	echo 1
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on 249.0.10.109 (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on 249.0.10.110 (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on 249.0.10.111 (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on 249.0.11.109 (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on 249.0.11.110 (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on 249.0.11.111 (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on 249.0.9.109 (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on 249.0.9.110 (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on 249.0.9.111 (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on 250.0.10.109 (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on 250.0.10.110 (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on 250.0.10.111 (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on 250.0.11.109 (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on 250.0.11.110 (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on 250.0.11.111 (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on 250.0.9.109 (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on 250.0.9.110 (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on 250.0.9.111 (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on 251.0.10.109 (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on 251.0.10.110 (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on 251.0.10.111 (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on 251.0.11.109 (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on 251.0.11.110 (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on 251.0.11.111 (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on 251.0.9.109 (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on 251.0.9.110 (). Using 1.
+par_sshlogin_range	parallel: Warning: Could not figure out number of cpus on 251.0.9.111 (). Using 1.
 par_sh_embed	--embed
 par_sh_embed	Redirect the output to a file and add your changes at the end:
 par_sh_embed	  /usr/local/bin/parallel --embed > new_script

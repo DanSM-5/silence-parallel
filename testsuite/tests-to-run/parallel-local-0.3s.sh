@@ -236,15 +236,17 @@ par_rpl_repeats() {
 
 par_do_not_export_PARALLEL_ENV() {
     echo '### Do not export $PARALLEL_ENV to children'
+    . env_parallel.bash
+    env_parallel --session
     doit() {
 	echo Should be 0
 	echo "$PARALLEL_ENV" | wc
 	echo Should give 60k and not overflow
 	PARALLEL_ENV="$PARALLEL_ENV" parallel echo '{=$_="\""x$_=}' ::: 60000 | wc
     }
-    . env_parallel.bash
     # Make PARALLEL_ENV as big as possible
-    PARALLEL_ENV="a='$(seq 100000 | head -c $((139000-$(set|wc -c) )) )'"
+    PARALLEL_ENV="a='$(seq 100000 | head -c $((149000-$(set|wc -c) )) )'"
+    PARALLEL_ENV="a=b"
     env_parallel doit ::: 1
 }
 
@@ -608,6 +610,7 @@ par_expansion_in_colsep() {
 
 par_extglob() {
     bash -O extglob -c '. env_parallel.bash;
+      env_parallel --session
       _longopt () {
         case "$prev" in
           --+([-a-z0-9_]))

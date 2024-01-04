@@ -280,6 +280,10 @@ par__test_cpu_detection_cpuinfo	1-1-1-1 Intel Xeon X5675 (mandriva.p)
 par__test_cpu_detection_cpuinfo	1 1 1 1
 par__test_cpu_detection_cpuinfo	1-1-1-1 Intel(R) Celeron(R) M (eee900)
 par__test_cpu_detection_cpuinfo	1 1 1 1
+par__test_cpu_detection_cpuinfo	2-12-24-12 Intel(R) Xeon(R) CPU E5-2620 v3 @ 2.40GHz (vh4)
+par__test_cpu_detection_cpuinfo	2 12 24 12
+par__test_cpu_detection_cpuinfo	1-6-12-6 AMD Ryzen 5 4600G with Radeon Graphics (ai)
+par__test_cpu_detection_cpuinfo	1 6 12 6
 par__test_cpu_detection_cpuinfo	1-4-8-4 Core i7-3632QM Acer laptop
 par__test_cpu_detection_cpuinfo	1 4 8 4
 par__test_cpu_detection_cpuinfo	1-2-4-2 Core i5-2410M laptop firewall
@@ -306,6 +310,10 @@ par__test_cpu_detection_lscpu	1-1-1-1 Intel Xeon X5675 (mandriva.p)
 par__test_cpu_detection_lscpu	1 1 1 1
 par__test_cpu_detection_lscpu	1-1-1-1 Intel(R) Celeron(R) M (eee900)
 par__test_cpu_detection_lscpu	1 1 1 1
+par__test_cpu_detection_lscpu	2-12-24-12 Intel(R) Xeon(R) CPU E5-2620 v3 @ 2.40GHz (vh4)
+par__test_cpu_detection_lscpu	2 12 24 12
+par__test_cpu_detection_lscpu	1-6-12-6 AMD Ryzen 5 4600G with Radeon Graphics (ai)
+par__test_cpu_detection_lscpu	1 6 12 6
 par__test_cpu_detection_lscpu	1-4-8-4 Core i7-3632QM Acer laptop
 par__test_cpu_detection_lscpu	1 4 8 4
 par__test_cpu_detection_lscpu	1-2-4-2 Core i5-2410M laptop firewall
