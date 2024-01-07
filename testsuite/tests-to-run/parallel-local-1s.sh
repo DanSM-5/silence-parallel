@@ -682,6 +682,17 @@ par_too_long_line_X() {
     seq 3000 | parallel -Xj1 'echo {} {} {} {} {} {} {} {} {} {} {} {} {} {} | wc'
 }
 
+par__test_cpu_detection_topology() {
+    pack() { zstd -19 | mmencode; }
+    unpack() { mmencode -u | zstd -d; }
+    PARALLEL_CPUPREFIX=
+    # ssh server tar cvf - /sys/devices/system/cpu | pack
+
+
+    
+    
+}
+
 par__test_cpu_detection_cpuinfo() {
     pack() { zstd -19 | mmencode; }
     unpack() { mmencode -u | zstd -d; }

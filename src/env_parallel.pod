@@ -25,24 +25,15 @@ environment to GNU B<parallel>.
 If the shell function is not loaded, a dummy script will be run
 instead that explains how to install the function.
 
-B<env_parallel> is 100 ms slower at startup than pure GNU
-B<parallel>, and takes up to 30% longer to start a job (typically 15 ms).
+B<env_parallel> is 100 ms slower at startup than pure GNU B<parallel>,
+and takes up to 30% longer to start a job (typically 15 ms).
 
-Due to the problem with environment space (see below) the recommended
-usage is either:
+Due to the problem with environment space (see below) you are
+recommended only to transfer the environment that you need.
 
-  # Do --record-env into $PARALLEL_IGNORED_NAMES
-  env_parallel --session
-
-  # Define whatever you want to use
-  myfunc() { myalias and functions $myvar work. $1.; }
-  alias myalias='echo Aliases'
-  myvar='and variables'
-
-  # env_parallel will not export names in $PARALLEL_IGNORED_NAMES
-  env_parallel -S localhost myfunc ::: Hooray
-
-Or:
+To help you do that, you can mark names that should not be
+transferred. This can be done with either B<--session> or
+B<--record-env>.
 
   # Record the "clean" environment (this only needs to be run once)
   env_parallel --record-env
@@ -56,6 +47,22 @@ Or:
 
   # Use --env _ to only transfer the names not in the "empty" environment
   env_parallel --env _ -S localhost myfunc ::: Hooray
+
+Or:
+
+  # Do --record-env into $PARALLEL_IGNORED_NAMES
+  env_parallel --session
+
+  # Define whatever you want to use
+  myfunc() { myalias and functions $myvar work. $1.; }
+  alias myalias='echo Aliases'
+  myvar='and variables'
+
+  # env_parallel will not export names in $PARALLEL_IGNORED_NAMES
+  env_parallel -S localhost myfunc ::: Hooray
+
+  # Optionally
+  env_parallel --end-session
 
 In B<csh> B<--session> is not supported:
 

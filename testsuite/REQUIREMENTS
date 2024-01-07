@@ -44,8 +44,7 @@ install_packages() {
     # Build Tools
     build_pkgs="bison libxxhash-dev libzstd-dev liblz4-dev libssl-dev"
     build_pkgs="$build_pkgs python3-cmarkgfm libpod-pom-view-restructured-perl"
-    build_pkgs="$build_pkgs graphviz"
-
+    build_pkgs="$build_pkgs graphviz yodl libreoffice"
     sudo dpkg --add-architecture i386; sudo apt update
     if $INSTALL $test_pkgs $packaging_pkgs $shebang_pkgs $sql_pkgs \
 		$compression_pkgs $shell_pkgs $database_pkgs $build_pkgs ; then
@@ -109,13 +108,6 @@ install_oracle_client() {
     # test it works: sql oracle://
 }
 
-setup_virtual_box_network() {
-    echo "Adding IP-range to virtualbox"
-    sudo mkdir -p /etc/vbox
-    (cat; echo '* 172.27.27.0/24') < /etc/vbox/networks.conf | uniq |
-	sudo tee /etc/vbox/networks.conf
-}
-
 setup_databases() {
     # DATABASES
     echo '# Create PostgreSQL'
@@ -142,6 +134,20 @@ setup_databases() {
     sudo sql "$dburl" "CREATE DATABASE `whoami`;CREATE USER '`whoami`'@'localhost' IDENTIFIED BY '`whoami`'; GRANT ALL ON `whoami`.* TO '`whoami`'@'localhost';"
 }
 
+setup_virtual_box_network() {
+    echo "Adding IP-range to virtualbox"
+    sudo mkdir -p /etc/vbox
+    sudo touch /etc/vbox/networks.conf
+    (cat; echo '* 172.27.27.0/24') < /etc/vbox/networks.conf | uniq |
+	sudo tee /etc/vbox/networks.conf
+}
+
+start_vagrant_servers() {
+    cd testsuite/vagrant/
+    ssh-add -L >> authorized_keys
+    parallel 'cd {//}; vagrant up' ::: testsuite/vagrant/*/*/Vagrantfile
+}
+
 add_server_to_hosts() {
     add_ssh_key_to_authorized() {
 	(cat vagrant/authorized_keys; cat ~/.ssh/*.pub) |
@@ -158,7 +164,14 @@ add_server_to_hosts() {
 #debug2: ciphers stoc: aes128-ctr,aes192-ctr,aes256-ctr,aes256-cbc,aes192-cbc,aes128-cbc,3des-cbc
 #debug2: MACs ctos: umac-64-etm@openssh.com,umac-128-etm@openssh.com,hmac-sha2-256-etm@openssh.com,hmac-sha2-512-etm@openssh.com,hmac-sha1-etm@openssh.com,umac-64@openssh.com,umac-128@openssh.com,hmac-sha2-256,hmac-sha2-512,hmac-sha1
 #debug2: MACs stoc: umac-64-etm@openssh.com,umac-128-etm@openssh.com,hmac-sha2-256-etm@openssh.com,hmac-sha2-512-etm@openssh.com,hmac-sha1-etm@openssh.com,umac-64@openssh.com,umac-128@openssh.com,hmac-sha2-256,hmac-sha2-512,hmac-sha1
-#	
+	#
+
+	# Fix: .ssh/config
+ 	#Host centos3 127.0.0.1 
+ 	#  KexAlgorithms +diffie-hellman-group1-sha1 
+ 	#  Ciphers +3des-cbc,aes128-cbc,aes192-cbc,aes256-cbc 
+ 	#  HostKeyAlgorithms +ssh-rsa,ssh-dss
+ 	# sshpass -p vagrant ssh -v -p 50136 vagrant@127.0.0.1
     }
     
     insert_in_etc_hosts() {
@@ -168,7 +181,7 @@ add_server_to_hosts() {
 	    # skip
 	    true
 	else
-	    printf "$1\t$2\n" |
+	    printf "$@\n" |
 		sudo tee -a /etc/hosts
 	fi
     }
@@ -181,7 +194,7 @@ add_server_to_hosts() {
 	    grep 172 Vagrantfile | grep -v '#' |
 		perl -pe 's/.*(172.27[\.0-9]+).*/$1/';
 	}
-	insert_in_etc_hosts $(vagrant_ip $1) $1
+	insert_in_etc_hosts $(vagrant_ip $1) $@
     }
     export -f add_single_vagrant_to_etc_hosts
     
@@ -189,7 +202,8 @@ add_server_to_hosts() {
     insert_in_etc_hosts 127.1.2.3 server
     
     insert_in_etc_hosts 127.0.0.2 lo
-    parallel add_single_vagrant_to_etc_hosts ::: centos8 freebsd11 freebsd12 freebsd13 rhel8 centos3 centos39-oracle817
+    parallel add_single_vagrant_to_etc_hosts {} parallel-server{#} ::: centos8 freebsd12 freebsd13 rhel8 centos3
+    #centos39-oracle817
     # TODO alias
     # 172.27.27.8     centos8 parallel-server1 server1
     # 172.27.27.72    freebsd12 parallel-server3 server3
@@ -199,13 +213,16 @@ add_server_to_hosts() {
     # $ cat /etc/vbox/networks.conf
     # * 172.27.0.0/16
     # TODO
+    parallel --ll --tag 'cd {};vagrant up' ::: vagrant/*/*
+    parallel w4it-for-port-open {} 22 ::: centos8 freebsd11 freebsd12 freebsd13 rhel8 centos3
+    
     sshaddvagrant() {
 	cat ~/.ssh/*.pub | (cd vagrant/*/$1 && vagrant ssh -c 'cat >>.ssh/authorized_keys')
 	sshpass -p vagrant ssh-copy-id -o StrictHostKeyChecking=accept-new vagrant@$1
 	ssh vagrant@$1 echo vagrant@$1 OK
     }
     export -f sshaddvagrant
-    parallel sshaddvagrant ::: centos8 freebsd11 freebsd12 freebsd13 rhel8 centos3 centos39-oracle817
+    parallel sshaddvagrant ::: centos8 freebsd11 freebsd12 freebsd13 rhel8 centos3
     parallel ssh -o StrictHostKeyChecking=accept-new vagrant@{} ::: parallel-server{1..4} centos3
     # TODO find ipv6
     ipv6=
@@ -463,7 +480,7 @@ rsync_versions() {
 	 # Make "lib/addrinfo.h" ?
 	 touch lib/addrinfo.h
 	 LDFLAGS=-static ./configure &&
-	     (make proto; make -j2) &&
+	     (make proto; make -j2 || make reconfigure && make -j2; make) &&
 	     sudo cp rsync /usr/local/bin/rsync-$1
      }
      export -f make_one
@@ -497,6 +514,8 @@ run() {
 	install_tangetools &&
 	install_oracle_client &&
 	setup_databases &&
+	setup_virtual_box_network &&
+	start_vagrant_servers &&
 	add_server_to_hosts &&
 	create_shell_logins &&
 	copy_ssh_keys &&

@@ -79,9 +79,11 @@ done
 
 
 cat <<'_EOS'
+You have called the dummy script "env_parallel".
+
 env_parallel only works if it is a function.
 
-Do this and restart your shell:
+You need to do this and restart your shell:
 
 bash:  Put this in $HOME/.bashrc:  . env_parallel.bash
        E.g. by doing:  echo '. env_parallel.bash' >> $HOME/.bashrc

@@ -273,26 +273,27 @@ from:tange@gnu.org
 to:parallel@gnu.org, bug-parallel@gnu.org
 stable-bcc: Jesse Alama <jessealama@fastmail.fm>
 
-Subject: GNU Parallel 20231222 ('Sundhnúkagígur') released
+Subject: GNU Parallel 20240122 ('Margrethe') released
 
-GNU Parallel 20231222 ('Sundhnúkagígur') has been released. It is available for download at: lbry://@GnuParallel:4
+GNU Parallel 20240122 ('Margrethe') has been released. It is available for download at: lbry://@GnuParallel:4
 
 Quote of the month:
 
-  Parallel is so damn good! You’ve got to use it.
-    -- @ThePrimeTimeagen@youtube.com
+  <<>>
  
 New in this release:
 
-* --combine-exec combines GNU Parallel with any executable.
+* --sshlogin supports ranges: server[01-12,15] 10.0.[1-10].[2-254]
+
+* --plus enables {slot-1} and {seq-1} = {%}-1 and {#}-1 to count from 0.
+
+* env_parallel.{sh,ash,dash,bash,ksh,zsh} is now the same script.
 
 * Bug fixes and man page updates.
 
 News about GNU Parallel:
 
-* The first video that seems to be completely AI generated: https://www.youtube.com/watch?v=Ie8eAhlEHOg
-
-* GNU Parallel and “fail immediately if any fails” problem https://antiarchitect.medium.com/gnu-parallel-and-fail-immediately-if-any-fails-problem-481ddea690ba
+* <<>>
 
 
 GNU Parallel - For people who live life in the parallel lane.
