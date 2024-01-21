@@ -171,6 +171,6 @@ par_delay_Xauto() {
 }
 
 export -f $(compgen -A function | grep par_)
-compgen -A function | grep par_ | sort |
+compgen -A function | G par_ "$@" | sort |
     #    parallel --joblog /tmp/jl-`basename $0` -j10 --tag -k '{} 2>&1'
         parallel --joblog /tmp/jl-`basename $0` -j1 --tag -k '{} 2>&1'

@@ -223,7 +223,7 @@ par_remote_nice() {
 
 par_hgrp_agrp_comma() {
     echo '### bug #63722: hostgroup with , breaks parser'
-    stdout parallel --hgrp ::: id@csh@lo,tcsh@lo id@csh@lo,tcsh@lo | sort
+    stdout parallel --hgrp ::: whoami@csh@lo,tcsh@lo whoami@csh@lo,tcsh@lo | sort
 }
 
 par_hgrp_agrp() {

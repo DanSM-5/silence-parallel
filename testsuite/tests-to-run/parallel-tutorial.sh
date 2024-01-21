@@ -6,12 +6,13 @@
 cleanup() {
     find {"$TMPDIR",/var/tmp,/tmp}/{fif,tms,par[^a]}* -mmin -10 -print0 2>/dev/null |
 	parallel -0 rm 2>/dev/null
-}    
+}
 
 cleanup
 touch ~/.parallel/will-cite
 echo '### test parallel_tutorial'
 
+unset DISPLAY
 TMPDIR=/tmp/parllel-tutorial
 mkdir -p "$TMPDIR"
 cd "$TMPDIR"
@@ -119,6 +120,8 @@ perl -ne '$/="\n\n"; /^Output/../^[^O]\S/ and next; /^  / and print;' "$testsuit
 	      s:/tmp/par-job-\S+:script:g;
 	      s:par......par:tempfile:g;
 	      s:^tempfile\n::g;
+	      #+(zenity:2012805): Gtk-WARNING **: 02:25:32.662: cannot open display:
+	      s,.zenity.*cannot open display:,,;
 	      # --progress => 1:local / 4 / 4
 	      s,1:local / . / .,1:local / 9 / 9,;
 	      # bash: -c: line 1: .set a="tempfile"; if( { test -d "$a" } ) echo "$a is a dir"

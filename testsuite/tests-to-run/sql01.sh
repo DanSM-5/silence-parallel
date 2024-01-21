@@ -132,7 +132,7 @@ par_--html() {
     echo
 }
 
-par__listproc() {
+par_listproc() {
     echo "### Test --show-processlist|proclist|listproc";
     # Take the minimum of 3 runs to avoid error counting
     # if one of the other jobs happens to be running    
@@ -194,5 +194,5 @@ par_--help() {
 
 
 export -f $(compgen -A function | grep par_)
-compgen -A function | grep par_ | LC_ALL=C sort |
-    parallel --timeout 3000% -j6 --tag -k --joblog /tmp/jl-`basename $0` '{} 2>&1'
+compgen -A function | G par_ "$@" | LC_ALL=C sort |
+    parallel --timeout 10 -j0 --tag -k --joblog /tmp/jl-`basename $0` '{} 2>&1'

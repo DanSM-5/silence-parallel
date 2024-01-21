@@ -12,6 +12,82 @@ par__10000_5_rpl_X	4
 par__10000_5_rpl_X	4
 par__10000_5_rpl_X	3
 par__10000_5_rpl_X	2
+par__I_X_m	### Test -I with -X and -m
+par__I_X_m	1 1
+par__I_X_m	2 1
+par__I_X_m	2 2
+par__I_X_m	3 1
+par__I_X_m	3 2
+par__I_X_m	3 3
+par__I_X_m	4 1
+par__I_X_m	4 2
+par__I_X_m	4 3
+par__I_X_m	4 4
+par__I_X_m	5 1
+par__I_X_m	5 2
+par__I_X_m	5 3
+par__I_X_m	5 4
+par__I_X_m	5 5
+par__I_X_m	6 1
+par__I_X_m	6 2
+par__I_X_m	6 3
+par__I_X_m	6 4
+par__I_X_m	6 5
+par__I_X_m	6 6
+par__I_X_m	7 1
+par__I_X_m	7 2
+par__I_X_m	7 3
+par__I_X_m	7 4
+par__I_X_m	7 5
+par__I_X_m	7 6
+par__I_X_m	7 7
+par__I_X_m	8 1
+par__I_X_m	8 2
+par__I_X_m	8 3
+par__I_X_m	8 4
+par__I_X_m	8 5
+par__I_X_m	8 6
+par__I_X_m	8 7
+par__I_X_m	8 8
+par__I_X_m	9 1
+par__I_X_m	9 2
+par__I_X_m	9 3
+par__I_X_m	9 4
+par__I_X_m	9 5
+par__I_X_m	9 6
+par__I_X_m	9 7
+par__I_X_m	9 8
+par__I_X_m	9 9
+par__I_X_m	10 1
+par__I_X_m	10 2
+par__I_X_m	10 3
+par__I_X_m	10 4
+par__I_X_m	10 5
+par__I_X_m	10 6
+par__I_X_m	10 7
+par__I_X_m	10 8
+par__I_X_m	10 9
+par__I_X_m	10 10
+par__I_X_m	a1 b1
+par__I_X_m	a2 b1 b2
+par__I_X_m	a3 b1 b2 b3
+par__I_X_m	a4 b1 b2 b3 b4
+par__I_X_m	a5 b1 b2 b3 b4 b5
+par__I_X_m	a6 b1 b2 b3 b4 b5 b6
+par__I_X_m	a7 b1 b2 b3 b4 b5 b6 b7
+par__I_X_m	a8 b1 b2 b3 b4 b5 b6 b7 b8
+par__I_X_m	a9 b1 b2 b3 b4 b5 b6 b7 b8 b9
+par__I_X_m	a10 b1 b2 b3 b4 b5 b6 b7 b8 b9 b10
+par__I_X_m	a1 b1
+par__I_X_m	a2 b1 2
+par__I_X_m	a3 b1 2 3
+par__I_X_m	a4 b1 2 3 4
+par__I_X_m	a5 b1 2 3 4 5
+par__I_X_m	a6 b1 2 3 4 5 6
+par__I_X_m	a7 b1 2 3 4 5 6 7
+par__I_X_m	a8 b1 2 3 4 5 6 7 8
+par__I_X_m	a9 b1 2 3 4 5 6 7 8 9
+par__I_X_m	a10 b1 2 3 4 5 6 7 8 9 10
 par__argfile_plus	-- -a file +file ++file
 par__argfile_plus	parallel: Error: It is unclear whether you mean +./file or ./+file
 par__argfile_plus	-- -a file +./file ++file
@@ -241,6 +317,57 @@ par__parset_assoc_arr	zsh@lo	ls: cannot access 'no-such-file': No such file or d
 par__parset_assoc_arr	zsh@lo	ls: cannot access 'no-such-file': No such file or directory
 par__parset_assoc_arr	zsh@lo	ls: cannot access 'no-such-file1': No such file or directory
 par__parset_assoc_arr	zsh@lo	ls: cannot access 'no-such-file2': No such file or directory
+par__plus	### --plus
+par__plus	(It is OK to start with extra / or end with extra .)
+par__plus	a = /a = a. = /a. = a. = /a. = a. = /a.
+par__plus	a.b = /a.b = a.b = /a.b = a.b. = /a.b. = a.b. = /a.b.
+par__plus	a.b.c = /a.b.c = a.b.c = /a.b.c = a.b.c = /a.b.c = a.b.c. = /a.b.c.
+par__plus	a.b.c.d = /a.b.c.d = a.b.c.d = /a.b.c.d = a.b.c.d = /a.b.c.d = a.b.c.d = /a.b.c.d
+par__plus	a/1 = a/1 = a/1. = a/1. = a/1. = a/1. = a/1. = a/1.
+par__plus	a.b/1.2 = a.b/1.2 = a.b/1.2 = a.b/1.2 = a.b/1.2. = a.b/1.2. = a.b/1.2. = a.b/1.2.
+par__plus	a.b.c/1.2.3 = a.b.c/1.2.3 = a.b.c/1.2.3 = a.b.c/1.2.3 = a.b.c/1.2.3 = a.b.c/1.2.3 = a.b.c/1.2.3. = a.b.c/1.2.3.
+par__plus	a.b.c.d/1.2.3.4 = a.b.c.d/1.2.3.4 = a.b.c.d/1.2.3.4 = a.b.c.d/1.2.3.4 = a.b.c.d/1.2.3.4 = a.b.c.d/1.2.3.4 = a.b.c.d/1.2.3.4 = a.b.c.d/1.2.3.4
+par__plus	a. = /a. = a. = /a. = a.. = /a.. = a.. = /a..
+par__plus	a.b. = /a.b. = a.b. = /a.b. = a.b. = /a.b. = a.b.. = /a.b..
+par__plus	a.b.c. = /a.b.c. = a.b.c. = /a.b.c. = a.b.c. = /a.b.c. = a.b.c. = /a.b.c.
+par__plus	a.b.c.d. = /a.b.c.d. = a.b.c.d. = /a.b.c.d. = a.b.c.d. = /a.b.c.d. = a.b.c.d. = /a.b.c.d.
+par__plus	a/1. = a/1. = a/1. = a/1. = a/1.. = a/1.. = a/1.. = a/1..
+par__plus	a.b/1.2. = a.b/1.2. = a.b/1.2. = a.b/1.2. = a.b/1.2. = a.b/1.2. = a.b/1.2.. = a.b/1.2..
+par__plus	a.b.c/1.2.3. = a.b.c/1.2.3. = a.b.c/1.2.3. = a.b.c/1.2.3. = a.b.c/1.2.3. = a.b.c/1.2.3. = a.b.c/1.2.3. = a.b.c/1.2.3.
+par__plus	a.b.c.d/1.2.3.4. = a.b.c.d/1.2.3.4. = a.b.c.d/1.2.3.4. = a.b.c.d/1.2.3.4. = a.b.c.d/1.2.3.4. = a.b.c.d/1.2.3.4. = a.b.c.d/1.2.3.4. = a.b.c.d/1.2.3.4.
+par__plus	a.. = /a.. = a.. = /a.. = a.. = /a.. = a... = /a...
+par__plus	a.b.. = /a.b.. = a.b.. = /a.b.. = a.b.. = /a.b.. = a.b.. = /a.b..
+par__plus	a.b.c.. = /a.b.c.. = a.b.c.. = /a.b.c.. = a.b.c.. = /a.b.c.. = a.b.c.. = /a.b.c..
+par__plus	a.b.c.d.. = /a.b.c.d.. = a.b.c.d.. = /a.b.c.d.. = a.b.c.d.. = /a.b.c.d.. = a.b.c.d.. = /a.b.c.d..
+par__plus	a./1. = a./1. = a./1. = a./1. = a./1.. = a./1.. = a./1.. = a./1..
+par__plus	a.b./1.2.. = a.b./1.2.. = a.b./1.2.. = a.b./1.2.. = a.b./1.2.. = a.b./1.2.. = a.b./1.2.. = a.b./1.2..
+par__plus	a.b.c./1.2.3.. = a.b.c./1.2.3.. = a.b.c./1.2.3.. = a.b.c./1.2.3.. = a.b.c./1.2.3.. = a.b.c./1.2.3.. = a.b.c./1.2.3.. = a.b.c./1.2.3..
+par__plus	a.b.c.d./1.2.3.4.. = a.b.c.d./1.2.3.4.. = a.b.c.d./1.2.3.4.. = a.b.c.d./1.2.3.4.. = a.b.c.d./1.2.3.4.. = a.b.c.d./1.2.3.4.. = a.b.c.d./1.2.3.4.. = a.b.c.d./1.2.3.4..
+par__plus	### Test {%...} {%%...} {#...} {##...}
+par__plus	z.foo
+par__plus	z.foo
+par__plus	foo
+par__plus	foo
+par__plus	foo.z
+par__plus	foo.z
+par__plus	foo
+par__plus	foo
+par__plus	A B C
+par__plus	A C B
+par__plus	B A C
+par__plus	B C A
+par__plus	C A B
+par__plus	C B A
+par__plus	A+B+C
+par__plus	A+C+B
+par__plus	B+A+C
+par__plus	B+C+A
+par__plus	C+A+B
+par__plus	C+B+A
+par__plus	A B C
+par__plus	A B D
+par__plus	A C D
+par__plus	B C D
 par__prefix_for_L_n_N_s	Must give xxx000 args
 par__prefix_for_L_n_N_s	1000
 par__prefix_for_L_n_N_s	1000
@@ -321,6 +448,177 @@ par__prefix_for_L_n_N_s	244
 par__prefix_for_L_n_N_s	246
 par__prefix_for_L_n_N_s	246
 par__prefix_for_L_n_N_s	273
+par__sql_colsep	### SQL should add Vn columns for --colsep
+par__sql_colsep	/a/A/1/11/
+par__sql_colsep	/a/A/2/22/
+par__sql_colsep	/a/A/3/33/
+par__sql_colsep	/b/B/1/11/
+par__sql_colsep	/b/B/2/22/
+par__sql_colsep	/b/B/3/33/
+par__sql_colsep	/c/C/1/11/
+par__sql_colsep	/c/C/2/22/
+par__sql_colsep	/c/C/3/33/
+par__sql_colsep	/a/A/1/11/
+par__sql_colsep	/a/A/2/22/
+par__sql_colsep	/a/A/3/33/
+par__sql_colsep	/b/B/1/11/
+par__sql_colsep	/b/B/2/22/
+par__sql_colsep	/b/B/3/33/
+par__sql_colsep	/c/C/1/11/
+par__sql_colsep	/c/C/2/22/
+par__sql_colsep	/c/C/3/33/
+par__sql_colsep	a A 1 11 a A 2 22 a A 3 33
+par__sql_colsep	a A 4 44 a A 5 55 a A 6 66
+par__sql_colsep	b B 1 11 b B 2 22 b B 3 33
+par__sql_colsep	b B 4 44 b B 5 55 b B 6 66
+par__sql_colsep	c C 1 11 c C 2 22 c C 3 33
+par__sql_colsep	c C 4 44 c C 5 55 c C 6 66
+par__sql_colsep	a A 1 11 a A 2 22 a A 3 33
+par__sql_colsep	a A 4 44 a A 5 55 a A 6 66
+par__sql_colsep	b B 1 11 b B 2 22 b B 3 33
+par__sql_colsep	b B 4 44 b B 5 55 b B 6 66
+par__sql_colsep	c C 1 11 c C 2 22 c C 3 33
+par__sql_colsep	c C 4 44 c C 5 55 c C 6 66
+par__test_XI_mI	### Test -I
+par__test_XI_mI	1 1
+par__test_XI_mI	2 1
+par__test_XI_mI	2 2
+par__test_XI_mI	3 1
+par__test_XI_mI	3 2
+par__test_XI_mI	3 3
+par__test_XI_mI	4 1
+par__test_XI_mI	4 2
+par__test_XI_mI	4 3
+par__test_XI_mI	4 4
+par__test_XI_mI	5 1
+par__test_XI_mI	5 2
+par__test_XI_mI	5 3
+par__test_XI_mI	5 4
+par__test_XI_mI	5 5
+par__test_XI_mI	6 1
+par__test_XI_mI	6 2
+par__test_XI_mI	6 3
+par__test_XI_mI	6 4
+par__test_XI_mI	6 5
+par__test_XI_mI	6 6
+par__test_XI_mI	7 1
+par__test_XI_mI	7 2
+par__test_XI_mI	7 3
+par__test_XI_mI	7 4
+par__test_XI_mI	7 5
+par__test_XI_mI	7 6
+par__test_XI_mI	7 7
+par__test_XI_mI	8 1
+par__test_XI_mI	8 2
+par__test_XI_mI	8 3
+par__test_XI_mI	8 4
+par__test_XI_mI	8 5
+par__test_XI_mI	8 6
+par__test_XI_mI	8 7
+par__test_XI_mI	8 8
+par__test_XI_mI	9 1
+par__test_XI_mI	9 2
+par__test_XI_mI	9 3
+par__test_XI_mI	9 4
+par__test_XI_mI	9 5
+par__test_XI_mI	9 6
+par__test_XI_mI	9 7
+par__test_XI_mI	9 8
+par__test_XI_mI	9 9
+par__test_XI_mI	10 1
+par__test_XI_mI	10 2
+par__test_XI_mI	10 3
+par__test_XI_mI	10 4
+par__test_XI_mI	10 5
+par__test_XI_mI	10 6
+par__test_XI_mI	10 7
+par__test_XI_mI	10 8
+par__test_XI_mI	10 9
+par__test_XI_mI	10 10
+par__test_XI_mI	### Test -X -I
+par__test_XI_mI	a1 b1
+par__test_XI_mI	a2 b1 b2
+par__test_XI_mI	a3 b1 b2 b3
+par__test_XI_mI	a4 b1 b2 b3 b4
+par__test_XI_mI	a5 b1 b2 b3 b4 b5
+par__test_XI_mI	a6 b1 b2 b3 b4 b5 b6
+par__test_XI_mI	a7 b1 b2 b3 b4 b5 b6 b7
+par__test_XI_mI	a8 b1 b2 b3 b4 b5 b6 b7 b8
+par__test_XI_mI	a9 b1 b2 b3 b4 b5 b6 b7 b8 b9
+par__test_XI_mI	a10 b1 b2 b3 b4 b5 b6 b7 b8 b9 b10
+par__test_XI_mI	### Test -m -I
+par__test_XI_mI	a1 b1
+par__test_XI_mI	a2 b1 2
+par__test_XI_mI	a3 b1 2 3
+par__test_XI_mI	a4 b1 2 3 4
+par__test_XI_mI	a5 b1 2 3 4 5
+par__test_XI_mI	a6 b1 2 3 4 5 6
+par__test_XI_mI	a7 b1 2 3 4 5 6 7
+par__test_XI_mI	a8 b1 2 3 4 5 6 7 8
+par__test_XI_mI	a9 b1 2 3 4 5 6 7 8 9
+par__test_XI_mI	a10 b1 2 3 4 5 6 7 8 9 10
+par__test_cpu_detection_cpuinfo	2-8-8-8 Xeon 8 core server in Germany
+par__test_cpu_detection_cpuinfo	2 8 8 8
+par__test_cpu_detection_cpuinfo	4-48-48-48 Dell R815 4 CPU 48-core
+par__test_cpu_detection_cpuinfo	4 24 48 24
+par__test_cpu_detection_cpuinfo	1-4-8-4 4-core/8 thread Lenovo T480
+par__test_cpu_detection_cpuinfo	1 4 8 4
+par__test_cpu_detection_cpuinfo	4-64-64-64 Dell R815 4 CPU 64-core
+par__test_cpu_detection_cpuinfo	4 32 64 32
+par__test_cpu_detection_cpuinfo	1-2-2-2 AMD Neo N36L Dual-Core Processor
+par__test_cpu_detection_cpuinfo	1 2 2 2
+par__test_cpu_detection_cpuinfo	1-1-1-1 Intel Xeon X5675 (mandriva.p)
+par__test_cpu_detection_cpuinfo	1 1 1 1
+par__test_cpu_detection_cpuinfo	1-1-1-1 Intel(R) Celeron(R) M (eee900)
+par__test_cpu_detection_cpuinfo	1 1 1 1
+par__test_cpu_detection_cpuinfo	2-12-24-12 Intel(R) Xeon(R) CPU E5-2620 v3 @ 2.40GHz (vh4)
+par__test_cpu_detection_cpuinfo	2 12 24 12
+par__test_cpu_detection_cpuinfo	1-6-12-6 AMD Ryzen 5 4600G with Radeon Graphics (ai)
+par__test_cpu_detection_cpuinfo	1 6 12 6
+par__test_cpu_detection_cpuinfo	1-4-8-4 Lenovo E540 i7-4712MQ
+par__test_cpu_detection_cpuinfo	1 4 8 4
+par__test_cpu_detection_cpuinfo	1-4-8-4 Core i7-3632QM Acer laptop
+par__test_cpu_detection_cpuinfo	1 4 8 4
+par__test_cpu_detection_cpuinfo	1-2-4-2 Core i5-2410M laptop firewall
+par__test_cpu_detection_cpuinfo	1 2 4 2
+par__test_cpu_detection_cpuinfo	1-2-2-2 AMD Opteron 244 dual core laptop(?)
+par__test_cpu_detection_cpuinfo	1 2 2 2
+par__test_cpu_detection_cpuinfo	2-24-48-24 24-core (maxwell?)
+par__test_cpu_detection_cpuinfo	2 24 48 24
+par__test_cpu_detection_cpuinfo	1-2-2-2 HP Laptop Compaq 6530b
+par__test_cpu_detection_cpuinfo	1 2 2 2
+par__test_cpu_detection_cpuinfo	1-8-8-8 Huawei P Smart Octa-core (4x2.36 GHz Cortex-A53 & 4x1.7 GHz Cortex-A53)
+par__test_cpu_detection_cpuinfo	1 8 8 8
+par__test_cpu_detection_cpuinfo	1-4-4-4 x96 quad-core Android TV-box
+par__test_cpu_detection_cpuinfo	1 4 4 4
+par__test_cpu_detection_cpuinfo	1-6-6-6 Kramses 200 USD laptop 6-core
+par__test_cpu_detection_cpuinfo	1 6 6 6
+par__test_cpu_detection_lscpu	2-8-8-8 Xeon 8 core server in Germany
+par__test_cpu_detection_lscpu	2 8 8 8
+par__test_cpu_detection_lscpu	4-64-64-64 Dell R815 4 CPU 64-core
+par__test_cpu_detection_lscpu	4 32 64 32
+par__test_cpu_detection_lscpu	1-2-2-2 AMD Neo N36L Dual-Core Processor
+par__test_cpu_detection_lscpu	1 2 2 2
+par__test_cpu_detection_lscpu	1-1-1-1 Intel Xeon X5675 (mandriva.p)
+par__test_cpu_detection_lscpu	1 1 1 1
+par__test_cpu_detection_lscpu	1-1-1-1 Intel(R) Celeron(R) M (eee900)
+par__test_cpu_detection_lscpu	1 1 1 1
+par__test_cpu_detection_lscpu	2-12-24-12 Intel(R) Xeon(R) CPU E5-2620 v3 @ 2.40GHz (vh4)
+par__test_cpu_detection_lscpu	2 12 24 12
+par__test_cpu_detection_lscpu	1-6-12-6 AMD Ryzen 5 4600G with Radeon Graphics (ai)
+par__test_cpu_detection_lscpu	1 6 12 6
+par__test_cpu_detection_lscpu	1-4-8-4 Lenovo E540 i7-4712MQ
+par__test_cpu_detection_lscpu	1 4 8 4
+par__test_cpu_detection_lscpu	1-4-8-4 Core i7-3632QM Acer laptop
+par__test_cpu_detection_lscpu	1 4 8 4
+par__test_cpu_detection_lscpu	1-2-4-2 Core i5-2410M laptop firewall
+par__test_cpu_detection_lscpu	1 2 4 2
+par__test_cpu_detection_lscpu	1-8-8-8 Huawei P Smart Octa-core (4x2.36 GHz Cortex-A53 & 4x1.7 GHz Cortex-A53)
+par__test_cpu_detection_lscpu	2 8 8 8
+par__test_cpu_detection_lscpu	1-4-4-4 x96 quad-core Android TV-box
+par__test_cpu_detection_lscpu	1 1 1 1
+par__test_cpu_detection_topology	1-4-8-4 Lenovo E540 i7-4712MQ
+par__test_cpu_detection_topology	1 4 8 4
 par_children_receive_sig	### Do children receive --termseq signals
 par_children_receive_sig	parallel: Warning: This job was killed because it timed out:
 par_children_receive_sig	parallel: Warning: show_signals ''
@@ -543,11 +841,15 @@ par_parset	line1
 par_parset	line2
 par_parset2	### parset into array
 par_parset2	foo bar baz
+par_parset2	foo bar baz
 par_parset2	### parset into vars with comma
+par_parset2	foo bar baz
 par_parset2	foo bar baz
 par_parset2	### parset into vars with space
 par_parset2	foo bar baz
+par_parset2	foo bar baz
 par_parset2	### parset with newlines
+par_parset2	1 1 2 1 2 3
 par_parset2	1
 par_parset2	1
 par_parset2	2
@@ -556,11 +858,17 @@ par_parset2	2
 par_parset2	3
 par_parset2	### parset into indexed array vars
 par_parset2	foo bar baz
+par_parset2	foo bar baz
+par_parset2	foo bar bar
 par_parset2	foo bar bar
 par_parset2	### env_parset
 par_parset2	myecho myvar myarr  1 foo myecho myvar myarr  1 bar myecho myvar myarr  1 baz
 par_parset2	myecho myvar myarr  1 foo myecho myvar myarr  1 bar myecho myvar myarr  1 baz
 par_parset2	myecho myvar myarr  1 foo myecho myvar myarr  1 bar myecho myvar myarr  1 baz
+par_parset2	myecho myvar myarr  1 foo myecho myvar myarr  1 bar myecho myvar myarr  1 baz
+par_parset2	myecho myvar myarr  1 foo myecho myvar myarr  1 bar myecho myvar myarr  1 baz
+par_parset2	myecho myvar myarr  1 foo myecho myvar myarr  1 bar myecho myvar myarr  1 baz
+par_parset2	newline1 newline2 1 newline1 newline2 1 2 newline1 newline2 1 2 3
 par_parset2	newline1
 par_parset2	newline2
 par_parset2	1
@@ -574,6 +882,8 @@ par_parset2	1
 par_parset2	2
 par_parset2	3
 par_parset2	myecho myvar myarr  1 foo myecho myvar myarr  1 bar myecho myvar myarr  1 baz
+par_parset2	myecho myvar myarr  1 foo myecho myvar myarr  1 bar myecho myvar myarr  1 baz
+par_parset2	myecho myvar myarr  1 foo myecho myvar myarr  1 bar myecho myvar myarr  1 bar
 par_parset2	myecho myvar myarr  1 foo myecho myvar myarr  1 bar myecho myvar myarr  1 bar
 par_parset2	bug #52507: parset arr1 -v echo ::: fails
 par_parset2	seq 3

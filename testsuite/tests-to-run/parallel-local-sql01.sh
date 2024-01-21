@@ -8,13 +8,27 @@
 # The tests must be able to run in parallel
 
 export SQLITE=sqlite3:///%2Frun%2Fshm%2Fparallel.db
-export PG=pg://`whoami`:`whoami`@lo/`whoami`
-export MYSQL=mysql://`whoami`:`whoami`@lo/`whoami`
+export PG=pg://`whoami`:`whoami`@localhost/`whoami`
+export MYSQL=mysql://`whoami`:`whoami`@localhost/`whoami`
 export CSV=csv:///%2Frun%2Fshm
+export INFLUX=influx:///parallel
 
 export DEBUG=false
 rm -f /run/shm/parallel.db
 mkdir -p /run/shm/csv
+
+overlay_mysql() {
+    # MySQL is rediculously slow: Force it to work in RAM
+    sudo service mysql stop
+    mysqldir=/var/lib/mysql
+    upper=/dev/shm/mysql
+    work=/dev/shm/mysql-work
+    sudo umount $mysqldir 2>/dev/null
+    mkdir -p $upper $work
+    sudo mount -t overlay overlay -o lowerdir=$mysqldir,upperdir=$upper,workdir=$work $mysqldir
+    sudo chown mysql:mysql $mysqldir
+    sudo service mysql start
+}
 
 p_showsqlresult() {
     # print results stored in $SERVERURL/$TABLE
@@ -46,11 +60,11 @@ p_wrapper() {
 }
 
 p_template() {
-    # Run the 
+    # Run the jobs with both master and worker
     (
 	# Make sure there is work to be done
 	sleep 6;
-	parallel --sqlworker $DBURL    "$@" sleep .3\;echo >"$T1"
+	parallel --sqlworker $DBURL "$@" sleep .3\;echo >"$T1"
     ) &
     parallel  --sqlandworker $DBURL "$@" sleep .3\;echo ::: {1..5} ::: {a..e} >"$T2";
 }
@@ -137,17 +151,54 @@ par_empty() {
     true;
 }
 
-hostname=`hostname`
-export -f $(compgen -A function | egrep 'p_|par_')
-# Tested that -j0 in parallel is fastest (up to 15 jobs)
-# -j5: SQLite complains about locked database.
-compgen -A function | grep par_ | sort |
-    stdout parallel -vj4 -k --tag --joblog /tmp/jl-`basename $0` p_wrapper \
-	   :::: - ::: \$MYSQL \$PG \$SQLITE \$CSV |
-    perl -pe 's/tbl\d+/TBL99999/gi;' |
-    perl -pe 's/(from TBL99999 order) .*/$1/g' |
-    perl -pe 's/ *\b'"$hostname"'\b */hostname/g' | 
-    grep -v -- --------------- |
-    perl -pe 's/ *\bhost\b */host/g' |
-    perl -pe 's/ +/ /g'
+par_sql_joblog() {
+    echo '### should only give a single --joblog heading'
+    echo '### --sqlmaster/--sqlworker'
+    parallel -k --joblog - --sqlmaster $DBURL --wait sleep .3\;echo ::: {1..5} ::: {a..e} |
+	perl -pe 's/\d+\.\d+/999.999/g' | sort -n &
+    sleep 0.5
+    T=$(mktemp)
+    parallel -k --joblog - --sqlworker $DBURL > "$T"
+    wait
+    # Needed because of race condition
+    cat "$T"; rm "$T"
+    echo '### --sqlandworker'
+    parallel -k --joblog - --sqlandworker $DBURL sleep .3\;echo ::: {1..5} ::: {a..e} |
+	perl -pe 's/\d+\.\d+/999.999/g' | sort -n
+    # TODO --sqlandworker --wait
+}
 
+par_no_table() {
+    echo 'bug #50018: --dburl without table dies'
+    parallel --sqlworker $SERVERURL
+    echo $?
+    parallel --sqlandworker $SERVERURL echo ::: no_output
+    echo $?
+    parallel --sqlmaster $SERVERURL echo ::: no_output
+    echo $?
+    # For p_wrapper to remove table
+    parallel --sqlandworker $DBURL true ::: dummy ::: dummy
+}
+
+export -f $(compgen -A function | grep p_)
+export -f $(compgen -A function | G par_ "$@")
+
+# Run the DBURLs in parallel, but only one of the same DBURL at the same time
+
+joblog=/tmp/jl-`basename $0`
+true > $joblog
+
+do_dburl() {
+    export dbvar=$1
+    hostname=`hostname`
+    compgen -A function | G par_ | sort |
+	stdout parallel -vj1 -k --tag --joblog +$joblog p_wrapper {} \$$dbvar |
+	perl -pe 's/tbl\d+/TBL99999/gi;' |
+	perl -pe 's/(from TBL99999 order) .*/$1/g' |
+	perl -pe 's/ *\b'"$hostname"'\b */hostname/g' |
+	grep -v -- --------------- |
+	perl -pe 's/ *\bhost\b */host/g' |
+	perl -pe 's/ +/ /g'
+}
+export -f do_dburl
+parallel -vk --tag do_dburl ::: CSV INFLUX MYSQL PG SQLITE

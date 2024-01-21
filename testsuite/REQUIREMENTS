@@ -15,6 +15,7 @@ install_packages() {
     test_pkgs="$test_pkgs mono-csharp-shell libevent-dev tcl libtext-csv-perl"
     test_pkgs="$test_pkgs xterm libc6-i386 libcrypt1:i386 vagrant virtualbox"
     test_pkgs="$test_pkgs libtest-nowarnings-perl xemacs21 pv zenity"
+    test_pkgs="$test_pkgs lsh-client lsh-utils torsocks net-tools"
 
     # Debian package
     packaging_pkgs="dpkg-dev build-essential debhelper osc cvs automake"
@@ -142,17 +143,23 @@ setup_virtual_box_network() {
 	sudo tee /etc/vbox/networks.conf
 }
 
-start_vagrant_servers() {
-    cd testsuite/vagrant/
-    ssh-add -L >> authorized_keys
-    parallel 'cd {//}; vagrant up' ::: testsuite/vagrant/*/*/Vagrantfile
-}
-
 add_server_to_hosts() {
     add_ssh_key_to_authorized() {
 	(cat vagrant/authorized_keys; cat ~/.ssh/*.pub) |
 	    uniq > vagrant/authorized_keys.$$
 	mv vagrant/authorized_keys.$$ vagrant/authorized_keys
+	# Problem:
+	# https://developer.hashicorp.com/vagrant/docs/v2.4.0/vagrantfile/ssh_settings
+	# says:
+	# 
+	#   (non-interactive SSH connections use the internal SSH
+	#   communicator which is unaffected by this setting).
+	#
+	# We need to force Ruby's Net::SSH to use ~/.ssh/config
+	# or -oKexAlgorithms=diffie-hellman-group1-sha1
+	#
+	# VAGRANT_PREFER_SYSTEM_BIN=1 ought to fix it, but does not.
+	
 
 	# Fix:
 	# could not settle on kex algorithm
@@ -181,7 +188,7 @@ add_server_to_hosts() {
 	    # skip
 	    true
 	else
-	    printf "$@\n" |
+	    echo "$@" |
 		sudo tee -a /etc/hosts
 	fi
     }
@@ -194,7 +201,7 @@ add_server_to_hosts() {
 	    grep 172 Vagrantfile | grep -v '#' |
 		perl -pe 's/.*(172.27[\.0-9]+).*/$1/';
 	}
-	insert_in_etc_hosts $(vagrant_ip $1) $@
+	insert_in_etc_hosts $(vagrant_ip $1) "$@"
     }
     export -f add_single_vagrant_to_etc_hosts
     
@@ -202,40 +209,44 @@ add_server_to_hosts() {
     insert_in_etc_hosts 127.1.2.3 server
     
     insert_in_etc_hosts 127.0.0.2 lo
-    parallel add_single_vagrant_to_etc_hosts {} parallel-server{#} ::: centos8 freebsd12 freebsd13 rhel8 centos3
-    #centos39-oracle817
-    # TODO alias
-    # 172.27.27.8     centos8 parallel-server1 server1
-    # 172.27.27.72    freebsd12 parallel-server3 server3
-    # 172.27.27.108   rhel8 parallel-server4 server4
-    # 172.27.27.73    freebsd13 parallel-server2 server2
-    # TODO
-    # $ cat /etc/vbox/networks.conf
-    # * 172.27.0.0/16
-    # TODO
-    parallel --ll --tag 'cd {};vagrant up' ::: vagrant/*/*
-    parallel w4it-for-port-open {} 22 ::: centos8 freebsd11 freebsd12 freebsd13 rhel8 centos3
-    
+    parallel add_single_vagrant_to_etc_hosts {} parallel-server{#} ::: centos8 freebsd13 freebsd14 rhel8 centos3
+}
+
+vagrant_up() {
+    parallel -j0 --ll --tag 'cd {};vagrant up' ::: vagrant/*/*
+    # After this you should be able to 'vagrant ssh'
+}
+
+add_key_to_auth_key() {
     sshaddvagrant() {
+        ssh-keygen -f ~/.ssh/known_hosts -R $1
 	cat ~/.ssh/*.pub | (cd vagrant/*/$1 && vagrant ssh -c 'cat >>.ssh/authorized_keys')
 	sshpass -p vagrant ssh-copy-id -o StrictHostKeyChecking=accept-new vagrant@$1
 	ssh vagrant@$1 echo vagrant@$1 OK
     }
     export -f sshaddvagrant
-    parallel sshaddvagrant ::: centos8 freebsd11 freebsd12 freebsd13 rhel8 centos3
-    parallel ssh -o StrictHostKeyChecking=accept-new vagrant@{} ::: parallel-server{1..4} centos3
+    parallel --tag sshaddvagrant ::: centos8 freebsd13 freebsd14 rhel8 centos3
+    parallel --tag ssh -o StrictHostKeyChecking=accept-new vagrant@{} ::: parallel-server{1..4} centos3
+    cat ~/.ssh/*pub >> ~/.ssh/authorized_keys
     # TODO find ipv6
     ipv6=
-    parallel ssh -o StrictHostKeyChecking=accept-new {} ::: lo localhost 172.27.27.1 127.0.0.1 ::1 $ipv6
+    parallel --tag ssh -o StrictHostKeyChecking=accept-new {} ::: lo localhost 172.27.27.1 127.0.0.1 ::1 $ipv6
     # parallel sshpass -p vagrant ssh-copy-id vagrant@{} ::: parallel-server{1..4} centos3
 
     # ssh-copy-id vagrant@parallel-server1..4 centos3
 }
 
+install_rsync_on_vagrant() {
+    parallel --tag ssh vagrant@{} "'
+      sudo apt install rsync || sudo yum install -y rsync || sudo pkg install -y rsync;
+      sudo apt install perl || sudo yum install -y perl || sudo pkg install -y perl;
+    '" ::: parallel-server{1..4} centos3 
+}
+
 shellsplus() {
     shells="bash sh csh ash dash tcsh zsh ksh ksh93 fish fizsh mksh"
     shells="$shells posh rc sash yash nopathbash nopathcsh"
-    shellsplus="parallel $shells"
+    shellsplus=$(whoami)" parallel $shells"
     parallel -k echo ::: $shellsplus
 }
 
@@ -282,6 +293,9 @@ create_shell_logins() {
     (shellsplus; echo withpassword) |
 	parallel --lb --halt soon,fail=1 --timeout 1000% --retries 5 --tag -j1 del_add_user ||
 	(echo Creation failed: $?; false)
+    # Homedir must be readable by others
+    umask 0002
+    (shellsplus; echo withpassword) | sudo parallel chmod +rX ~{}
 }
 
 copy_ssh_keys() {
@@ -340,10 +354,11 @@ copy_ssh_keys() {
 	# Remove env_parallel from .profile
 	ssh nopathbash@lo 'perl -i.bak -pe s/.*env_parallel.*// .profile .bashrc'
 	ssh nopathcsh@lo 'echo >> .cshrc setenv PATH /bin:/usr/bin'
+	ssh nopathcsh@lo 'echo >> .tcshrc setenv PATH /bin:/usr/bin'
 	ssh nopathcsh@lo 'echo >> .login setenv PATH /bin:/usr/bin'
-	ssh nopathbash@lo 'echo $PATH; echo 1 | parallel echo' ||
+	ssh nopathbash@lo 'echo $PATH; echo NOT OK | parallel echo' ||
 	    echo Great - this should FAIL: parallel should not be found
-	ssh nopathcsh@lo 'echo $PATH; echo 1 | parallel echo' ||
+	ssh nopathcsh@lo 'echo $PATH; echo NOT OK | parallel echo' ||
 	    echo Great - this should FAIL: parallel should not be found
     )
 }
@@ -382,15 +397,16 @@ lsh_setup() {
     #
     # There is no longer an overlap: LSH is unsupported until there is
     # a common algorithm again
-    shellsplus | parallel --bar --timeout 5 export_key_to_local_users
-    shellsplus | parallel --bar --timeout 5 'lsh -l {} lo true || export_key_to_local_users {}'
-    shellsplus | parallel --bar --timeout 5 'lsh -l {} lo true || echo Fail {}'
+    (whoami; shellsplus) | parallel --bar --timeout 5 --retries 5 export_key_to_local_users
+    (whoami; shellsplus) | parallel --bar --timeout 5 --retries 5 'lsh -l {} lo true || export_key_to_local_users {}'
+    (whoami; shellsplus) | parallel --bar --timeout 5 --retries 5 'lsh -l {} lo true || echo Fail {}'
 }
 
 add_freebsd() {
-    echo "# Add public key to freebsd7.t"
-    ssh freebsd7.t cat .ssh/id_rsa.pub |
-	ssh parallel@localhost 'cat >>.ssh/authorized_keys'
+    echo "# Add public keys to old servers"
+    # freebsd7 is no longer supported as virtualbox
+    # ssh freebsd7 cat .ssh/id_rsa.pub |
+    #    ssh parallel@localhost 'cat >>.ssh/authorized_keys'
 
     echo Add:
     echo HostkeyAlgorithms +ssh-dss
@@ -420,10 +436,10 @@ tmux_versions() {
 	 cd tmux$1
 	 git reset --hard
 	 git checkout $1
-	 ./autogen.sh &&
-	     ./configure &&
-	     make -j2 &&
-	     sudo cp tmux /usr/local/bin/tmux-$1
+	 bash ./autogen.sh;
+	 ./configure &&
+	 make -j2 &&
+	 sudo cp tmux /usr/local/bin/tmux-$1
      }
      export -f make_one
      echo '# Building tmux'
@@ -507,6 +523,28 @@ misc() {
 
     # Build locale for LC_ALL=zh_HK.big5hkscs perl -e 1
     sudo locale-gen zh_HK
+
+    p=$(goodpasswd)
+    echo withpassword:$p | sudo chpasswd
+    echo "export withpassword=$p" >> ~/.passwords
+
+    
+    echo TODO
+    echo ssh til egen IP-adresse  192.168.100.94
+    echo sshd_config
+    echo HostKeyAlgorithms +ssh-rsa
+    echo PubkeyAcceptedAlgorithms +ssh-rsa
+    echo KexAlgorithms +diffie-hellman-group1-sha1,curve25519-sha256@libssh.org,ecdh-sha2-nistp256,ecdh-sha2-nistp384,ecdh-sha2-nistp521,diffie-hellman-group-exchange-sha256,diffie-hellman-group14-sha1
+    echo Ciphers +3des-cbc,aes128-cbc,aes192-cbc,aes256-cbc,aes128-ctr,aes192-ctr,aes256-ctr,aes128-gcm@openssh.com,aes256-gcm@openssh.com,chacha20-poly1305@openssh.com
+    echo MaxStartups 100:30:1000
+    echo 
+    echo freepl
+    echo 'set $withpassword'
+    echo 'set $mysqlrootpassword in .passwords'
+    echo '/usr/local/bin/parallel-20120822'
+    echo 'permission of ~shell/ must be +rx'
+    echo '~/.sql/aliases'
+    echo 'python install python-is-python3'
 }
 
 run() {
@@ -515,8 +553,9 @@ run() {
 	install_oracle_client &&
 	setup_databases &&
 	setup_virtual_box_network &&
-	start_vagrant_servers &&
 	add_server_to_hosts &&
+	vagrant_up &&
+	add_key_to_auth_key &&
 	create_shell_logins &&
 	copy_ssh_keys &&
 	lsh_setup &&

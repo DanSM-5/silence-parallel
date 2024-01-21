@@ -191,11 +191,12 @@ par_no_route_to_host() {
 	# Filter the list 5 times to make sure to get good hosts
 	export -f findhosts
 	export -f filterhosts
-	nice bash -c '
+	# Run this in the background
+	nice tmux new-session -d -s filterhosts$$-$RANDOM -c '
 	    findhosts | filterhosts | filterhosts | filterhosts |
 	        filterhosts | filterhosts | head > /tmp/filtered.$$
 	    mv /tmp/filtered.$$ /tmp/filtered.hosts
-	'
+	' &
     ) &
     (
 	# We just need one of each to complete
@@ -228,23 +229,31 @@ par__d_filter_hosts() {
     printf 'OKa\0OKb\0' | parallel -k -0 --filter-hosts -S lo echo
 }
 
-par_sshlogin_range() {
+par__sshlogin_range() {
     echo '### --sshlogin with ranges'
     echo '### Jobs fail, but the important is the name of the hosts'
     doit() {
 	stdout parallel --dr "$@" echo ::: 1 | sort
     }
-    doit -S a[000-123].nx-dom,b[2,3,5,7-11]c[1,4,6].nx-dom
-    doit -S{prod,dev}[000-100].nx-dom
-    doit -S'2[49-51].0.[9-11].1[09-11]'
+    cluster() {
+	doit -S a[00-12].nx-dom,b[2,3,5,7-11]c[1,4,6].nx-dom
+    }
+    devprod() {
+	doit -S{prod,dev}[000-010,098-101].nx-dom
+    }
+    ipaddr() {
+	doit -Sip'2[49-51].0.[9-11].1[09-11]'
+    }
+    export -f doit cluster devprod ipaddr
+    parallel -k ::: cluster devprod ipaddr
 
 }
 
 export -f $(compgen -A function | grep par_)
 #compgen -A function | grep par_ | sort | parallel --delay $D -j$P --tag -k '{} 2>&1'
 #compgen -A function | grep par_ | sort |
-compgen -A function | grep par_ | LANG=C sort -ri |
+compgen -A function | G par_ "$@" | LANG=C sort |
 #    parallel --joblog /tmp/jl-`basename $0` --delay $D -j$P --tag -k '{} 2>&1'
-    parallel --joblog /tmp/jl-`basename $0` --delay 0.1 -j200% --tag -k '{} 2>&1' |
+    parallel --joblog /tmp/jl-`basename $0` --timeout 100 --delay 0.1 -j200% --tag -k '{} 2>&1' |
     perl -pe 's/line \d\d\d+:/line XXX:/' |
     perl -pe 's/\[\d\d\d+\]:/[XXX]:/'

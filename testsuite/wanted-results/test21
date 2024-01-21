@@ -4,27 +4,27 @@
 1
 1
 centos8.localdomain
-freebsd12.localdomain
+freebsd14.localdomain
 hostname; echo 1
 hostname; echo 1
 ### Test $PARALLEL - multi line
 1
 1
 centos8.localdomain
-freebsd12.localdomain
+freebsd14.localdomain
 hostname; echo 1
 hostname; echo 1
 ### Test ~/.parallel/config - single line
 1
 1
 centos8.localdomain
-freebsd12.localdomain
+freebsd14.localdomain
 hostname; echo 1
 hostname; echo 1
 ### Test ~/.parallel/config - multi line
 1
 1
 centos8.localdomain
-freebsd12.localdomain
+freebsd14.localdomain
 hostname; echo 1
 hostname; echo 1

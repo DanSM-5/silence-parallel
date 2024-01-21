@@ -6,14 +6,12 @@
 
 # SSH only allowed to localhost/lo
 
-
-
 par_ssh_cmd_with_newline() {
     echo '### Check --ssh with \n works'
     ssh=$(mktemp)
     cp -a /usr/bin/ssh "$ssh"
     qssh=$(parallel -0 --shellquote "$ssh")
-    parallel --ssh "$qssh" -S sh@lo ::: id
+    parallel --ssh "$qssh" -S sh@lo ::: whoami
 }
 
 par_controlmaster() {
@@ -153,6 +151,6 @@ par__--shellquote_command_len() {
 }
 
 export -f $(compgen -A function | grep par_)
-compgen -A function | grep par_ | sort |
+compgen -A function | G par_ "$@" | sort |
     # 2019-07-14 100% slowed down 4 threads/16GB
     parallel -j75% --joblog /tmp/jl-`basename $0` -j3 --tag -k --delay 0.1 --retries 3 '{} 2>&1'

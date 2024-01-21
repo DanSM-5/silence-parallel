@@ -8695,13 +8695,13 @@ sub sct_gnu_linux($) {
 	for($thread = 0;
 	    -r "$prefix/cpu$thread/topology/physical_package_id";
 	    $thread++) {
-	    $socket{slurp_or_exit(
+	    $socket{::slurp_or_exit(
 			"$prefix/cpu$thread/topology/physical_package_id")}++;
 	}
 	for($thread = 0;
 	    -r "$prefix/cpu$thread/topology/thread_siblings";
 	    $thread++) {
-	    $sibiling{slurp_or_exit(
+	    $sibiling{::slurp_or_exit(
 			  "$prefix/cpu$thread/topology/thread_siblings")}++;
 	}
 	$cpu->{'sockets'} = keys %socket;

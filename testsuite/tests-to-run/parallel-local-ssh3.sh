@@ -142,4 +142,4 @@ export -f $(compgen -A function | grep par_)
 # Tested with -j1..8
 # -j6 was fastest
 #compgen -A function | grep par_ | sort | parallel --delay $D -j$P --tag -k '{} 2>&1'
-compgen -A function | grep par_ | sort | parallel --delay 0.1 -j2 --tag -k '{} 2>&1'
+compgen -A function | G par_ "$@" | sort | parallel --delay 0.1 -j2 --tag -k '{} 2>&1'

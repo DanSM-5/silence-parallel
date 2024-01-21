@@ -622,4 +622,4 @@ par_pipe_retries	 134362  134362  940534
 par_pipe_retries	localhost-:
 par_pipe_retries	parallel: Error: --retries cannot be combined with --roundrobin.
 par_ssh_cmd_with_newline	### Check --ssh with \n works
-par_ssh_cmd_with_newline	uid=1003(sh) gid=1003(sh) groups=1003(sh)
+par_ssh_cmd_with_newline	sh

@@ -103,26 +103,33 @@ REQUIRE=bash -c '\
 
 prereqlocal: installparallel startvm
 	${REQUIRE}
-	parallel -j1 ssh-keygen -R parallel-server{} ::: 1 2 3 4 || true
-	(parallel 'ssh vagrant@parallel-server{} mkdir -p bin; scp `which parallel` vagrant@parallel-server{}:bin/' ::: 1 2 3 4)&
+	(parallel 'ssh -oStrictHostKeyChecking=accept-new vagrant@parallel-server{} mkdir -p bin; scp `which parallel` vagrant@parallel-server{}:bin/' ::: 1 2 3 4)&
 
 prereqremote: installparallel startvm
-	parallel -j0 --timeout 10 --tag ssh vagrant@parallel-server{} parallel --minversion 20121021 ::: 1 2 || (echo parallel on remote required for testsuite; /bin/true)
+	parallel -j0 --timeout 10 --tag ssh -oStrictHostKeyChecking=accept-new vagrant@parallel-server{} parallel --minversion 20121021 ::: 1 2 || (echo parallel on remote required for testsuite; /bin/true)
 
 ignore=bytes.of.data|ping.statistics|packets.transmitted|64.bytes.from|\
-  min/avg/max/mdev|default
+  min/avg/max/mdev|default|known.hosts|Host.*found
 start=(stdout ping -w 1 -c 1 {} || \
-  (cd vagrant/*/{} && vagrant up; \
-   wssh vagrant@{} echo {} is up) ) | \
+  (cd vagrant/*/{} 2>/dev/null && vagrant up ; \
+   echo {} | grep -q centos3 && \
+    (cat ../../authorized_keys | vagrant ssh -c "cat >>.ssh/authorized_keys"; \
+     vagrant ssh -c "sudo /sbin/ifconfig eth1 172.27.27.3"); \
+   ssh-keygen -R {}; \
+   stdout wssh -oStrictHostKeyChecking=accept-new vagrant@{} echo {} is up) ) | \
   grep -Ev "${ignore}"
+
 stop=(stdout ping -w 1 -c 1 {} && \
   (cd vagrant/*/{} && vagrant suspend) ) | \
   grep -Ev "${ignore}"
 
+namedservers=centos8 freebsd13 freebsd14 rhel8 centos3
+servers=parallel-server1 parallel-server2 parallel-server3 parallel-server4 ${namedservers}
+
 startvm:
-	parallel -j0 --tag -k '${start}' ::: centos8 freebsd13 freebsd12 rhel8 centos3 &
+	parallel -j0 --tag -k '${start}' ::: ${servers} &
 stopvm:
-	parallel -j0 --tag -k '${stop}' ::: centos8 freebsd13 freebsd12 rhel8 centos3 || true
+	parallel -j0 --tag -k '${stop}' ::: ${namedservers} || true
 
 startdb:
 	true TODO should start Oracle in vagrant

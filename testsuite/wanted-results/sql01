@@ -53,16 +53,16 @@ par_-r		Is the server running on that host and accepting TCP/IP connections?
 par_-r	[ |   psql     -h 127.0.0.3 -U nongood -p 2227 -d nongood]
 par_-r	psql: error: connection to server at "127.0.0.3", port 2227 failed: Connection refused
 par_-r		Is the server running on that host and accepting TCP/IP connections?
-par__listproc	### Test --show-processlist|proclist|listproc
-par__listproc	      2      17
-par__listproc	      2      17
-par__listproc	      2      17
 par_dbsize	### Test --db-size --dbsize
 par_dbsize	6
 par_dbsize	6
 par_dburl_user_password_host_port	### Test dburl with username password host port
 par_dburl_user_password_host_port	Test dburl with username password host port
 par_dburl_user_password_host_port	OK
+par_listproc	### Test --show-processlist|proclist|listproc
+par_listproc	      2      17
+par_listproc	      2      17
+par_listproc	      2      17
 par_noheaders	### Test --noheaders --no-headers -n
 par_noheaders	abc 1
 par_noheaders	def 3
@@ -89,5 +89,5 @@ par_sql_on_cmdline	### Test reading sql on command line
 par_sql_on_cmdline	Test reading SQL from command line
 par_sql_on_cmdline	Yes it does
 par_tablesize	### Test --table-size --tablesize
-par_tablesize	94
-par_tablesize	94
+par_tablesize	93
+par_tablesize	93

@@ -143,6 +143,6 @@ par_filter_host_noise() {
 
 export -f $(compgen -A function | grep par_)
 #compgen -A function | grep par_ | sort | parallel --delay $D -j$P --tag -k '{} 2>&1'
-compgen -A function | grep par_ | LC_ALL=C sort |
+compgen -A function | G par_ "$@" | LC_ALL=C sort |
     parallel --joblog /tmp/jl-`basename $0` --delay 0.1 -j10 --tag -k '{} 2>&1'
 

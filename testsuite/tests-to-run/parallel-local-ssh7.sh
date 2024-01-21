@@ -1650,8 +1650,8 @@ _EOF
 par_environment_too_big_ash() {
   myscript=$(cat <<'_EOF'
     echo 'bug #50815: env_parallel should warn if the environment is too big'
-    len_var=63
-    len_var_remote=47
+    len_var=53
+    len_var_remote=37
     len_var_quote=31
     len_var_quote_remote=21
     len_fun=1
@@ -1720,7 +1720,7 @@ _EOF
 par_environment_too_big_bash() {
   myscript=$(cat <<'_EOF'
     echo 'bug #50815: env_parallel should warn if the environment is too big'
-    len_overhead=-20-$( (shopt;alias;typeset -f;typeset -p) | wc -c)/1000
+    len_overhead=-27-$( (shopt;alias;typeset -f;typeset -p) | wc -c)/1000
     len_var=$len_overhead+56
     len_var_remote=$len_overhead+40
     len_var_quote=$len_overhead+41
@@ -1795,8 +1795,8 @@ par_environment_too_big_csh() {
 par_environment_too_big_dash() {
   myscript=$(cat <<'_EOF'
     echo 'bug #50815: env_parallel should warn if the environment is too big'
-    len_var=63
-    len_var_remote=47
+    len_var=53
+    len_var_remote=37
     len_var_quote=31
     len_var_quote_remote=21
     len_fun=1
@@ -1870,8 +1870,8 @@ par_environment_too_big_fish() {
 par_environment_too_big_ksh() {
   myscript=$(cat <<'_EOF'
     echo 'bug #50815: env_parallel should warn if the environment is too big'
-    len_functions=-15-$(functions|wc -c)/1000
-    len_variables=-15-$(typeset -p | wc -c)/1000
+    len_functions=-20-$(functions|wc -c)/1000
+    len_variables=-20-$(typeset -p | wc -c)/1000
     len_var=$len_variables+40
     len_var_remote=$len_variables+30
     len_var_quote=$len_variables+43
@@ -1949,7 +1949,7 @@ par_environment_too_big_mksh() {
     len_fun=28
     len_fun_remote=13
     len_fun_quote=28
-    len_fun_quote_remote=23
+    len_fun_quote_remote=18
 
     . `which env_parallel.mksh`;
 
@@ -2013,8 +2013,8 @@ _EOF
 par_environment_too_big_sh() {
   myscript=$(cat <<'_EOF'
     echo 'bug #50815: env_parallel should warn if the environment is too big'
-    len_var=63
-    len_var_remote=47
+    len_var=58
+    len_var_remote=42
     len_var_quote=31
     len_var_quote_remote=21
     len_fun=1 # unsupported
@@ -3321,7 +3321,7 @@ export -f $(compgen -A function | grep par_)
 
 #compgen -A function | grep par_ | sort | parallel --delay $D -j$P --tag -k '{} 2>&1'
 #compgen -A function | grep par_ | sort |
-compgen -A function | grep par_ | LC_ALL=C sort |
+compgen -A function | G par_ "$@" | LC_ALL=C sort |
 #    parallel --joblog /tmp/jl-`basename $0` --delay $D -j$P --tag -k '{} 2>&1'
     # 2019-07-14 200% too high for 16 GB/4 thread
     parallel --joblog /tmp/jl-`basename $0` -j75% --retries 2 --tag -k '{} 2>&1' |
