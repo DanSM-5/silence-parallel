@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 
-# SPDX-FileCopyrightText: 2021-2023 Ole Tange, http://ole.tange.dk and Free Software and Foundation, Inc.
+# SPDX-FileCopyrightText: 2021-2024 Ole Tange, http://ole.tange.dk and Free Software and Foundation, Inc.
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 =pod
@@ -60,7 +60,7 @@ On a 48 core machine you should see a speedup of 3x over B<sort>.
 
 =head1 AUTHOR
 
-Copyright (C) 2020-2023 Ole Tange,
+Copyright (C) 2020-2024 Ole Tange,
 http://ole.tange.dk and Free Software Foundation, Inc.
 
 
@@ -137,7 +137,7 @@ GetOptions(
     "help" => \$opt::dummy,
     ) || exit(255);
 $Global::progname = ($0 =~ m:(^|/)([^/]+)$:)[1];
-$Global::version = 20231222;
+$Global::version = 20240122;
 if($opt::version) { version(); exit 0; }
 # Remove -D and --parallel=N
 my @s = (grep { ! /^-D$|^--parallel=\S+$/ }
@@ -274,7 +274,7 @@ sub version() {
     print join
 	("\n",
 	 "GNU $Global::progname $Global::version",
-	 "Copyright (C) 2020-2023 Ole Tange, http://ole.tange.dk and Free Software",
+	 "Copyright (C) 2020-2024 Ole Tange, http://ole.tange.dk and Free Software",
 	 "Foundation, Inc.",
 	 "License GPLv3+: GNU GPL version 3 or later <https://gnu.org/licenses/gpl.html>",
 	 "This is free software: you are free to change and redistribute it.",

@@ -273,13 +273,14 @@ from:tange@gnu.org
 to:parallel@gnu.org, bug-parallel@gnu.org
 stable-bcc: Jesse Alama <jessealama@fastmail.fm>
 
-Subject: GNU Parallel 20240122 ('Margrethe') released
+Subject: GNU Parallel 20240122 ('Frederik X') released
 
-GNU Parallel 20240122 ('Margrethe') has been released. It is available for download at: lbry://@GnuParallel:4
+GNU Parallel 20240122 ('Frederik X') has been released. It is available for download at: lbry://@GnuParallel:4
 
 Quote of the month:
 
-  <<>>
+  GNU Parallel alone provides more value than moreutils
+    -- Ferret7446@news.ycombinator.com
  
 New in this release:
 

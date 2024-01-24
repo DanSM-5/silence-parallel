@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 
-# Copyright (C) 2007-2023 Ole Tange, http://ole.tange.dk and Free
+# Copyright (C) 2007-2024 Ole Tange, http://ole.tange.dk and Free
 # Software Foundation, Inc.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -18,7 +18,7 @@
 # or write to the Free Software Foundation, Inc., 51 Franklin St,
 # Fifth Floor, Boston, MA 02110-1301 USA
 #
-# SPDX-FileCopyrightText: 2007-2023 Ole Tange, http://ole.tange.dk and Free Software and Foundation, Inc.
+# SPDX-FileCopyrightText: 2007-2024 Ole Tange, http://ole.tange.dk and Free Software and Foundation, Inc.
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 # open3 used in Job::start
@@ -2794,7 +2794,7 @@ sub check_invalid_option_combinations() {
 
 sub init_globals() {
     # Defaults:
-    $Global::version = 20231222;
+    $Global::version = 20240122;
     $Global::progname = 'parallel';
     $::name = "GNU Parallel";
     $Global::infinity = 2**31;
@@ -5842,8 +5842,8 @@ sub usage() {
 	 "If you use programs that use GNU Parallel to process data for an article in a",
 	 "scientific publication, please cite:",
 	 "",
-	 "  Tange, O. (2023, December 22). GNU Parallel 20231222 ('Sundhnúkagígur').",
-	 "  Zenodo. https://doi.org/10.5281/zenodo.10428184",
+	 "  Tange, O. (2024, January 22). GNU Parallel 20240122 ('Frederik X').",
+	 "  Zenodo. https://doi.org/10.5281/zenodo.10558745",
 	 "",
 	 # Before changing these lines, please read
 	 # https://www.gnu.org/software/parallel/parallel_design.html#citation-notice
@@ -5875,8 +5875,8 @@ sub citation_notice() {
 	     "If you use programs that use GNU Parallel to process data for an article in a",
 	     "scientific publication, please cite:",
 	     "",
-	     "  Tange, O. (2023, December 22). GNU Parallel 20231222 ('Sundhnúkagígur').",
-	     "  Zenodo. https://doi.org/10.5281/zenodo.10428184",
+	     "  Tange, O. (2024, January 22). GNU Parallel 20240122 ('Frederik X').",
+	     "  Zenodo. https://doi.org/10.5281/zenodo.10558745",
 	     "",
 	     # Before changing these line,  please read
 	     # https://www.gnu.org/software/parallel/parallel_design.html#citation-notice and
@@ -5975,7 +5975,7 @@ sub version() {
     print join
 	("\n",
 	 "GNU $Global::progname $Global::version",
-	 "Copyright (C) 2007-2023 Ole Tange, http://ole.tange.dk and Free Software",
+	 "Copyright (C) 2007-2024 Ole Tange, http://ole.tange.dk and Free Software",
 	 "Foundation, Inc.",
 	 "License GPLv3+: GNU GPL version 3 or later <https://gnu.org/licenses/gpl.html>",
 	 "This is free software: you are free to change and redistribute it.",
@@ -6003,20 +6003,20 @@ sub citation() {
 	"If you use programs that use GNU Parallel to process data for an article in a",
 	"scientific publication, please cite:",
 	"",
-	"\@software{tange_2023_10428184,",
+	"\@software{tange_2024_10558745,",
 	"      author       = {Tange, Ole},",
-	"      title        = {GNU Parallel 20231222 ('Sundhnúkagígur')},",
-	"      month        = Dec,",
+	"      title        = {GNU Parallel 20240122 ('Frederik X')},",
+	"      month        = Jan,",
 	"      year         = 2023,",
 	"      note         = {{GNU Parallel is a general parallelizer to run",
 	"                       multiple serial command line programs in parallel",
 	"                       without changing them.}},",
 	"      publisher    = {Zenodo},",
-	"      doi          = {10.5281/zenodo.10428184},",
-	"      url          = {https://doi.org/10.5281/zenodo.10428184}",
+	"      doi          = {10.5281/zenodo.10558745},",
+	"      url          = {https://doi.org/10.5281/zenodo.10558745}",
 	"}",
 	"",
-	"(Feel free to use \\nocite{tange_2023_10428184})",
+	"(Feel free to use \\nocite{tange_2024_10558745})",
 	"",
 	# Before changing these lines, please read
 	# https://www.gnu.org/software/parallel/parallel_design.html#citation-notice and
@@ -6110,7 +6110,7 @@ sub embed() {
     }
     print "#!$Global::shell
 
-# Copyright (C) 2007-2023 $user, Ole Tange, http://ole.tange.dk
+# Copyright (C) 2007-2024 $user, Ole Tange, http://ole.tange.dk
 # and Free Software Foundation, Inc.
 #
 # This program is free software; you can redistribute it and/or modify

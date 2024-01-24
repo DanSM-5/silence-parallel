@@ -4,8 +4,6 @@
  
 Quote of the month:
 
-  GNU Parallel alone provides more value than moreutils
-    -- Ferret7446@news.ycombinator.com
 
   GNU parallel ftw
     -- hostux.social/@rmpr @_paulmairo@twitter
@@ -233,7 +231,10 @@ https://negfeedback.blogspot.com/2020/05/indispensable-command-line-tools.html
 
 === Used ===
 
-  Parallel is so damn good! You’ve got to use it.
+  GNU Parallel alone provides more value than moreutils
+    -- Ferret7446@news.ycombinator.com
+
+Parallel is so damn good! You’ve got to use it.
     -- @ThePrimeTimeagen@youtube.com
  
   Got around to using GNU parallel for the first time from a suggestion by @jdwasmuth ... now I'm wishing I started using this years ago
