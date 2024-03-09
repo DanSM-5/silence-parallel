@@ -54,13 +54,14 @@ upload:
 	gpg --auto-key-locate keyserver --keyserver-options auto-key-retrieve parallel-latest.tar.bz2.sig
 	gpg --auto-key-locate keyserver --keyserver-options auto-key-retrieve parallel-$(YYYYMMDD).tar.bz2.sig
 
-	../ftpsync/src/ftpsync parallel-$(YYYYMMDD).tar.bz2{,.sig,*asc} ftp://ftp-upload.gnu.org/incoming/ftp/
-	../ftpsync/src/ftpsync parallel-latest.tar.bz2{,.sig,*asc} ftp://ftp-upload.gnu.org/incoming/ftp/
+# 	"|| true" needed if already uploaded
+	p=`echo parallel-latest.tar.bz2*{,.sig,.asc}`; lftp -e "put $$p; bye" ftp://ftp-upload.gnu.org/incoming/ftp/ || true
+	p=`echo parallel-$(YYYYMMDD).tar.bz2*{,.sig,.asc}`; lftp -e "put $$p; bye" ftp://ftp-upload.gnu.org/incoming/ftp/ || true
 
 # This can take 7 minutes
 	pushd /tmp; \
 	rm -rf /tmp/parallel-$(YYYYMMDD)*; \
-	while ! wget https://ftp.gnu.org/gnu/parallel/parallel-$(YYYYMMDD).tar.bz2 ; do sleep 2; done; \
+	while ! wget https://ftp.gnu.org/gnu/parallel/parallel-$(YYYYMMDD).tar.bz2 ; do sleep 10; done; \
 	tar xjvf parallel-$(YYYYMMDD).tar.bz2; \
 	cd parallel-$(YYYYMMDD); \
 	./configure; \
