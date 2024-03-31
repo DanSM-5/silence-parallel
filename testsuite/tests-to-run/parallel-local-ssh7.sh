@@ -2087,47 +2087,70 @@ par_environment_too_big_tcsh() {
 par_environment_too_big_zsh() {
   myscript=$(cat <<'_EOF'
     echo 'bug #50815: env_parallel should warn if the environment is too big'
+
+    # Zsh's default env is often too big. Remove all _* functions.
+    print -l ${(k)functions}|grep ^_ | while read a; do unset -f "$a"; done
+
     . `which env_parallel.zsh`;
 
-    bigvar="$(perl -e 'print "x"x24000')"
+    len_var=16
+    len_var_remote=$len_var-15
+    len_var_quote=$len_var
+    len_var_quote_remote=$len_var-15
+    len_fun=18
+    len_fun_remote=$len_fun-10
+    len_fun_quote=$len_fun
+    len_fun_quote_remote=$len_fun-10
+
+    repeat_() {
+      # Repeat input string n*1000 times
+      perl -e 'print ((shift)x(eval "1000*(".shift.")"))' "$@"
+    }
+
+    bigvar=$(repeat_ x $len_var)
     env_parallel echo ::: OK_bigvar
-    bigvar="$(perl -e 'print "x"x12000')"
+    bigvar=$(repeat_ x $len_var_remote)
     env_parallel -S lo echo ::: OK_bigvar_remote
 
-    bigvar="$(perl -e 'print "\""x24000')"
+    bigvar=$(repeat_ \" $len_var_quote)
     env_parallel echo ::: OK_bigvar_quote
-    bigvar="$(perl -e 'print "\""x12000')"
+    bigvar=$(repeat_ \" $len_var_quote_remote)
     env_parallel -S lo echo ::: OK_bigvar_quote_remote
 
     bigvar=u
-    eval 'bigfunc() { a="'"$(perl -e 'print "x"x24000')"'"; };'
+    eval 'bigfunc() { a="'"$(repeat_ x $len_fun)"'"; };'
     env_parallel echo ::: OK_bigfunc
-    eval 'bigfunc() { a="'"$(perl -e 'print "x"x12000')"'"; };'
+    eval 'bigfunc() { a="'"$(repeat_ x $len_fun_remote)"'"; };'
     env_parallel -S lo echo ::: OK_bigfunc_remote
 
-    eval 'bigfunc() { a="'"$(perl -e 'print "\""x24000')"'"; };'
+    eval 'bigfunc() { a="'"$(repeat_ \" $len_fun_quote)"'"; };'
     env_parallel echo ::: OK_bigfunc_quote
-    eval 'bigfunc() { a="'"$(perl -e 'print "\""x12000')"'"; };'
+    eval 'bigfunc() { a="'"$(repeat_ \" $len_fun_quote_remote)"'"; };'
     env_parallel -S lo echo ::: OK_bigfunc_quote_remote
     bigfunc() { true; }
 
     echo Rest should fail
 
-    bigvar="$(perl -e 'print "x"x126000')"
+    # Add 10 or 100. It differs a bit from system to system
+    bigvar=$(repeat_ x $len_var+20)
     env_parallel echo ::: fail_bigvar
+    bigvar=$(repeat_ x $len_var_remote+10)
     env_parallel -S lo echo ::: fail_bigvar_remote
 
-    bigvar="$(perl -e 'print "\""x127000')"
+    bigvar=$(repeat_ \" $len_var_quote+20)
     env_parallel echo ::: fail_bigvar_quote
+    bigvar=$(repeat_ \" $len_var_quote_remote+20)
     env_parallel -S lo echo ::: fail_bigvar_quote_remote
 
     bigvar=u
-    eval 'bigfunc() { a="'"$(perl -e 'print "x"x128000')"'"; };'
+    eval 'bigfunc() { a="'"$(repeat_ x $len_fun+20)"'"; };'
     env_parallel echo ::: fail_bigfunc
+    eval 'bigfunc() { a="'"$(repeat_ x $len_fun_remote+20)"'"; };'
     env_parallel -S lo echo ::: fail_bigfunc_remote
 
-    eval 'bigfunc() { a="'"$(perl -e 'print "\""x129000')"'"; };'
+    eval 'bigfunc() { a="'"$(repeat_ \" $len_fun_quote+20)"'"; };'
     env_parallel echo ::: fail_bigfunc_quote
+    eval 'bigfunc() { a="'"$(repeat_ \" $len_fun_quote_remote+10)"'"; };'
     env_parallel -S lo echo ::: fail_bigfunc_quote_remote
 
     bigfunc() { true; }

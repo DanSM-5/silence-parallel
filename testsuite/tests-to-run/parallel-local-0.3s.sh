@@ -93,8 +93,10 @@ par_shellcompletion() {
 
 par_ctagstring() {
     echo '### --ctag --ctagstring should be different from --tag --tagstring'
+    echo tag/ctag 8 37
     parallel --tag echo ::: 1 ::: a| wc -c
     parallel --ctag echo ::: 1 ::: a | wc -c
+    echo tagstring/ctagstring 10 39
     parallel --tagstring 'I{1}\tB{2}' echo ::: 1 ::: a | wc -c
     parallel --ctagstring 'I{1}\tB{2}' echo ::: 1 ::: a | wc -c
 }

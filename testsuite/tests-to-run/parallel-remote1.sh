@@ -47,14 +47,17 @@ par__filter_hosts_different_errors() {
 
 par_timeout_retries() {
     echo '### test --timeout --retries'
+    # 8.8.8.8 is up but does not allow login - should timeout
+    # 8.8.8.9 is down - should timeout
+    # 192.168.1.197 is down but on our subnet - should not timeout
     stdout parallel -j0 --timeout 5 --retries 3 -k ssh {} echo {} \
-	   ::: 192.168.1.197 8.8.8.8 $SSHLOGIN1 $SSHLOGIN2 $SSHLOGIN3 |
+	   ::: 192.168.1.197 8.8.8.8 8.8.8.9 $SSHLOGIN1 $SSHLOGIN2 $SSHLOGIN3 |
 	grep -v 'Warning: Permanently added' | puniq
 }
 
 par__filter_hosts_no_ssh_nxserver() {
     echo '### test --filter-hosts with server w/o ssh, non-existing server'
-    stdout parallel -S 192.168.1.197,8.8.8.8,$SSHLOGIN1,$SSHLOGIN2,$SSHLOGIN3 --filter-hosts --nonall -k --tag echo |
+    stdout parallel -S 192.168.1.197,8.8.8.8,8.8.8.9,$SSHLOGIN1,$SSHLOGIN2,$SSHLOGIN3 --filter-hosts --nonall -k --tag echo |
 	grep -v 'parallel: Warning: Removed'
 }
 

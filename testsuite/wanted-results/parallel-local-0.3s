@@ -64,34 +64,34 @@ par_bug43654	par_bug43654	[7m100% 1:0=0s 1                                    
 par_colour_failed	--colour-failed --colour
 par_colour_failed	seq 1;exit 0
 par_colour_failed	1
-par_colour_failed	[48;5;196;38;5;231m[Kseq 1;exit 1[m
-par_colour_failed	[48;5;196;38;5;231m[K1[m
-par_colour_failed	[48;5;196;38;5;231m[Kseq 1;exit 2[m
-par_colour_failed	[48;5;196;38;5;231m[K1[m
+par_colour_failed	[48;5;196;38;5;231m[Kseq 1;exit 1(B[m
+par_colour_failed	[48;5;196;38;5;231m[K1(B[m
+par_colour_failed	[48;5;196;38;5;231m[Kseq 1;exit 2(B[m
+par_colour_failed	[48;5;196;38;5;231m[K1(B[m
 par_colour_failed	seq 2;exit 0
 par_colour_failed	1
 par_colour_failed	2
-par_colour_failed	[48;5;196;38;5;231m[Kseq 2;exit 1[m
-par_colour_failed	[48;5;196;38;5;231m[K1[m
-par_colour_failed	[48;5;196;38;5;231m[K2[m
-par_colour_failed	[48;5;196;38;5;231m[Kseq 2;exit 2[m
-par_colour_failed	[48;5;196;38;5;231m[K1[m
-par_colour_failed	[48;5;196;38;5;231m[K2[m
-par_colour_failed	[48;5;178;38;5;000m[Kseq 1;exit 0[m
-par_colour_failed	[48;5;178;38;5;000m[K1[m
-par_colour_failed	[48;5;196;38;5;231m[Kseq 1;exit 1[m
-par_colour_failed	[48;5;196;38;5;231m[K1[m
-par_colour_failed	[48;5;196;38;5;231m[Kseq 1;exit 2[m
-par_colour_failed	[48;5;196;38;5;231m[K1[m
-par_colour_failed	[48;5;203;38;5;000m[Kseq 2;exit 0[m
-par_colour_failed	[48;5;203;38;5;000m[K1[m
-par_colour_failed	[48;5;203;38;5;000m[K2[m
-par_colour_failed	[48;5;196;38;5;231m[Kseq 2;exit 1[m
-par_colour_failed	[48;5;196;38;5;231m[K1[m
-par_colour_failed	[48;5;196;38;5;231m[K2[m
-par_colour_failed	[48;5;196;38;5;231m[Kseq 2;exit 2[m
-par_colour_failed	[48;5;196;38;5;231m[K1[m
-par_colour_failed	[48;5;196;38;5;231m[K2[m
+par_colour_failed	[48;5;196;38;5;231m[Kseq 2;exit 1(B[m
+par_colour_failed	[48;5;196;38;5;231m[K1(B[m
+par_colour_failed	[48;5;196;38;5;231m[K2(B[m
+par_colour_failed	[48;5;196;38;5;231m[Kseq 2;exit 2(B[m
+par_colour_failed	[48;5;196;38;5;231m[K1(B[m
+par_colour_failed	[48;5;196;38;5;231m[K2(B[m
+par_colour_failed	[48;5;178;38;5;000m[Kseq 1;exit 0(B[m
+par_colour_failed	[48;5;178;38;5;000m[K1(B[m
+par_colour_failed	[48;5;196;38;5;231m[Kseq 1;exit 1(B[m
+par_colour_failed	[48;5;196;38;5;231m[K1(B[m
+par_colour_failed	[48;5;196;38;5;231m[Kseq 1;exit 2(B[m
+par_colour_failed	[48;5;196;38;5;231m[K1(B[m
+par_colour_failed	[48;5;203;38;5;000m[Kseq 2;exit 0(B[m
+par_colour_failed	[48;5;203;38;5;000m[K1(B[m
+par_colour_failed	[48;5;203;38;5;000m[K2(B[m
+par_colour_failed	[48;5;196;38;5;231m[Kseq 2;exit 1(B[m
+par_colour_failed	[48;5;196;38;5;231m[K1(B[m
+par_colour_failed	[48;5;196;38;5;231m[K2(B[m
+par_colour_failed	[48;5;196;38;5;231m[Kseq 2;exit 2(B[m
+par_colour_failed	[48;5;196;38;5;231m[K1(B[m
+par_colour_failed	[48;5;196;38;5;231m[K2(B[m
 par_colsep_0	bug --colsep 0
 par_colsep_0	OK
 par_colsep_0	OK
@@ -144,10 +144,12 @@ par_csv_pipe	More records in single block
 par_csv_pipe	9000"
 par_csv_pipe	11000"
 par_ctagstring	### --ctag --ctagstring should be different from --tag --tagstring
+par_ctagstring	tag/ctag 8 37
 par_ctagstring	8
-par_ctagstring	35
-par_ctagstring	10
 par_ctagstring	37
+par_ctagstring	tagstring/ctagstring 10 39
+par_ctagstring	10
+par_ctagstring	39
 par_delimiter	### Test --delimiter and -d: Delimiter instead of newline
 par_delimiter	# Yes there is supposed to be an extra newline for -d N
 par_delimiter	This is line 1
@@ -332,8 +334,8 @@ par_link_files_as_only_arg	1 1 1
 par_link_files_as_only_arg	2 2 2
 par_link_files_as_only_arg	3 3 3
 par_ll_long_followed_by_short	par_ll_long_followed_by_short	[KA very long line        
-par_ll_long_followed_by_short	Mpar_ll_long_followed_by_short	[KA very long line        
-par_ll_long_followed_by_short	Mpar_ll_long_followed_by_short	[KOK      
+par_ll_long_followed_by_short	[Apar_ll_long_followed_by_short	[KA very long line        
+par_ll_long_followed_by_short	[Apar_ll_long_followed_by_short	[KOK      
 par_ll_no_newline	bug #64030: parallel --ll echo -n ::: foo
 par_ll_no_newline	par_ll_no_newline	[Klines   
 par_ll_no_newline	par_ll_no_newline	[Ktwo     

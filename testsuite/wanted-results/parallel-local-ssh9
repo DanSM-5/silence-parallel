@@ -29,11 +29,9 @@ par__propagate_env	** test_zsh_filter
 par__propagate_env	FOO=test_zsh_filter
 par__propagate_env	HOME=~
 par__propagate_env	** test_csh
-par__propagate_env	MANPATH: Undefined variable.
 par__propagate_env	FOO=test_csh
 par__propagate_env	HOME=~
 par__propagate_env	** test_csh_filter
-par__propagate_env	MANPATH: Undefined variable.
 par__propagate_env	FOO=test_csh_filter
 par__propagate_env	HOME=~
 par__propagate_env	** bug #41805 done

@@ -423,13 +423,13 @@ par_progress	Computer:jobs running/jobs completed/%of started jobs/Average secon
 par_progress	local:0/3/100%/9.9s [K
 par_progress	
 par_progress	Computers / CPU cores / Max jobs to run
-par_progress	1:local / 4 / 4
+par_progress	1:local / 2 / 2
 par_progress	
 par_progress	Computer:jobs running/jobs completed/%of started jobs/Average seconds to complete
 par_progress	local:0/3/100%/9.9s [K
 par_progress	
 par_progress	Computers / CPU threads / Max jobs to run
-par_progress	1:local / 8 / 8
+par_progress	1:local / 4 / 4
 par_progress	
 par_progress	Computer:jobs running/jobs completed/%of started jobs/Average seconds to complete
 par_progress	local:0/3/100%/9.9s [K

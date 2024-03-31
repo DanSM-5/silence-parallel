@@ -1,3 +1,21 @@
+20240322
+
+New in this release:
+
+* Polarhome.com is down for good. This means that only platforms that
+  can be run in Vagrant 2.3.7 on x86-64 will be supported going
+  forward.
+
+* Bug fixes and man page updates.
+
+
+20240222
+
+New in this release:
+
+* Bug fixes and man page updates.
+
+
 20240122
 
 New in this release:

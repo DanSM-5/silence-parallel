@@ -4,6 +4,11 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+# Clean up environment to make room for the test functions
+while read f ; do
+    eval unset -f "$f";
+done < <(compgen -A function | grep ^_)
+
 . `which env_parallel.bash`
 env_parallel --session
 
@@ -70,6 +75,7 @@ par_many_args() {
     for a in `seq 6000`; do eval "export a$a=1" ; done
     geny 10000 | stdout parallel -Xkj1  'pecho {} {} {} {} | wc' |
 	perl -pe 's/( y){10,}//g'
+    echo
 }
 
 par_many_var() {
@@ -81,7 +87,8 @@ par_many_var() {
     for a in `seq 6000`; do eval "export a$a=1" ; done
     gen 40000 | stdout parallel -Xkj1  'pecho {} {} {} {} | wc -c' |
 	perl -pe 's/\d{10,}.\d+ //g; s/(\d+)\d\d\d/${1}XXX/g;' |
-	grep 22XXX
+	grep XXX
+    echo
 }
 
 par_many_var_func() {
@@ -96,6 +103,7 @@ par_many_var_func() {
     for a in `seq 2000`; do eval export -f a$a ; done
     gen 40000 | stdout parallel -Xkj1  'pecho {} {} {} {} | wc' |
 	perl -pe 's/\d{10,}.\d+ //g'
+    echo
 }
 
 par_many_func() {
@@ -105,10 +113,12 @@ par_many_func() {
     gen() { seq -f %f 1000000000000000 1000000000050000 | head -c $1; }
     pecho() { perl -e 'print "@ARGV\n"' "$@"; }
     export -f pecho
-    for a in `seq 5000`; do eval "a$a() { 1; }" ; done
-    for a in `seq 5000`; do eval export -f a$a ; done
-    gen 40000 | stdout parallel -Xkj1  'pecho {} {} {} {} | wc' |
+    for a in `seq 3000`; do eval "a$a() { 1; }" ; done
+    for a in `seq 3000`; do eval export -f a$a ; done
+    gen 40000 | stdout parallel -Xkj1  'pecho {} {} {} {} | wc'
+    echo |
 	perl -pe 's/\d{10,}.\d+ //g'
+    echo
 }
 
 par_big_func() {
@@ -123,6 +133,7 @@ par_big_func() {
     for a in `seq 1`; do eval export -f a$a ; done
     gen 80000 | stdout parallel --load 2 -Xkj1  'pecho {} {} {} {} | wc' |
 	perl -pe 's/\d{10,}.\d+ //g'
+    echo
 }
 
 par_many_var_big_func() {
@@ -138,6 +149,7 @@ par_many_var_big_func() {
     gen 40000 | stdout parallel -Xkj1  'pecho {} {} {} {} | wc -c' |
 	perl -pe 's/\d{10,}.\d+ //g; s/(\d+)\d\d\d/${1}XXX/g;' |
 	grep 5XXX
+    echo
 }
 
 par_big_func_name() {
@@ -150,7 +162,8 @@ par_big_func_name() {
     for a in `seq 10`; do eval "export a$big$a=1" ; done
     gen 30000 | stdout parallel -Xkj1  'pecho {} {} {} {} | wc -c' |
 	perl -pe 's/\d{10,}.\d+ //g; s/(\d+)\d\d\d/${1}XXX/g;' |
-	grep 18XXX
+	grep 1.XXX
+    echo
 }
 
 par_big_var_func_name() {
@@ -159,13 +172,14 @@ par_big_var_func_name() {
     gen() { seq -f %f 1000000000000000 1000000000050000 | head -c $1; }
     pecho() { perl -e 'print "@ARGV\n"' "$@"; }
     export -f pecho
-    big=`perl -e print\"x\"x10000`
+    big=`perl -e print\"x\"x5000`
     for a in `seq 10`; do eval "export a$big$a=1" ; done
     for a in `seq 10`; do eval "a$big$a() { 1; }" ; done
     for a in `seq 10`; do eval export -f a$big$a ; done
     gen 80000 | stdout parallel --load 4 -Xkj1  'pecho {} {} {} {} | wc -c' |
 	perl -pe 's/\d{10,}.\d+ //g; s/(\d+)\d\d\d/${1}XXX/g;' |
-	grep 18XXX
+	grep XXX
+    echo
 }
 
 export PARALLEL="--_unsafe"

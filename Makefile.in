@@ -824,8 +824,8 @@ upload:
 	gpg --auto-key-locate keyserver --keyserver-options auto-key-retrieve parallel-$(YYYYMMDD).tar.bz2.sig
 
 # 	"|| true" needed if already uploaded
-	p=`echo parallel-latest.tar.bz2*{,.sig,.asc}`; lftp -e "put $$p; bye" ftp://ftp-upload.gnu.org/incoming/ftp/ || true
-	p=`echo parallel-$(YYYYMMDD).tar.bz2*{,.sig,.asc}`; lftp -e "put $$p; bye" ftp://ftp-upload.gnu.org/incoming/ftp/ || true
+	p=`echo parallel-latest.tar.bz2*{,.sig,.asc}`; lftp -e "put $$p; bye" ftp://anonymous@ftp-upload.gnu.org/incoming/ftp/ || true
+	p=`echo parallel-$(YYYYMMDD).tar.bz2*{,.sig,.asc}`; lftp -e "put $$p; bye" ftp://anonymous@ftp-upload.gnu.org/incoming/ftp/ || true
 
 # This can take 7 minutes
 	pushd /tmp; \

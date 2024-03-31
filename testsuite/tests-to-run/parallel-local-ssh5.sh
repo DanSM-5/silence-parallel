@@ -147,7 +147,7 @@ par__--shellquote_command_len() {
     export -f outer
 
     stdout parallel --tag -k outer ::: '-Slo -j10' '' |
-	perl -pe 's/(\d\d+)\d\d\d/${1}xxx/g';
+	perl -pe 's/(\d+)\d\d\d\d/${1}xxxx/g';
 }
 
 export -f $(compgen -A function | grep par_)

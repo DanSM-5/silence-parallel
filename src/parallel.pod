@@ -841,9 +841,9 @@ https://perldoc.perl.org/perlre.html
 See also: B<--csv> B<{>I<n>B<}> B<--trim> B<--link>
 
 
-=item B<--combineexec> I<name> (beta testing)
+=item B<--combineexec> I<name>
 
-=item B<--combine-executable> I<name> (beta testing)
+=item B<--combine-executable> I<name>
 
 Combine GNU B<parallel> with another program into a single executable.
 

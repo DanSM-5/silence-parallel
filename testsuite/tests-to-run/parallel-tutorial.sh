@@ -59,11 +59,11 @@ perl -ne '$/="\n\n"; /^Output/../^[^O]\S/ and next; /^  / and print;' "$testsuit
               # Remote script
               s/(PARALLEL_PID\D+)\d+/${1}000000/g;
               # sql timing
-              s/,[a-z]*,\d+.\d+,\d+.\d+/,:,000000000.000,0.000/g;
+              s/,[a-z0-9]*,\d+.\d+,\d+.\d+/,:,000000000.000,0.000/g;
               # /usr/bin/time -f %e
               s/^(\d+)\.\d+$/$1/;
               # --workdir ...
-              s:parallel/tmp/[a-z]+-\d+-1:TMPWORKDIR:g;
+              s:parallel/tmp/[a-z0-9]+-\d+-1:TMPWORKDIR:g;
 	      # .../privat/parallel2/
 	      s='$srcdir'==;
               # + cat ... | (Bash outputs these in random order)
