@@ -1661,7 +1661,23 @@ https://github.com/gdm85/coshell
 
 =head2 DIFFERENCES BETWEEN spread AND GNU Parallel
 
-B<spread> runs commands on all directories.
+=over
+
+=item - - - I4 - - I7
+
+=item M1 - - - - -
+
+=item O1 O2 O3 O4 O5 O6 - O8 - O10
+
+=item - - - - - - -
+
+=item - - - - - - - - -
+
+=item - -
+
+=back
+
+B<spread> runs commands on all directories. It does not run jobs in parallel.
 
 It can be emulated with GNU B<parallel> using this Bash function:
 
@@ -1672,9 +1688,8 @@ It can be emulated with GNU B<parallel> using this Bash function:
     parallel $(_cmds "$@")'|| echo exit status $?' ::: */
   }
 
-This works except for the B<--exclude> option.
-
-(Last checked: 2017-11)
+https://github.com/tfogo/spread
+(Last checked: 2024-04)
 
 
 =head2 DIFFERENCES BETWEEN pyargs AND GNU Parallel
