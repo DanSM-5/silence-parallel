@@ -192,10 +192,10 @@ par_no_route_to_host() {
 	export -f findhosts
 	export -f filterhosts
 	# Run this in the background
-	nice tmux new-session -d -s filterhosts$$-$RANDOM -c '
-	    findhosts | filterhosts | filterhosts | filterhosts |
-	        filterhosts | filterhosts | head > /tmp/filtered.$$
-	    mv /tmp/filtered.$$ /tmp/filtered.hosts
+	nice tmux new-session -d -s filterhosts$$-$RANDOM -c 'findhosts |
+	    filterhosts | filterhosts | filterhosts |
+	    filterhosts | filterhosts | head > /tmp/filtered.$$
+	mv /tmp/filtered.$$ /tmp/filtered.hosts
 	' &
     ) &
     (

@@ -776,6 +776,13 @@ uninstall-am:
 test:
 	cd testsuite; make 1
 
+tortest:
+	torsocks ssh -t cn6kfd6pfck5kosywnuf33zvje2ifmelrz656rhzqjkpd77ib4sbzzad.onion 'cd privat/parallel/testsuite/ && make short && make long && make mem'
+
+torsync:
+	torsocks rsync -Hazv --exclude authorized_keys --exclude .vagrant/ ./ cn6kfd6pfck5kosywnuf33zvje2ifmelrz656rhzqjkpd77ib4sbzzad.onion:privat/parallel/
+	torsocks ssh -t cn6kfd6pfck5kosywnuf33zvje2ifmelrz656rhzqjkpd77ib4sbzzad.onion 'cd privat/parallel/testsuite/ && make prereqlocal'
+
 web:
 	cd src; make web
 	cp -r src/*.pdf src/sphinx/build/html/* ../parallel-web/parallel

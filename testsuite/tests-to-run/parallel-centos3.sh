@@ -93,6 +93,7 @@ par_shellshock_bug() {
 #   We can safely ignore those.
 export LC_ALL=C
 export TMPDIR=/tmp
+unset DISPLAY
 env_parallel --env par_shellshock_bug --env LC_ALL --env SSHLOGIN2 --env _ \
 	     -vj9 -k --joblog /tmp/jl-`basename $0` --retries 3 \
 	     -S $SSHLOGIN1 --tag '{} 2>&1' \
