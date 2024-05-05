@@ -777,11 +777,18 @@ test:
 	cd testsuite; make 1
 
 tortest:
-	torsocks ssh -t cn6kfd6pfck5kosywnuf33zvje2ifmelrz656rhzqjkpd77ib4sbzzad.onion 'cd privat/parallel/testsuite/ && make short && make long && make mem'
+	torsocks ssh -t tortest 'export SSH_AUTH_SOCK=`cat ~/.ssh/SSH_AUTH_SOCK`;\
+                                 export SSH_AGENT_PID=`cat ~/.ssh/SSH_AGENT_PID`;\
+                                 cd privat/parallel/testsuite/ &&\
+                                   make short && make long && make mem'
+	make torresults
+
+torresults:
+	torsocks rsync -Hazv --progress --exclude authorized_keys --exclude .vagrant/ tortest:privat/parallel/testsuite/actual-results/ testsuite/actual-results/
 
 torsync:
-	torsocks rsync -Hazv --exclude authorized_keys --exclude .vagrant/ ./ cn6kfd6pfck5kosywnuf33zvje2ifmelrz656rhzqjkpd77ib4sbzzad.onion:privat/parallel/
-	torsocks ssh -t cn6kfd6pfck5kosywnuf33zvje2ifmelrz656rhzqjkpd77ib4sbzzad.onion 'cd privat/parallel/testsuite/ && make prereqlocal'
+	torsocks rsync -Hazv --progress --exclude authorized_keys --exclude .vagrant/ ./ tortest:privat/parallel/
+	make tortest
 
 web:
 	cd src; make web

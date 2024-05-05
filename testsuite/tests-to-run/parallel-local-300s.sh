@@ -110,7 +110,7 @@ par_over_4GB() {
 	nice md5sum
 }
 
-par_mem_leak() {
+par__mem_leak() {
     echo "### test for mem leak"
 
     export parallel=parallel
@@ -161,7 +161,7 @@ par_mem_leak() {
     fi
 }
 
-par_halt_on_error() {
+par_xhalt_on_error() {
     mytest() {
 	HALT=$1
 	BOOL1=$2
@@ -183,7 +183,7 @@ par_halt_on_error() {
     parallel -j1 -k --tag mytest ::: -2 -1 0 1 2 ::: true false ::: true false
 }
 
-par_test_build_and_install() {
+par__test_build_and_install() {
     cd ~/privat/parallel
     # Make a .tar.gz file
     stdout make dist |

@@ -28,6 +28,7 @@ par_sshlogin_with_comma() {
 
 par_sshpass_with_password() {
     echo '### sshpass'
+    . ~/.passwords
     echo OK | parallel -S "sshpass -p $withpassword ssh withpassword@lo:22" echo
     echo OK | parallel -S withpassword:"$withpassword"@lo:22 echo
     export SSHPASS="$withpassword"

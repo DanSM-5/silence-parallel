@@ -591,7 +591,8 @@ par_tmp_full() {
     sudo mount -t tmpfs -o size=10% none $SHM
 
     echo "### Test --tmpdir running full. bug #40733 was caused by this"
-    stdout parallel -j1 --tmpdir $SHM cat /dev/zero ::: dummy
+    stdout parallel -j1 --tmpdir $SHM cat /dev/zero ::: dummy |
+	grep -v 'Warning:.*No space left on device during global destruction'
 }
 
 par_jobs_file() {

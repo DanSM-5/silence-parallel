@@ -116,7 +116,7 @@ start=(stdout ping -w 1 -c 1 {} && ssh vagrant@{} echo ssh {} works || \
     (cat ../../authorized_keys | vagrant ssh -c "cat >>.ssh/authorized_keys"; \
      vagrant ssh -c "sudo /sbin/ifconfig eth1 172.27.27.3"); \
    ssh-keygen -R {}; \
-   stdout wssh -oStrictHostKeyChecking=accept-new vagrant@{} echo {} is up) ) | \
+   stdout wssh -oStrictHostKeyChecking=accept-new vagrant@{} echo ssh {} started and works) ) | \
   grep -Ev "${ignore}"
 
 stop=(stdout ping -w 1 -c 1 {} && \

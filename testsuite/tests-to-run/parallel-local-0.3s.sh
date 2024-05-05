@@ -419,8 +419,8 @@ par_disk_full() {
     ) >/dev/null 2>/dev/null
 
     cat /dev/zero >$SMALLDISK/out
-    parallel --tmpdir $SMALLDISK echo ::: OK
-
+    stdout parallel --tmpdir $SMALLDISK echo ::: OK |
+	grep -v 'Warning: unable to close filehandle.* No space left on device'
     rm $SMALLDISK/out
 
     sudo umount -l /tmp/smalldisk.img
