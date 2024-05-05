@@ -559,7 +559,7 @@ par__test_XI_mI	a9 b1 2 3 4 5 6 7 8 9
 par__test_XI_mI	a10 b1 2 3 4 5 6 7 8 9 10
 par__test_cpu_detection_cpuinfo	2-8-8-8 Xeon 8 core server in Germany
 par__test_cpu_detection_cpuinfo	2 8 8 8
-par__test_cpu_detection_cpuinfo	4-48-48-48 Dell R815 4 CPU 48-core
+par__test_cpu_detection_cpuinfo	4-48-48-48 Dell R815 4 CPU 48-core Opteron 6174
 par__test_cpu_detection_cpuinfo	4 24 48 24
 par__test_cpu_detection_cpuinfo	1-4-8-4 4-core/8 thread Lenovo T480
 par__test_cpu_detection_cpuinfo	1 4 8 4
@@ -579,6 +579,8 @@ par__test_cpu_detection_cpuinfo	1-4-8-4 Lenovo E540 i7-4712MQ (PROSA stud organi
 par__test_cpu_detection_cpuinfo	1 4 8 4
 par__test_cpu_detection_cpuinfo	1-4-8-4 Core i7-3632QM Acer laptop
 par__test_cpu_detection_cpuinfo	1 4 8 4
+par__test_cpu_detection_cpuinfo	1-16-24-16 8*2 thread + 8*1 threads Intel Core i7-13700HX
+par__test_cpu_detection_cpuinfo	1 12 24 12
 par__test_cpu_detection_cpuinfo	1-2-4-2 Core i5-2410M laptop firewall
 par__test_cpu_detection_cpuinfo	1 2 4 2
 par__test_cpu_detection_cpuinfo	1-2-2-2 AMD Opteron 244 dual core laptop(?)
@@ -611,6 +613,8 @@ par__test_cpu_detection_lscpu	1-4-8-4 Lenovo E540 i7-4712MQ (PROSA stud organize
 par__test_cpu_detection_lscpu	1 4 8 4
 par__test_cpu_detection_lscpu	1-4-8-4 Core i7-3632QM Acer laptop
 par__test_cpu_detection_lscpu	1 4 8 4
+par__test_cpu_detection_lscpu	1-16-24-16 8*2 thread + 8*1 threads Intel Core i7-13700HX
+par__test_cpu_detection_lscpu	1 12 24 12
 par__test_cpu_detection_lscpu	1-2-4-2 Core i5-2410M laptop firewall
 par__test_cpu_detection_lscpu	1 2 4 2
 par__test_cpu_detection_lscpu	1-8-8-8 Huawei P Smart Octa-core (4x2.36 GHz Cortex-A53 & 4x1.7 GHz Cortex-A53)
@@ -618,12 +622,15 @@ par__test_cpu_detection_lscpu	2 8 8 8
 par__test_cpu_detection_lscpu	1-4-4-4 x96 quad-core Android TV-box
 par__test_cpu_detection_lscpu	1 1 1 1
 par__test_cpu_detection_topology	4-64-64-64 Dell R815 4 CPU 64-core
+par__test_cpu_detection_topology	4 8 8 8
 par__test_cpu_detection_topology	1-2-2-2 AMD Neo N36L Dual-Core Processor
 par__test_cpu_detection_topology	1 2 2 2
 par__test_cpu_detection_topology	1-4-8-4 Lenovo E540 i7-4712MQ (PROSA stud organizer)
 par__test_cpu_detection_topology	1 4 8 4
 par__test_cpu_detection_topology	1-2-4-2 ThinkPad A475 AMD PRO A12-8830B R7 (64g)
 par__test_cpu_detection_topology	1 2 4 2
+par__test_cpu_detection_topology	1-16-24-16 8*2 thread + 8*1 threads Intel Core i7-13700HX
+par__test_cpu_detection_topology	1 4 8 4
 par_children_receive_sig	### Do children receive --termseq signals
 par_children_receive_sig	parallel: Warning: This job was killed because it timed out:
 par_children_receive_sig	parallel: Warning: show_signals ''

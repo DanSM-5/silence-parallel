@@ -5458,6 +5458,13 @@ sub onall($@) {
     for my $host (sort keys %Global::host) {
 	my $sshlogin = $Global::host{$host};
 	my $qsshlogin = Q($sshlogin->string());
+	my $qsshloginpw = Q($sshlogin->pwstring());
+	if($qsshloginpw ne $qsshlogin) {
+	    ::warning_once("Using password or SSHPASS with --(n)onall ".
+			   "exposes the password",
+			   "on the command line, ".
+			   "making it visible to local users via `ps`.");
+	}
 	my $joblog = tmp_joblog($opt::joblog);
 	if($joblog) {
 	    push @joblogs, $joblog;
@@ -5466,8 +5473,7 @@ sub onall($@) {
 	my $quad = $opt::arg_file_sep || "::::";
 	# If PARALLEL_ENV is set: Pass it on
 	my $penv=$Global::parallel_env ?
-	    "PARALLEL_ENV=".Q($Global::parallel_env) :
-	    '';
+	    "PARALLEL_ENV=".Q($Global::parallel_env) : '';
 	my $results;
 	if(defined $opt::results) {
 	    $results = Q($opt::results) . $qsshlogin;
@@ -5475,12 +5481,12 @@ sub onall($@) {
 	::debug("init", "$penv $0 $suboptions -j1 $joblog ",
 		((defined $opt::tag) ? "--tagstring ".$qsshlogin : ""),
 		((defined $opt::results) ? "--results ".$results : ""),
-		" -S $qsshlogin ",
+		" -S $qsshloginpw ",
 		join(" ",shell_quote(@command,$quad,@argfiles)),"\n");
 	print $parallel_fh "$penv $0 $suboptions -j1 $joblog ",
 	    ((defined $opt::tag) ? "--tagstring ".$qsshlogin : ""),
 	    ((defined $opt::results) ? "--results ".$results : ""),
-	    " -S $qsshlogin ",
+	    " -S $qsshloginpw ",
 	    join(" ",shell_quote(@command,$quad,@argfiles)),"\0";
     }
     close $parallel_fh;
@@ -7295,11 +7301,20 @@ sub new($$) {
     #	[ncpu/]/usr/bin/ssh user:pass@server:port
     if ($s =~ s:^(\d+)/::) { $ncpus = $1; }
 
+    # Why disallow space in password?
+    # Example:
+    #   C:/bin/ssh user:C:/bin/ssh@host
+    # Should this parse as:
+    #   user 'C' with password '/bin/ssh user:C:/bin/ssh'
+    # or
+    #   cmd 'C:/bin/ssh' user 'user' with password 'C:/bin/ssh'
+    # This is impossible to determine.
+    # With space forbidden in password it uniquely parses as the 2nd.
     #	[/usr/bin/ssh ]user:pass@server:port
     if($s =~ s/^(.*) //) { $sshcommand = $1; }
 
     #	[user:pass@]server:port
-    if($s =~ s/^([^@]+)@//) {
+    if($s =~ s/^(.+)@//) {
 	my $userpw = $1;
 	# user[:pass]
 	if($userpw =~ s/:(.*)//) {
@@ -7356,6 +7371,12 @@ sub new($$) {
 	($user && $user."@").
 	($host && $host).
 	($port && ":$port");
+    my $pwstring =
+	# Only include the sshcommand in $string if it is set by user
+	($sshcommand && $sshcommand." ").
+	($user && $user. ($password && ":".$password)."@").
+	($host && $host).
+	($port && ":$port");
     if($host eq ':') {
 	$local = 1;
 	$string = ":";
@@ -7370,6 +7391,7 @@ sub new($$) {
     $no_slash_string =~ s/[^-a-z0-9:]/_/gi;
     return bless {
 	'string' => $string,
+	    'pwstring' => $pwstring,
 	    'jobs_running' => 0,
 	    'jobs_completed' => 0,
 	    'maxlength' => undef,
@@ -7407,6 +7429,11 @@ sub DESTROY($) {
 sub string($) {
     my $self = shift;
     return $self->{'string'};
+}
+
+sub pwstring($) {
+    my $self = shift;
+    return $self->{'pwstring'};
 }
 
 sub host($) {
@@ -7456,7 +7483,6 @@ sub sshcmd($) {
 	}
 	push @local, "-S", ::Q($control_path);
     }
-
     return "@local";
 }
 

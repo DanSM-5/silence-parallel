@@ -19,7 +19,7 @@ torresults:
 
 
 torsync:
-	torsocks rsync -Hazv --progress --exclude authorized_keys --exclude .vagrant/ ./ tortest:privat/parallel/
+	torsocks rsync -Hazv --progress --exclude authorized_keys --exclude .vagrant/ --exclude actual-results --delete ./ tortest:privat/parallel/
 	make tortest
 
 web:

@@ -255,11 +255,12 @@ Argument from input source I<n> or the I<n>'th argument.
 
 This positional replacement string will be replaced by the input from
 input source I<n> (when used with B<--arg-file> or B<::::>) or with the
-I<n>'th argument (when used with B<-N>). If I<n> is negative it refers
-to the I<n>'th last argument.
+I<n>'th argument (when used with B<-N> or B<--colsep>).
+
+If I<n> is negative it refers to the I<n>'th last argument.
 
 See also: B<{}> B<{>I<n>.B<}> B<{>I<n>/B<}> B<{>I<n>//B<}>
-B<{>I<n>/.B<}>
+B<{>I<n>/.B<}> B<--colsep>
 
 
 =item B<{>I<n>.B<}>
@@ -827,7 +828,8 @@ columns. The n'th column can be accessed using B<{>I<n>B<}> or
 B<{>I<n>.B<}>. E.g. B<{3}> is the 3rd column.
 
 If there are more input sources, each input source will be separated,
-but the columns from each input source will be linked.
+but the columns from each input source will be linked. Here {4} refers
+to column 2 in input source 2:
 
   parallel --colsep '-' echo {4} {3} {2} {1} \
     ::: A-B C-D ::: e-f g-h
@@ -1773,7 +1775,7 @@ If in doubt use B<-X> as that will most likely do what is needed.
 See also: B<-X> B<--xargs>
 
 
-=item B<--memfree> I<size>
+=item B<--memfree> I<size> (alpha testing)
 
 Minimum memory free when starting another job.
 
@@ -1785,10 +1787,7 @@ are free, no more jobs will be started. If less than 50% I<size> bytes
 are free, the youngest job will be killed (as per B<--term-seq>), and
 put back on the queue to be run later.
 
-B<--retries> must be set to determine how many times GNU B<parallel>
-should retry a given job.
-
-See also: UNIT PREFIX B<--term-seq> B<--retries> B<--memsuspend>
+See also: UNIT PREFIX B<--term-seq> B<--memsuspend>
 
 
 =item B<--memsuspend> I<size>
@@ -1880,7 +1879,7 @@ is somewhat slower than B<--block>.
 See also: UNIT PREFIX B<--pipe> B<--block> B<-m> B<-X> B<--max-args>
 
 
-=item B<--nonall>
+=item B<--nonall> (alpha testing)
 
 B<--onall> with no arguments.
 
@@ -1895,7 +1894,7 @@ servers.
 See also: B<--onall> B<--sshlogin>
 
 
-=item B<--onall>
+=item B<--onall> (alpha testing)
 
 Run all the jobs on all computers given with B<--sshlogin>.
 
@@ -3115,11 +3114,11 @@ I<duration> is in seconds, but can be postfixed with s, m, h, or d.
 See also: TIME POSTFIXES B<--sshlogin> B<--delay>
 
 
-=item B<--sshlogin> I<[@hostgroups/][ncpus/]sshlogin[,[@hostgroups/][ncpus/]sshlogin[,...]]>
+=item B<--sshlogin> I<[@hostgroups/][ncpus/][[user][:[password]]@]host[:port][,...]>
 
 =item B<--sshlogin> I<@hostgroup>
 
-=item B<-S> I<[@hostgroups/][ncpus/]sshlogin[,[@hostgroups/][ncpus/]sshlogin[,...]]>
+=item B<-S> I<[@hostgroups/][ncpus/][ssh command][[user][:[password]]@]host[:port][,...]>
 
 =item B<-S> I<@hostgroup>
 
@@ -3127,46 +3126,103 @@ Distribute jobs to remote computers.
 
 The jobs will be run on a list of remote computers.
 
-If I<hostgroups> is given, the I<sshlogin> will be added to that
-hostgroup. Multiple hostgroups are separated by '+'. The I<sshlogin>
+=over 15
+
+=item Z<> @I<hostgroups>/
+
+One or more groups this sshlogin belongs to (See
+B<--hostgroup>). Multiple groups are separated by '+'. The I<sshlogin>
 will always be added to a hostgroup named the same as I<sshlogin>.
 
 If only the I<@hostgroup> is given, only the sshlogins in that
 hostgroup will be used. Multiple I<@hostgroup> can be given.
 
+Examples: B<@prod/>, B<@dev+remote/>
+
+
+=item Z<> I<ncpus>/
+
+Force number of CPU threads.
+
 GNU B<parallel> will determine the number of CPUs on the remote
 computers and run the number of jobs as specified by B<-j>.  If the
 number I<ncpus> is given GNU B<parallel> will use this number for
-number of CPUs on the host. Normally I<ncpus> will not be
+number of CPU threads on the host. Normally I<ncpus> will not be
 needed.
 
-An I<sshlogin> is of the form:
+Examples: B<4/>, B<12/>
 
-  [sshcommand [options]] [username[:password]@]hostname
 
-If I<password> is given, B<sshpass> will be used. Otherwise the
-sshlogin must not require a password (B<ssh-agent> and B<ssh-copy-id>
-may help with that).
+=item Z<> I<ssh command>
 
-If the hostname is an IPv6 address, the port can be given separated
-with p or #. If the address is enclosed in [] you can also use :.
-E.g. ::1p2222 ::1#2222 [::1]:2222
+The I<ssh command> to use. The I<ssh command> must be followed by a space.
 
-Ranges of hostnames can be given in [] like this: server[1,3,8-10]
-(for server1, server3, server8, server9, server10) or
-server[001,003,008-010] (for server001, server003, server008,
-server009, server010). With Bash's brace expansion you can do:
--S{dev,prod}[001-100] to get -Sdev[001-100] -Sprod[001-100]
-More [] are allowed: server[1-10].cluster[1-5].example.net
+Example: B</usr/bin/lsh -z >, B<autossh -C >
 
-The sshlogin ':' is special, it means 'no ssh' and will therefore run
-on the local computer.
 
-The sshlogin '..' is special, it read sshlogins from ~/.parallel/sshloginfile or
-$XDG_CONFIG_HOME/parallel/sshloginfile
+=item Z<> I<user>
 
-The sshlogin '-' is special, too, it read sshlogins from stdin
-(standard input).
+User name to log in as. Defaults to the current user name.
+
+Examples: B<alice>, B<bob>
+
+
+=item Z<> :I<password>
+
+Use I<password> for authentication (using B<sshpass>). B<password>
+cannot contain space. If I<password> is omitted use B<$SSHPASS>. If
+B<:> is omitted use B<ssh>'s default authentication. In this case
+login must not require a password (B<ssh-agent> and B<ssh-copy-id> may
+help with that).
+
+Examples: B<:mypassword>, B<:>
+
+
+=item Z<> I<host>
+
+Hostname or IP address of server.
+
+Examples: B<server01>, B<10.1.2.3>, B<[2001:470:142:4::a]>,
+B<2001:470:142:5::116>.
+
+Ranges of hostnames can be given in [] like this: B<server[1,3,8-10]>
+(for B<server1, server3, server8, server9, server10>) or
+B<server[001,003,008-010]> (for B<server001, server003, server008,
+server009, server010>). With Bash's brace expansion you can do:
+B<-S{dev,prod}[001-100]> to get B<-Sdev[001-100] -Sprod[001-100]> More
+[]'s are allowed: B<server[01-10].cluster[1-5].example.net>
+
+=item Z<> :I<port>
+
+Port number to connect to.
+
+Examples: B<:22>, B<:2222>.
+
+For IPv6 you can use B<p> or B<#> instead of B<:>.
+
+Examples: B<[2001:470:142:4::a]:2222>, B<2001:470:142:5::116p2222>,
+B<2001:470:142:5::116#22222>
+
+=back
+
+There are 3 names with special meaning:
+
+=over 4
+
+=item Z<> I<:>
+
+Means 'no ssh' and will therefore run on the local computer.
+
+=item Z<> I<..>
+
+Read sshlogins from B<~/.parallel/sshloginfile> or
+B<$XDG_CONFIG_HOME/parallel/sshloginfile>
+
+=item Z<> I<->
+
+Read sshlogins from stdin (standard input).
+
+=back
 
 To specify more sshlogins separate the sshlogins by comma, newline (in
 the same string), or repeat the options multiple times.
@@ -3174,7 +3230,7 @@ the same string), or repeat the options multiple times.
 GNU B<parallel> splits on , (comma) so if your sshlogin contains ,
 (comma) you need to replace it with \, or ,,
 
-For examples: see B<--sshloginfile>.
+See B<--sshloginfile> for complete examples.
 
 The remote host must have GNU B<parallel> installed.
 
@@ -3196,8 +3252,9 @@ lines. Empty lines and lines starting with '#' are ignored. Example:
   username@server2.example.com
   8/my-8-cpu-server.example.com
   2/my_other_username@my-dualcore.example.net
-  # This server has SSH running on port 2222
+  # These servers have SSH running on port 2222
   ssh -p 2222 server.example.net
+  server01.example.net:2222
   4/ssh -p 2222 quadserver.example.net
   # Use a different ssh program
   myssh -p 2222 -l myusername hexacpu.example.net
@@ -3207,12 +3264,23 @@ lines. Empty lines and lines starting with '#' are ignored. Example:
   6//usr/local/bin/myssh -p 2222 -l myusername hexacpu
   # Assume 16 CPUs on the local computer
   16/:
+  # Use password for authentication
+  user:password@host
+  # Use $SSHPASS for authentication
+  user:@host
+  # Use $SSHPASS for authentication and current username
+  :@host
+  # Use password for authentication and current username
+  :password@host
+  # Login in as bob with :p@ss:w0rd@ as password
+  bob::p@ss:w0rd@@host
   # Put server1 in hostgroup1
   @hostgroup1/server1
   # Put myusername@server2 in hostgroup1+hostgroup2
   @hostgroup1+hostgroup2/myusername@server2
   # Force 4 CPUs and put 'ssh -p 2222 server3' in hostgroup1
   @hostgroup1/4/ssh -p 2222 server3
+  # TODO example with ,,
 
 When using a different ssh program the last argument must be the hostname.
 
@@ -3221,14 +3289,23 @@ Multiple B<--sshloginfile> are allowed.
 GNU B<parallel> will first look for the file in current dir; if that
 fails it look for the file in ~/.parallel.
 
-The sshloginfile '..' is special, it read sshlogins from
-~/.parallel/sshloginfile
+There are 3 names with special meaning:
 
-The sshloginfile '.' is special, it read sshlogins from
-/etc/parallel/sshloginfile
+=over 4
 
-The sshloginfile '-' is special, too, it read sshlogins from stdin
-(standard input).
+=item Z<> I<..>
+
+Read sshlogins from B<~/.parallel/sshloginfile>
+
+=item Z<> I<.>
+
+Read sshlogins from B</etc/parallel/sshloginfile>
+
+=item Z<> I<->
+
+Read sshlogins from stdin (standard input).
+
+=back
 
 If the sshloginfile is changed it will be re-read when a job finishes
 though at most once per second. This makes it possible to add and
@@ -3820,7 +3897,7 @@ characters that have special meaning in shell:
 
 and depending on context these needs to be quoted, too:
 
-  ~ & # ! ? space * {
+  ~ & ! ? space * { #
 
 Therefore most people will never need more quoting than putting '\'
 in front of the special characters.

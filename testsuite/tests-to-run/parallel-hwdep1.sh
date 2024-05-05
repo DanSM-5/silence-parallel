@@ -219,7 +219,7 @@ par__environment_too_big_zsh() {
     bigfunc() { true; }
 _EOF
   )
-  ssh zsh@lo "$myscript"
+    stdout ssh zsh@lo "$myscript" | perl -pe 's/(\d)\d\d\d\d/${1}XXXX/g'
 }
 
 par_progress() {
