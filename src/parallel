@@ -1985,10 +1985,7 @@ sub options_completion_hash() {
 	 # https://git.savannah.gnu.org/cgit/parallel.git/tree/doc/citation-notice-faq.txt
 	 # You accept to be put in a public hall-of-shame by removing
 	 # these lines
-	 ("bibtex|citation".
-	  "[Print the citation notice and BibTeX entry for GNU parallel, ".
-	  "silence citation notice for all future runs, and exit. ".
-	  "It will not run any commands]"
+	 ("bibtex|citation"
 	  => \$opt::citation),
 	 "will-cite|willcite|nn|nonotice|no-notice" => \$opt::willcite,
 	 # Termination and retries
@@ -2226,14 +2223,7 @@ sub parse_options(@) {
     init_globals();
     my @argv_before = @ARGV;
     @ARGV = read_options();
-    # Before changing these line, please read
-    # https://www.gnu.org/software/parallel/parallel_design.html#citation-notice
-    # https://git.savannah.gnu.org/cgit/parallel.git/tree/doc/citation-notice-faq.txt
-    # You accept to be added to a public hall-of-shame by removing the lines
-    if(defined $opt::citation) {
-	citation(\@argv_before,\@ARGV);
-	wait_and_exit(0);
-    }
+		
     # no-* overrides *
     if($opt::nokeeporder) { $opt::keeporder = undef; }
 
@@ -2621,18 +2611,6 @@ sub parse_options(@) {
     # https://en.wikipedia.org/wiki/Red_Hat_Enterprise_Linux_derivatives#Legal_aspects
     # https://tm.joomla.org/trademark-faq.html
     # https://www.mozilla.org/en-US/foundation/trademarks/faq/
-    #
-    # Running 'parallel --citation' one single time takes less than 10
-    # seconds, and will silence the citation notice for future
-    # runs. If that is too much trouble for you, why not use one of
-    # the alternatives instead?
-    # See a list in: 'man parallel_alternatives'
-    #
-    # If you want GNU Parallel to be maintained in the future, you
-    # should keep this line:
-    citation_notice();
-    # This is because _YOU_ actively make it harder to justify
-    # spending time developing GNU Parallel by removing it.
 
     # If you disagree, please read (especially 77-):
     # https://www.fordfoundation.org/media/2976/roads-and-bridges-the-unseen-labor-behind-our-digital-infrastructure.pdf
@@ -5845,6 +5823,7 @@ sub usage() {
 	 "  Tange, O. (2024, March 22). GNU Parallel 20240322 ('Sweden').",
 	 "  Zenodo. https://doi.org/10.5281/zenodo.10901541",
 	 "",
+
 	 # Before changing these lines, please read
 	 # https://www.gnu.org/software/parallel/parallel_design.html#citation-notice
 	 # https://git.savannah.gnu.org/cgit/parallel.git/tree/doc/citation-notice-faq.txt
@@ -5861,60 +5840,6 @@ sub citation_notice() {
     # if stderr redirected: do nothing
     # if $PARALLEL_HOME/will-cite: do nothing
     # else: print citation notice to stderr
-    if($opt::willcite
-       or
-       $opt::plain
-       or
-       not -t $Global::original_stderr
-       or
-       grep { -e "$_/will-cite" } @Global::config_dirs) {
-	# skip
-    } else {
-	::status
-	    ("Academic tradition requires you to cite works you base your article on.",
-	     "If you use programs that use GNU Parallel to process data for an article in a",
-	     "scientific publication, please cite:",
-	     "",
-	     "  Tange, O. (2024, March 22). GNU Parallel 20240322 ('Sweden').",
-	     "  Zenodo. https://doi.org/10.5281/zenodo.10901541",
-	     "",
-	     # Before changing these line,  please read
-	     # https://www.gnu.org/software/parallel/parallel_design.html#citation-notice and
-	     # https://git.savannah.gnu.org/cgit/parallel.git/tree/doc/citation-notice-faq.txt
-	     # You accept to be put in a public hall of shame by
-	     # removing these lines
-	     "This helps funding further development; AND IT WON'T COST YOU A CENT.",
-	     "If you pay 10000 EUR you should feel free to use GNU Parallel without citing.",
-	     "",
-	     "More about funding GNU Parallel and the citation notice:",
-	     "https://www.gnu.org/software/parallel/parallel_design.html#citation-notice",
-	     "",
-	     "To silence this citation notice: run 'parallel --citation' once.",
-	     ""
-	    );
-	mkdir $Global::config_dir;
-	# Number of times the user has run GNU Parallel without showing
-	# willingness to cite
-	my $runs = 0;
-	if(open (my $fh, "<", $Global::config_dir.
-		 "/runs-without-willing-to-cite")) {
-	    $runs = <$fh>;
-	    close $fh;
-	}
-	$runs++;
-	if(open (my $fh, ">", $Global::config_dir.
-		 "/runs-without-willing-to-cite")) {
-	    print $fh $runs;
-	    close $fh;
-	    if($runs >= 10) {
-		::status("Come on: You have run parallel $runs times. ".
-			 "Isn't it about time ",
-			 "you run 'parallel --citation' once to silence ".
-			 "the citation notice?",
-			 "");
-	    }
-	}
-    }
 }
 
 sub status(@) {
@@ -5988,90 +5913,6 @@ sub version() {
 }
 
 sub citation() {
-    # Returns: N/A
-    my ($all_argv_ref,$argv_options_removed_ref) = @_;
-    my $all_argv = "@$all_argv_ref";
-    my $no_opts = "@$argv_options_removed_ref";
-    $all_argv=~s/--citation//;
-    if($all_argv ne $no_opts) {
-	::warning("--citation ignores all other options and arguments.");
-	::status("");
-    }
-
-    ::status(
-	"Academic tradition requires you to cite works you base your article on.",
-	"If you use programs that use GNU Parallel to process data for an article in a",
-	"scientific publication, please cite:",
-	"",
-	"\@software{tange_2024_10901541,",
-	"      author       = {Tange, Ole},",
-	"      title        = {GNU Parallel 20240322 ('Sweden')},",
-	"      month        = Mar,",
-	"      year         = 2023,",
-	"      note         = {{GNU Parallel is a general parallelizer to run",
-	"                       multiple serial command line programs in parallel",
-	"                       without changing them.}},",
-	"      publisher    = {Zenodo},",
-	"      doi          = {10.5281/zenodo.10901541},",
-	"      url          = {https://doi.org/10.5281/zenodo.10901541}",
-	"}",
-	"",
-	"(Feel free to use \\nocite{tange_2024_10901541})",
-	"",
-	# Before changing these lines, please read
-	# https://www.gnu.org/software/parallel/parallel_design.html#citation-notice and
-	# https://git.savannah.gnu.org/cgit/parallel.git/tree/doc/citation-notice-faq.txt
-	# You accept to be put in a public hall of shame by removing
-	# these lines
-	"This helps funding further development; AND IT WON'T COST YOU A CENT.",
-	"If you pay 10000 EUR you should feel free to use GNU Parallel without citing.",
-	"",
-	"More about funding GNU Parallel and the citation notice:",
-	"https://lists.gnu.org/archive/html/parallel/2013-11/msg00006.html",
-	"https://www.gnu.org/software/parallel/parallel_design.html#citation-notice",
-	"https://git.savannah.gnu.org/cgit/parallel.git/tree/doc/citation-notice-faq.txt",
-	""
-	);
-    while(not grep { -e "$_/will-cite" } @Global::config_dirs) {
-	print "\nType: 'will cite' and press enter.\n> ";
-	my $input = <STDIN>;
-	if(not defined $input) {
-	    exit(255);
-	}
-	if($input =~ /will cite/i) {
-	    if(mkdir $Global::config_dir) {
-                # Recompute @Global::config_dirs so we can break out of the loop.
-                init_globals();
-            }
-	    if(open (my $fh, ">", $Global::config_dir."/will-cite")) {
-		close $fh;
-		::status(
-		    "",
-		    "Thank you for your support: You are the reason why there is funding to",
-		    "continue maintaining GNU Parallel. On behalf of future versions of",
-		    "GNU Parallel, which would not exist without your support:",
-		    "",
-		    "  THANK YOU SO MUCH",
-		    "",
-		    "It is really appreciated. The citation notice is now silenced.",
-		    "");
-	    } else {
-		::status(
-		      "",
-		      "Thank you for your support. It is much appreciated. The citation",
-		      "cannot permanently be silenced. Use '--will-cite' instead.",
-		      "",
-		      "If you use '--will-cite' in scripts to be run by others you are making",
-		      "it harder for others to see the citation notice.  The development of",
-		      "GNU Parallel is indirectly financed through citations, so if users",
-		      "do not know they should cite then you are making it harder to finance",
-		      "development. However, if you pay 10000 EUR, you should feel free to",
-		      "use '--will-cite' in scripts.",
-		      "");
-		last;
-	    }
-	}
-    }
 }
 
 sub show_limits() {
