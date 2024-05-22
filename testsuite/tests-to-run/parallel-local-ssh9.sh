@@ -65,23 +65,25 @@ par_ksh_embed() {
     echo '--embed'
     parallel --embed | tac | perl -pe '
       /^parallel/ and not $seen++ and s{^}{
-echo \${a[1]}
-parset a echo ::: ParsetOK ParsetOK ParsetOK
-env_parallel echo ::: env_parallel_OK
-env_parallel --env myvar echo {} --env \\\$myvar ::: env_parallel
-myvar=OK
-parallel echo ::: parallel_OK
-PATH=/usr/sbin:/usr/bin:/sbin:/bin
-# Do not look for parallel in /usr/local/bin
-#. \`which env_parallel.ksh\`
-}
+        echo \${a[1]}
+        parset a echo ::: ParsetOK ParsetOK ParsetOK
+        env_parallel echo ::: env_parallel_OK
+        env_parallel --env myvar echo {} --env \\\$myvar ::: env_parallel
+        myvar=OK
+        parallel echo ::: parallel_OK
+        PATH=/usr/sbin:/usr/bin:/sbin:/bin
+        # Do not look for parallel in /usr/local/bin
+        #. \`which env_parallel.ksh\`
+      }
     ' | tac > parallel-embed
     chmod +x parallel-embed
     ./parallel-embed
     rm parallel-embed
 _EOF
   )
-  ssh ksh@lo "$myscript"
+  ssh ksh@lo "$myscript" |
+      # ./parallel-embed[XXX]: env_parallel[16122]: _which_PAR[15964]: perl: /usr/bin/perl: cannot exec
+      perl -pe 's/env_parallel[^:]*: _which_PAR[^:]*: //'
 }
 
 par_sh_embed() {

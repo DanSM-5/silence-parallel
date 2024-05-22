@@ -310,7 +310,7 @@ par__test_cpu_detection_topology() {
 	'
     }
     cpu20() {
-	echo '1-16-24-16 8*2 thread + 8*1 threads Intel Core i7-13700HX'
+	echo '1-16-24-16 8*2 thr + 8*1 thr Intel Core i7-13700HX (user submit)'
 	echo '
 	KLUv/QRovBQA1tU+IGBJ2wa2Edh2H/3+WsW1pqAixNFSp4VaZLdSOgQfA5ACMwA1ADcATO1J
 	9EsI6f//P65ZU+hjFfNJ/bjGHYG/E5T1fjgw67nF/3R4Jh4lRFYqGeWTyiMq/BEIRzMLcSll
@@ -974,7 +974,7 @@ par__test_cpu_detection_cpuinfo() {
 	' | unpack
     }
     cpu20() {
-	echo '1-16-24-16 8*2 thread + 8*1 threads Intel Core i7-13700HX'
+	echo '1-16-24-16 8*2 thr + 8*1 thr Intel Core i7-13700HX (user submit)'
 	echo '
 	KLUv/QRoXSEApjqgIyBtrAMBfUS1S7lyNhBkqR+VRby1HGkcIfAfpUMCoQwIwQaLnACNAJAA
 	LX4Zn3Z86/pt/rpvlN4QgwxJGnClhXdPzld527SrNxLxc8heffK1xyxR1NLZEqah89q9Q9Ze
@@ -1280,7 +1280,7 @@ par__test_cpu_detection_lscpu() {
 	' | unpack
     }
     cpu20() {
-	echo '1-16-24-16 8*2 thread + 8*1 threads Intel Core i7-13700HX'
+	echo '1-16-24-16 8*2 thr + 8*1 thr Intel Core i7-13700HX (user submit)'
 	echo '
 	KLUv/QRoxSAACkYADCkAb7g52NOaaG9pWWVp1EK7UMah1zodCwjsgmz4tfgH/PMzcUVV1Ypq
 	XsoAswCsALDiYJkWExTubWeGpVgcGJDHJOIB4lGeZGEwGAIeDEcjgwMIhuIWQu3JUsEBg1HA
@@ -1304,7 +1304,7 @@ par__test_cpu_detection_lscpu() {
 	KC9ROWX9fWoZ7C7CNABXLKPG2LjX44E/rCicwihACaxZnTc=
 	' | unpack
     }
-    
+	
     export -f $(compgen -A function | grep ^cpu)
     
     test_one() {

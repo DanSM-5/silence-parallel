@@ -194,10 +194,12 @@ par_shebang_wrap_gnuplot() {
     cat <<'EOF' > "$script"
 #!/usr/local/bin/parallel --shebang-wrap -k ARG={} /usr/bin/gnuplot
 
-print "Arguments ", system('echo $ARG')
+print "Arguments ", system('echo "$ARG"')
 EOF
     chmod 755 "$script"
-    "$script" arg1 arg2 "arg3.1  arg3.2"
+    stdout "$script" arg1 arg2 "arg3.1  arg3.2" |
+	# Gnuplot 6.0 inserts an extra space
+	perl -pe 's/rguments  /rguments /'
     rm "$script"
 }
 
@@ -312,5 +314,6 @@ export -f $(compgen -A function | grep par_)
 # Tested with -j1..8
 # -j6 was fastest
 #compgen -A function | grep par_ | sort | parallel -j$P --tag -k '{} 2>&1'
-compgen -A function | grep par_ | LC_ALL=C sort | parallel -j6 --tag -k '{} 2>&1'
+compgen -A function | G par_ "$@" | LC_ALL=C sort |
+    parallel -j6 --tag -k '{} 2>&1'
 rmdir "$TMPDIR" "$tmp"

@@ -2794,7 +2794,7 @@ sub check_invalid_option_combinations() {
 
 sub init_globals() {
     # Defaults:
-    $Global::version = 20240422;
+    $Global::version = 20240522;
     $Global::progname = 'parallel';
     $::name = "GNU Parallel";
     $Global::infinity = 2**31;
@@ -5853,8 +5853,8 @@ sub usage() {
 	 "If you use programs that use GNU Parallel to process data for an article in a",
 	 "scientific publication, please cite:",
 	 "",
-	 "  Tange, O. (2024, April 22). GNU Parallel 20240422 ('Børsen').",
-	 "  Zenodo. https://doi.org/10.5281/zenodo.11043435",
+	 "  Tange, O. (2024, May 22). GNU Parallel 20240522 ('Tbilisi').",
+	 "  Zenodo. https://doi.org/10.5281/zenodo.11247979",
 	 "",
 	 # Before changing these lines, please read
 	 # https://www.gnu.org/software/parallel/parallel_design.html#citation-notice
@@ -5886,8 +5886,8 @@ sub citation_notice() {
 	     "If you use programs that use GNU Parallel to process data for an article in a",
 	     "scientific publication, please cite:",
 	     "",
-	     "  Tange, O. (2024, April 22). GNU Parallel 20240422 ('Børsen').",
-	     "  Zenodo. https://doi.org/10.5281/zenodo.11043435",
+	     "  Tange, O. (2024, May 22). GNU Parallel 20240522 ('Tbilisi').",
+	     "  Zenodo. https://doi.org/10.5281/zenodo.11247979",
 	     "",
 	     # Before changing these line,  please read
 	     # https://www.gnu.org/software/parallel/parallel_design.html#citation-notice and
@@ -6014,20 +6014,20 @@ sub citation() {
 	"If you use programs that use GNU Parallel to process data for an article in a",
 	"scientific publication, please cite:",
 	"",
-	"\@software{tange_2024_11043435,",
+	"\@software{tange_2024_11247979,",
 	"      author       = {Tange, Ole},",
-	"      title        = {GNU Parallel 20240422 ('Børsen')},",
-	"      month        = Apr,",
+	"      title        = {GNU Parallel 20240522 ('Tbilisi')},",
+	"      month        = May,",
 	"      year         = 2023,",
 	"      note         = {{GNU Parallel is a general parallelizer to run",
 	"                       multiple serial command line programs in parallel",
 	"                       without changing them.}},",
 	"      publisher    = {Zenodo},",
-	"      doi          = {10.5281/zenodo.11043435},",
-	"      url          = {https://doi.org/10.5281/zenodo.11043435}",
+	"      doi          = {10.5281/zenodo.11247979},",
+	"      url          = {https://doi.org/10.5281/zenodo.11247979}",
 	"}",
 	"",
-	"(Feel free to use \\nocite{tange_2024_11043435})",
+	"(Feel free to use \\nocite{tange_2024_11247979})",
 	"",
 	# Before changing these lines, please read
 	# https://www.gnu.org/software/parallel/parallel_design.html#citation-notice and
@@ -11358,7 +11358,7 @@ sub should_be_retried($) {
     #	0 - do not retry
     #	1 - job queued for retry
     my $self = shift;
-    if(0 and $opt::memfree and $self->killreason() eq "mem") {
+    if($opt::memfree and $self->killreason() eq "mem") {
 	# Job was killed due to memfree => retry
 	return $self->retry();
     }

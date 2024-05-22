@@ -579,7 +579,7 @@ par__test_cpu_detection_cpuinfo	1-4-8-4 Lenovo E540 i7-4712MQ (PROSA stud organi
 par__test_cpu_detection_cpuinfo	1 4 8 4
 par__test_cpu_detection_cpuinfo	1-4-8-4 Core i7-3632QM Acer laptop
 par__test_cpu_detection_cpuinfo	1 4 8 4
-par__test_cpu_detection_cpuinfo	1-16-24-16 8*2 thread + 8*1 threads Intel Core i7-13700HX
+par__test_cpu_detection_cpuinfo	1-16-24-16 8*2 thr + 8*1 thr Intel Core i7-13700HX (user submit)
 par__test_cpu_detection_cpuinfo	1 12 24 12
 par__test_cpu_detection_cpuinfo	1-2-4-2 Core i5-2410M laptop firewall
 par__test_cpu_detection_cpuinfo	1 2 4 2
@@ -613,7 +613,7 @@ par__test_cpu_detection_lscpu	1-4-8-4 Lenovo E540 i7-4712MQ (PROSA stud organize
 par__test_cpu_detection_lscpu	1 4 8 4
 par__test_cpu_detection_lscpu	1-4-8-4 Core i7-3632QM Acer laptop
 par__test_cpu_detection_lscpu	1 4 8 4
-par__test_cpu_detection_lscpu	1-16-24-16 8*2 thread + 8*1 threads Intel Core i7-13700HX
+par__test_cpu_detection_lscpu	1-16-24-16 8*2 thr + 8*1 thr Intel Core i7-13700HX (user submit)
 par__test_cpu_detection_lscpu	1 12 24 12
 par__test_cpu_detection_lscpu	1-2-4-2 Core i5-2410M laptop firewall
 par__test_cpu_detection_lscpu	1 2 4 2
@@ -629,7 +629,7 @@ par__test_cpu_detection_topology	1-4-8-4 Lenovo E540 i7-4712MQ (PROSA stud organ
 par__test_cpu_detection_topology	1 4 8 4
 par__test_cpu_detection_topology	1-2-4-2 ThinkPad A475 AMD PRO A12-8830B R7 (64g)
 par__test_cpu_detection_topology	1 2 4 2
-par__test_cpu_detection_topology	1-16-24-16 8*2 thread + 8*1 threads Intel Core i7-13700HX
+par__test_cpu_detection_topology	1-16-24-16 8*2 thr + 8*1 thr Intel Core i7-13700HX (user submit)
 par__test_cpu_detection_topology	1 4 8 4
 par_children_receive_sig	### Do children receive --termseq signals
 par_children_receive_sig	parallel: Warning: This job was killed because it timed out:

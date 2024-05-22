@@ -13,9 +13,10 @@ install_packages() {
     test_pkgs="imagemagick expect autossh sshpass jq libpod-simple-perl"
     test_pkgs="$test_pkgs pod2pdf gawk lua5.3 clisp php-cli nodejs"
     test_pkgs="$test_pkgs mono-csharp-shell libevent-dev tcl libtext-csv-perl"
-    test_pkgs="$test_pkgs xterm libc6-i386 libcrypt1:i386 vagrant virtualbox"
+    test_pkgs="$test_pkgs xterm libc6-i386 libcrypt1:i386 virtualbox"
     test_pkgs="$test_pkgs libtest-nowarnings-perl xemacs21 pv zenity"
-    test_pkgs="$test_pkgs lsh-client lsh-utils torsocks net-tools"
+    test_pkgs="$test_pkgs lsh-client lsh-utils torsocks net-tools python-is-python3"
+    test_pkgs="$test_pkgs reiserfsprogs btrfs-progs exfatprogs f2fs-tools xfsprogs"
 
     # Debian package
     packaging_pkgs="dpkg-dev build-essential debhelper osc cvs automake"
@@ -40,12 +41,15 @@ install_packages() {
     shell_pkgs="$shell_pkgs tcsh yash zsh busybox-static"
 
     # Databases
-    database_pkgs="postgresql mysql-server sqlite influxdb influxdb-client"
+    database_pkgs="postgresql mysql-server influxdb influxdb-client"
 
     # Build Tools
     build_pkgs="bison libxxhash-dev libzstd-dev liblz4-dev libssl-dev"
     build_pkgs="$build_pkgs python3-cmarkgfm libpod-pom-view-restructured-perl"
     build_pkgs="$build_pkgs graphviz yodl libreoffice"
+
+    # Alternatives
+    alt_database="sqlite sqlite3"
     sudo dpkg --add-architecture i386; sudo apt update
     if $INSTALL $test_pkgs $packaging_pkgs $shebang_pkgs $sql_pkgs \
 		$compression_pkgs $shell_pkgs $database_pkgs $build_pkgs ; then
@@ -55,7 +59,24 @@ install_packages() {
 	echo Packages missing
 	return 1
     fi
-    pip install sphinx-rtd-theme
+    if parallel -j1 --tag --halt now,success=1 $INSTALL ::: $alt_database ; then
+	# OK
+	true
+    else
+	echo Cannot install: "$alt_database"
+	return 1
+    fi
+    if \vagrant --help >/dev/null ; then
+	# OK
+	true
+    else
+	# Version 2.3.7 is the last under a free license
+	wget -m https://releases.hashicorp.com/vagrant/2.3.7/vagrant_2.3.7-1_amd64.deb
+	sudo dpkg -i releases.hashicorp.com/vagrant/2.3.7/vagrant_2.3.7-1_amd64.deb
+    fi
+    sudo apt install python3-sphinx-rtd-theme || pip install sphinx-rtd-theme
+    echo zh_HK BIG5-HKSCS | sudo tee -a /etc/locale.gen
+    sudo locale-gen
     sudo apt update &
 }
 
@@ -100,6 +121,8 @@ install_oracle_client() {
 	echo 'export ORACLE_HOME' >> ~/.bashrc
 	echo 'export ORACLE_SID=XE' >> ~/.bashrc
     fi
+    # libaio
+    sudo apt install libaio1t64
     perl -MCPAN -e 'install DBD::Oracle'
     # TODO set up vagrant oracle server
     git clone https://github.com/oracle/vagrant-projects.git
@@ -111,28 +134,34 @@ install_oracle_client() {
 
 setup_databases() {
     # DATABASES
-    echo '# Create PostgreSQL'
-    sudo em /etc/postgresql/*/main/postgresql.conf
-    # listen_addresses = '*'
-    sudo service postgresql restart
-    
-    # Drop database and user if needed
-    sudo su - postgres -c 'dropdb '`whoami`
-    sudo su - postgres -c 'dropuser '`whoami`
-    sudo su - postgres -c 'createdb '`whoami`
-    sudo su - postgres -c 'createuser '`whoami`
-    sudo su - postgres -c "sql pg:/// \"ALTER USER \\\"`whoami`\\\" WITH PASSWORD '`whoami`';\""
+    setup_postgres() {
+	echo '# Create PostgreSQL'
+	sudo em /etc/postgresql/*/main/postgresql.conf
+	# listen_addresses = '*'
+	sudo service postgresql restart
+	
+	# Drop database and user if needed
+	sudo su - postgres -c 'dropdb '`whoami`
+	sudo su - postgres -c 'dropuser '`whoami`
+	sudo su - postgres -c 'createdb '`whoami`
+	sudo su - postgres -c 'createuser '`whoami`
+	sudo su - postgres -c "sql pg:/// \"ALTER USER \\\"`whoami`\\\" WITH PASSWORD '`whoami`';\""
+    }
 
-    mysqlrootpass=${mysqlrootpass:-b+Ydjq4ejT4E}
-    dburl=mysql://root:"$mysqlrootpass"@/mysql
-    echo '# Create MySQL'
-    sudo su mysql mysqladmin create `whoami`
-    # Default Debian way of getting "root" access
-    sudo mysql --defaults-file=/etc/mysql/debian.cnf mysql <<< "ALTER USER 'root'@'localhost' IDENTIFIED BY '$mysqlrootpass';"
+    setup_mysql() {
+	mysqlrootpass=${mysqlrootpass:-b+Ydjq4ejT4E}
+	dburl=mysql://root:"$mysqlrootpass"@/mysql
+	echo '# Create MySQL'
+	sudo su mysql mysqladmin create `whoami`
+	# Default Debian way of getting "root" access
+	sudo mysql --defaults-file=/etc/mysql/debian.cnf mysql <<< "ALTER USER 'root'@'localhost' IDENTIFIED BY '$mysqlrootpass';"
 
-    # Drop database and user if needed
-    sudo sql "$dburl" "DROP DATABASE `whoami`;DROP USER '`whoami`'@'localhost';"
-    sudo sql "$dburl" "CREATE DATABASE `whoami`;CREATE USER '`whoami`'@'localhost' IDENTIFIED BY '`whoami`'; GRANT ALL ON `whoami`.* TO '`whoami`'@'localhost';"
+	# Drop database and user if needed
+	sudo sql "$dburl" "DROP DATABASE `whoami`;DROP USER '`whoami`'@'localhost';"
+	sudo sql "$dburl" "CREATE DATABASE `whoami`;CREATE USER '`whoami`'@'localhost' IDENTIFIED BY '`whoami`'; GRANT ALL ON `whoami`.* TO '`whoami`'@'localhost';"
+    }
+    setup_postgres
+    setup_mysql
 }
 
 setup_virtual_box_network() {
@@ -217,6 +246,34 @@ vagrant_up() {
     # After this you should be able to 'vagrant ssh'
 }
 
+vagrant_centos3() {
+    echo 'Centos3 can only use an RSA key'
+    if [ -e ~/.ssh/id_rsa ] ; then
+	# OK
+	true
+    else
+	ssh-keygen -P '' -t rsa -f ~/.ssh/id_rsa
+    fi
+    cat ~/.ssh/id_rsa.pub >> vagrant/authorized_keys
+    (
+	# Centos3 only works with some weak ciphers
+	echo 'Host *'
+	echo '  GSSAPIAuthentication no'
+	echo '  KexAlgorithms +diffie-hellman-group1-sha1'
+	echo '  Ciphers +3des-cbc,aes128-cbc,aes192-cbc,aes256-cbc'
+	echo '  HostKeyAlgorithms +ssh-rsa,ssh-dss'
+	echo '  PubkeyAcceptedKeyTypes +ssh-rsa,ssh-dss'
+
+    ) >> ~/.ssh/config
+    (
+	cd vagrant/*/centos3 && vagrant up
+	(cat ../../authorized_keys | vagrant ssh -c "cat >>.ssh/authorized_keys";
+	 vagrant ssh -c "sudo /sbin/ifconfig eth1 172.27.27.3")
+	 ssh-keygen -R centos3
+	 stdout wssh -oStrictHostKeyChecking=accept-new vagrant@centos3 echo ssh centos3 started and works
+    )
+}
+
 add_key_to_auth_key() {
     sshaddvagrant() {
         ssh-keygen -f ~/.ssh/known_hosts -R $1
@@ -246,7 +303,7 @@ install_rsync_on_vagrant() {
 shellsplus() {
     shells="bash sh csh ash dash tcsh zsh ksh ksh93 fish fizsh mksh"
     shells="$shells posh rc sash yash nopathbash nopathcsh"
-    shellsplus=$(whoami)" parallel $shells"
+    shellsplus="parallel $shells"
     parallel -k echo ::: $shellsplus
 }
 
@@ -489,10 +546,15 @@ rsync_versions() {
 	 cd rsync-$1
 	 git reset --hard
 	 git checkout $1
-	 perl -i -pe 's/AC_DEFINE_UNQUOTED.HAVE_REMSH, .HAVE_REMSH./AC_DEFINE_UNQUOTED(HAVE_REMSH, \$HAVE_REMSH,[dummy])/;
+	 perl -i -pe '
+	 BEGIN{ print "AC_DEFINE([HAVE_LONGLONG], [], [long long support])\n",
+	 	      "AC_DEFINE([HAVE_UTIMBUF], [], [utimbuf is available])\n" };
+         s/AC_DEFINE_UNQUOTED.HAVE_REMSH, .HAVE_REMSH./AC_DEFINE_UNQUOTED(HAVE_REMSH, \$HAVE_REMSH,[dummy])/;
 	 s/AC_DEFINE.HAVE_ERRNO_DECL.,/AC_DEFINE(HAVE_ERRNO_DECL,[1],[dummy]),/;
 	 s/AC_DEFINE.HAVE_FNMATCH.,/AC_DEFINE(HAVE_FNMATCH,[1],[dummy]),/;' configure.in
-         autoreconf --install -W gnu
+	 autoheader
+         automake --add-missing
+	 autoreconf --install -W gnu
 	 # Make "lib/addrinfo.h" ?
 	 touch lib/addrinfo.h
 	 LDFLAGS=-static ./configure &&

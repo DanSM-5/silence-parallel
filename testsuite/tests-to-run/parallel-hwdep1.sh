@@ -10,8 +10,8 @@
 par__environment_too_big_ash() {
   myscript=$(cat <<'_EOF'
     echo 'bug #50815: env_parallel should warn if the environment is too big'
-    len_var=53
-    len_var_remote=37
+    len_var=63 
+    len_var_remote=47
     len_var_quote=31
     len_var_quote_remote=21
     len_fun=1
@@ -74,14 +74,14 @@ par__environment_too_big_ash() {
     bigfunc() { true; }
 _EOF
   )
-  ssh ash@lo "$myscript"
+  stdout ssh ash@lo "$myscript" | perl -pe 's/(\d)\d\d\d\d/${1}XXXX/g'
 }
 
 par__environment_too_big_dash() {
   myscript=$(cat <<'_EOF'
     echo 'bug #50815: env_parallel should warn if the environment is too big'
-    len_var=53
-    len_var_remote=37
+    len_var=63
+    len_var_remote=47
     len_var_quote=31
     len_var_quote_remote=21
     len_fun=1
@@ -144,7 +144,7 @@ par__environment_too_big_dash() {
     bigfunc() { true; }
 _EOF
   )
-  ssh dash@lo "$myscript"
+  stdout ssh dash@lo "$myscript" | perl -pe 's/(\d)\d\d\d\d/${1}XXXX/g'
 }
 
 par__environment_too_big_zsh() {

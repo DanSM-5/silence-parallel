@@ -710,6 +710,6 @@ par_test_ipv6_format() {
 
 # was -j6 before segfault circus
 export -f $(compgen -A function | grep par_)
-compgen -A function | grep par_ | sort |
+compgen -A function | G par_ "$@" | sort |
     #    parallel --delay 0.3 --timeout 1000% -j6 --tag -k --joblog /tmp/jl-`basename $0` '{} 2>&1'
     parallel --delay 0.3 --timeout 3000% -j6 --lb --tag -k --joblog /tmp/jl-`basename $0` '{} 2>&1'

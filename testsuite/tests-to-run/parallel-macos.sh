@@ -147,8 +147,7 @@ par_many_var_big_func() {
     for a in `seq 10`; do eval "a$a() { '$big'; }" ; done
     for a in `seq 10`; do eval export -f a$a ; done
     gen 40000 | stdout parallel -Xkj1  'pecho {} {} {} {} | wc -c' |
-	perl -pe 's/\d{10,}.\d+ //g; s/(\d+)\d\d\d/${1}XXX/g;' |
-	grep 5XXX
+	perl -pe 's/\d{10,}.\d+ //g; s/(\d+)\d\d\d/${1}XXX/g;' 
     echo
 }
 
@@ -183,7 +182,7 @@ par_big_var_func_name() {
 }
 
 export PARALLEL="--_unsafe"
-macsshlogin=$(parallel --halt now,success=1 ssh {} echo {} ::: ota@mac macosx.p)
+macsshlogin=$(parallel --timeout 30 --halt now,success=1 ssh {} echo {} ::: ota@mac macosx.p)
 
 if scp /usr/local/bin/parallel $macsshlogin:bin/ ; then
     true
