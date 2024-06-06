@@ -110,13 +110,13 @@ prereqremote: installparallel startvm
 
 ignore=bytes.of.data|ping.statistics|packets.transmitted|64.bytes.from|\
   min/avg/max/mdev|default|known.hosts|Host.*found
-start=(stdout ping -w 1 -c 1 {} || \
+start=(stdout ping -w 1 -c 1 {} && ssh vagrant@{} echo ssh {} works || \
   (cd vagrant/*/{} 2>/dev/null && vagrant up ; \
    echo {} | grep -q centos3 && \
     (cat ../../authorized_keys | vagrant ssh -c "cat >>.ssh/authorized_keys"; \
      vagrant ssh -c "sudo /sbin/ifconfig eth1 172.27.27.3"); \
    ssh-keygen -R {}; \
-   stdout wssh -oStrictHostKeyChecking=accept-new vagrant@{} echo {} is up) ) | \
+   stdout wssh -oStrictHostKeyChecking=accept-new vagrant@{} echo ssh {} started and works) ) | \
   grep -Ev "${ignore}"
 
 stop=(stdout ping -w 1 -c 1 {} && \
@@ -127,6 +127,8 @@ namedservers=centos8 freebsd13 freebsd14 rhel8 centos3
 servers=parallel-server1 parallel-server2 parallel-server3 parallel-server4 ${namedservers}
 
 startvm:
+	sort -u ~/.ssh/*.pub vagrant/authorized_keys > vagrant/authorized_keys.
+	mv vagrant/authorized_keys. vagrant/authorized_keys
 	parallel -j0 --tag -k '${start}' ::: ${servers} &
 stopvm:
 	parallel -j0 --tag -k '${stop}' ::: ${namedservers} || true

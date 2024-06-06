@@ -135,5 +135,17 @@ par_sem_2jobs	job3b 6
 par_sem_2jobs	done
 par_sem_dir	### bug #58985: sem stall if .parallel/semaphores is chmod 0
 par_sem_dir	parallel: Error: Semaphoredir must be writable: '~/.parallel/semaphores'
+par_timeout	### Test --timeout
+par_timeout	1.1
+par_timeout	1.1
+par_timeout	parallel: Warning: This job was killed because it timed out:
+par_timeout	parallel: Warning: echo 7.7; sleep 7.7; echo 7.7
+par_timeout	parallel: Warning: This job was killed because it timed out:
+par_timeout	parallel: Warning: echo 8.8; sleep 8.8; echo 8.8
+par_timeout	parallel: Warning: This job was killed because it timed out:
+par_timeout	parallel: Warning: echo 9.9; sleep 9.9; echo 9.9
+par_timeout	7.7
+par_timeout	8.8
+par_timeout	9.9
 par_tmux_termination	### --tmux test - check termination
 par_tmux_termination	See output with: tmux -S /TMP/tmsXXXXX attach

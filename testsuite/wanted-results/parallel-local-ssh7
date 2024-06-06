@@ -1737,24 +1737,7 @@ par_env_parallel_zsh	bug #50435: Remote fifo broke in 20150522
 par_env_parallel_zsh	bug #52534: Tail of multiline alias is ignored
 par_env_parallel_zsh	data from stdin
 par_env_parallel_zsh	data from stdin
-par_environment_too_big_ash	bug #50815: env_parallel should warn if the environment is too big
-par_environment_too_big_ash	OK_bigvar
-par_environment_too_big_ash	OK_bigvar_remote
-par_environment_too_big_ash	OK_bigvar_quote
-par_environment_too_big_ash	OK_bigvar_quote_remote
-par_environment_too_big_ash	OK_bigfunc
-par_environment_too_big_ash	OK_bigfunc_remote
-par_environment_too_big_ash	OK_bigfunc_quote
-par_environment_too_big_ash	OK_bigfunc_quote_remote
-par_environment_too_big_ash	Rest should fail - functions not supported in ash
-par_environment_too_big_ash	parallel: Error: Command line too long (999 >= 999) at input 0: fail_bigvar
-par_environment_too_big_ash	parallel: Error: Command line too long (999 >= 999) at input 0: fail_bigvar_remote
-par_environment_too_big_ash	parallel: Error: Command line too long (999 >= 999) at input 0: fail_bigvar_quote
-par_environment_too_big_ash	parallel: Error: Command line too long (999 >= 999) at input 0: fail_bigvar_quote_remote
-par_environment_too_big_ash	fail_bigfunc-not-supported
-par_environment_too_big_ash	fail_bigfunc_remote-not-supported
-par_environment_too_big_ash	fail_bigfunc_quote-not-supported
-par_environment_too_big_ash	fail_bigfunc_quote_remote-not-supported
+par_environment_too_big_ash	moved to hwdep1.sh
 par_environment_too_big_bash	bug #50815: env_parallel should warn if the environment is too big
 par_environment_too_big_bash	OK_bigvar
 par_environment_too_big_bash	OK_bigvar_remote
@@ -1774,24 +1757,7 @@ par_environment_too_big_bash	parallel: Error: Command line too long (999 >= 999)
 par_environment_too_big_bash	parallel: Error: Command line too long (999 >= 999) at input 0: fail_bigfunc_quote
 par_environment_too_big_bash	parallel: Error: Command line too long (999 >= 999) at input 0: fail_bigfunc_quote_remote
 par_environment_too_big_csh	Not implemented
-par_environment_too_big_dash	bug #50815: env_parallel should warn if the environment is too big
-par_environment_too_big_dash	OK_bigvar
-par_environment_too_big_dash	OK_bigvar_remote
-par_environment_too_big_dash	OK_bigvar_quote
-par_environment_too_big_dash	OK_bigvar_quote_remote
-par_environment_too_big_dash	OK_bigfunc
-par_environment_too_big_dash	OK_bigfunc_remote
-par_environment_too_big_dash	OK_bigfunc_quote
-par_environment_too_big_dash	OK_bigfunc_quote_remote
-par_environment_too_big_dash	Rest should fail - functions not supported in dash
-par_environment_too_big_dash	parallel: Error: Command line too long (999 >= 999) at input 0: fail_bigvar
-par_environment_too_big_dash	parallel: Error: Command line too long (999 >= 999) at input 0: fail_bigvar_remote
-par_environment_too_big_dash	parallel: Error: Command line too long (999 >= 999) at input 0: fail_bigvar_quote
-par_environment_too_big_dash	parallel: Error: Command line too long (999 >= 999) at input 0: fail_bigvar_quote_remote
-par_environment_too_big_dash	fail_bigfunc-not-supported
-par_environment_too_big_dash	fail_bigfunc_remote-not-supported
-par_environment_too_big_dash	fail_bigfunc_quote-not-supported
-par_environment_too_big_dash	fail_bigfunc_quote_remote-not-supported
+par_environment_too_big_dash	moved to hwdep1.sh
 par_environment_too_big_fish	Not implemented
 par_environment_too_big_ksh	bug #50815: env_parallel should warn if the environment is too big
 par_environment_too_big_ksh	OK_bigvar
@@ -1848,24 +1814,7 @@ par_environment_too_big_sh	fail_bigfunc_remote-not-supported
 par_environment_too_big_sh	fail_bigfunc_quote-not-supported
 par_environment_too_big_sh	fail_bigfunc_quote_remote-not-supported
 par_environment_too_big_tcsh	Not implemented
-par_environment_too_big_zsh	bug #50815: env_parallel should warn if the environment is too big
-par_environment_too_big_zsh	OK_bigvar
-par_environment_too_big_zsh	OK_bigvar_remote
-par_environment_too_big_zsh	OK_bigvar_quote
-par_environment_too_big_zsh	OK_bigvar_quote_remote
-par_environment_too_big_zsh	OK_bigfunc
-par_environment_too_big_zsh	OK_bigfunc_remote
-par_environment_too_big_zsh	OK_bigfunc_quote
-par_environment_too_big_zsh	OK_bigfunc_quote_remote
-par_environment_too_big_zsh	Rest should fail
-par_environment_too_big_zsh	parallel: Error: Command line too long (999 >= 999) at input 0: fail_bigvar
-par_environment_too_big_zsh	parallel: Error: Command line too long (999 >= 999) at input 0: fail_bigvar_remote
-par_environment_too_big_zsh	parallel: Error: Command line too long (999 >= 999) at input 0: fail_bigvar_quote
-par_environment_too_big_zsh	parallel: Error: Command line too long (999 >= 999) at input 0: fail_bigvar_quote_remote
-par_environment_too_big_zsh	parallel: Error: Command line too long (999 >= 999) at input 0: fail_bigfunc
-par_environment_too_big_zsh	parallel: Error: Command line too long (999 >= 999) at input 0: fail_bigfunc_remote
-par_environment_too_big_zsh	parallel: Error: Command line too long (999 >= 999) at input 0: fail_bigfunc_quote
-par_environment_too_big_zsh	parallel: Error: Command line too long (999 >= 999) at input 0: fail_bigfunc_quote_remote
+par_environment_too_big_zsh	moved to hwdep1.sh
 par_funky_ash	
 par_funky_ash	'	'
 par_funky_ash	'par_funky_ash	 !"#$%&'"'"'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~€‚ƒ„…†‡ˆ‰Š‹Œ‘’“”•–—˜™š›œŸ ¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º»¼½¾¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏĞÑÒÓÔÕÖ×ØÙÚÛÜİŞßàáâãäåæçèéêëìíîïğñòóôõö÷øùúûüışÿ'

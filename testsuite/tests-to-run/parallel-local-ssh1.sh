@@ -26,12 +26,24 @@ par_sshlogin_with_comma() {
 }
 
 
-par_sshpass_with_password() {
+par__sshpass_with_password() {
     echo '### sshpass'
-    echo OK | parallel -S "sshpass -p $withpassword ssh withpassword@lo:22" echo
+    . ~/.passwords
+    qwithpassword=$(echo "$withpassword" | parallel --shellquote)
+    echo OK | parallel -S "sshpass -p $qwithpassword ssh withpassword@lo:22" echo
     echo OK | parallel -S withpassword:"$withpassword"@lo:22 echo
+    echo OK | parallel --onall -S withpassword:"$withpassword"@lo:22 echo
     export SSHPASS="$withpassword"
     echo OK | parallel -S withpassword:@lo:22 echo
+    echo OK | parallel --onall -S withpassword:@lo:22 echo
+    echo '### Crazy passwords: `date>>/tmp/trap`;(|<*&)'"'"
+    > /tmp/trap
+    (
+	stdout parallel --onall -S5/user:'`date>>/tmp/trap`;'@host echo ::: A
+	stdout parallel --onall -S5/user:'`date>>/tmp/trap`;(|<*&)'"'"@host echo ::: A
+    ) | perl -pe 's/([a-f0-9]{100,} )+[a-f0-9]{1,}/HEX/g'
+    echo This must stay empty
+    cat /tmp/trap
 }
 
 par_--ssh_ssh_in_ssh() {

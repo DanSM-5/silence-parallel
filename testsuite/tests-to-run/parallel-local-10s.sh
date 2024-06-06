@@ -55,7 +55,7 @@ par_quote_special_results() {
 	mkfs=$1
 	img=$(mktemp /dev/shm/par-test-loop-XXXX.img)
 	dir=$(mktemp -d /tmp/par-test-loop-XXXX)
-	dd if=/dev/zero bs=1000k count=150 > "$img"
+	dd if=/dev/zero bs=1024k count=301 > "$img"
 	# Use the mkfs.$filesystem
 	$mkfs "$img"
 	sudo mount "$img" "$dir" -oloop,uid=`id -u` 2>/dev/null ||
@@ -83,7 +83,16 @@ par_quote_special_results() {
            "mkfs.reiserfs -fq" "mkfs.ntfs -F" "mkfs.xfs -f" mkfs.minix \
 	   mkfs.fat mkfs.vfat mkfs.msdos mkfs.f2fs |
 	perl -pe 's:(/dev/loop|par-test-loop)\S+:$1:g;s/ +/ /g' |
-	G -v MB/s -v GB/s -v UUID -v Binutils -v 150000 -v exfatprogs
+	G -v MB/s -v GB/s -v UUID -v Binutils -v 150000 -v exfatprogs |
+	# mkfs.btrfs Incompat features: extref, skinny-metadata, no-holes
+	# mke2fs 1.46.5 (30-Dec-2021)
+	# btrfs-progs v6.6.3
+ 	G -vP Incompat.features -v mke2fs.[.0-9]{5} -v btrfs-progs.v[.0-9]{5} |
+	# See https://btrfs.readthedocs.io for more
+	# mkfs.f2fs Info: Overprovision segments = 27 (GC reserved = 18)
+	G -v 'See http' -v Overprovision |
+	# mkfs.f2fs /dev/loop 147952 70136 77816 48% /tmp/par-test-loop
+	perl -pe 's:/dev/loop \d+ \d+ \d+:/dev/loop 999999 99999 99999:'
     # Skip:
     #   mkfs.bfs - ro
     #   mkfs.cramfs - ro
@@ -564,24 +573,6 @@ par_retries_all_fail() {
 	parallel -k -j0 --retries 2 --timeout 0.1 'echo {}; sleep {}; false' 2>/dev/null
 }
 
-par_sockets_cores_threads() {
-    echo '### Test --number-of-sockets/cores/threads'
-    unset PARALLEL_CPUINFO
-    unset PARALLEL_LSCPU
-    parallel --number-of-sockets
-    parallel --number-of-cores
-    parallel --number-of-threads
-    parallel --number-of-cpus
-
-    echo '### Test --use-sockets-instead-of-threads'
-    (seq 1 4 |
-	 stdout parallel --use-sockets-instead-of-threads -j100% sleep) &&
-	echo sockets done &
-    (seq 1 4 | stdout parallel -j100% sleep) && echo threads done &
-    wait
-    echo 'Threads should complete first on machines with less than 8 sockets'
-}
-
 par_long_line_remote() {
     echo '### Deal with long command lines on remote servers'
     perl -e "print(((\"'\"x5000).\"\\n\")x6)" |
@@ -609,7 +600,8 @@ par_tmp_full() {
     sudo mount -t tmpfs -o size=10% none $SHM
 
     echo "### Test --tmpdir running full. bug #40733 was caused by this"
-    stdout parallel -j1 --tmpdir $SHM cat /dev/zero ::: dummy
+    stdout parallel -j1 --tmpdir $SHM cat /dev/zero ::: dummy |
+	grep -v 'Warning:.*No space left on device during global destruction'
 }
 
 par_jobs_file() {

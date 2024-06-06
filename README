@@ -40,13 +40,13 @@ installation.
 
     $ (wget -O - pi.dk/3 || lynx -source pi.dk/3 || curl pi.dk/3/ || \
        fetch -o - http://pi.dk/3 ) > install.sh
-    $ sha1sum install.sh | grep 883c667e01eed62f975ad28b6d50e22a
-    12345678 883c667e 01eed62f 975ad28b 6d50e22a
-    $ md5sum install.sh | grep cc21b4c943fd03e93ae1ae49e28573c0
-    cc21b4c9 43fd03e9 3ae1ae49 e28573c0
-    $ sha512sum install.sh | grep da012ec113b49a54e705f86d51e784ebced224fdf
-    79945d9d 250b42a4 2067bb00 99da012e c113b49a 54e705f8 6d51e784 ebced224
-    fdff3f52 ca588d64 e75f6033 61bd543f d631f592 2f87ceb2 ab034149 6df84a35
+    $ sha1sum install.sh | grep 51621b7f1ee103c00783aae4ef9889f8
+    12345678 51621b7f 1ee103c0 0783aae4 ef9889f8
+    $ md5sum install.sh | grep 62eada78703b5500241b8e50baf62758
+    62eada78 703b5500 241b8e50 baf62758
+    $ sha512sum install.sh | grep c0206a65dc86f2bb6bbdf1a2bc96bc6d067
+    160d3159 9480cf5c a101512f 150b7ac0 206a65dc 86f2bb6b bdf1a2bc 96bc6d06
+    7f8237c2 0964b67f bccf8a93 332528fa 11e5ab43 2a6226a6 ceb197ab 7f03c061
     $ bash install.sh
 
 This will literally install faster than reading the rest of this
@@ -57,11 +57,11 @@ document.
 
 Full installation of GNU Parallel is as simple as:
 
-    wget https://ftpmirror.gnu.org/parallel/parallel-20240322.tar.bz2
-    wget https://ftpmirror.gnu.org/parallel/parallel-20240322.tar.bz2.sig
-    gpg parallel-20240322.tar.bz2.sig
-    bzip2 -dc parallel-20240322.tar.bz2 | tar xvf -
-    cd parallel-20240322
+    wget https://ftpmirror.gnu.org/parallel/parallel-20240522.tar.bz2
+    wget https://ftpmirror.gnu.org/parallel/parallel-20240522.tar.bz2.sig
+    gpg parallel-20240522.tar.bz2.sig
+    bzip2 -dc parallel-20240522.tar.bz2 | tar xvf -
+    cd parallel-20240522
     ./configure && make && sudo make install
 
 
@@ -70,11 +70,11 @@ Full installation of GNU Parallel is as simple as:
 If you are not root you can add ~/bin to your path and install in
 ~/bin and ~/share:
 
-    wget https://ftpmirror.gnu.org/parallel/parallel-20240322.tar.bz2
-    wget https://ftpmirror.gnu.org/parallel/parallel-20240322.tar.bz2.sig
-    gpg parallel-20240322.tar.bz2.sig
-    bzip2 -dc parallel-20240322.tar.bz2 | tar xvf -
-    cd parallel-20240322
+    wget https://ftpmirror.gnu.org/parallel/parallel-20240522.tar.bz2
+    wget https://ftpmirror.gnu.org/parallel/parallel-20240522.tar.bz2.sig
+    gpg parallel-20240522.tar.bz2.sig
+    bzip2 -dc parallel-20240522.tar.bz2 | tar xvf -
+    cd parallel-20240522
     ./configure --prefix=$HOME && make && make install
 
 Or if your system lacks 'make' you can simply copy src/parallel
@@ -122,8 +122,8 @@ will love you for it.
 When using programs that use GNU Parallel to process data for
 publication please cite:
 
-    Tange, O. (2024, March 22). GNU Parallel 20240322 ('Sweden').
-    Zenodo. https://doi.org/10.5281/zenodo.10901541
+    Tange, O. (2024, May 22). GNU Parallel 20240522 ('Tbilisi').
+    Zenodo. https://doi.org/10.5281/zenodo.11247979
 
 Copyright (C) 2007-2022 Ole Tange, http://ole.tange.dk and Free
 Software Foundation, Inc.

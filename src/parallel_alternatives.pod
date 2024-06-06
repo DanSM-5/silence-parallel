@@ -1661,7 +1661,23 @@ https://github.com/gdm85/coshell
 
 =head2 DIFFERENCES BETWEEN spread AND GNU Parallel
 
-B<spread> runs commands on all directories.
+=over
+
+=item - - - I4 - - I7
+
+=item M1 - - - - -
+
+=item O1 O2 O3 O4 O5 O6 - O8 - O10
+
+=item - - - - - - -
+
+=item - - - - - - - - -
+
+=item - -
+
+=back
+
+B<spread> runs commands on all directories. It does not run jobs in parallel.
 
 It can be emulated with GNU B<parallel> using this Bash function:
 
@@ -1672,9 +1688,8 @@ It can be emulated with GNU B<parallel> using this Bash function:
     parallel $(_cmds "$@")'|| echo exit status $?' ::: */
   }
 
-This works except for the B<--exclude> option.
-
-(Last checked: 2017-11)
+https://github.com/tfogo/spread
+(Last checked: 2024-04)
 
 
 =head2 DIFFERENCES BETWEEN pyargs AND GNU Parallel
@@ -4308,7 +4323,7 @@ ms/job it is slow.
 
 Output takes O(n^2) time for output of size n. 10 MB takes ~1 second,
 30 MB takes ~7 seconds, 100 MB takes ~60 seconds, 300 MB takes ~480
-seconds, 1000 GB takes
+seconds, 1000 MB takes ~10000 seconds.
 
 100 MB of output takes around 1 GB of RAM.
 
@@ -4356,6 +4371,51 @@ and use less memory.
 https://github.com/baalimago/repeater
 (Last checked: 2023-12)
 
+
+=head2 DIFFERENCES BETWEEN parallelize AND GNU Parallel
+
+Summary (see legend above):
+
+=over
+
+=item I1 - - - - - I7
+
+=item - - - - - M6
+
+=item O1 - O3 O4 O5 - O7 - - -
+
+=item E1 - - E4 - - -
+
+=item - - - - - - - - -
+
+=item - -
+
+=back
+
+B<parallelize> runs the full line as a command. If the command is not
+found, there is no warning.
+
+The output at most ~1000000 lines/s. If the lines are short this is
+quite slow. The lines can at most be 2047999 bytes long. Longer lines
+cause segfault.
+
+
+=head3 EXAMPLES
+
+simple.dat:
+
+  sleep 5
+  foo
+  cat alire.toml
+  loc src/parallelize.adb
+  sh loc src/*.ad?
+
+1$ bin/parallelize -v <simple.dat
+
+1$ parallel <simple.dat
+
+https://github.com/simonjwright/parallelize
+(Last checked: 2024-04)
 
 =head2 Todo
 

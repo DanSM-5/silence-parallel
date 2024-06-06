@@ -13,9 +13,6 @@ cat <<'EOF' | sed -e 's/;$/; /;s/$SERVER1/'$SERVER1'/;s/$SERVER2/'$SERVER2'/' | 
 echo '### Bug in --load'; 
   nice parallel -k --load 30 sleep 0.1\;echo ::: 1 2 3
 
-echo '### Test --timeout'
-  nice stdout parallel -j0 -k --timeout 2 echo {}\; sleep {}\; echo {} ::: 1.1 7.7 8.8 9.9
-
 echo '### Test --joblog followed by --resume --joblog'
   rm -f /tmp/joblog; 
   timeout -k 1 1 parallel -j2 --joblog /tmp/joblog sleep {} ::: 1.1 2.2 3.3 4.4 2>/dev/null; 

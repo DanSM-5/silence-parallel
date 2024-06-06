@@ -3,20 +3,6 @@ echo '### Bug in --load';   nice parallel -k --load 30 sleep 0.1\;echo ::: 1 2 3
 1
 2
 3
-echo '### Test --timeout'
-### Test --timeout
-  nice stdout parallel -j0 -k --timeout 2 echo {}\; sleep {}\; echo {} ::: 1.1 7.7 8.8 9.9
-1.1
-1.1
-parallel: Warning: This job was killed because it timed out:
-parallel: Warning: echo 7.7; sleep 7.7; echo 7.7
-7.7
-parallel: Warning: This job was killed because it timed out:
-parallel: Warning: echo 8.8; sleep 8.8; echo 8.8
-8.8
-parallel: Warning: This job was killed because it timed out:
-parallel: Warning: echo 9.9; sleep 9.9; echo 9.9
-9.9
 echo '### Test --joblog followed by --resume --joblog'
 ### Test --joblog followed by --resume --joblog
   rm -f /tmp/joblog;   timeout -k 1 1 parallel -j2 --joblog /tmp/joblog sleep {} ::: 1.1 2.2 3.3 4.4 2>/dev/null;   parallel -j2 --resume --joblog /tmp/joblog sleep {} ::: 1.1 2.2 3.3 4.4;   cat /tmp/joblog | wc -lw;   rm -f /tmp/joblog; echo '### Test --resume --joblog followed by --resume --joblog';   rm -f /tmp/joblog2;   timeout -k 1 1 parallel -j2 --resume --joblog /tmp/joblog2 sleep {} ::: 1.1 2.2 3.3 4.4 2>/dev/null;   parallel -j2 --resume --joblog /tmp/joblog2 sleep {} ::: 1.1 2.2 3.3 4.4;   cat /tmp/joblog2 | wc -lw;   rm -f /tmp/joblog2; echo '### Test --header'

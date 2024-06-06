@@ -1,3 +1,21 @@
+20240522
+
+New in this release:
+
+* --onall now supports sshpass - user:pass@host.
+
+* --memfree kills do not count as --retries.
+
+* Bug fixes and man page updates.
+
+
+20240422
+
+New in this release:
+
+* Bug fixes and man page updates.
+
+
 20240322
 
 New in this release:

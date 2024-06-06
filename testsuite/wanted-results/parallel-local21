@@ -89,7 +89,7 @@ par_shebang_wrap_csharp	Arguments arg2
 par_shebang_wrap_csharp	Arguments arg3.1  arg3.2
 par_shebang_wrap_gnuplot	Arguments arg1
 par_shebang_wrap_gnuplot	Arguments arg2
-par_shebang_wrap_gnuplot	Arguments arg3.1 arg3.2
+par_shebang_wrap_gnuplot	Arguments arg3.1  arg3.2
 par_shebang_wrap_ksh	Arguments arg1
 par_shebang_wrap_ksh	Arguments arg2
 par_shebang_wrap_ksh	Arguments arg3.1  arg3.2

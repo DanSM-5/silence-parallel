@@ -2772,7 +2772,7 @@ sub check_invalid_option_combinations() {
 
 sub init_globals() {
     # Defaults:
-    $Global::version = 20240322;
+    $Global::version = 20240522;
     $Global::progname = 'parallel';
     $::name = "GNU Parallel";
     $Global::infinity = 2**31;
@@ -5436,6 +5436,13 @@ sub onall($@) {
     for my $host (sort keys %Global::host) {
 	my $sshlogin = $Global::host{$host};
 	my $qsshlogin = Q($sshlogin->string());
+	my $qsshloginpw = Q($sshlogin->pwstring());
+	if($qsshloginpw ne $qsshlogin) {
+	    ::warning_once("Using password or SSHPASS with --(n)onall ".
+			   "exposes the password",
+			   "on the command line, ".
+			   "making it visible to local users via `ps`.");
+	}
 	my $joblog = tmp_joblog($opt::joblog);
 	if($joblog) {
 	    push @joblogs, $joblog;
@@ -5444,8 +5451,7 @@ sub onall($@) {
 	my $quad = $opt::arg_file_sep || "::::";
 	# If PARALLEL_ENV is set: Pass it on
 	my $penv=$Global::parallel_env ?
-	    "PARALLEL_ENV=".Q($Global::parallel_env) :
-	    '';
+	    "PARALLEL_ENV=".Q($Global::parallel_env) : '';
 	my $results;
 	if(defined $opt::results) {
 	    $results = Q($opt::results) . $qsshlogin;
@@ -5453,12 +5459,12 @@ sub onall($@) {
 	::debug("init", "$penv $0 $suboptions -j1 $joblog ",
 		((defined $opt::tag) ? "--tagstring ".$qsshlogin : ""),
 		((defined $opt::results) ? "--results ".$results : ""),
-		" -S $qsshlogin ",
+		" -S $qsshloginpw ",
 		join(" ",shell_quote(@command,$quad,@argfiles)),"\n");
 	print $parallel_fh "$penv $0 $suboptions -j1 $joblog ",
 	    ((defined $opt::tag) ? "--tagstring ".$qsshlogin : ""),
 	    ((defined $opt::results) ? "--results ".$results : ""),
-	    " -S $qsshlogin ",
+	    " -S $qsshloginpw ",
 	    join(" ",shell_quote(@command,$quad,@argfiles)),"\0";
     }
     close $parallel_fh;
@@ -5705,15 +5711,20 @@ sub kill_sleep_seq(@) {
     # Send jobs TERM,TERM,KILL to processgroups
     # Input:
     #	@pids = list of pids that are also processgroups
-    # Convert pids to process groups ($processgroup = -$pid)
-    my @pgrps = map { -$_ } @_;
-    my @term_seq = split/,/,$opt::termseq;
-    if(not @term_seq) {
-	@term_seq = ("TERM",200,"TERM",100,"TERM",50,"KILL",25);
-    }
-    # for each signal+waittime: kill process groups still not dead
-    while(@term_seq) {
-	@pgrps = kill_sleep(shift @term_seq, shift @term_seq, @pgrps);
+    # Killing can be slow if you follow @term_seq
+    # So run the killing in parallel
+    if(not fork()) {
+	# Convert pids to process groups ($processgroup = -$pid)
+	my @pgrps = map { -$_ } @_;
+	my @term_seq = split/,/,$opt::termseq;
+	if(not @term_seq) {
+	    @term_seq = ("TERM",200,"TERM",100,"TERM",50,"KILL",25);
+	}
+	# for each signal+waittime: kill process groups still not dead
+	while(@term_seq) {
+	    @pgrps = kill_sleep(shift @term_seq, shift @term_seq, @pgrps);
+	}
+	exit(0);
     }
 }
 
@@ -5820,8 +5831,8 @@ sub usage() {
 	 "If you use programs that use GNU Parallel to process data for an article in a",
 	 "scientific publication, please cite:",
 	 "",
-	 "  Tange, O. (2024, March 22). GNU Parallel 20240322 ('Sweden').",
-	 "  Zenodo. https://doi.org/10.5281/zenodo.10901541",
+	 "  Tange, O. (2024, May 22). GNU Parallel 20240522 ('Tbilisi').",
+	 "  Zenodo. https://doi.org/10.5281/zenodo.11247979",
 	 "",
 
 	 # Before changing these lines, please read
@@ -6981,6 +6992,7 @@ sub kill_youngster_if_not_enough_mem() {
 		::debug("mem","\n", $job->seq(), "killed ",
 			$sshlogin->memfree()," < ",$limit);
 		$job->kill();
+		$job->set_killreason("mem");
 		$sshlogin->memfree_recompute();
 	    } else {
 		last;
@@ -7130,11 +7142,20 @@ sub new($$) {
     #	[ncpu/]/usr/bin/ssh user:pass@server:port
     if ($s =~ s:^(\d+)/::) { $ncpus = $1; }
 
+    # Why disallow space in password?
+    # Example:
+    #   C:/bin/ssh user:C:/bin/ssh@host
+    # Should this parse as:
+    #   user 'C' with password '/bin/ssh user:C:/bin/ssh'
+    # or
+    #   cmd 'C:/bin/ssh' user 'user' with password 'C:/bin/ssh'
+    # This is impossible to determine.
+    # With space forbidden in password it uniquely parses as the 2nd.
     #	[/usr/bin/ssh ]user:pass@server:port
     if($s =~ s/^(.*) //) { $sshcommand = $1; }
 
     #	[user:pass@]server:port
-    if($s =~ s/^([^@]+)@//) {
+    if($s =~ s/^(.+)@//) {
 	my $userpw = $1;
 	# user[:pass]
 	if($userpw =~ s/:(.*)//) {
@@ -7191,6 +7212,12 @@ sub new($$) {
 	($user && $user."@").
 	($host && $host).
 	($port && ":$port");
+    my $pwstring =
+	# Only include the sshcommand in $string if it is set by user
+	($sshcommand && $sshcommand." ").
+	($user && $user. ($password && ":".$password)."@").
+	($host && $host).
+	($port && ":$port");
     if($host eq ':') {
 	$local = 1;
 	$string = ":";
@@ -7205,6 +7232,7 @@ sub new($$) {
     $no_slash_string =~ s/[^-a-z0-9:]/_/gi;
     return bless {
 	'string' => $string,
+	    'pwstring' => $pwstring,
 	    'jobs_running' => 0,
 	    'jobs_completed' => 0,
 	    'maxlength' => undef,
@@ -7242,6 +7270,11 @@ sub DESTROY($) {
 sub string($) {
     my $self = shift;
     return $self->{'string'};
+}
+
+sub pwstring($) {
+    my $self = shift;
+    return $self->{'pwstring'};
 }
 
 sub host($) {
@@ -7291,7 +7324,6 @@ sub sshcmd($) {
 	}
 	push @local, "-S", ::Q($control_path);
     }
-
     return "@local";
 }
 
@@ -9805,6 +9837,16 @@ sub kill($) {
     ::kill_sleep_seq($self->pid());
 }
 
+sub killreason($) {
+    my $self = shift;
+    return $self->{'killreason'};
+}
+
+sub set_killreason($) {
+    my $self = shift;
+    $self->{'killreason'} = shift;
+}
+
 sub suspend($) {
     my $self = shift;
     my @pgrps = map { -$_ } $self->pid();
@@ -11139,12 +11181,28 @@ sub set_job_in_joblog($) {
     vec($Global::job_already_run,$job->seq(),1) = 1;
 }
 
+    sub retry() {
+	# This command should be retried
+	    my $self = shift;
+
+	$self->set_endtime(undef);
+	$self->reset_exitstatus();
+	$self->set_killreason(undef);
+	$Global::JobQueue->unget($self);
+	::debug("run", "Retry ", $self->seq(), "\n");
+	return 1;
+    }
+
 sub should_be_retried($) {
     # Should this job be retried?
     # Returns
     #	0 - do not retry
     #	1 - job queued for retry
     my $self = shift;
+    if($opt::memfree and $self->killreason() eq "mem") {
+	# Job was killed due to memfree => retry
+	return $self->retry();
+    }
     if (not defined $opt::retries) { return 0; }
     if(not $self->exitstatus() and not $self->exitsignal()) {
 	# Completed with success. If there is a recorded failure: forget it
@@ -11165,11 +11223,7 @@ sub should_be_retried($) {
 	    return 0;
 	} else {
 	    # This command should be retried
-	    $self->set_endtime(undef);
-	    $self->reset_exitstatus();
-	    $Global::JobQueue->unget($self);
-	    ::debug("run", "Retry ", $self->seq(), "\n");
-	    return 1;
+	    return $self->retry();
 	}
     }
 }

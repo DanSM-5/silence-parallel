@@ -419,8 +419,8 @@ par_disk_full() {
     ) >/dev/null 2>/dev/null
 
     cat /dev/zero >$SMALLDISK/out
-    parallel --tmpdir $SMALLDISK echo ::: OK
-
+    stdout parallel --tmpdir $SMALLDISK echo ::: OK |
+	grep -v 'Warning: unable to close filehandle.* No space left on device'
     rm $SMALLDISK/out
 
     sudo umount -l /tmp/smalldisk.img
@@ -1090,6 +1090,6 @@ par_hash_and_time_functions() {
 }
 
 export -f $(compgen -A function | grep par_)
-compgen -A function | grep par_ | LC_ALL=C sort |
+compgen -A function | G par_ "$@" | LC_ALL=C sort |
     parallel --timeout 1000% -j6 --tag -k --joblog /tmp/jl-`basename $0` '{} 2>&1' |
     perl -pe 's:/usr/bin:/bin:g'

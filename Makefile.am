@@ -7,6 +7,21 @@ SUBDIRS = src
 test:
 	cd testsuite; make 1
 
+tortest:
+	torsocks ssh -t tortest 'export SSH_AUTH_SOCK=`cat ~/.ssh/SSH_AUTH_SOCK`;\
+                                 export SSH_AGENT_PID=`cat ~/.ssh/SSH_AGENT_PID`;\
+                                 cd privat/parallel/testsuite/ &&\
+                                   make short && make long && make mem'
+	make torresults
+
+torresults:
+	torsocks rsync -Hazv --progress --exclude authorized_keys --exclude .vagrant/ tortest:privat/parallel/testsuite/actual-results/ testsuite/actual-results/
+
+
+torsync:
+	torsocks rsync -Hazv --inplace --progress --exclude authorized_keys --exclude .vagrant/ --exclude actual-results --delete ./ tortest:privat/parallel/
+	make tortest
+
 web:
 	cd src; make web
 	cp -r src/*.pdf src/sphinx/build/html/* ../parallel-web/parallel
@@ -55,8 +70,8 @@ upload:
 	gpg --auto-key-locate keyserver --keyserver-options auto-key-retrieve parallel-$(YYYYMMDD).tar.bz2.sig
 
 # 	"|| true" needed if already uploaded
-	p=`echo parallel-latest.tar.bz2*{,.sig,.asc}`; lftp -e "put $$p; bye" ftp://anonymous@ftp-upload.gnu.org/incoming/ftp/ || true
-	p=`echo parallel-$(YYYYMMDD).tar.bz2*{,.sig,.asc}`; lftp -e "put $$p; bye" ftp://anonymous@ftp-upload.gnu.org/incoming/ftp/ || true
+	p=`echo parallel-latest.tar.bz2*{,.sig,.asc}`; lftp -e "put $$p; bye" ftp://anonymous:ole=tange.dk@ftp-upload.gnu.org/incoming/ftp/ || true
+	p=`echo parallel-$(YYYYMMDD).tar.bz2*{,.sig,.asc}`; lftp -e "put $$p; bye" ftp://anonymous:ole=tange.dk@ftp-upload.gnu.org/incoming/ftp/ || true
 
 # This can take 7 minutes
 	pushd /tmp; \
