@@ -3130,12 +3130,14 @@ The jobs will be run on a list of remote computers.
 
 =item Z<> @I<hostgroups>/
 
-One or more groups this sshlogin belongs to (See
-B<--hostgroup>). Multiple groups are separated by '+'. The I<sshlogin>
-will always be added to a hostgroup named the same as I<sshlogin>.
+One or more groups this sshlogin belongs to. Multiple groups are
+separated by '+'. The I<sshlogin> will always be added to a hostgroup
+named the same as I<sshlogin>.
 
 If only the I<@hostgroup> is given, only the sshlogins in that
 hostgroup will be used. Multiple I<@hostgroup> can be given.
+
+See B<--hostgroup>.
 
 Examples: B<@prod/>, B<@dev+remote/>
 
@@ -3170,17 +3172,18 @@ Examples: B<alice>, B<bob>
 =item Z<> :I<password>
 
 Use I<password> for authentication (using B<sshpass>). B<password>
-cannot contain space. If I<password> is omitted use B<$SSHPASS>. If
-B<:> is omitted use B<ssh>'s default authentication. In this case
-login must not require a password (B<ssh-agent> and B<ssh-copy-id> may
-help with that).
+cannot contain space. If I<password> is omitted, GNU B<parallel> will
+use B<$SSHPASS>. If B<:> is omitted use B<ssh>'s default
+authentication. In this case login must not require a password
+(B<ssh-agent> and B<ssh-copy-id> may help with that).
 
 Examples: B<:mypassword>, B<:>
 
 
 =item Z<> I<host>
 
-Hostname or IP address of server.
+Hostname or IP address of server. (This is what you will use the
+most).
 
 Examples: B<server01>, B<10.1.2.3>, B<[2001:470:142:4::a]>,
 B<2001:470:142:5::116>.

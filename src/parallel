@@ -2794,7 +2794,7 @@ sub check_invalid_option_combinations() {
 
 sub init_globals() {
     # Defaults:
-    $Global::version = 20240522;
+    $Global::version = 20240523;
     $Global::progname = 'parallel';
     $::name = "GNU Parallel";
     $Global::infinity = 2**31;
@@ -7723,9 +7723,9 @@ sub limit($) {
 		 limit=$1;
 		 io_file=$2;
 		 # Do the measurement in the background
-		 ((tmp=$(tempfile);
-		 LANG=C iostat -x 1 2 > $tmp;
-		 mv $tmp $io_file) </dev/null >/dev/null & );
+		 ((tmp=$(mktemp || tempfile);
+		   LANG=C iostat -x 1 2 > $tmp;
+		   mv $tmp $io_file) </dev/null >/dev/null & );
 		 perl -e '-e $ARGV[0] or exit(1);
 		   for(reverse <>) {
 		     /Device/ and last;
@@ -7772,7 +7772,6 @@ sub limit($) {
     local %ENV = %env;
     $ENV{'SSHLOGIN'} = $self->string();
     system($Global::shell,"-c",$self->{'limitscript'});
-    #::qqx($self->{'limitscript'});
     ::debug("limit","limit `".$self->{'limitscript'}."` result ".($?>>8)."\n");
     return $?>>8;
 }
@@ -11340,17 +11339,17 @@ sub set_job_in_joblog($) {
     vec($Global::job_already_run,$job->seq(),1) = 1;
 }
 
-    sub retry() {
-	# This command should be retried
-	    my $self = shift;
+sub retry() {
+    # This command should be retried
+    my $self = shift;
 
-	$self->set_endtime(undef);
-	$self->reset_exitstatus();
-	$self->set_killreason(undef);
-	$Global::JobQueue->unget($self);
-	::debug("run", "Retry ", $self->seq(), "\n");
-	return 1;
-    }
+    $self->set_endtime(undef);
+    $self->reset_exitstatus();
+    $self->set_killreason(undef);
+    $Global::JobQueue->unget($self);
+    ::debug("run", "Retry ", $self->seq(), "\n");
+    return 1;
+}
 
 sub should_be_retried($) {
     # Should this job be retried?
