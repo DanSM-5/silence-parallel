@@ -846,7 +846,7 @@ _EOF
   # Old versions of fish sometimes throw up bugs all over,
   # but seem to work OK otherwise. So ignore these errors.
   ssh fish@lo "$myscript" 2>&1 |
-      perl -ne '/fish:|fish\(/ and next; print'
+      perl -ne '/^\^|fish:|fish\(/ and next; print'
 }
 
 par_--env_underscore_ksh() {
@@ -942,7 +942,8 @@ par_--env_underscore_mksh() {
     echo "OK if no myfunc         ^^^^^^^^^^^^^^^^^" >&2;
 _EOF
   )
-  ssh mksh@lo "$myscript"
+  ssh mksh@lo "$myscript" |
+      perl -pe 's/^[EŴ]:/EW:/g'
 }
 
 par_--env_underscore_sh() {
@@ -2942,7 +2943,8 @@ par_env_parallel_--session_mksh() {
     unset PARALLEL_IGNORED_NAMES
 _EOF
   )
-  ssh mksh@lo "$myscript"
+  ssh mksh@lo "$myscript" |
+      perl -pe 's/^[EŴ]:/EW:/g'
 }
 
 par_env_parallel_--session_sh() {

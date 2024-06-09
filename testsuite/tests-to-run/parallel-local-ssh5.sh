@@ -153,4 +153,4 @@ par__--shellquote_command_len() {
 export -f $(compgen -A function | grep par_)
 compgen -A function | G par_ "$@" | sort |
     # 2019-07-14 100% slowed down 4 threads/16GB
-    parallel -j75% --joblog /tmp/jl-`basename $0` -j3 --tag -k --delay 0.1 --retries 3 '{} 2>&1'
+    parallel --timeout 100 -j75% --joblog /tmp/jl-`basename $0` -j3 --tag -k --delay 0.1 --retries 3 '{} 2>&1'

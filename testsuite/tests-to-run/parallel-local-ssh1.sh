@@ -41,7 +41,7 @@ par__sshpass_with_password() {
     (
 	stdout parallel --onall -S5/user:'`date>>/tmp/trap`;'@host echo ::: A
 	stdout parallel --onall -S5/user:'`date>>/tmp/trap`;(|<*&)'"'"@host echo ::: A
-    ) | perl -pe 's/([a-f0-9]{100,} )+[a-f0-9]{1,}/HEX/g'
+    ) | perl -pe 's/([a-f0-9]{100,} )+[a-f0-9]{1,}/HEX/g; s/\r/\n/g;'
     echo This must stay empty
     cat /tmp/trap
 }

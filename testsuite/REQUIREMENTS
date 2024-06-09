@@ -285,8 +285,10 @@ add_key_to_auth_key() {
     parallel --tag sshaddvagrant ::: centos8 freebsd13 freebsd14 rhel8 centos3
     parallel --tag ssh -o StrictHostKeyChecking=accept-new vagrant@{} ::: parallel-server{1..4} centos3
     cat ~/.ssh/*pub >> ~/.ssh/authorized_keys
-    # TODO find ipv6
-    ipv6=
+    ipv6() {
+	ifconfig | perl -nE '/inet6 ([0-9a-f:]+) .*(host|global)/ and say $1'
+    }
+    ipv6=$(ipv6)
     parallel --tag ssh -o StrictHostKeyChecking=accept-new {} ::: lo localhost 172.27.27.1 127.0.0.1 ::1 $ipv6
     # parallel sshpass -p vagrant ssh-copy-id vagrant@{} ::: parallel-server{1..4} centos3
 
@@ -640,7 +642,9 @@ misc() {
     echo Ciphers +3des-cbc,aes128-cbc,aes192-cbc,aes256-cbc,aes128-ctr,aes192-ctr,aes256-ctr,aes128-gcm@openssh.com,aes256-gcm@openssh.com,chacha20-poly1305@openssh.com
     echo MaxStartups 100:30:1000
     echo 
-    echo freepl
+    echo strlncopy -> rsync
+    echo sqlite2
+    echo 
     echo 'set $withpassword'
     echo 'set $mysqlrootpassword in .passwords'
     echo '/usr/local/bin/parallel-20120822'

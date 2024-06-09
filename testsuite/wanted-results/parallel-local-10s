@@ -92,7 +92,7 @@ par_compress_prg_fails	 --tag --files	parallel: Error: false failed.
 par_compress_prg_fails	--line-buffer  	1
 par_compress_prg_fails	--line-buffer  	parallel: Error: false failed.
 par_compress_prg_fails	--line-buffer  	parallel: Error: false failed.
-par_compress_prg_fails	--line-buffer  --files	1
+par_compress_prg_fails	--line-buffer  --files	9
 par_compress_prg_fails	--line-buffer  --files	parallel: Warning: Use --files0 when $TMPDIR contains newline.
 par_compress_prg_fails	--line-buffer  --files	parallel: Error: false failed.
 par_compress_prg_fails	--line-buffer  --files	parallel: Error: false failed.
@@ -709,7 +709,6 @@ par_pipepart_tee	bug #45479: --pipe/--pipepart --tee
 par_pipepart_tee	--pipepart --tee
 par_pipepart_tee	314572800
 par_quote_special_results	### Test --results on file systems with limited UTF8 support
-par_quote_special_results	mkfs.btrfs	btrfs-progs v5.16.2
 par_quote_special_results	mkfs.btrfs	
 par_quote_special_results	mkfs.btrfs	NOTE: several default settings have changed in version 5.15, please make sure
 par_quote_special_results	mkfs.btrfs	 this does not affect your deployments:
@@ -731,11 +730,10 @@ par_quote_special_results	mkfs.btrfs	Runtime features: free-space-tree
 par_quote_special_results	mkfs.btrfs	Checksum: crc32c
 par_quote_special_results	mkfs.btrfs	Number of devices: 1
 par_quote_special_results	mkfs.btrfs	Devices:
-par_quote_special_results	mkfs.btrfs	 ID SIZE PATH
 par_quote_special_results	mkfs.btrfs	 1 301.00MiB /dev/shm/par-test-loop
 par_quote_special_results	mkfs.btrfs	
 par_quote_special_results	mkfs.btrfs	Filesystem 1K-blocks Used Available Use% Mounted on
-par_quote_special_results	mkfs.btrfs	/dev/loop 999999 99999 99999 2% /tmp/par-test-loop
+par_quote_special_results	mkfs.btrfs	/dev/loop 999999 99999 99999 9% /tmp/par-test-loop
 par_quote_special_results	mkfs.btrfs	. ./++ ./++++ ./++_ ./++__ ./++m ./++z ./+_ ./+__ ./+m ./+z ./,. ./,..
 par_quote_special_results	mkfs.btrfs	
 par_quote_special_results	mkfs.btrfs	. ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./par_quote_special_results	mkfs.btrfs	 ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./! ./" ./# ./$ ./% ./& ./' ./( ./) ./* ./++ ./+_ ./+z ./, ./- ./0 ./1 ./2 ./3 ./4 ./5 ./6 ./7 ./8 ./9 ./: ./; ./< ./= ./> ./? ./@ ./A ./B ./C ./D ./E ./F ./G ./H ./I ./J ./K ./L ./M ./N ./O ./P ./Q ./R ./S ./T ./U ./V ./W ./X ./Y ./Z ./[ ./\ ./] ./^ ./_ ./` ./a ./b ./c ./d ./e ./f ./g ./h ./i ./j ./k ./l ./m ./n ./o ./p ./q ./r ./s ./t ./u ./v ./w ./x ./y ./z ./{ ./| ./} ./~ ./ ./Ä
@@ -754,7 +752,7 @@ par_quote_special_results	mkfs.exfat	Synchronizing...
 par_quote_special_results	mkfs.exfat	
 par_quote_special_results	mkfs.exfat	exFAT format complete!
 par_quote_special_results	mkfs.exfat	Filesystem 1K-blocks Used Available Use% Mounted on
-par_quote_special_results	mkfs.exfat	/dev/loop 999999 99999 99999 1% /tmp/par-test-loop
+par_quote_special_results	mkfs.exfat	/dev/loop 999999 99999 99999 9% /tmp/par-test-loop
 par_quote_special_results	mkfs.exfat	. ./++ ./++++ ./++_ ./++__ ./++m ./++z ./+_ ./+__ ./+m ./+z ./,
 par_quote_special_results	mkfs.exfat	. ./ ./! ./# ./$ ./% ./& ./' ./( ./) ./++ ./+01 ./+02 ./+03 ./+04 ./+05 ./+06 ./+07 ./+08 ./+09 ./+0a ./+0b ./+0c ./+0d ./+0e ./+0f ./+10 ./+11 ./+12 ./+13 ./+14 ./+15 ./+16 ./+17 ./+18 ./+19 ./+1a ./+1b ./+1c ./+1d ./+1e ./+1f ./+80 ./+_ ./+a ./+b ./+d ./+g ./+k ./+l ./+p ./+y ./+z ./, ./- ./0 ./1 ./2 ./3 ./4 ./5 ./6 ./7 ./8 ./9 ./; ./= ./@ ./A ./B ./C ./D ./E ./F ./G ./H ./I ./J ./K ./L ./M ./N ./O ./P ./Q ./R ./S ./T ./U ./V ./W ./X ./Y ./Z ./[ ./] ./^ ./_ ./` ./{ ./} ./~ ./
 par_quote_special_results	mkfs.exfat	. ./+80 ./+81 ./+82 ./+83 ./+84 ./+85 ./+86 ./+87 ./+88 ./+89 ./+8a ./+8b ./+8c ./+8d ./+8e ./+8f ./+90 ./+91 ./+92 ./+93 ./+94 ./+95 ./+96 ./+97 ./+98 ./+99 ./+9a ./+9b ./+9c ./+9d ./+9e ./+9f ./+a0 ./+a1 ./+a2 ./+a3 ./+a4 ./+a5 ./+a6 ./+a7 ./+a8 ./+a9 ./+aa ./+ab ./+ac ./+ad ./+ae ./+af ./+b0 ./+b1 ./+b2 ./+b3 ./+b4 ./+b5 ./+b6 ./+b7 ./+b8 ./+b9 ./+ba ./+bb ./+bc ./+bd ./+be ./+bf ./+c0 ./+c1 ./+c2 ./+c3 ./+c4 ./+c5 ./+c6 ./+c7 ./+c8 ./+c9 ./+ca ./+cb ./+cc ./+cd ./+ce ./+cf ./+d0 ./+d1 ./+d2 ./+d3 ./+d4 ./+d5 ./+d6 ./+d7 ./+d8 ./+d9 ./+da ./+db ./+dc ./+dd ./+de ./+df ./+e0 ./+e1 ./+e2 ./+e3 ./+e4 ./+e5 ./+e6 ./+e7 ./+e8 ./+e9 ./+ea ./+eb ./+ec ./+ed ./+ee ./+ef ./+f0 ./+f1 ./+f2 ./+f3 ./+f4 ./+f5 ./+f6 ./+f7 ./+f8 ./+f9 ./+fa ./+fb ./+fc ./+fd ./+fe ./+ff
@@ -770,14 +768,13 @@ par_quote_special_results	mkfs.ext2	Writing inode tables: 0/3 done
 par_quote_special_results	mkfs.ext2	Writing superblocks and filesystem accounting information: 0/3 done
 par_quote_special_results	mkfs.ext2	
 par_quote_special_results	mkfs.ext2	Filesystem 1K-blocks Used Available Use% Mounted on
-par_quote_special_results	mkfs.ext2	/dev/loop 999999 99999 99999 1% /tmp/par-test-loop
+par_quote_special_results	mkfs.ext2	/dev/loop 999999 99999 99999 9% /tmp/par-test-loop
 par_quote_special_results	mkfs.ext2	. ./++ ./++++ ./++_ ./++__ ./++m ./++z ./+_ ./+__ ./+m ./+z ./,. ./,..
 par_quote_special_results	mkfs.ext2	
 par_quote_special_results	mkfs.ext2	. ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./par_quote_special_results	mkfs.ext2	 ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./! ./" ./# ./$ ./% ./& ./' ./( ./) ./* ./++ ./+_ ./+z ./, ./- ./0 ./1 ./2 ./3 ./4 ./5 ./6 ./7 ./8 ./9 ./: ./; ./< ./= ./> ./? ./@ ./A ./B ./C ./D ./E ./F ./G ./H ./I ./J ./K ./L ./M ./N ./O ./P ./Q ./R ./S ./T ./U ./V ./W ./X ./Y ./Z ./[ ./\ ./] ./^ ./_ ./` ./a ./b ./c ./d ./e ./f ./g ./h ./i ./j ./k ./l ./m ./n ./o ./p ./q ./r ./s ./t ./u ./v ./w ./x ./y ./z ./{ ./| ./} ./~ ./ ./Ä
 par_quote_special_results	mkfs.ext2	. ./Ä ./Å ./Ç ./É ./Ñ ./Ö ./Ü ./á ./à ./â ./ä ./ã ./å ./ç ./é ./è ./ê ./ë ./í ./ì ./î ./ï ./ñ ./ó ./ò ./ô ./ö ./õ ./ú ./ù ./û ./ü ./† ./° ./¢ ./£ ./§ ./• ./¶ ./ß ./® ./© ./™ ./´ ./¨ ./≠ ./Æ ./Ø ./∞ ./± ./≤ ./≥ ./¥ ./µ ./∂ ./∑ ./∏ ./π ./∫ ./ª ./º ./Ω ./æ ./ø ./¿ ./¡ ./¬ ./√ ./ƒ ./≈ ./∆ ./« ./» ./… ./  ./À ./Ã ./Õ ./Œ ./œ ./– ./— ./“ ./” ./‘ ./’ ./÷ ./◊ ./ÿ ./Ÿ ./⁄ ./€ ./‹ ./› ./ﬁ ./ﬂ ./‡ ./· ./‚ ./„ ./‰ ./Â ./Ê ./Á ./Ë ./È ./Í ./Î ./Ï ./Ì ./Ó ./Ô ./ ./Ò ./Ú ./Û ./Ù ./ı ./ˆ ./˜ ./¯ ./˘ ./˙ ./˚ ./¸ ./˝ ./˛ ./ˇ
 par_quote_special_results	mkfs.ext2	301+0 records in
 par_quote_special_results	mkfs.ext2	301+0 records out
-par_quote_special_results	mkfs.ext2	mke2fs 1.46.5 (30-Dec-2021)
 par_quote_special_results	mkfs.ext3	Discarding device blocks: 0/77056 done 
 par_quote_special_results	mkfs.ext3	Creating filesystem with 77056 4k blocks and 77088 inodes
 par_quote_special_results	mkfs.ext3	Superblock backups stored on blocks: 
@@ -789,14 +786,13 @@ par_quote_special_results	mkfs.ext3	Creating journal (4096 blocks): done
 par_quote_special_results	mkfs.ext3	Writing superblocks and filesystem accounting information: 0/3 done
 par_quote_special_results	mkfs.ext3	
 par_quote_special_results	mkfs.ext3	Filesystem 1K-blocks Used Available Use% Mounted on
-par_quote_special_results	mkfs.ext3	/dev/loop 999999 99999 99999 1% /tmp/par-test-loop
+par_quote_special_results	mkfs.ext3	/dev/loop 999999 99999 99999 9% /tmp/par-test-loop
 par_quote_special_results	mkfs.ext3	. ./++ ./++++ ./++_ ./++__ ./++m ./++z ./+_ ./+__ ./+m ./+z ./,. ./,..
 par_quote_special_results	mkfs.ext3	
 par_quote_special_results	mkfs.ext3	. ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./par_quote_special_results	mkfs.ext3	 ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./! ./" ./# ./$ ./% ./& ./' ./( ./) ./* ./++ ./+_ ./+z ./, ./- ./0 ./1 ./2 ./3 ./4 ./5 ./6 ./7 ./8 ./9 ./: ./; ./< ./= ./> ./? ./@ ./A ./B ./C ./D ./E ./F ./G ./H ./I ./J ./K ./L ./M ./N ./O ./P ./Q ./R ./S ./T ./U ./V ./W ./X ./Y ./Z ./[ ./\ ./] ./^ ./_ ./` ./a ./b ./c ./d ./e ./f ./g ./h ./i ./j ./k ./l ./m ./n ./o ./p ./q ./r ./s ./t ./u ./v ./w ./x ./y ./z ./{ ./| ./} ./~ ./ ./Ä
 par_quote_special_results	mkfs.ext3	. ./Ä ./Å ./Ç ./É ./Ñ ./Ö ./Ü ./á ./à ./â ./ä ./ã ./å ./ç ./é ./è ./ê ./ë ./í ./ì ./î ./ï ./ñ ./ó ./ò ./ô ./ö ./õ ./ú ./ù ./û ./ü ./† ./° ./¢ ./£ ./§ ./• ./¶ ./ß ./® ./© ./™ ./´ ./¨ ./≠ ./Æ ./Ø ./∞ ./± ./≤ ./≥ ./¥ ./µ ./∂ ./∑ ./∏ ./π ./∫ ./ª ./º ./Ω ./æ ./ø ./¿ ./¡ ./¬ ./√ ./ƒ ./≈ ./∆ ./« ./» ./… ./  ./À ./Ã ./Õ ./Œ ./œ ./– ./— ./“ ./” ./‘ ./’ ./÷ ./◊ ./ÿ ./Ÿ ./⁄ ./€ ./‹ ./› ./ﬁ ./ﬂ ./‡ ./· ./‚ ./„ ./‰ ./Â ./Ê ./Á ./Ë ./È ./Í ./Î ./Ï ./Ì ./Ó ./Ô ./ ./Ò ./Ú ./Û ./Ù ./ı ./ˆ ./˜ ./¯ ./˘ ./˙ ./˚ ./¸ ./˝ ./˛ ./ˇ
 par_quote_special_results	mkfs.ext3	301+0 records in
 par_quote_special_results	mkfs.ext3	301+0 records out
-par_quote_special_results	mkfs.ext3	mke2fs 1.46.5 (30-Dec-2021)
 par_quote_special_results	mkfs.ext4	Discarding device blocks: 0/77056 done 
 par_quote_special_results	mkfs.ext4	Creating filesystem with 77056 4k blocks and 77088 inodes
 par_quote_special_results	mkfs.ext4	Superblock backups stored on blocks: 
@@ -808,16 +804,15 @@ par_quote_special_results	mkfs.ext4	Creating journal (4096 blocks): done
 par_quote_special_results	mkfs.ext4	Writing superblocks and filesystem accounting information: 0/3 done
 par_quote_special_results	mkfs.ext4	
 par_quote_special_results	mkfs.ext4	Filesystem 1K-blocks Used Available Use% Mounted on
-par_quote_special_results	mkfs.ext4	/dev/loop 999999 99999 99999 1% /tmp/par-test-loop
+par_quote_special_results	mkfs.ext4	/dev/loop 999999 99999 99999 9% /tmp/par-test-loop
 par_quote_special_results	mkfs.ext4	. ./++ ./++++ ./++_ ./++__ ./++m ./++z ./+_ ./+__ ./+m ./+z ./,. ./,..
 par_quote_special_results	mkfs.ext4	
 par_quote_special_results	mkfs.ext4	. ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./par_quote_special_results	mkfs.ext4	 ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./! ./" ./# ./$ ./% ./& ./' ./( ./) ./* ./++ ./+_ ./+z ./, ./- ./0 ./1 ./2 ./3 ./4 ./5 ./6 ./7 ./8 ./9 ./: ./; ./< ./= ./> ./? ./@ ./A ./B ./C ./D ./E ./F ./G ./H ./I ./J ./K ./L ./M ./N ./O ./P ./Q ./R ./S ./T ./U ./V ./W ./X ./Y ./Z ./[ ./\ ./] ./^ ./_ ./` ./a ./b ./c ./d ./e ./f ./g ./h ./i ./j ./k ./l ./m ./n ./o ./p ./q ./r ./s ./t ./u ./v ./w ./x ./y ./z ./{ ./| ./} ./~ ./ ./Ä
 par_quote_special_results	mkfs.ext4	. ./Ä ./Å ./Ç ./É ./Ñ ./Ö ./Ü ./á ./à ./â ./ä ./ã ./å ./ç ./é ./è ./ê ./ë ./í ./ì ./î ./ï ./ñ ./ó ./ò ./ô ./ö ./õ ./ú ./ù ./û ./ü ./† ./° ./¢ ./£ ./§ ./• ./¶ ./ß ./® ./© ./™ ./´ ./¨ ./≠ ./Æ ./Ø ./∞ ./± ./≤ ./≥ ./¥ ./µ ./∂ ./∑ ./∏ ./π ./∫ ./ª ./º ./Ω ./æ ./ø ./¿ ./¡ ./¬ ./√ ./ƒ ./≈ ./∆ ./« ./» ./… ./  ./À ./Ã ./Õ ./Œ ./œ ./– ./— ./“ ./” ./‘ ./’ ./÷ ./◊ ./ÿ ./Ÿ ./⁄ ./€ ./‹ ./› ./ﬁ ./ﬂ ./‡ ./· ./‚ ./„ ./‰ ./Â ./Ê ./Á ./Ë ./È ./Í ./Î ./Ï ./Ì ./Ó ./Ô ./ ./Ò ./Ú ./Û ./Ù ./ı ./ˆ ./˜ ./¯ ./˘ ./˙ ./˚ ./¸ ./˝ ./˛ ./ˇ
 par_quote_special_results	mkfs.ext4	301+0 records in
 par_quote_special_results	mkfs.ext4	301+0 records out
-par_quote_special_results	mkfs.ext4	mke2fs 1.46.5 (30-Dec-2021)
 par_quote_special_results	mkfs.reiserfs -fq	Filesystem 1K-blocks Used Available Use% Mounted on
-par_quote_special_results	mkfs.reiserfs -fq	/dev/loop 999999 99999 99999 11% /tmp/par-test-loop
+par_quote_special_results	mkfs.reiserfs -fq	/dev/loop 999999 99999 99999 9% /tmp/par-test-loop
 par_quote_special_results	mkfs.reiserfs -fq	. ./++ ./++++ ./++_ ./++__ ./++m ./++z ./+_ ./+__ ./+m ./+z ./,. ./,..
 par_quote_special_results	mkfs.reiserfs -fq	
 par_quote_special_results	mkfs.reiserfs -fq	. ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./par_quote_special_results	mkfs.reiserfs -fq	 ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./! ./" ./# ./$ ./% ./& ./' ./( ./) ./* ./++ ./+_ ./+z ./, ./- ./0 ./1 ./2 ./3 ./4 ./5 ./6 ./7 ./8 ./9 ./: ./; ./< ./= ./> ./? ./@ ./A ./B ./C ./D ./E ./F ./G ./H ./I ./J ./K ./L ./M ./N ./O ./P ./Q ./R ./S ./T ./U ./V ./W ./X ./Y ./Z ./[ ./\ ./] ./^ ./_ ./` ./a ./b ./c ./d ./e ./f ./g ./h ./i ./j ./k ./l ./m ./n ./o ./p ./q ./r ./s ./t ./u ./v ./w ./x ./y ./z ./{ ./| ./} ./~ ./ ./Ä
@@ -831,7 +826,7 @@ par_quote_special_results	mkfs.ntfs -F	Initializing device with zeroes: 0% 0
 par_quote_special_results	mkfs.ntfs -F	Creating NTFS volume structures.
 par_quote_special_results	mkfs.ntfs -F	mkntfs completed successfully. Have a nice day.
 par_quote_special_results	mkfs.ntfs -F	Filesystem 1K-blocks Used Available Use% Mounted on
-par_quote_special_results	mkfs.ntfs -F	/dev/loop 999999 99999 99999 1% /tmp/par-test-loop
+par_quote_special_results	mkfs.ntfs -F	/dev/loop 999999 99999 99999 9% /tmp/par-test-loop
 par_quote_special_results	mkfs.ntfs -F	. ./++ ./++++ ./++_ ./++__ ./++m ./++z ./+_ ./+__ ./+m ./+z ./,. ./,..
 par_quote_special_results	mkfs.ntfs -F	
 par_quote_special_results	mkfs.ntfs -F	. ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./par_quote_special_results	mkfs.ntfs -F	 ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./! ./" ./# ./$ ./% ./& ./' ./( ./) ./* ./++ ./+80 ./+_ ./+z ./, ./- ./0 ./1 ./2 ./3 ./4 ./5 ./6 ./7 ./8 ./9 ./: ./; ./< ./= ./> ./? ./@ ./A ./B ./C ./D ./E ./F ./G ./H ./I ./J ./K ./L ./M ./N ./O ./P ./Q ./R ./S ./T ./U ./V ./W ./X ./Y ./Z ./[ ./\ ./] ./^ ./_ ./` ./a ./b ./c ./d ./e ./f ./g ./h ./i ./j ./k ./l ./m ./n ./o ./p ./q ./r ./s ./t ./u ./v ./w ./x ./y ./z ./{ ./| ./} ./~ ./
@@ -848,16 +843,13 @@ par_quote_special_results	mkfs.ntfs -F	To boot from a device, Windows needs the 
 par_quote_special_results	mkfs.ntfs -F	Windows will not be able to boot from this device.
 par_quote_special_results	mkfs.xfs -f	meta-data=/dev/shm/par-test-loop isize=512 agcount=4, agsize=19264 blks
 par_quote_special_results	mkfs.xfs -f	 = sectsz=512 attr=2, projid32bit=1
-par_quote_special_results	mkfs.xfs -f	 = crc=1 finobt=1, sparse=1, rmapbt=0
-par_quote_special_results	mkfs.xfs -f	 = reflink=1 bigtime=0 inobtcount=0
 par_quote_special_results	mkfs.xfs -f	data = bsize=4096 blocks=77056, imaxpct=25
 par_quote_special_results	mkfs.xfs -f	 = sunit=0 swidth=0 blks
 par_quote_special_results	mkfs.xfs -f	naming =version 2 bsize=4096 ascii-ci=0, ftype=1
-par_quote_special_results	mkfs.xfs -f	log =internal log bsize=4096 blocks=1368, version=2
 par_quote_special_results	mkfs.xfs -f	 = sectsz=512 sunit=0 blks, lazy-count=1
 par_quote_special_results	mkfs.xfs -f	realtime =none extsz=4096 blocks=0, rtextents=0
 par_quote_special_results	mkfs.xfs -f	Filesystem 1K-blocks Used Available Use% Mounted on
-par_quote_special_results	mkfs.xfs -f	/dev/loop 999999 99999 99999 6% /tmp/par-test-loop
+par_quote_special_results	mkfs.xfs -f	/dev/loop 999999 99999 99999 9% /tmp/par-test-loop
 par_quote_special_results	mkfs.xfs -f	. ./++ ./++++ ./++_ ./++__ ./++m ./++z ./+_ ./+__ ./+m ./+z ./,. ./,..
 par_quote_special_results	mkfs.xfs -f	
 par_quote_special_results	mkfs.xfs -f	. ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./par_quote_special_results	mkfs.xfs -f	 ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./! ./" ./# ./$ ./% ./& ./' ./( ./) ./* ./++ ./+_ ./+z ./, ./- ./0 ./1 ./2 ./3 ./4 ./5 ./6 ./7 ./8 ./9 ./: ./; ./< ./= ./> ./? ./@ ./A ./B ./C ./D ./E ./F ./G ./H ./I ./J ./K ./L ./M ./N ./O ./P ./Q ./R ./S ./T ./U ./V ./W ./X ./Y ./Z ./[ ./\ ./] ./^ ./_ ./` ./a ./b ./c ./d ./e ./f ./g ./h ./i ./j ./k ./l ./m ./n ./o ./p ./q ./r ./s ./t ./u ./v ./w ./x ./y ./z ./{ ./| ./} ./~ ./ ./Ä
@@ -871,7 +863,7 @@ par_quote_special_results	mkfs.minix	Zonesize=1024
 par_quote_special_results	mkfs.minix	Maxsize=268966912
 par_quote_special_results	mkfs.minix	
 par_quote_special_results	mkfs.minix	Filesystem 1K-blocks Used Available Use% Mounted on
-par_quote_special_results	mkfs.minix	/dev/loop 999999 99999 99999 1% /tmp/par-test-loop
+par_quote_special_results	mkfs.minix	/dev/loop 999999 99999 99999 9% /tmp/par-test-loop
 par_quote_special_results	mkfs.minix	. ./++ ./++++ ./++_ ./++__ ./++m ./++z ./+_ ./+__ ./+m ./+z ./,. ./,..
 par_quote_special_results	mkfs.minix	
 par_quote_special_results	mkfs.minix	. ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./par_quote_special_results	mkfs.minix	 ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./! ./" ./# ./$ ./% ./& ./' ./( ./) ./* ./++ ./+_ ./+z ./, ./- ./0 ./1 ./2 ./3 ./4 ./5 ./6 ./7 ./8 ./9 ./: ./; ./< ./= ./> ./? ./@ ./A ./B ./C ./D ./E ./F ./G ./H ./I ./J ./K ./L ./M ./N ./O ./P ./Q ./R ./S ./T ./U ./V ./W ./X ./Y ./Z ./[ ./\ ./] ./^ ./_ ./` ./a ./b ./c ./d ./e ./f ./g ./h ./i ./j ./k ./l ./m ./n ./o ./p ./q ./r ./s ./t ./u ./v ./w ./x ./y ./z ./{ ./| ./} ./~ ./ ./Ä
@@ -880,7 +872,7 @@ par_quote_special_results	mkfs.minix	301+0 records in
 par_quote_special_results	mkfs.minix	301+0 records out
 par_quote_special_results	mkfs.fat	mkfs.fat 4.2 (2021-01-31)
 par_quote_special_results	mkfs.fat	Filesystem 1K-blocks Used Available Use% Mounted on
-par_quote_special_results	mkfs.fat	/dev/loop 999999 99999 99999 0% /tmp/par-test-loop
+par_quote_special_results	mkfs.fat	/dev/loop 999999 99999 99999 9% /tmp/par-test-loop
 par_quote_special_results	mkfs.fat	. ./++ ./++++ ./++_ ./++__ ./++m ./++z ./+_ ./+__ ./+m ./+z ./,
 par_quote_special_results	mkfs.fat	. ./! ./# ./$ ./% ./& ./' ./( ./) ./++ ./+01 ./+02 ./+03 ./+04 ./+05 ./+06 ./+07 ./+08 ./+09 ./+0a ./+0b ./+0c ./+0d ./+0e ./+0f ./+10 ./+11 ./+12 ./+13 ./+14 ./+15 ./+16 ./+17 ./+18 ./+19 ./+1a ./+1b ./+1c ./+1d ./+1e ./+1f ./+20 ./+_ ./+a ./+b ./+d ./+g ./+k ./+l ./+p ./+y ./+z ./, ./- ./0 ./1 ./2 ./3 ./4 ./5 ./6 ./7 ./8 ./9 ./; ./= ./@ ./A ./B ./C ./D ./E ./F ./G ./H ./I ./J ./K ./L ./M ./N ./O ./P ./Q ./R ./S ./T ./U ./V ./W ./X ./Y ./Z ./[ ./] ./^ ./_ ./` ./{ ./} ./~ ./ ./Ä
 par_quote_special_results	mkfs.fat	. ./Ä ./Å ./Ç ./É ./Ñ ./Ö ./Ü ./á ./à ./â ./ä ./ã ./å ./ç ./é ./è ./ê ./ë ./í ./ì ./î ./ï ./ñ ./ó ./ò ./ô ./ö ./õ ./ú ./ù ./û ./ü ./† ./° ./¢ ./£ ./§ ./• ./¶ ./ß ./® ./© ./™ ./´ ./¨ ./≠ ./Æ ./Ø ./∞ ./± ./≤ ./≥ ./¥ ./µ ./∂ ./∑ ./∏ ./π ./∫ ./ª ./º ./Ω ./æ ./ø ./¿ ./¡ ./¬ ./√ ./ƒ ./≈ ./∆ ./« ./» ./… ./  ./À ./Ã ./Õ ./Œ ./œ ./– ./— ./“ ./” ./‘ ./’ ./÷ ./◊ ./ÿ ./Ÿ ./⁄ ./€ ./‹ ./› ./ﬁ ./ﬂ ./˜ ./ˇ
@@ -888,7 +880,7 @@ par_quote_special_results	mkfs.fat	301+0 records in
 par_quote_special_results	mkfs.fat	301+0 records out
 par_quote_special_results	mkfs.vfat	mkfs.fat 4.2 (2021-01-31)
 par_quote_special_results	mkfs.vfat	Filesystem 1K-blocks Used Available Use% Mounted on
-par_quote_special_results	mkfs.vfat	/dev/loop 999999 99999 99999 0% /tmp/par-test-loop
+par_quote_special_results	mkfs.vfat	/dev/loop 999999 99999 99999 9% /tmp/par-test-loop
 par_quote_special_results	mkfs.vfat	. ./++ ./++++ ./++_ ./++__ ./++m ./++z ./+_ ./+__ ./+m ./+z ./,
 par_quote_special_results	mkfs.vfat	. ./! ./# ./$ ./% ./& ./' ./( ./) ./++ ./+01 ./+02 ./+03 ./+04 ./+05 ./+06 ./+07 ./+08 ./+09 ./+0a ./+0b ./+0c ./+0d ./+0e ./+0f ./+10 ./+11 ./+12 ./+13 ./+14 ./+15 ./+16 ./+17 ./+18 ./+19 ./+1a ./+1b ./+1c ./+1d ./+1e ./+1f ./+20 ./+_ ./+a ./+b ./+d ./+g ./+k ./+l ./+p ./+y ./+z ./, ./- ./0 ./1 ./2 ./3 ./4 ./5 ./6 ./7 ./8 ./9 ./; ./= ./@ ./A ./B ./C ./D ./E ./F ./G ./H ./I ./J ./K ./L ./M ./N ./O ./P ./Q ./R ./S ./T ./U ./V ./W ./X ./Y ./Z ./[ ./] ./^ ./_ ./` ./{ ./} ./~ ./ ./Ä
 par_quote_special_results	mkfs.vfat	. ./Ä ./Å ./Ç ./É ./Ñ ./Ö ./Ü ./á ./à ./â ./ä ./ã ./å ./ç ./é ./è ./ê ./ë ./í ./ì ./î ./ï ./ñ ./ó ./ò ./ô ./ö ./õ ./ú ./ù ./û ./ü ./† ./° ./¢ ./£ ./§ ./• ./¶ ./ß ./® ./© ./™ ./´ ./¨ ./≠ ./Æ ./Ø ./∞ ./± ./≤ ./≥ ./¥ ./µ ./∂ ./∑ ./∏ ./π ./∫ ./ª ./º ./Ω ./æ ./ø ./¿ ./¡ ./¬ ./√ ./ƒ ./≈ ./∆ ./« ./» ./… ./  ./À ./Ã ./Õ ./Œ ./œ ./– ./— ./“ ./” ./‘ ./’ ./÷ ./◊ ./ÿ ./Ÿ ./⁄ ./€ ./‹ ./› ./ﬁ ./ﬂ ./˜ ./ˇ
@@ -896,14 +888,13 @@ par_quote_special_results	mkfs.vfat	301+0 records in
 par_quote_special_results	mkfs.vfat	301+0 records out
 par_quote_special_results	mkfs.msdos	mkfs.fat 4.2 (2021-01-31)
 par_quote_special_results	mkfs.msdos	Filesystem 1K-blocks Used Available Use% Mounted on
-par_quote_special_results	mkfs.msdos	/dev/loop 999999 99999 99999 0% /tmp/par-test-loop
+par_quote_special_results	mkfs.msdos	/dev/loop 999999 99999 99999 9% /tmp/par-test-loop
 par_quote_special_results	mkfs.msdos	. ./++ ./++++ ./++_ ./++__ ./++m ./++z ./+_ ./+__ ./+m ./+z ./,
 par_quote_special_results	mkfs.msdos	. ./! ./# ./$ ./% ./& ./' ./( ./) ./++ ./+01 ./+02 ./+03 ./+04 ./+05 ./+06 ./+07 ./+08 ./+09 ./+0a ./+0b ./+0c ./+0d ./+0e ./+0f ./+10 ./+11 ./+12 ./+13 ./+14 ./+15 ./+16 ./+17 ./+18 ./+19 ./+1a ./+1b ./+1c ./+1d ./+1e ./+1f ./+20 ./+_ ./+a ./+b ./+d ./+g ./+k ./+l ./+p ./+y ./+z ./, ./- ./0 ./1 ./2 ./3 ./4 ./5 ./6 ./7 ./8 ./9 ./; ./= ./@ ./A ./B ./C ./D ./E ./F ./G ./H ./I ./J ./K ./L ./M ./N ./O ./P ./Q ./R ./S ./T ./U ./V ./W ./X ./Y ./Z ./[ ./] ./^ ./_ ./` ./{ ./} ./~ ./ ./Ä
 par_quote_special_results	mkfs.msdos	. ./Ä ./Å ./Ç ./É ./Ñ ./Ö ./Ü ./á ./à ./â ./ä ./ã ./å ./ç ./é ./è ./ê ./ë ./í ./ì ./î ./ï ./ñ ./ó ./ò ./ô ./ö ./õ ./ú ./ù ./û ./ü ./† ./° ./¢ ./£ ./§ ./• ./¶ ./ß ./® ./© ./™ ./´ ./¨ ./≠ ./Æ ./Ø ./∞ ./± ./≤ ./≥ ./¥ ./µ ./∂ ./∑ ./∏ ./π ./∫ ./ª ./º ./Ω ./æ ./ø ./¿ ./¡ ./¬ ./√ ./ƒ ./≈ ./∆ ./« ./» ./… ./  ./À ./Ã ./Õ ./Œ ./œ ./– ./— ./“ ./” ./‘ ./’ ./÷ ./◊ ./ÿ ./Ÿ ./⁄ ./€ ./‹ ./› ./ﬁ ./ﬂ ./˜ ./ˇ
 par_quote_special_results	mkfs.msdos	301+0 records in
 par_quote_special_results	mkfs.msdos	301+0 records out
 par_quote_special_results	mkfs.f2fs	
-par_quote_special_results	mkfs.f2fs		F2FS-tools: mkfs.f2fs Ver: 1.14.0 (2020-08-24)
 par_quote_special_results	mkfs.f2fs	
 par_quote_special_results	mkfs.f2fs	Info: Disable heap-based policy
 par_quote_special_results	mkfs.f2fs	Info: Debug level = 0
@@ -917,7 +908,7 @@ par_quote_special_results	mkfs.f2fs	Info: format version with
 par_quote_special_results	mkfs.f2fs	Info: [/dev/shm/par-test-loop Discarding device
 par_quote_special_results	mkfs.f2fs	Info: format successful
 par_quote_special_results	mkfs.f2fs	Filesystem 1K-blocks Used Available Use% Mounted on
-par_quote_special_results	mkfs.f2fs	/dev/loop 999999 99999 99999 32% /tmp/par-test-loop
+par_quote_special_results	mkfs.f2fs	/dev/loop 999999 99999 99999 9% /tmp/par-test-loop
 par_quote_special_results	mkfs.f2fs	. ./++ ./++++ ./++_ ./++__ ./++m ./++z ./+_ ./+__ ./+m ./+z ./,. ./,..
 par_quote_special_results	mkfs.f2fs	
 par_quote_special_results	mkfs.f2fs	. ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./par_quote_special_results	mkfs.f2fs	 ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./! ./" ./# ./$ ./% ./& ./' ./( ./) ./* ./++ ./+_ ./+z ./, ./- ./0 ./1 ./2 ./3 ./4 ./5 ./6 ./7 ./8 ./9 ./: ./; ./< ./= ./> ./? ./@ ./A ./B ./C ./D ./E ./F ./G ./H ./I ./J ./K ./L ./M ./N ./O ./P ./Q ./R ./S ./T ./U ./V ./W ./X ./Y ./Z ./[ ./\ ./] ./^ ./_ ./` ./a ./b ./c ./d ./e ./f ./g ./h ./i ./j ./k ./l ./m ./n ./o ./p ./q ./r ./s ./t ./u ./v ./w ./x ./y ./z ./{ ./| ./} ./~ ./ ./Ä

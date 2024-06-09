@@ -77,10 +77,12 @@ par__sshpass_with_password	OK
 par__sshpass_with_password	### Crazy passwords: `date>>/tmp/trap`;(|<*&)'
 par__sshpass_with_password	parallel: Warning: Using password or SSHPASS with --(n)onall exposes the password
 par__sshpass_with_password	parallel: Warning: on the command line, making it visible to local users via `ps`.
-par__sshpass_with_password	ssh: Could not resolve hostname host: No address associated with hostnamepar__sshpass_with_password	
+par__sshpass_with_password	ssh: Could not resolve hostname host: No address associated with hostname
+par__sshpass_with_password	
 par__sshpass_with_password	parallel: Warning: Using password or SSHPASS with --(n)onall exposes the password
 par__sshpass_with_password	parallel: Warning: on the command line, making it visible to local users via `ps`.
-par__sshpass_with_password	ssh: Could not resolve hostname host: No address associated with hostnamepar__sshpass_with_password	
+par__sshpass_with_password	ssh: Could not resolve hostname host: No address associated with hostname
+par__sshpass_with_password	
 par__sshpass_with_password	This must stay empty
 par_csh_variable_newline	### Can csh propagate a variable containing \n
 par_csh_variable_newline	1

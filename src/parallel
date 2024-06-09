@@ -2768,7 +2768,7 @@ sub check_invalid_option_combinations() {
     }
     sub test_safe_chars {
 	my $var = shift;
-	if($ENV{$var} =~ m{^[-a-z0-9_+,.%:/= ]*$}i) {
+	if($ENV{$var} =~ m{^[-a-z0-9_+,.%:/= ]*$}is) {
 	    # OK
 	} else {
 	    unsafe_warn("\$$var can only contain [-a-z0-9_+,.%:/= ].");
@@ -2783,8 +2783,8 @@ sub check_invalid_option_combinations() {
 	    ::warning("--cat/--fifo fails under csh ".
 		      "if \$TMPDIR contains newline.");
 	}
-    } elsif($ENV{'TMPDIR'} =~ /\257/) {
-	unsafe_warn("\$TMPDIR with \\257 (\257) is not supported.");
+    } elsif($ENV{'TMPDIR'} =~ /\177/) {
+	unsafe_warn("\$TMPDIR with \\177 (\177) is not supported.");
     } else{
 	test_safe_chars('TMPDIR');
     }
@@ -4583,7 +4583,7 @@ sub toggle_progress() {
 	if($Global::all_jobs_done) { $eta = now()-$Global::start_time; }
 	my $arg = $Global::newest_job ?
 	    $Global::newest_job->{'commandline'}->
-	    replace_placeholders(["\257<\257>"],0,0) : "";
+	    replace_placeholders(["\177<\177>"],0,0) : "";
 	$arg = decode_utf8($arg);
 	my $eta_dhms = ::seconds_to_time_units($eta);
 	my $bar_text =
@@ -12024,7 +12024,7 @@ sub print_parset($) {
 	# End: (done in wait_and_exit())
 	#   )'`"
 	print '[',::Q($self->{'commandline'}->
-		      replace_placeholders(["\257<\257>"],0,0)),']=';
+		      replace_placeholders(["\177<\177>"],0,0)),']=';
     } elsif($Global::parset eq "array") {
 	# Start: (done in parse_parset())
 	#   eval "`echo 'myassoc=(
@@ -13096,21 +13096,21 @@ sub replace_placeholders($$$$) {
     #	\0spc = unquoted space
     #	\0end = last token element
     #	\0ign = dummy token to be ignored
-    #	\257<...\257> = replacement expression
+    #	\177<...\177> = replacement expression
     #	" " = quoted space, that splits -X group
     #	text = normal text - possibly part of -X group
     my $spacer = 0;
     my @tokens = grep { length $_ > 0 } map {
-	if(/^\257<|^ $/) {
-	    # \257<...\257> or space
+	if(/^\177<|^ $/) {
+	    # \177<...\177> or space
 	    $_
 	} else {
 	    # Split each space/tab into a token
 	    split /(?=\s)|(?<=\s)/
 	}
     }
-    # Split \257< ... \257> into own token
-    map { split /(?=\257<)|(?<=\257>)/ }
+    # Split \177< ... \177> into own token
+    map { split /(?=\177<)|(?<=\177>)/ }
     # Insert "\0spc" between every element
     # This space should never be quoted
     map { $spacer++ ? ("\0spc",$_) : $_ }
@@ -13137,7 +13137,7 @@ sub replace_placeholders($$$$) {
     # $self is actually a CommandLine-object,
     # but it looks nice to be able to say {= $job->slot() =}
     my $job = $self;
-    # @replaced = tokens with \257< \257> replaced
+    # @replaced = tokens with \177< \177> replaced
     my @replaced;
     if($self->{'context_replace'}) {
 	my @ctxgroup;
@@ -13145,7 +13145,7 @@ sub replace_placeholders($$$$) {
 	    # \0end = last token was end of tokens.
 	    if($t eq "\t" or $t eq " " or $t eq "\0end" or $t eq "\0spc") {
 		# Context group complete: Replace in it
-		if(grep { /^\257</ } @ctxgroup) {
+		if(grep { /^\177</ } @ctxgroup) {
 		    # Context group contains a replacement string:
 		    # Copy once per arg
 		    my $space = "\0ign";
@@ -13157,7 +13157,7 @@ sub replace_placeholders($$$$) {
 			CORE::push @replaced, $space, map {
 			    $a = $_;
 			    if($a =~
-				s{\257<(-?\d+)?(.*)\257>}
+				s{\177<(-?\d+)?(.*)\177>}
 			    {
 				if($1) {
 				    # Positional replace
@@ -13172,12 +13172,12 @@ sub replace_placeholders($$$$) {
 				    ($arg ? $arg->replace($2,$quote_arg,$self) : "");
 				}
 			    }sgxe) {
-				# Token is \257<..\257>
+				# Token is \177<..\177>
 			    } else {
 				if($Global::escape_string_present) {
-				    # Command line contains \257:
-				    # Unescape it \257\256 => \257
-				    $a =~ s/\257\256/\257/g;
+				    # Command line contains \177:
+				    # Unescape it \177\256 => \177
+				    $a =~ s/\177\176/\177/g;
 				}
 			    }
 			    $a
@@ -13188,7 +13188,12 @@ sub replace_placeholders($$$$) {
 		} else {
 		    # Context group has no a replacement string: Copy it once
 		    CORE::push @replaced, map {
-			$Global::escape_string_present and s/\257\256/\257/g; $_;
+			if($Global::escape_string_present) {
+			    # Command line contains \177:
+			    # Unescape it \177\176 => \177
+			    $a =~ s/\177\176/\177/g;
+			}
+			$_;
 		    } @ctxgroup;
 		}
 		# New context group
@@ -13206,13 +13211,13 @@ sub replace_placeholders($$$$) {
 	# Push output
 	# repquote = no if {} first on line, no if $quote, yes otherwise
 	for my $t (@tokens) {
-	    if($t =~ /^\257</) {
+	    if($t =~ /^\177</) {
 		my $space = "\0ign";
 		for my $arg (@$argref) {
 		    my $normal_replace;
 		    $a = $t;
 		    $a =~
-			s{\257<(-?\d+)?(.*)\257>}
+			s{\177<(-?\d+)?(.*)\177>}
 		    {
 			if($1) {
 			    # Positional replace
@@ -13235,7 +13240,7 @@ sub replace_placeholders($$$$) {
 	    } else {
 		# No replacement
 		CORE::push @replaced, map {
-		    $Global::escape_string_present and s/\257\256/\257/g; $_;
+		    $Global::escape_string_present and s/\177\176/\177/g; $_;
 		} $t;
 	    }
 	}
@@ -13296,7 +13301,7 @@ sub new($) {
     @command = merge_rpl_parts(@command);
 
     # Protect matching inside {= perl expr =}
-    # by replacing {= and =} with \257< and \257>
+    # by replacing {= and =} with \177< and \177>
     # in options that can contain replacement strings:
     # @command, --transferfile, --return,
     # --tagstring, --workdir, --results
@@ -13306,21 +13311,21 @@ sub new($) {
 	@opt::filter) {
 	# Skip if undefined
 	defined($_) or next;
-	# Escape \257 => \257\256
-	$Global::escape_string_present += s/\257/\257\256/g;
+	# Escape \177 => \177\176
+	$Global::escape_string_present += s/\177/\177\176/g;
 	# Needs to match rightmost left parens (Perl defaults to leftmost)
 	# to deal with: {={==} and {={==}=}
-	# Replace {= -> \257<  and  =} -> \257>
+	# Replace {= -> \177<  and  =} -> \177>
 	#
 	# Complex way to do:
-	#   s/{=(.*)=}/\257<$1\257>/g
+	#   s/{=(.*)=}/\177<$1\177>/g
 	# which would not work
 	s[\Q$Global::parensleft\E # Match {=
 	  # Match . unless the next string is {= or =}
 	  #   needed to force matching the shortest {= =}
 	  ((?:(?! \Q$Global::parensleft\E|\Q$Global::parensright\E ).)*?)
 	  \Q$Global::parensright\E ] # Match =}
-	{\257<$1\257>}gxs;
+	{\177<$1\177>}gxs;
 	for my $rpl (sort { length $b <=> length $a } keys %Global::rpl) {
 	    # Replace long --rpl's before short ones, as a short may be a
 	    # substring of a long:
@@ -13342,8 +13347,8 @@ sub new($) {
 			/xs;
 	    $grp_regexp ||= '';
 	    my $rplval = $Global::rpl{$rpl};
-	    while(s{( (?: ^|\257> ) (?: [^\257]*|[\257][^<>] )*? )
-		      # Don't replace after \257 unless \257>
+	    while(s{( (?: ^|\177> ) (?: [^\177]*|[\177][^<>] )*? )
+		      # Don't replace after \177 unless \177>
 		    \Q$prefix\E $grp_regexp \Q$postfix\E}
 		  {
 		      # The start remains the same
@@ -13366,7 +13371,7 @@ sub new($) {
 			  $set_args .= "\$_pAr_gRp$i = \"" .
 			      ::perl_quote_scalar($grp[$i]) . "\";";
 		      }
-		      $unchanged . "\257<" . $set_args . $rv . "\257>"
+		      $unchanged . "\177<" . $set_args . $rv . "\177>"
 		  }gxes) {
 	    }
 	    # Do the same for the positional replacement strings
@@ -13374,8 +13379,8 @@ sub new($) {
 	    if($posrpl =~ s/^\{//) {
 		# Only do this if the shorthand start with {
 		$prefix=~s/^\{//;
-		# Don't replace after \257 unless \257>
-		while(s{( (?: ^|\257> ) (?: [^\257]*|[\257][^<>] )*? )
+		# Don't replace after \177 unless \177>
+		while(s{( (?: ^|\177> ) (?: [^\177]*|[\177][^<>] )*? )
 		  \{(-?\d+) \s* \Q$prefix\E $grp_regexp \Q$postfix\E}
 		      {
 		      # The start remains the same
@@ -13399,7 +13404,7 @@ sub new($) {
 			  $set_args .= "\$_pAr_gRp$i = \"" .
 			      ::perl_quote_scalar($grp[$i]) . "\";";
 		      }
-		      $unchanged . "\257<" . $position . $set_args . $rv . "\257>"
+		      $unchanged . "\177<" . $position . $set_args . $rv . "\177>"
 		  }gxes) {
 		}
 	    }
@@ -13410,7 +13415,7 @@ sub new($) {
 	replacement_counts_and_lengths($transfer_files, $return_files,
 				       $template_names, $template_contents,
 				       @command);
-    if("@command" =~ /^[^ \t\n=]*\257</) {
+    if("@command" =~ /^[^ \t\n=]*\177</) {
 	# Replacement string is (part of) the command (and not just
 	# argument or variable definition V1={})
 	# E.g. parallel {}, parallel my_{= s/_//=}, parallel {2}
@@ -13503,7 +13508,7 @@ sub replacement_counts_and_lengths($$@) {
 	my $noncontextlen = 0;
 	my $contextgroups = 0;
 	for my $c (@cmd) {
-	    while($c =~ s/ \257<( (?: [^\257]*|[\257][^<>] )*?)\257> /\000/xs) {
+	    while($c =~ s/ \177<( (?: [^\177]*|[\177][^<>] )*?)\177> /\000/xs) {
 		# %replacecount = { "perlexpr" => number of times seen }
 		# e.g { "s/a/b/" => 2 }
 		$replacecount{$1}++;
@@ -13511,7 +13516,7 @@ sub replacement_counts_and_lengths($$@) {
 	    }
 	    # Measure the length of the context around the {= perl expr =}
 	    # Use that {=...=} has been replaced with \000 above
-	    # So there is no need to deal with \257<
+	    # So there is no need to deal with \177<
 	    while($c =~ s/ (\S*\000\S*) //xs) {
 		my $w = $1;
 		$w =~ tr/\000//d; # Remove all \000's
@@ -13528,7 +13533,7 @@ sub replacement_counts_and_lengths($$@) {
 	    # Options that can contain replacement strings
 	    defined($_) or next;
 	    my $t = $_;
-	    while($t =~ s/ \257<( (?: [^\257]*|[\257][^<>] )* )\257> //xs) {
+	    while($t =~ s/ \177<( (?: [^\177]*|[\177][^<>] )* )\177> //xs) {
 		# %replacecount = { "perlexpr" => number of times seen }
 		# e.g { "$_++" => 2 }
 		# But for tagstring we just need to mark it as seen
@@ -13551,14 +13556,14 @@ sub replacement_counts_and_lengths($$@) {
 	if($sum == 0) {
 	    if(not @command) {
 		# Default command = {}
-		@command = ("\257<\257>");
+		@command = ("\177<\177>");
 	    } elsif(($opt::pipe or $opt::pipepart)
 		    and not $opt::fifo and not $opt::cat) {
 		# With --pipe / --pipe-part you can have no replacement
 		last;
 	    } else {
 		# Append {} to the command if there are no {...}'s and no {=...=}
-		push @command, ("\257<\257>");
+		push @command, ("\177<\177>");
 	    }
 	}
     }
@@ -13585,7 +13590,7 @@ sub get($) {
 					       $self->{'template_name'},
 					       $self->{'template_contents'},
 					       @$SQL::command_ref);
-	    if("@command" =~ /^[^ \t\n=]*\257</) {
+	    if("@command" =~ /^[^ \t\n=]*\177</) {
 		# Replacement string is (part of) the command (and not just
 		# argument or variable definition V1={})
 		# E.g. parallel {}, parallel my_{= s/_//=}, parallel {2}
@@ -15035,8 +15040,8 @@ sub insert_records($) {
     my $command_ref = shift;
     my $record_ref = shift;
     my $table = $self->table();
-    # For SQL encode the command with \257 space as split points
-    my $command = join("\257 ",@$command_ref);
+    # For SQL encode the command with \177 space as split points
+    my $command = join("\177 ",@$command_ref);
     my @v_cols = map { ", V$_" } (1..$self->max_number_of_args());
     # Two extra value due to $seq, Exitval, Send
     my $v_vals = join ",", map { "?" } (1..$self->max_number_of_args()+4);
@@ -15083,8 +15088,21 @@ sub get_record($) {
 	    # Save the sequence number to use when running the job
 	    $SQL::next_seq = $seq;
 	    $self->update("SET Exitval = ? WHERE Seq = ".$seq, -1220);
-	    # Command is encoded with '\257 space' as splitting char
-	    my @command = split /\257 /, shift @$val_ref;
+	    # Command is encoded with '\177 space' as delimiter
+	    my @command;
+	    my $encoded_cmd = shift @$val_ref;
+	    if($encoded_cmd =~ /\177 /) {
+		@command = split /\177 /, $encoded_cmd;
+	    } else {
+		# (\257 space for backward compatability)
+		@command = split /\257 /, $encoded_cmd;
+		# Recode \257 => \177
+		for (@command,@$val_ref) {
+		    s/\257</\177</g;
+		    s/\257>/\177>/g;
+		    s/\257\256/\257/g;
+		}
+	    }
 	    $SQL::command_ref = \@command;
 	    for (@$val_ref) {
 		push @retval, Arg->new($_);

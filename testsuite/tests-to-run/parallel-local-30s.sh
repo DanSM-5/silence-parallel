@@ -299,8 +299,9 @@ par_exit_code() {
     parallel -uj0 --halt now,done=1 ::: runit killsleep
 }
 
-par_macron() {
+par_internal_quote_char() {
     echo '### See if \257\256 \257<\257> is replaced correctly'
+    echo '### See if \177\176 \177<\177> is replaced correctly'
     print_it() {
 	parallel $2 ::: "echo $1"
 	parallel $2 echo ::: "$1"
@@ -310,11 +311,27 @@ par_macron() {
 	parallel $2 echo \""$1"\"{} ::: "$1"
     }
     export -f print_it
-    parallel --tag -k print_it \
-      ::: "$(perl -e 'print "\257"')" "$(perl -e 'print "\257\256"')" \
-      "$(perl -e 'print "\257\257\256"')" \
-      "$(perl -e 'print "\257<\257<\257>\257>"')" \
-      ::: -X -q -Xq -k
+    a257="$(printf "\257")"
+    a256="$(printf "\256")"
+    a177="$(printf "\177")"
+    a176="$(printf "\176")"
+    stdout parallel --tag -k print_it \
+	     ::: "$a257" "$a177" "$a257$a256" "$a177$a176" \
+	     "$a257$a257$a256" "$a177$a177$a176" \
+	     "$a257<$a257<$a257>$a257" "$a177<$a177<$a177>$a177" \
+	     ::: -X -q -Xq -k |
+	# Upgrade old bash error to new bash error
+	perl -pe 's/No such file or directory/Invalid or incomplete multibyte or wide character/g'
+    cd "$TMPDIR"
+    echo "Compare old quote char csv"
+    parallel-20231222 --sqlmaster csv:///./oldformat.csv echo "$(printf "\257\257 \177\177")" ::: 1 2 3
+    stdout parallel -k --sqlworker csv:///./oldformat.csv echo "$(printf "\257\257 \177\177")" ::: 1 2 3 |
+	od -t x1z > old.out
+    echo "with new quote char csv (must be the same)"
+    parallel --sqlmaster csv:///./newformat.csv echo "$(printf "\257\257 \177\177")" ::: 1 2 3
+    stdout parallel -k --sqlworker csv:///./newformat.csv echo "$(printf "\257\257 \177\177")" ::: 1 2 3 |
+	od -t x1z > new.out
+    diff old.out new.out && echo OK
 }
 
 par_groupby() {
@@ -688,18 +705,26 @@ par__plus_dyn_repl() {
 }
 
 par_test_ipv6_format() {
+    ipv4() {
+	ifconfig | perl -nE '/inet (\S+) / and say $1'
+    }
+    ipv6() {
+	ifconfig | perl -nE '/inet6 ([0-9a-f:]+) .*(host|global)/ and say $1'
+    }
+    (ipv4; ipv6) |
+	parallel ssh -oStrictHostKeyChecking=accept-new {} true 2>/dev/null
     echo '### Host as IPv6 address'
     (
-	ifconfig |
+	ipv6 |
             # Get IPv6 addresses of local server
-            perl -nE '/inet6 ([0-9a-f:]+) .*(host|global)/ and
+            perl -nE '/([0-9a-f:]+)/ and
               map {say $1,$_,22; say $1,$_,"ssh"} qw(: . #  p q)' |
             # 9999::9999:9999:22 => [9999::9999:9999]:22
 	    # 9999::9999:9999q22 => 9999::9999:9999
             perl -pe 's/(.*):(22|ssh)$/[$1]:$2/;s/q.*//;'
-	ifconfig |
+	ipv4 |
             # Get IPv4 addresses
-            perl -nE '/inet (\S+) / and
+            perl -nE '/(\S+)/ and
               map {say $1,$_,22; say $1,$_,"ssh"} qw(:  q)' |
             # 9.9.9.9q22 => 9.9.9.9
             perl -pe 's/q.*//;'

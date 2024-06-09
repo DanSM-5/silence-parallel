@@ -2652,105 +2652,200 @@ par_groupby	--block 20 C1 $_%=2 csv ,	parallel: Warning: A record was longer tha
 par_groupby	--block 20 C1 $_%=2 csv ,	parallel: Warning: A record was longer than 37. Increasing to --blocksize 50.
 par_groupby	--block 20 C1 $_%=2 csv ,	parallel: Warning: A record was longer than 50. Increasing to --blocksize 66.
 par_groupby	--block 20 C1 $_%=2 csv ,	parallel: Warning: A record was longer than 66. Increasing to --blocksize 87.
-par_macron	### See if \257\256 \257<\257> is replaced correctly
-par_macron	п -X	п
-par_macron	п -X	п
-par_macron	п -X	п п
-par_macron	п -X	п п
-par_macron	п -X	пп
-par_macron	п -X	пп
-par_macron	п -q	п
-par_macron	п -q	п п
-par_macron	п -q	"п" п
-par_macron	п -q	пп
-par_macron	п -q	"п"п
-par_macron	п -q	/usr/bin/bash: line 1: $'echo \257': command not found
-par_macron	п -Xq	п
-par_macron	п -Xq	п п
-par_macron	п -Xq	"п" п
-par_macron	п -Xq	пп
-par_macron	п -Xq	"п"п
-par_macron	п -Xq	/usr/bin/bash: line 1: $'echo \257': command not found
-par_macron	п -k	п
-par_macron	п -k	п
-par_macron	п -k	п п
-par_macron	п -k	п п
-par_macron	п -k	пп
-par_macron	п -k	пп
-par_macron	по -X	по
-par_macron	по -X	по
-par_macron	по -X	по по
-par_macron	по -X	по по
-par_macron	по -X	попо
-par_macron	по -X	попо
-par_macron	по -q	по
-par_macron	по -q	по по
-par_macron	по -q	"по" по
-par_macron	по -q	попо
-par_macron	по -q	"по"по
-par_macron	по -q	/usr/bin/bash: line 1: $'echo \257\256': command not found
-par_macron	по -Xq	по
-par_macron	по -Xq	по по
-par_macron	по -Xq	"по" по
-par_macron	по -Xq	попо
-par_macron	по -Xq	"по"по
-par_macron	по -Xq	/usr/bin/bash: line 1: $'echo \257\256': command not found
-par_macron	по -k	по
-par_macron	по -k	по
-par_macron	по -k	по по
-par_macron	по -k	по по
-par_macron	по -k	попо
-par_macron	по -k	попо
-par_macron	ппо -X	ппо
-par_macron	ппо -X	ппо
-par_macron	ппо -X	ппо ппо
-par_macron	ппо -X	ппо ппо
-par_macron	ппо -X	ппоппо
-par_macron	ппо -X	ппоппо
-par_macron	ппо -q	ппо
-par_macron	ппо -q	ппо ппо
-par_macron	ппо -q	"ппо" ппо
-par_macron	ппо -q	ппоппо
-par_macron	ппо -q	"ппо"ппо
-par_macron	ппо -q	/usr/bin/bash: line 1: $'echo \257\257\256': command not found
-par_macron	ппо -Xq	ппо
-par_macron	ппо -Xq	ппо ппо
-par_macron	ппо -Xq	"ппо" ппо
-par_macron	ппо -Xq	ппоппо
-par_macron	ппо -Xq	"ппо"ппо
-par_macron	ппо -Xq	/usr/bin/bash: line 1: $'echo \257\257\256': command not found
-par_macron	ппо -k	ппо
-par_macron	ппо -k	ппо
-par_macron	ппо -k	ппо ппо
-par_macron	ппо -k	ппо ппо
-par_macron	ппо -k	ппоппо
-par_macron	ппо -k	ппоппо
-par_macron	п<п<п>п> -X	п<п<п>п>
-par_macron	п<п<п>п> -X	п<п<п>п> п<п<п>п>
-par_macron	п<п<п>п> -X	п<п<п>п>п<п<п>п>
-par_macron	п<п<п>п> -X	/usr/bin/bash: -c: line 1: syntax error near unexpected token `newline'
-par_macron	п<п<п>п> -X	/usr/bin/bash: -c: line 1: `echo п<п<п>п>'
-par_macron	п<п<п>п> -X	/usr/bin/bash: line 1: п: No such file or directory
-par_macron	п<п<п>п> -X	/usr/bin/bash: line 1: п: No such file or directory
-par_macron	п<п<п>п> -q	п<п<п>п>
-par_macron	п<п<п>п> -q	п<п<п>п> п<п<п>п>
-par_macron	п<п<п>п> -q	"п<п<п>п>" п<п<п>п>
-par_macron	п<п<п>п> -q	п<п<п>п>п<п<п>п>
-par_macron	п<п<п>п> -q	"п<п<п>п>"п<п<п>п>
-par_macron	п<п<п>п> -q	/usr/bin/bash: line 1: $'echo \257<\257<\257>\257>': command not found
-par_macron	п<п<п>п> -Xq	п<п<п>п>
-par_macron	п<п<п>п> -Xq	п<п<п>п> п<п<п>п>
-par_macron	п<п<п>п> -Xq	"п<п<п>п>" п<п<п>п>
-par_macron	п<п<п>п> -Xq	п<п<п>п>п<п<п>п>
-par_macron	п<п<п>п> -Xq	"п<п<п>п>"п<п<п>п>
-par_macron	п<п<п>п> -Xq	/usr/bin/bash: line 1: $'echo \257<\257<\257>\257>': command not found
-par_macron	п<п<п>п> -k	п<п<п>п>
-par_macron	п<п<п>п> -k	п<п<п>п> п<п<п>п>
-par_macron	п<п<п>п> -k	п<п<п>п>п<п<п>п>
-par_macron	п<п<п>п> -k	/usr/bin/bash: -c: line 1: syntax error near unexpected token `newline'
-par_macron	п<п<п>п> -k	/usr/bin/bash: -c: line 1: `echo п<п<п>п>'
-par_macron	п<п<п>п> -k	/usr/bin/bash: line 1: п: No such file or directory
-par_macron	п<п<п>п> -k	/usr/bin/bash: line 1: п: No such file or directory
+par_internal_quote_char	### See if \257\256 \257<\257> is replaced correctly
+par_internal_quote_char	### See if \177\176 \177<\177> is replaced correctly
+par_internal_quote_char	п -X	п
+par_internal_quote_char	п -X	п
+par_internal_quote_char	п -X	п п
+par_internal_quote_char	п -X	п п
+par_internal_quote_char	п -X	пп
+par_internal_quote_char	п -X	пп
+par_internal_quote_char	п -q	п
+par_internal_quote_char	п -q	п п
+par_internal_quote_char	п -q	"п" п
+par_internal_quote_char	п -q	пп
+par_internal_quote_char	п -q	"п"п
+par_internal_quote_char	п -q	/usr/bin/bash: line 1: $'echo \257': command not found
+par_internal_quote_char	п -Xq	п
+par_internal_quote_char	п -Xq	п п
+par_internal_quote_char	п -Xq	"п" п
+par_internal_quote_char	п -Xq	пп
+par_internal_quote_char	п -Xq	"п"п
+par_internal_quote_char	п -Xq	/usr/bin/bash: line 1: $'echo \257': command not found
+par_internal_quote_char	п -k	п
+par_internal_quote_char	п -k	п
+par_internal_quote_char	п -k	п п
+par_internal_quote_char	п -k	п п
+par_internal_quote_char	п -k	пп
+par_internal_quote_char	п -k	пп
+par_internal_quote_char	 -X	
+par_internal_quote_char	 -X	
+par_internal_quote_char	 -X	~ 
+par_internal_quote_char	 -X	~ 
+par_internal_quote_char	 -X	
+par_internal_quote_char	 -X	
+par_internal_quote_char	 -q	
+par_internal_quote_char	 -q	 
+par_internal_quote_char	 -q	"" 
+par_internal_quote_char	 -q	
+par_internal_quote_char	 -q	""
+par_internal_quote_char	 -q	/usr/bin/bash: line 1: $'echo \177': command not found
+par_internal_quote_char	 -Xq	
+par_internal_quote_char	 -Xq	~ 
+par_internal_quote_char	 -Xq	"~" 
+par_internal_quote_char	 -Xq	
+par_internal_quote_char	 -Xq	""
+par_internal_quote_char	 -Xq	/usr/bin/bash: line 1: $'echo \177': command not found
+par_internal_quote_char	 -k	
+par_internal_quote_char	 -k	
+par_internal_quote_char	 -k	 
+par_internal_quote_char	 -k	 
+par_internal_quote_char	 -k	
+par_internal_quote_char	 -k	
+par_internal_quote_char	по -X	по
+par_internal_quote_char	по -X	по
+par_internal_quote_char	по -X	по по
+par_internal_quote_char	по -X	по по
+par_internal_quote_char	по -X	попо
+par_internal_quote_char	по -X	попо
+par_internal_quote_char	по -q	по
+par_internal_quote_char	по -q	по по
+par_internal_quote_char	по -q	"по" по
+par_internal_quote_char	по -q	попо
+par_internal_quote_char	по -q	"по"по
+par_internal_quote_char	по -q	/usr/bin/bash: line 1: $'echo \257\256': command not found
+par_internal_quote_char	по -Xq	по
+par_internal_quote_char	по -Xq	по по
+par_internal_quote_char	по -Xq	"по" по
+par_internal_quote_char	по -Xq	попо
+par_internal_quote_char	по -Xq	"по"по
+par_internal_quote_char	по -Xq	/usr/bin/bash: line 1: $'echo \257\256': command not found
+par_internal_quote_char	по -k	по
+par_internal_quote_char	по -k	по
+par_internal_quote_char	по -k	по по
+par_internal_quote_char	по -k	по по
+par_internal_quote_char	по -k	попо
+par_internal_quote_char	по -k	попо
+par_internal_quote_char	~ -X	~
+par_internal_quote_char	~ -X	~
+par_internal_quote_char	~ -X	~~ ~
+par_internal_quote_char	~ -X	~~ ~
+par_internal_quote_char	~ -X	~~
+par_internal_quote_char	~ -X	~~
+par_internal_quote_char	~ -q	~
+par_internal_quote_char	~ -q	~ ~
+par_internal_quote_char	~ -q	"~" ~
+par_internal_quote_char	~ -q	~~
+par_internal_quote_char	~ -q	"~"~
+par_internal_quote_char	~ -q	/usr/bin/bash: line 1: $'echo \177~': command not found
+par_internal_quote_char	~ -Xq	~
+par_internal_quote_char	~ -Xq	~~ ~
+par_internal_quote_char	~ -Xq	"~~" ~
+par_internal_quote_char	~ -Xq	~~
+par_internal_quote_char	~ -Xq	"~"~
+par_internal_quote_char	~ -Xq	/usr/bin/bash: line 1: $'echo \177~': command not found
+par_internal_quote_char	~ -k	~
+par_internal_quote_char	~ -k	~
+par_internal_quote_char	~ -k	~ ~
+par_internal_quote_char	~ -k	~ ~
+par_internal_quote_char	~ -k	~~
+par_internal_quote_char	~ -k	~~
+par_internal_quote_char	ппо -X	ппо
+par_internal_quote_char	ппо -X	ппо
+par_internal_quote_char	ппо -X	ппо ппо
+par_internal_quote_char	ппо -X	ппо ппо
+par_internal_quote_char	ппо -X	ппоппо
+par_internal_quote_char	ппо -X	ппоппо
+par_internal_quote_char	ппо -q	ппо
+par_internal_quote_char	ппо -q	ппо ппо
+par_internal_quote_char	ппо -q	"ппо" ппо
+par_internal_quote_char	ппо -q	ппоппо
+par_internal_quote_char	ппо -q	"ппо"ппо
+par_internal_quote_char	ппо -q	/usr/bin/bash: line 1: $'echo \257\257\256': command not found
+par_internal_quote_char	ппо -Xq	ппо
+par_internal_quote_char	ппо -Xq	ппо ппо
+par_internal_quote_char	ппо -Xq	"ппо" ппо
+par_internal_quote_char	ппо -Xq	ппоппо
+par_internal_quote_char	ппо -Xq	"ппо"ппо
+par_internal_quote_char	ппо -Xq	/usr/bin/bash: line 1: $'echo \257\257\256': command not found
+par_internal_quote_char	ппо -k	ппо
+par_internal_quote_char	ппо -k	ппо
+par_internal_quote_char	ппо -k	ппо ппо
+par_internal_quote_char	ппо -k	ппо ппо
+par_internal_quote_char	ппо -k	ппоппо
+par_internal_quote_char	ппо -k	ппоппо
+par_internal_quote_char	~ -X	~
+par_internal_quote_char	~ -X	~
+par_internal_quote_char	~ -X	~~~ ~
+par_internal_quote_char	~ -X	~~~ ~
+par_internal_quote_char	~ -X	~~
+par_internal_quote_char	~ -X	~~
+par_internal_quote_char	~ -q	~
+par_internal_quote_char	~ -q	~ ~
+par_internal_quote_char	~ -q	"~" ~
+par_internal_quote_char	~ -q	~~
+par_internal_quote_char	~ -q	"~"~
+par_internal_quote_char	~ -q	/usr/bin/bash: line 1: $'echo \177\177~': command not found
+par_internal_quote_char	~ -Xq	~
+par_internal_quote_char	~ -Xq	~~~ ~
+par_internal_quote_char	~ -Xq	"~~~" ~
+par_internal_quote_char	~ -Xq	~~
+par_internal_quote_char	~ -Xq	"~"~
+par_internal_quote_char	~ -Xq	/usr/bin/bash: line 1: $'echo \177\177~': command not found
+par_internal_quote_char	~ -k	~
+par_internal_quote_char	~ -k	~
+par_internal_quote_char	~ -k	~ ~
+par_internal_quote_char	~ -k	~ ~
+par_internal_quote_char	~ -k	~~
+par_internal_quote_char	~ -k	~~
+par_internal_quote_char	п<п<п>п -X	п<п<п>п
+par_internal_quote_char	п<п<п>п -X	п<п<п>п п<п<п>п
+par_internal_quote_char	п<п<п>п -X	п<п<п>пп<п<п>п
+par_internal_quote_char	п<п<п>п -X	/usr/bin/bash: line 1: п: Invalid or incomplete multibyte or wide character
+par_internal_quote_char	п<п<п>п -X	/usr/bin/bash: line 1: п: Invalid or incomplete multibyte or wide character
+par_internal_quote_char	п<п<п>п -X	/usr/bin/bash: line 1: п: Invalid or incomplete multibyte or wide character
+par_internal_quote_char	п<п<п>п -q	п<п<п>п
+par_internal_quote_char	п<п<п>п -q	п<п<п>п п<п<п>п
+par_internal_quote_char	п<п<п>п -q	"п<п<п>п" п<п<п>п
+par_internal_quote_char	п<п<п>п -q	п<п<п>пп<п<п>п
+par_internal_quote_char	п<п<п>п -q	"п<п<п>п"п<п<п>п
+par_internal_quote_char	п<п<п>п -q	/usr/bin/bash: line 1: $'echo \257<\257<\257>\257': command not found
+par_internal_quote_char	п<п<п>п -Xq	п<п<п>п
+par_internal_quote_char	п<п<п>п -Xq	п<п<п>п п<п<п>п
+par_internal_quote_char	п<п<п>п -Xq	"п<п<п>п" п<п<п>п
+par_internal_quote_char	п<п<п>п -Xq	п<п<п>пп<п<п>п
+par_internal_quote_char	п<п<п>п -Xq	"п<п<п>п"п<п<п>п
+par_internal_quote_char	п<п<п>п -Xq	/usr/bin/bash: line 1: $'echo \257<\257<\257>\257': command not found
+par_internal_quote_char	п<п<п>п -k	п<п<п>п
+par_internal_quote_char	п<п<п>п -k	п<п<п>п п<п<п>п
+par_internal_quote_char	п<п<п>п -k	п<п<п>пп<п<п>п
+par_internal_quote_char	п<п<п>п -k	/usr/bin/bash: line 1: п: Invalid or incomplete multibyte or wide character
+par_internal_quote_char	п<п<п>п -k	/usr/bin/bash: line 1: п: Invalid or incomplete multibyte or wide character
+par_internal_quote_char	п<п<п>п -k	/usr/bin/bash: line 1: п: Invalid or incomplete multibyte or wide character
+par_internal_quote_char	<<> -X	<<>
+par_internal_quote_char	<<> -X	~<~<~>~ <<>
+par_internal_quote_char	<<> -X	<<><<>
+par_internal_quote_char	<<> -X	/usr/bin/bash: line 1: : Invalid or incomplete multibyte or wide character
+par_internal_quote_char	<<> -X	/usr/bin/bash: line 1: ~: Invalid or incomplete multibyte or wide character
+par_internal_quote_char	<<> -X	/usr/bin/bash: line 1: : Invalid or incomplete multibyte or wide character
+par_internal_quote_char	<<> -q	<<>
+par_internal_quote_char	<<> -q	<<> <<>
+par_internal_quote_char	<<> -q	"<<>" <<>
+par_internal_quote_char	<<> -q	<<><<>
+par_internal_quote_char	<<> -q	"<<>"<<>
+par_internal_quote_char	<<> -q	/usr/bin/bash: line 1: $'echo \177<\177<\177>\177': command not found
+par_internal_quote_char	<<> -Xq	<<>
+par_internal_quote_char	<<> -Xq	~<~<~>~ <<>
+par_internal_quote_char	<<> -Xq	"~<~<~>~" <<>
+par_internal_quote_char	<<> -Xq	<<><<>
+par_internal_quote_char	<<> -Xq	"<<>"<<>
+par_internal_quote_char	<<> -Xq	/usr/bin/bash: line 1: $'echo \177<\177<\177>\177': command not found
+par_internal_quote_char	<<> -k	<<>
+par_internal_quote_char	<<> -k	<<> <<>
+par_internal_quote_char	<<> -k	<<><<>
+par_internal_quote_char	<<> -k	/usr/bin/bash: line 1: : No such file or directory
+par_internal_quote_char	<<> -k	/usr/bin/bash: line 1: : No such file or directory
+par_internal_quote_char	<<> -k	/usr/bin/bash: line 1: : No such file or directory
 par_max_length_len_128k	### BUG: The length for -X is not close to max (131072)
 par_max_length_len_128k	63xxx
 par_max_length_len_128k	63xxx

@@ -82,10 +82,8 @@ par_--env_underscore_fish	variables in aliases and arrays in functions work
 par_--env_underscore_fish	Test ignoring
 par_--env_underscore_fish	script (line 99): 
 par_--env_underscore_fish	not_copied_alias 'error=OK'
-par_--env_underscore_fish	^
 par_--env_underscore_fish	script (line 99): 
 par_--env_underscore_fish	not_copied_func 'error=OK'
-par_--env_underscore_fish	^
 par_--env_underscore_fish	error=OK
 par_--env_underscore_fish	error=OK
 par_--env_underscore_fish	Test single ignoring
@@ -104,11 +102,9 @@ par_--env_underscore_fish	in function 'myfunc' with arguments 'work'
 par_--env_underscore_fish		called on line 99 of file script
 par_--env_underscore_fish	OK if   ^^^^^^^^^^^^^^^^^ no myecho
 par_--env_underscore_fish	myfunc work
-par_--env_underscore_fish	^
 par_--env_underscore_fish	OK if   ^^^^^^^^^^^^^^^^^ no myfunc
 par_--env_underscore_fish	script (line 6): 
 par_--env_underscore_fish	myfunc work
-par_--env_underscore_fish	^
 par_--env_underscore_fish	OK if   ^^^^^^^^^^^^^^^^^ no myfunc
 par_--env_underscore_ksh	### ksh
 par_--env_underscore_ksh	### Testing of --env _
@@ -135,6 +131,14 @@ par_--env_underscore_ksh	OK if no myfunc         ^^^^^^^^^^^^^^^^^
 par_--env_underscore_ksh	script: line 2: myfunc: not found
 par_--env_underscore_ksh	OK if no myfunc         ^^^^^^^^^^^^^^^^^
 par_--env_underscore_mksh	### mksh
+par_--env_underscore_mksh	W: script[9]: not_copied_alias: inaccessible or not found
+par_--env_underscore_mksh	W: script[9]: not_copied_func: inaccessible or not found
+par_--env_underscore_mksh	OK if no myecho    ^^^^^^^^^^^^^^^^^
+par_--env_underscore_mksh	OK if no myecho    ^^^^^^^^^^^^^^^^^
+par_--env_underscore_mksh	W: /bin/mksh: myfunc: inaccessible or not found
+par_--env_underscore_mksh	OK if no myfunc         ^^^^^^^^^^^^^^^^^
+par_--env_underscore_mksh	W: script[9]: myfunc: inaccessible or not found
+par_--env_underscore_mksh	OK if no myfunc         ^^^^^^^^^^^^^^^^^
 par_--env_underscore_mksh	### Testing of --env _
 par_--env_underscore_mksh	variables in aliases in and arrays in functions work
 par_--env_underscore_mksh	variables in aliases in and arrays in functions work
@@ -142,8 +146,6 @@ par_--env_underscore_mksh	variables in aliases in and arrays in functions work
 par_--env_underscore_mksh	variables in aliases in and arrays in functions work
 par_--env_underscore_mksh	variables in aliases in and arrays in functions work
 par_--env_underscore_mksh	variables in aliases in and arrays in functions work
-par_--env_underscore_mksh	W: script[9]: not_copied_alias: inaccessible or not found
-par_--env_underscore_mksh	W: script[9]: not_copied_func: inaccessible or not found
 par_--env_underscore_mksh	error=OK
 par_--env_underscore_mksh	error=OK
 par_--env_underscore_mksh	aliases in and arrays in functions work
@@ -151,13 +153,7 @@ par_--env_underscore_mksh	aliases in and arrays in functions work
 par_--env_underscore_mksh	aliases in functions work
 par_--env_underscore_mksh	aliases in functions work
 par_--env_underscore_mksh	aliases in functions work
-par_--env_underscore_mksh	OK if no myecho    ^^^^^^^^^^^^^^^^^
 par_--env_underscore_mksh	aliases in functions work
-par_--env_underscore_mksh	OK if no myecho    ^^^^^^^^^^^^^^^^^
-par_--env_underscore_mksh	W: /bin/mksh: myfunc: inaccessible or not found
-par_--env_underscore_mksh	OK if no myfunc         ^^^^^^^^^^^^^^^^^
-par_--env_underscore_mksh	W: script[9]: myfunc: inaccessible or not found
-par_--env_underscore_mksh	OK if no myfunc         ^^^^^^^^^^^^^^^^^
 par_--env_underscore_sh	### sh
 par_--env_underscore_sh	### Testing of --env _
 par_--env_underscore_sh	variables in aliases work
@@ -1246,6 +1242,10 @@ par_env_parallel_--session_ksh	after varafter_OK
 par_env_parallel_--session_ksh	after varafter_OK
 par_env_parallel_--session_ksh	array after arrayafter_OK
 par_env_parallel_--session_ksh	array after arrayafter_OK
+par_env_parallel_--session_mksh	W: /bin/mksh: aliasbefore: inaccessible or not found
+par_env_parallel_--session_mksh	W: script[9]: aliasbefore: inaccessible or not found
+par_env_parallel_--session_mksh	W: /bin/mksh: funcbefore: inaccessible or not found
+par_env_parallel_--session_mksh	W: script[9]: funcbefore: inaccessible or not found
 par_env_parallel_--session_mksh	### Test env_parallel --session
 par_env_parallel_--session_mksh	### level0 should be hidden, level1 should be transferred
 par_env_parallel_--session_mksh	
@@ -1339,10 +1339,6 @@ par_env_parallel_--session_mksh	l2var
 par_env_parallel_--session_mksh	l2func
 par_env_parallel_--session_mksh	l2alias
 par_env_parallel_--session_mksh	level2 array OK
-par_env_parallel_--session_mksh	W: /bin/mksh: aliasbefore: inaccessible or not found
-par_env_parallel_--session_mksh	W: script[9]: aliasbefore: inaccessible or not found
-par_env_parallel_--session_mksh	W: /bin/mksh: funcbefore: inaccessible or not found
-par_env_parallel_--session_mksh	W: script[9]: funcbefore: inaccessible or not found
 par_env_parallel_--session_mksh	no_before
 par_env_parallel_--session_mksh	no_before
 par_env_parallel_--session_mksh	no_before
