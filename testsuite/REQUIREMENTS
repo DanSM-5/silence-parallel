@@ -433,6 +433,7 @@ lsh_setup() {
 	--capture-to ~/.lsh/host-acls lo echo Added host-auth
     lsh -c aes256-ctr --sloppy-host-authentication \
 	--capture-to ~/.lsh/host-acls localhost echo Added host-auth
+    rm -f .lsh/identity .lsh/identity.pub
     lsh-keygen | lsh-writekey -c none
     export_key_to_local_users() {
 	lsh-export-key --openssh < ~/.lsh/identity.pub |
@@ -454,9 +455,9 @@ lsh_setup() {
     #
     # There is no longer an overlap: LSH is unsupported until there is
     # a common algorithm again
-    (whoami; shellsplus) | parallel --bar --timeout 5 --retries 5 export_key_to_local_users
-    (whoami; shellsplus) | parallel --bar --timeout 5 --retries 5 'lsh -l {} lo true || export_key_to_local_users {}'
-    (whoami; shellsplus) | parallel --bar --timeout 5 --retries 5 'lsh -l {} lo true || echo Fail {}'
+    (whoami; shellsplus) | parallel --bar --timeout 10 --retries 5 export_key_to_local_users
+    (whoami; shellsplus) | parallel --bar --timeout 10 --retries 5 'lsh -l {} lo true || export_key_to_local_users {}'
+    (whoami; shellsplus) | parallel --bar --timeout 10 --retries 5 'lsh -l {} lo true || echo Fail {}'
 }
 
 add_freebsd() {
@@ -542,31 +543,70 @@ rsync_versions() {
 	  git tag | grep -v -- '-.*-' | grep -v pre)
      }
      make_one() {
+	 configure_make_install() {
+	     ./configure && make -j2 &&
+		 sudo cp rsync /usr/local/bin/rsync-$1
+	 }
+	 configure_make_proto_install() {
+	     ./configure && make proto && make -j2 &&
+		 sudo cp rsync /usr/local/bin/rsync-$1
+	 }
+	 edit_configure.in() {
+	     perl -i.bak -pe '
+		 $printed++ || print "AC_DEFINE([HAVE_LONGLONG], [], [long long support])\n",
+		 	      "AC_DEFINE([HAVE_UTIMBUF], [], [utimbuf is available])\n",
+			      "AC_DEFINE([HAVE_FNMATCH], [], [dummy])\n";
+	         s/AC_DEFINE_UNQUOTED.HAVE_REMSH, .HAVE_REMSH.*/AC_DEFINE_UNQUOTED(HAVE_REMSH, \$HAVE_REMSH,[dummy])/;
+		 s/AC_DEFINE.HAVE_ERRNO_DECL.,/AC_DEFINE(HAVE_ERRNO_DECL,[1],[dummy]),/;
+		 s/AC_CHECK_FUNC\((.*), , AC_LIBOBJ\((.*)\)\)/AC_CHECK_FUNC($1, , [AC_LIBOBJ($2)])/;
+		 s/AC_CHECK_FUNCS\((.*), , AC_LIBOBJ\((.*)\)\)/AC_CHECK_FUNCS($1, , [AC_LIBOBJ($2)])/;
+		 s/AC_DEFINE.HAVE_FNMATCH.,/AC_DEFINE(HAVE_FNMATCH,[1],[dummy]),/;' configure.in
+	 }
+	 build-older() {
+	     # rsync-mbp_bk_export0 rsync-v1.6.4 rsync-v1.6.5
+	     # rsync-v1.6.6 rsync-v1.6.7 rsync-v1.6.8 rsync-v1.6.9
+	     # rsync-v1.7.0 rsync-v1.7.1 rsync-v1.7.2 rsync-v1.7.3
+	     # rsync-v1.7.4 rsync-v2.0.0 rsync-v2.0.1 rsync-v2.0.2
+	     # rsync-v2.0.3 rsync-v2.0.4 rsync-v2.0.5 rsync-v2.0.6
+	     # rsync-v2.0.7 rsync-v2.0.8 rsync-v2.0.9 rsync-v2.0.10
+	     # rsync-v2.0.11 rsync-v2.0.12 rsync-v2.0.13 rsync-v2.0.14
+	     # rsync-v2.0.15 rsync-v2.0.16 rsync-v2.0.17 rsync-v2.0.18
+	     # rsync-v2.0.19 rsync-v2.1.0 rsync-v2.1.1 rsync-v2.2.0
+	     # rsync-v2.2.1 rsync-v2.3.0 rsync-v2.3.1 rsync-v2.3.2
+	     # rsync-v2.4.0 rsync-v2.4.1 rsync-v2.4.2 rsync-v2.4.3
+	     # rsync-v2.4.4 rsync-v2.4.5 rsync-v2.4.6 rsync-v2.5.1
+	     # rsync-v2.5.2 rsync-v2.5.3 rsync-v2.5.4 rsync-v2.5.5
+	     # rsync-v2.5.5.rc1 rsync-v2.5.6 rsync-v2.6.0 rsync-v2.6.1
+	     # rsync-v2.6.2 rsync-v2.6.3 rsync-v2.6.4 rsync-v2.6.5
+	     # rsync-v2.6.6 rsync-v2.6.7 rsync-v2.6.8 rsync-v2.6.9
+	     edit_configure.in
+	     mkdir -p lib
+	     touch lib/addrinfo.h lib/getopt.h
+	     autoreconf -fiv
+	     configure_make_proto_install $1
+	 }
+	 build-v3.0.0() {
+	     # rsync-v3.0.0 rsync-v3.0.1 rsync-v3.0.2 rsync-v3.0.3
+	     # rsync-v3.0.4 rsync-v3.0.5 rsync-v3.0.6 rsync-v3.0.7
+	     # rsync-v3.0.8 rsync-v3.0.9 rsync-v3.1.0 rsync-v3.1.1
+	     # rsync-v3.1.2 rsync-v3.1.3 rsync-v3.2.0 rsync-v3.2.1
+	     # rsync-v3.2.2 rsync-v3.2.3 rsync-v3.2.4 rsync-v3.2.5
+	     # rsync-v3.2.6 rsync-v3.2.7 rsync-v3.3.0
+	     configure_make_install $1
+	 }
 	 rsync -a --delete rsync/ rsync-$1/
 	 cd rsync-$1
 	 git reset --hard
 	 git checkout $1
-	 perl -i -pe '
-	 BEGIN{ print "AC_DEFINE([HAVE_LONGLONG], [], [long long support])\n",
-	 	      "AC_DEFINE([HAVE_UTIMBUF], [], [utimbuf is available])\n" };
-         s/AC_DEFINE_UNQUOTED.HAVE_REMSH, .HAVE_REMSH./AC_DEFINE_UNQUOTED(HAVE_REMSH, \$HAVE_REMSH,[dummy])/;
-	 s/AC_DEFINE.HAVE_ERRNO_DECL.,/AC_DEFINE(HAVE_ERRNO_DECL,[1],[dummy]),/;
-	 s/AC_DEFINE.HAVE_FNMATCH.,/AC_DEFINE(HAVE_FNMATCH,[1],[dummy]),/;' configure.in
-	 autoheader
-         automake --add-missing
-	 autoreconf --install -W gnu
-	 # Make "lib/addrinfo.h" ?
-	 touch lib/addrinfo.h
-	 LDFLAGS=-static ./configure &&
-	     (make proto; make -j2 || make reconfigure && make -j2; make) &&
-	     sudo cp rsync /usr/local/bin/rsync-$1
+
+	 build-v3.0.0 $1 || build-older $1
      }
      export -f make_one
      echo '# Building rsync'
-     listtags |
+     listtags | 
 	 stdout parallel --lb --tag \
 		'/usr/local/bin/rsync-{} --version || make_one {}'
-     listtags |
+     listtags | 
 	 parallel -k -v --tag '/usr/local/bin/rsync-{} --version'
     )
 }
@@ -592,7 +632,7 @@ misc() {
 
     
     echo TODO
-    echo ssh til egen IP-adresse  192.168.100.94
+    echo ssh til egen IP-adresse  192.168.100.94 ipv6 addr
     echo sshd_config
     echo HostKeyAlgorithms +ssh-rsa
     echo PubkeyAcceptedAlgorithms +ssh-rsa
