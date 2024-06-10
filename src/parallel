@@ -11105,6 +11105,7 @@ sub start($) {
     if($Global::interactive or $Global::stderr_verbose) {
 	$job->interactive_start();
     }
+    $job->openoutputfiles();
     # Must be run after $job->interactive_start():
     # $job->interactive_start() may call $job->skip()
     if($job->{'commandline'}{'skip'}
@@ -11112,9 +11113,9 @@ sub start($) {
        not $job->filter()) {
 	# $job->skip() was called or job filtered
 	$command = "true";
+    } else {
+	$job->print_verbose_dryrun();
     }
-    $job->openoutputfiles();
-    $job->print_verbose_dryrun();
     my($stdout_fh,$stderr_fh) = ($job->fh(1,"w"),$job->fh(2,"w"));
     if($opt::dryrun or $opt::sqlmaster) { $command = "true"; }
     $ENV{'PARALLEL_SEQ'} = $job->seq();

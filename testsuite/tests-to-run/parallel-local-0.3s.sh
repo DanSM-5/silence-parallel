@@ -16,6 +16,12 @@ export -f stdsort
 # Test amount of parallelization
 # parallel --shuf --jl /tmp/myjl -j1 'export JOBS={1};'bash tests-to-run/parallel-local-0.3s.sh ::: {1..16} ::: {1..5}
 
+par_filter_dryrun() {
+    echo 'bug #65840: --dry-run doesnot apply filters'
+    parallel -k --filter='"{1}" ne "Not"' echo '{1} {2} {3}' ::: Not Is ::: good OK
+    parallel --dr -k --filter='"{1}" ne "Not"' echo '{1} {2} {3}' ::: Not Is ::: good OK
+}
+
 par_uninstalled_sshpass() {
     echo '### sshpass must be installed for --sshlogin user:pass@host'
     sshpass=$(command -v sshpass)

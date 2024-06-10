@@ -236,6 +236,11 @@ par_file_ending_in_newline	### Hans found a bug giving unitialized variable
 par_file_ending_in_newline	gzip /tmp/parallel_f1
 par_file_ending_in_newline	gzip '/tmp/parallel_f2
 par_file_ending_in_newline	'
+par_filter_dryrun	bug #65840: --dry-run doesnot apply filters
+par_filter_dryrun	Is good
+par_filter_dryrun	Is OK
+par_filter_dryrun	echo Is good 
+par_filter_dryrun	echo Is OK 
 par_fish	### https://github.com/fish-shell/fish-shell/issues/5582
 par_fish	OK
 par_group-by_colsep_space	### --colsep " " should work like ","
