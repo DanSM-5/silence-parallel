@@ -2843,9 +2843,12 @@ par_internal_quote_char	<<> -Xq	/usr/bin/bash: line 1: $'echo \177<\177<\177
 par_internal_quote_char	<<> -k	<<>
 par_internal_quote_char	<<> -k	<<> <<>
 par_internal_quote_char	<<> -k	<<><<>
-par_internal_quote_char	<<> -k	/usr/bin/bash: line 1: : No such file or directory
-par_internal_quote_char	<<> -k	/usr/bin/bash: line 1: : No such file or directory
-par_internal_quote_char	<<> -k	/usr/bin/bash: line 1: : No such file or directory
+par_internal_quote_char	<<> -k	/usr/bin/bash: line 1: : Invalid or incomplete multibyte or wide character
+par_internal_quote_char	<<> -k	/usr/bin/bash: line 1: : Invalid or incomplete multibyte or wide character
+par_internal_quote_char	<<> -k	/usr/bin/bash: line 1: : Invalid or incomplete multibyte or wide character
+par_internal_quote_char	Compare old quote char csv
+par_internal_quote_char	with new quote char csv (must be the same)
+par_internal_quote_char	OK
 par_max_length_len_128k	### BUG: The length for -X is not close to max (131072)
 par_max_length_len_128k	63xxx
 par_max_length_len_128k	63xxx

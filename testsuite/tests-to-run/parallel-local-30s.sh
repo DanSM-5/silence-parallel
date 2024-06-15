@@ -322,6 +322,9 @@ par_internal_quote_char() {
 	     ::: -X -q -Xq -k |
 	# Upgrade old bash error to new bash error
 	perl -pe 's/No such file or directory/Invalid or incomplete multibyte or wide character/g'
+    # Bug in Perl's SQL::CSV module cannot handle dir with \n
+    TMPDIR=/tmp
+    TMPDIR=$(mktemp -d)
     cd "$TMPDIR"
     echo "Compare old quote char csv"
     parallel-20231222 --sqlmaster csv:///./oldformat.csv echo "$(printf "\257\257 \177\177")" ::: 1 2 3
@@ -332,6 +335,8 @@ par_internal_quote_char() {
     stdout parallel -k --sqlworker csv:///./newformat.csv echo "$(printf "\257\257 \177\177")" ::: 1 2 3 |
 	od -t x1z > new.out
     diff old.out new.out && echo OK
+    rm -f old.out new.out oldformat.csv newformat.csv
+    rmdir "$TMPDIR"
 }
 
 par_groupby() {
