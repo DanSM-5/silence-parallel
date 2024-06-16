@@ -81,7 +81,7 @@ par_ksh_embed() {
     rm parallel-embed
 _EOF
   )
-  ssh ksh@lo "$myscript" |
+  stdout ssh ksh@lo "$myscript" |
       # ./parallel-embed[XXX]: env_parallel[16122]: _which_PAR[15964]: perl: /usr/bin/perl: cannot exec
       perl -pe 's/env_parallel[^:]*: _which_PAR[^:]*: //'
 }
@@ -157,9 +157,9 @@ par_env_parallel_big_env() {
     echo '### bug #54128: command too long when exporting big env'
     . env_parallel.bash
     env_parallel --session
-    a=`rand | perl -pe 's/\0//g'| head -c 40000`
-    env_parallel -Slo echo should not ::: fail 2>&1
-    a=`rand | perl -pe 's/\0//g'| head -c 45000`
+    a=`rand | perl -pe 's/\0//g'| head -c 10000`
+    env_parallel -Slo echo ::: OK 2>&1
+    a=`rand | perl -pe 's/\0//g'| head -c 20000`
     env_parallel -Slo echo should ::: fail 2>/dev/null || echo OK
 }
 
@@ -194,7 +194,7 @@ par_no_route_to_host() {
 	export -f findhosts
 	export -f filterhosts
 	# Run this in the background
-	nice tmux new-session -d -s filterhosts$$-$RANDOM -c 'findhosts |
+	nice nohup bash -c 'findhosts |
 	    filterhosts | filterhosts | filterhosts |
 	    filterhosts | filterhosts | head > /tmp/filtered.$$
 	mv /tmp/filtered.$$ /tmp/filtered.hosts

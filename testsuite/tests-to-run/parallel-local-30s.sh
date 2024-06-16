@@ -57,6 +57,18 @@ par__keeporder_roundrobin() {
     fi
 }
 
+par_retries_lb_jl() {
+    echo Broken in 20240522
+    tmp=$(mktemp)
+    export tmp
+    parallel-20240522 --lb --jl /dev/null --timeout 0.3 --retries 5 'echo should be 5 lines >> "$tmp";sleep {}' ::: 20
+    cat "$tmp"
+    > "$tmp"
+    parallel --lb --jl /dev/null --timeout 0.3 --retries 5 'echo 5 lines >> "$tmp";sleep {}' ::: 20
+    cat "$tmp"
+    rm "$tmp"
+}
+
 par_reload_slf_every_second() {
     echo "### --slf should reload every second"
     tmp=$(mktemp)
@@ -511,7 +523,7 @@ par__memory_leak() {
     export -f a_run
     echo "### Test for memory leaks"
     echo "Of 300 runs of 1 job at least one should be bigger than a 3000 job run"
-    . $(which env_parallel.bash)
+    . env_parallel.bash
     parset small_max,big ::: 'seq 300 | parallel a_run 1 | jq -s max' 'a_run 3000'
     if [ $small_max -lt $big ] ; then
 	echo "Bad: Memleak likely."
@@ -710,6 +722,7 @@ par__plus_dyn_repl() {
 }
 
 par_test_ipv6_format() {
+    # If not MaxStartups 100:30:1000 then this will fail
     ipv4() {
 	ifconfig | perl -nE '/inet (\S+) / and say $1'
     }
@@ -734,7 +747,7 @@ par_test_ipv6_format() {
             # 9.9.9.9q22 => 9.9.9.9
             perl -pe 's/q.*//;'
     ) |
-	parallel -j30 --delay 0.1 --argsep , parallel -S {} true ::: 1 ||
+	parallel -j200% --argsep , parallel -S {} true ::: 1 ||
 	echo Failed
 }
 

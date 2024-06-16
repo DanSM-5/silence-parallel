@@ -101,14 +101,13 @@ par_--ssh_lsh() {
     # |       ssh-ed25519
     # |
     #
-    # There is no longer an overlap: LSH is unsupported until there is
-    # a common algorithm again
-    #
-    # Code is kept if lsh is upgraded in the future
-    parallel --ssh 'lsh -c aes256-ctr' -S lo echo ::: OK
-    echo OK | parallel --ssh 'lsh -c aes256-ctr' --pipe -S csh@lo cat
-    parallel --ssh lsh -S lo echo ::: OK
-    echo OK | parallel --ssh lsh --pipe -S csh@lo cat
+    server=centos3
+    user=vagrant
+    sshlogin=$user@$server
+    parallel --ssh lsh -S $sshlogin echo ::: OK
+    echo OK | parallel --ssh lsh --pipe -S $sshlogin cat
+    parallel --ssh lsh -S $sshlogin echo ::: OK
+    echo OK | parallel --ssh lsh --pipe -S $sshlogin cat
     # Todo:
     # * rsync/--trc
     # * csh@lo
@@ -128,26 +127,6 @@ par_env_parallel_onall() {
     doit() { echo Myfunc "$@"; }
     env_parallel -Slo --onall doit ::: works
     env_parallel -Slo --nonall doit works
-}
-
-par__--shellquote_command_len() {
-    echo '### test quoting will not cause a crash if too long'
-    # echo "'''" | parallel --shellquote --shellquote --shellquote --shellquote
-
-    testlen() {
-	echo "$1" | parallel $2 | wc
-    }
-    export -f testlen
-
-    outer() {
-	export PARALLEL="--env testlen -k --tag"
-	parallel $@ testlen '{=2 $_="$arg[1]"x$_ =}' '{=3 $_=" --shellquote"x$_ =}' \
-	     ::: '"' "'" ::: {1..10} ::: {1..10}
-    }
-    export -f outer
-
-    stdout parallel --tag -k outer ::: '-Slo -j10' '' |
-	perl -pe 's/(\d+)\d\d\d\d/${1}xxxx/g';
 }
 
 export -f $(compgen -A function | grep par_)

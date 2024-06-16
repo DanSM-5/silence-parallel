@@ -23,16 +23,16 @@ par_path_remote_bash() {
   cat <<'_EOS' |
   echo StArT
   echo BASH Path before: $PATH with no parallel
-  parallel echo ::: 1
+  parallel echo ::: 1 && echo ERROR
   # Race condition stderr/stdout
   sleep 1
-  echo '^^^^^^^^ Not found is OK'
+  echo 'OK: if not found ^^^^^^^^'
   # Exporting a big variable should not fail
   export A="`seq 1000`"
   PATH=$PATH:/tmp
   . /usr/local/bin/env_parallel.bash
   # --filter-hosts to see if $PATH with parallel is transferred
-  env_parallel --filter-hosts --env A,PATH -Slo echo '$PATH' ::: OK
+  env_parallel --filter-hosts --env A,PATH -Slo echo {}: '$PATH' ::: OK
 _EOS
   stdout ssh nopathbash@lo -T |
       perl -ne '/StArT/..0 and print' |
@@ -60,7 +60,7 @@ par_path_remote_csh() {
     source `which env_parallel.csh`
   endif
   # --filter-hosts to see if $PATH with parallel is transferred
-  env_parallel --filter-hosts --env A,PATH -Slo echo '$PATH' ::: OK
+  env_parallel --filter-hosts --env A,PATH -Slo echo {}: '$PATH' ::: OK
   # Sleep needed to avoid stderr/stdout mixing
   sleep 1
   echo Done

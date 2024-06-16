@@ -281,9 +281,13 @@ par__man_fish() {
 
     set myarray arrays 'with  = & " !'" '" work, too
     echo $myarray[1] $myarray[2] $myarray[3] $myarray[4]
+    sleep 0.1
     env_parallel -k echo '$myarray[{}]' ::: 1 2 3 4
+    sleep 0.1
     env_parallel -k -S server echo '$myarray[{}]' ::: 1 2 3 4
+    sleep 0.1
     env_parallel -k --env myarray echo '$myarray[{}]' ::: 1 2 3 4
+    sleep 0.1
     env_parallel -k --env myarray -S server echo '$myarray[{}]' ::: 1 2 3 4
 
     env_parallel --argsep --- env_parallel -k echo ::: multi level --- env_parallel
@@ -295,7 +299,8 @@ par__man_fish() {
     echo exit value $status should be 255 `sleep 1`
 _EOF
   )
-  ssh fish@lo "$myscript" | LC_ALL=C sort
+  ssh fish@lo "$myscript"
+    #| LC_ALL=C sort
 }
 
 par__man_ksh() {
@@ -826,7 +831,9 @@ par_--env_underscore_fish() {
     echo Test single ignoring;
     echo myvar > ~/.parallel/ignored_vars;
     env_parallel --env _ myfunc ::: work;
+    sleep 0.1
     env_parallel --env _ -S server myfunc ::: work;
+    sleep 0.1
     echo myarray >> ~/.parallel/ignored_vars;
     env_parallel --env _ myfunc ::: work;
     env_parallel --env _ -S server myfunc ::: work;
@@ -842,11 +849,11 @@ par_--env_underscore_fish() {
     echo "OK if   ^^^^^^^^^^^^^^^^^ no myfunc" >&2;
 _EOF
   )
-
   # Old versions of fish sometimes throw up bugs all over,
   # but seem to work OK otherwise. So ignore these errors.
-  ssh fish@lo "$myscript" 2>&1 |
-      perl -ne '/^\^|fish:|fish\(/ and next; print'
+  stdout ssh fish@lo "$myscript" |
+      perl -ne '/^\^|fish:|fish\(/ and next; print' |
+      perl -pe 's/^[ ~^]+$//g'
 }
 
 par_--env_underscore_ksh() {
@@ -894,7 +901,11 @@ par_--env_underscore_ksh() {
     echo "OK if no myfunc         ^^^^^^^^^^^^^^^^^" >&2;
 _EOF
   )
-  ssh ksh@lo "$myscript"
+  stdout ssh ksh@lo "$myscript" |
+      # /bin/ksh[999]: myfunc[1]: myecho: not found
+      # =>
+      # /bin/ksh: myecho: not found
+      perl -pe 's/\[\d+\]:.*\[\d+\]:/:/;'
 }
 
 par_--env_underscore_mksh() {
@@ -909,6 +920,7 @@ par_--env_underscore_mksh() {
     . `which env_parallel.mksh`;
     env_parallel --record-env;
     alias myecho="echo \$myvar aliases in";
+    # The alias is replaced in the function
     myfunc() { myecho ${myarray[@]} functions $*; };
     myvar="variables in";
     myarray=(and arrays in);
@@ -932,9 +944,9 @@ par_--env_underscore_mksh() {
     env_parallel --env _ -S server myfunc ::: work;
     echo myecho >> ~/.parallel/ignored_vars;
     env_parallel --env _ myfunc ::: work;
-    echo "OK if no myecho    ^^^^^^^^^^^^^^^^^" >&2;
+    echo The myecho alias is replaced in the function causing this not to fail
     env_parallel --env _ -S server myfunc ::: work;
-    echo "OK if no myecho    ^^^^^^^^^^^^^^^^^" >&2;
+    echo The myecho alias is replaced in the function causing this not to fail
     echo myfunc >> ~/.parallel/ignored_vars;
     env_parallel --env _ myfunc ::: work;
     echo "OK if no myfunc         ^^^^^^^^^^^^^^^^^" >&2;
@@ -942,7 +954,7 @@ par_--env_underscore_mksh() {
     echo "OK if no myfunc         ^^^^^^^^^^^^^^^^^" >&2;
 _EOF
   )
-  ssh mksh@lo "$myscript" |
+  stdout ssh mksh@lo "$myscript" |
       perl -pe 's/^[EŴ]:/EW:/g'
 }
 
@@ -2763,7 +2775,8 @@ par_env_parallel_--session_fish() {
     set -e PARALLEL_IGNORED_NAMES
 _EOF
   )
-  ssh fish@lo "$myscript" 2>&1
+  ssh fish@lo "$myscript" 2>&1 |
+      perl -pe 's/^[ ~^]+$//g'
 }
 
 par_env_parallel_--session_ksh() {
@@ -2943,7 +2956,7 @@ par_env_parallel_--session_mksh() {
     unset PARALLEL_IGNORED_NAMES
 _EOF
   )
-  ssh mksh@lo "$myscript" |
+  stdout ssh mksh@lo "$myscript" |
       perl -pe 's/^[EŴ]:/EW:/g'
 }
 

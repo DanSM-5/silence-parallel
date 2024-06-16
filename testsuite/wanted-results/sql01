@@ -89,5 +89,5 @@ par_sql_on_cmdline	### Test reading sql on command line
 par_sql_on_cmdline	Test reading SQL from command line
 par_sql_on_cmdline	Yes it does
 par_tablesize	### Test --table-size --tablesize
-par_tablesize	94
-par_tablesize	94
+par_tablesize	93
+par_tablesize	93

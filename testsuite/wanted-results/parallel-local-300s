@@ -609,6 +609,8 @@ par_compare_exit_codes	killed with different signals
 par_compare_exit_codes	sig=joblog_sig shell=parallel=joblog
 par_compare_exit_codes	par_compare_exit_codes	
 par_compare_exit_codes	csh sig  2=0 130=1=1
+par_compare_exit_codes	posh sig  32=11 160=139=139
+par_compare_exit_codes	posh sig  33=11 161=139=139
 par_compare_exit_codes	posh sig  34=11 162=139=139
 par_compare_exit_codes	posh sig  35=11 163=139=139
 par_compare_exit_codes	posh sig  36=11 164=139=139
@@ -676,9 +678,9 @@ par_compare_exit_codes	fdsh sig  29=0 157=2=2
 par_compare_exit_codes	fdsh exit 157=0 157=2=2
 par_compare_exit_codes	fdsh sig  30=0 158=2=2
 par_compare_exit_codes	fdsh exit 158=0 158=2=2
-par_compare_exit_codes	fdsh sig  32=0 0=2=2
+par_compare_exit_codes	fdsh sig  32=0 160=2=2
 par_compare_exit_codes	fdsh exit 160=0 160=2=2
-par_compare_exit_codes	fdsh sig  33=0 0=2=2
+par_compare_exit_codes	fdsh sig  33=0 161=2=2
 par_compare_exit_codes	fdsh exit 161=0 161=2=2
 par_compare_exit_codes	fdsh sig  35=0 163=2=2
 par_compare_exit_codes	fdsh exit 163=0 163=2=2

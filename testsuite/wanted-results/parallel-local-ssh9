@@ -181,7 +181,7 @@ par_bash_embed	You can also activate GNU Parallel for interactive use by:
 par_bash_embed	. ./parallel-embed
 par_csh_embed	Not implemented
 par_env_parallel_big_env	### bug #54128: command too long when exporting big env
-par_env_parallel_big_env	should not fail
+par_env_parallel_big_env	OK
 par_env_parallel_big_env	OK
 par_filter_hosts_parallel_not_installed	bug #62672: Triggered a bug with --filter-host
 par_filter_hosts_parallel_not_installed	parallel: Warning: Could not figure out number of cpus on nopathbash@lo (). Using 1.
@@ -189,8 +189,15 @@ par_filter_hosts_parallel_not_installed	OK
 par_filter_hosts_parallel_not_installed	parallel: Warning: Could not figure out number of cpus on nopathbash@lo (). Using 1.
 par_filter_hosts_parallel_not_installed	OK
 par_fish_embed	Not implemented
+par_ksh_embed	--embed
 par_ksh_embed	Redirect the output to a file and add your changes at the end:
 par_ksh_embed	  /usr/local/bin/parallel --embed > new_script
+par_ksh_embed	Put
+par_ksh_embed	your
+par_ksh_embed	code
+par_ksh_embed	here
+par_ksh_embed	parallel_OK
+par_ksh_embed	env_parallel --env OK
 par_ksh_embed	./parallel-embed[XXX]: perl: /usr/bin/perl: cannot execute [Argument list too long]
 par_ksh_embed	env_parallel: Error: Your environment is too big.
 par_ksh_embed	env_parallel: Error: You can try 3 different approaches:
@@ -201,13 +208,6 @@ par_ksh_embed	env_parallel: Error: 3. Try running this in a clean environment on
 par_ksh_embed	env_parallel: Error:      env_parallel --record-env
 par_ksh_embed	env_parallel: Error:    And then use '--env _'
 par_ksh_embed	env_parallel: Error: For details see: man env_parallel
-par_ksh_embed	--embed
-par_ksh_embed	Put
-par_ksh_embed	your
-par_ksh_embed	code
-par_ksh_embed	here
-par_ksh_embed	parallel_OK
-par_ksh_embed	env_parallel --env OK
 par_ksh_embed	ParsetOK
 par_ksh_embed	Put
 par_ksh_embed	your

@@ -5733,20 +5733,15 @@ sub kill_sleep_seq(@) {
     # Send jobs TERM,TERM,KILL to processgroups
     # Input:
     #	@pids = list of pids that are also processgroups
-    # Killing can be slow if you follow @term_seq
-    # So run the killing in parallel
-    if(not fork()) {
-	# Convert pids to process groups ($processgroup = -$pid)
-	my @pgrps = map { -$_ } @_;
-	my @term_seq = split/,/,$opt::termseq;
-	if(not @term_seq) {
-	    @term_seq = ("TERM",200,"TERM",100,"TERM",50,"KILL",25);
-	}
-	# for each signal+waittime: kill process groups still not dead
-	while(@term_seq) {
-	    @pgrps = kill_sleep(shift @term_seq, shift @term_seq, @pgrps);
-	}
-	exit(0);
+    # Convert pids to process groups ($processgroup = -$pid)
+    my @pgrps = map { -$_ } @_;
+    my @term_seq = split/,/,$opt::termseq;
+    if(not @term_seq) {
+	@term_seq = ("TERM",200,"TERM",100,"TERM",50,"KILL",25);
+    }
+    # for each signal+waittime: kill process groups still not dead
+    while(@term_seq) {
+	@pgrps = kill_sleep(shift @term_seq, shift @term_seq, @pgrps);
     }
 }
 

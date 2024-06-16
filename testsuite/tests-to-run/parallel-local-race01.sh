@@ -172,7 +172,8 @@ par_delay_Xauto() {
 
 par_timeout() {
     echo '### Test --timeout'
-    stdout parallel -j0 -k --timeout 2 echo {}\; sleep {}\; echo {} ::: 1.1 7.7 8.8 9.9
+    stdout parallel -j0 -k --timeout 2 echo {}\; sleep {}\; echo {} ::: 1.1 7.7 8.8 9.9 |
+	sort
 }
 
 export -f $(compgen -A function | grep par_)

@@ -44,12 +44,14 @@ par_fg_line-buffer() {
     sem --fg --line-buffer --id bugin20141226 echo OK
 }
 
-par_semaphore-timeout() {
+par__semaphore-timeout() {
     echo '### Test --st +1/-1'
-    stdout sem --id st --line-buffer "echo A normal-start;sleep 4;echo C normal-end"
-    stdout sem --id st --line-buffer --st 2 "echo B st1-start;sleep 4;echo D st1-end"
-    stdout sem --id st --line-buffer --st -2 "echo ERROR-st-1-start;sleep 4;echo ERROR-st-1-end"
-    stdout sem --id st --wait
+    (
+	stdout sem --id st --line-buffer "echo A normal-start;sleep 4;echo C normal-end"
+	stdout sem --id st --line-buffer --st 2 "echo B st1-start;sleep 4;echo D st1-end"
+	stdout sem --id st --line-buffer --st -2 "echo ERROR-st-1-start;sleep 4;echo ERROR-st-1-end"
+	stdout sem --id st --wait
+    ) | sort
 }
 
 par_exit() {
@@ -76,6 +78,6 @@ par_exit() {
 
 
 export -f $(compgen -A function | grep par_)
-compgen -A function | grep par_ | LC_ALL=C sort |
+compgen -A function | G par_ "$@" | LC_ALL=C sort |
     parallel --timeout 120 -j6 --tag -k --joblog /tmp/jl-`basename $0` '{} 2>&1' |
     perl -pe 's:/usr/bin:/bin:g'

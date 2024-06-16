@@ -39,10 +39,12 @@ par__sshpass_with_password() {
     echo '### Crazy passwords: `date>>/tmp/trap`;(|<*&)'"'"
     > /tmp/trap
     (
+	# These fail. The important part is that /tmp/trap is empty
 	stdout parallel --onall -S5/user:'`date>>/tmp/trap`;'@host echo ::: A
 	stdout parallel --onall -S5/user:'`date>>/tmp/trap`;(|<*&)'"'"@host echo ::: A
-    ) | perl -pe 's/([a-f0-9]{100,} )+[a-f0-9]{1,}/HEX/g; s/\r/\n/g;'
-    echo This must stay empty
+    ) | perl -pe 's/([a-f0-9]{100,} )+[a-f0-9]{1,}/HEX/g; s/\r/\n/g;' |
+	perl -pe 's/(ssh: Could not resolve hostname host:) .*/$1/'
+    echo This must stay empty:
     cat /tmp/trap
 }
 
@@ -413,7 +415,7 @@ _
 }
 
 export -f $(compgen -A function | grep par_)
-compgen -A function | grep par_ | LC_ALL=C sort |
+compgen -A function | G "$@" par_ | LC_ALL=C sort |
     parallel --timeout 130 -j6 --tag -k --joblog /tmp/jl-`basename $0` '{} 2>&1'
 
 cd ..

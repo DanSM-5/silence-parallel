@@ -413,7 +413,7 @@ env_parallel() {
     unset _get_ignored_VARS
 
     # --record-env
-    if perl -e 'exit grep { /^--record-env$/ } @ARGV' -- "$@"; then
+    if perl -e 'exit grep { /^--record-?env$/ } @ARGV' -- "$@"; then
 	true skip
     else
 	(_names_of_ALIASES;

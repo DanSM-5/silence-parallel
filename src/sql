@@ -865,8 +865,8 @@ sub oracle_commands {
 sub sqlite_commands {
     my ($database_driver,%opt) = (@_);
     if(not find_command_in_path($database_driver)) {
-	print STDERR "Database driver '$database_driver' not supported\n";
-	exit -1;
+	print STDERR "sql: Database driver '$database_driver' not supported\n";
+	exit 255;
     }
     my $sep = defined($::opt_s) ? "-separator '$::opt_s'" : "";
     my $password = defined($opt{'password'}) ? "--password=".$opt{'password'} : "";

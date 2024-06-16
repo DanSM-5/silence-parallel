@@ -16,6 +16,49 @@ export -f stdsort
 # Test amount of parallelization
 # parallel --shuf --jl /tmp/myjl -j1 'export JOBS={1};'bash tests-to-run/parallel-local-0.3s.sh ::: {1..16} ::: {1..5}
 
+par_env_parallel_recordenv() {
+    echo 'bug #65127: env_parallel --record-env and --recordenv should do the same.'
+    . env_parallel.bash
+    a=""
+    b=""
+    > ~/.parallel/ignored_vars
+    env_parallel --record-env
+    a=$(md5sum ~/.parallel/ignored_vars)
+    > ~/.parallel/ignored_vars
+    env_parallel --recordenv
+    b=$(md5sum ~/.parallel/ignored_vars)
+    echo There should be no difference
+    diff <(echo "$a") <(echo "$b")
+    > ~/.parallel/ignored_vars
+}
+
+par_-q_perl_program() {
+    echo "### test08 -q and perl"
+    (
+	echo flyp
+	echo _PRE 8
+	echo 'hatchname> 8'
+    ) > a
+    (
+	echo flyp
+	echo _PRE 9
+	echo 'hatchname> 8'
+    ) > b
+    (
+	echo flyp
+	echo _PRE 19
+	echo 'hatchname> 19'
+    ) > c
+    (
+	echo flyp
+	echo _PRE 19
+	echo 'hatchname> 9'
+    ) > d
+    ls |
+	parallel -q  perl -ne '/_PRE (\d+)/ and $p=$1; /hatchname> (\d+)/ and $1!=$p and print $ARGV,"\n"' |
+	sort
+}
+
 par_filter_dryrun() {
     echo 'bug #65840: --dry-run doesnot apply filters'
     parallel -k --filter='"{1}" ne "Not"' echo '{1} {2} {3}' ::: Not Is ::: good OK

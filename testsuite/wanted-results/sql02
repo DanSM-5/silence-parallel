@@ -8,7 +8,6 @@ par_influx	name: databases
 par_influx	name
 par_influx	----
 par_influx	_internal
-par_influx	tange
 par_influx	parallel
 par_influx	name: cpu
 par_influx	time                host    region  value
@@ -101,7 +100,7 @@ par_sqlite	bytes
 par_sqlite	3072
 par_sqlite	Current command: sqlite3
 par_sqlite	foo
-par_sqlite	sqltest.sqlite3: SQLite 3.x database, last written using SQLite version 3037002, file counter 1, database pages 2, cookie 0x1, schema 4, UTF-8, version-valid-for 1
+par_sqlite	sqltest.sqlite3: SQLite 3.x database, last written using SQLite version 3045001, file counter 1, database pages 2, cookie 0x1, schema 4, UTF-8, version-valid-for 1
 par_sqlite	n|t
 par_sqlite	1|Line 1
 par_sqlite	2|Line 2

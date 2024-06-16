@@ -5,13 +5,11 @@
 # Jobs that depend on the hardware
 # (e.g number of CPU threads, terminal type)
 
-#actual-results/parallel-macos
-
 par__environment_too_big_ash() {
   myscript=$(cat <<'_EOF'
     echo 'bug #50815: env_parallel should warn if the environment is too big'
-    len_var=63 
-    len_var_remote=47
+    len_var=60
+    len_var_remote=43
     len_var_quote=31
     len_var_quote_remote=21
     len_fun=1
@@ -80,8 +78,8 @@ _EOF
 par__environment_too_big_dash() {
   myscript=$(cat <<'_EOF'
     echo 'bug #50815: env_parallel should warn if the environment is too big'
-    len_var=63
-    len_var_remote=47
+    len_var=60
+    len_var_remote=43
     len_var_quote=31
     len_var_quote_remote=21
     len_fun=1

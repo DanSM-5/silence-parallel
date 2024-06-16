@@ -2937,6 +2937,25 @@ par_race_condition1	9
 par_race_condition1	10
 par_reload_slf_every_second	### --slf should reload every second
 par_reload_slf_every_second	OK
+par_retries_lb_jl	Broken in 20240522
+par_retries_lb_jl	parallel: Warning: This job was killed because it timed out:
+par_retries_lb_jl	parallel: Warning: echo should be 5 lines >> "$tmp";sleep 20
+par_retries_lb_jl	should be 5 lines
+par_retries_lb_jl	parallel: Warning: This job was killed because it timed out:
+par_retries_lb_jl	parallel: Warning: echo 5 lines >> "$tmp";sleep 20
+par_retries_lb_jl	parallel: Warning: This job was killed because it timed out:
+par_retries_lb_jl	parallel: Warning: echo 5 lines >> "$tmp";sleep 20
+par_retries_lb_jl	parallel: Warning: This job was killed because it timed out:
+par_retries_lb_jl	parallel: Warning: echo 5 lines >> "$tmp";sleep 20
+par_retries_lb_jl	parallel: Warning: This job was killed because it timed out:
+par_retries_lb_jl	parallel: Warning: echo 5 lines >> "$tmp";sleep 20
+par_retries_lb_jl	parallel: Warning: This job was killed because it timed out:
+par_retries_lb_jl	parallel: Warning: echo 5 lines >> "$tmp";sleep 20
+par_retries_lb_jl	5 lines
+par_retries_lb_jl	5 lines
+par_retries_lb_jl	5 lines
+par_retries_lb_jl	5 lines
+par_retries_lb_jl	5 lines
 par_shard	### --shard
 par_shard	OK
 par_shard	OK

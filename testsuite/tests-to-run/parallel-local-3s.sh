@@ -8,6 +8,32 @@
 # Each should be taking 3-10s and be possible to run in parallel
 # I.e.: No race conditions, no logins
 
+par_pty() {
+    parallel 'echo {} > {}' ::: 1 2 3
+    echo 1 > files 
+    echo 'xargs Expect: 3 1'
+    echo 3 | xargs -P 1 -n 1 -a files cat -
+    echo 'parallel Expect: 3 1 via psedotty  2'
+    cat >/tmp/parallel-script-for-script <<EOF
+#!/bin/bash
+echo 3 | parallel --tty -k -P 1 -n 1 -a files cat -
+EOF
+    chmod 755 /tmp/parallel-script-for-script
+    echo via pseudotty | script -q -f -c /tmp/parallel-script-for-script /dev/null
+    sleep 1
+
+    echo 'xargs Expect: 1 3'
+    echo 3 | xargs -I {} -P 1 -n 1 -a files cat {} -
+    echo 'parallel Expect: 1 3 2 via pseudotty'
+    cat >/tmp/parallel-script-for-script2 <<EOF
+#!/bin/bash
+echo 3 | parallel --tty -k -I {} -P 1 -n 1 -a files cat {} -
+EOF
+    chmod 755 /tmp/parallel-script-for-script2
+    echo via pseudotty | script -q -f -c /tmp/parallel-script-for-script2 /dev/null
+    sleep 1
+}
+
 par__test_cpu_detection_topology() {
     pack() { zstd -19 | mmencode; }
     unpack() { mmencode -u | zstd -d; }

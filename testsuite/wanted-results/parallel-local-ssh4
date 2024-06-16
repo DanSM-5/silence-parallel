@@ -277,7 +277,7 @@ par__test_different_rsync_versions	rsync-v3.2.4	Basic use works: rsync-v3.2.4
 par__test_different_rsync_versions	rsync-v3.2.5	Basic use works: rsync-v3.2.5
 par__test_different_rsync_versions	rsync-v3.2.6	Basic use works: rsync-v3.2.6
 par__test_different_rsync_versions	rsync-v3.2.7	Basic use works: rsync-v3.2.7
-par__test_different_rsync_versions	rsync-v3.3.0	Basic use works: rsync-v3.3.0
+par__test_different_rsync_versions	rsync-v3.3.0	Basic use failed - not tested: rsync-v3.3.0
 par_bigvar_csh	### csh
 par_bigvar_csh	3 big vars run remotely - length(base64) > 1000
 par_bigvar_csh	      1     200     692

@@ -26,8 +26,8 @@ par_path_remote_bash	bug #47695: How to set $PATH on remote? Bash
 par_path_remote_bash	StArT
 par_path_remote_bash	BASH Path before: /bin:/usr/bin with no parallel
 par_path_remote_bash	-bash: line 3: parallel: command not found
-par_path_remote_bash	^^^^^^^^ Not found is OK
-par_path_remote_bash	/bin:/usr/bin:/tmp OK
+par_path_remote_bash	OK: if not found ^^^^^^^^
+par_path_remote_bash	OK: /bin:/usr/bin:/tmp
 par_path_remote_bash	
 par_path_remote_csh	bug #47695: How to set $PATH on remote? csh
 par_path_remote_csh	StArT

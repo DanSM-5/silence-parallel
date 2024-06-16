@@ -246,7 +246,7 @@ the last half of the line is from another process. The example
 B<Parallel grep> cannot be done reliably with B<xargs> because of
 this. To see this in action try:
 
-  parallel perl -e "'"'$a="1"."{}"x10000000;print $a,"\n"'"'" \
+  parallel perl -e "'"'$a="1"."{}"x100000000;print $a,"\n"'"'" \
     '>' {} ::: a b c d e f g h
   # Serial = no mixing = the wanted result
   # 'tr -s a-z' squeezes repeating letters into a single letter
@@ -882,7 +882,7 @@ context replace:
 
 B<map> has no support for grouping. So this gives the wrong results:
 
-  parallel perl -e '\$a=\"1{}\"x10000000\;print\ \$a,\"\\n\"' '>' {} \
+  parallel perl -e '\$a=\"1{}\"x100000000\;print\ \$a,\"\\n\"' '>' {} \
     ::: a b c d e f
   ls -l a b c d e f
   parallel -kP4 -n1 grep 1 ::: a b c d e f > out.par
@@ -1157,7 +1157,7 @@ B<parallel>, but lacks many functions. All these fail:
 These do something different from GNU B<parallel>
 
   # -q to protect quoted $ and space
-  parallel -q perl -e '$a=shift; print "$a"x10000000' ::: a b c
+  parallel -q perl -e '$a=shift; print "$a"x100000000' ::: a b c
   # Generation of combination of inputs
   parallel echo {1} {2} ::: red green blue ::: S M L XL XXL
   # {= perl expression =} replacement string

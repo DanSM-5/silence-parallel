@@ -3,7 +3,8 @@ vagrant@centos3
 par_shellshock_bug	par_shellshock_bug 2>&1
 par_shellshock_bug	bug #43358: shellshock breaks exporting functions using --env name
 par_shellshock_bug	Non-shellshock-hardened to non-shellshock-hardened
-par_shellshock_bug	Function non-shellshock-hardened
+par_shellshock_bug	OK: Function non-shellshock-hardened
 par_shellshock_bug	bug #43358: shellshock breaks exporting functions using --env name
 par_shellshock_bug	Non-shellshock-hardened to shellshock-hardened
-par_shellshock_bug	Function shellshock-hardened
+par_shellshock_bug	OK: Function shellshock-hardened
+OK: ssh vagrant@centos3 parallel

@@ -1,3 +1,10 @@
+par__semaphore-timeout	### Test --st +1/-1
+par__semaphore-timeout	A normal-start
+par__semaphore-timeout	B st1-start
+par__semaphore-timeout	C normal-end
+par__semaphore-timeout	D st1-end
+par__semaphore-timeout	parallel: Warning: Semaphore timed out. Exiting.
+par__semaphore-timeout	parallel: Warning: Semaphore timed out. Stealing the semaphore.
 par_bg_p_should_error	### Test bug #33621: --bg -p should give an error message
 par_bg_p_should_error	parallel: Error: Jobs running in the background cannot be interactive.
 par_exit	### Exit values
@@ -93,10 +100,12 @@ par_exit	30	environment: line 1: PID Power failure           bash -c 'kill -'$1'
 par_exit	31	Bash exit value 159
 par_exit	31	Sem exit value 159
 par_exit	31	environment: line 1: PID Bad system call         (core dumped) bash -c 'kill -'$1' $$'
-par_exit	32	Bash exit value 0
-par_exit	32	Sem exit value 0
-par_exit	33	Bash exit value 0
-par_exit	33	Sem exit value 0
+par_exit	32	Bash exit value 160
+par_exit	32	Sem exit value 160
+par_exit	32	environment: line 1: PID Unknown signal 32       bash -c 'kill -'$1' $$'
+par_exit	33	Bash exit value 161
+par_exit	33	Sem exit value 161
+par_exit	33	environment: line 1: PID Unknown signal 33       bash -c 'kill -'$1' $$'
 par_exit	34	Bash exit value 162
 par_exit	34	Sem exit value 162
 par_exit	34	environment: line 1: PID Real-time signal 0      bash -c 'kill -'$1' $$'
@@ -255,13 +264,6 @@ par_mutex	18
 par_mutex	19
 par_mutex	20
 par_mutex	done
-par_semaphore-timeout	### Test --st +1/-1
-par_semaphore-timeout	A normal-start
-par_semaphore-timeout	parallel: Warning: Semaphore timed out. Stealing the semaphore.
-par_semaphore-timeout	B st1-start
-par_semaphore-timeout	C normal-end
-par_semaphore-timeout	parallel: Warning: Semaphore timed out. Exiting.
-par_semaphore-timeout	D st1-end
 par_stdin	### bug #60579: Sem: Allow reading from stdin and setting -a
 par_stdin	     10      10      21
 par_stdin	     10      10      21

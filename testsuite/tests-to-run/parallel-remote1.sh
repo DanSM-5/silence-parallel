@@ -49,9 +49,9 @@ par_timeout_retries() {
     echo '### test --timeout --retries'
     # 8.8.8.8 is up but does not allow login - should timeout
     # 8.8.8.9 is down - should timeout
-    # 192.168.1.197 is down but on our subnet - should not timeout
-    stdout parallel -j0 --timeout 8 --retries 3 -k ssh {} echo {} \
-	   ::: 192.168.1.197 8.8.8.8 8.8.8.9 $SSHLOGIN1 $SSHLOGIN2 $SSHLOGIN3 |
+    # 172.27.27.197 is down but on our subnet - should no route to host
+    stdout parallel -j0 --timeout 16 --retries 3 -k ssh {} echo {} \
+	   ::: 172.27.27.197 8.8.8.8 8.8.8.9 $SSHLOGIN1 $SSHLOGIN2 $SSHLOGIN3 |
 	grep -v 'Warning: Permanently added' | puniq
 }
 
@@ -85,7 +85,7 @@ par_workdir_in_HOME() {
 }
 
 export -f $(compgen -A function | grep par_)
-compgen -A function | grep par_ | LC_ALL=C sort |
+compgen -A function | G "$@" par_ | LC_ALL=C sort |
     parallel --timeout 3000% -j6 --tag -k --joblog /tmp/jl-`basename $0` '{} 2>&1' |
     perl -pe 's:/usr/bin:/bin:g'
 
