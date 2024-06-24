@@ -836,8 +836,7 @@ upload:
 
 	gpg --auto-key-locate keyserver --keyserver-options auto-key-retrieve parallel-latest.tar.bz2.sig
 	gpg --auto-key-locate keyserver --keyserver-options auto-key-retrieve parallel-$(YYYYMMDD).tar.bz2.sig
-
-# 	"|| true" needed if already uploaded
+	lftp --version
 	p=`echo parallel-latest.tar.bz2*{,.sig,.asc}`; lftp -e "put $$p; bye" ftp://anonymous:ole=tange.dk@ftp-upload.gnu.org/incoming/ftp/ || true
 	p=`echo parallel-$(YYYYMMDD).tar.bz2*{,.sig,.asc}`; lftp -e "put $$p; bye" ftp://anonymous:ole=tange.dk@ftp-upload.gnu.org/incoming/ftp/ || true
 

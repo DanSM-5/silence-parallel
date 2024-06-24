@@ -27,7 +27,6 @@ niceload --prg firefox &
 cd testsuite;
 # With 23 GB RAM free this takes 3m43s
 make mem;
-make polar;
 # Estimated time: 13m
 make long
 # Estimated time: 42m
@@ -273,33 +272,24 @@ from:tange@gnu.org
 to:parallel@gnu.org, bug-parallel@gnu.org
 stable-bcc: Jesse Alama <jessealama@fastmail.fm>
 
-Subject: GNU Parallel 20240622 ('Versailles/34 counts/(Raisi-IRAN preæsentdt)/spurlock(supersize)') released
+Subject: GNU Parallel 20240622 ('34 counts') released
 
-GNU Parallel 20240122 ('Frederik X') has been released. It is available for download at: lbry://@GnuParallel:4
+GNU Parallel 20240622 ('34 counts') has been released. It is available for download at: lbry://@GnuParallel:4
 
 Quote of the month:
 
-  GNU Parallel alone provides more value than moreutils
-    -- Ferret7446@news.ycombinator.com
+  The most glorious 15,000 lines of Perl ever written.
+    -- @nibblrrr7124@YouTube
  
 New in this release:
-
-* --sshlogin supports ranges: server[01-12,15] 10.0.[1-10].[2-254]
-
-* --plus enables {slot-1} and {seq-1} = {%}-1 and {#}-1 to count from 0.
-
-* env_parallel.{sh,ash,dash,bash,ksh,zsh} is now the same script.
 
 * Bug fixes and man page updates.
 
 News about GNU Parallel:
 
-https://dev.to/siddhantkcode/implementing-concurrency-in-shell-scripts-521o
+* Howto - Parallel: lanciare comandi in simultanea https://github.com/linuxhubit/linuxhub.it/blob/main/_posts/2024-06-14-howto-parallel-per-lanciare-comandi-in-simultanea.md
 
-Howto Parallel per lanciare comandi in simultanea
-https://github.com/linuxhubit/linuxhub.it/blob/main/_posts/2024-06-14-howto-parallel-per-lanciare-comandi-in-simultanea.md
-
-* <<>>
+* Implementing Concurrency in Shell Scripts https://dev.to/siddhantkcode/implementing-concurrency-in-shell-scripts-521o
 
 
 GNU Parallel - For people who live life in the parallel lane.
