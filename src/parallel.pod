@@ -1775,7 +1775,7 @@ If in doubt use B<-X> as that will most likely do what is needed.
 See also: B<-X> B<--xargs>
 
 
-=item B<--memfree> I<size> (alpha testing)
+=item B<--memfree> I<size> (beta testing)
 
 Minimum memory free when starting another job.
 
@@ -1879,7 +1879,7 @@ is somewhat slower than B<--block>.
 See also: UNIT PREFIX B<--pipe> B<--block> B<-m> B<-X> B<--max-args>
 
 
-=item B<--nonall> (alpha testing)
+=item B<--nonall> (beta testing)
 
 B<--onall> with no arguments.
 
@@ -1894,7 +1894,7 @@ servers.
 See also: B<--onall> B<--sshlogin>
 
 
-=item B<--onall> (alpha testing)
+=item B<--onall> (beta testing)
 
 Run all the jobs on all computers given with B<--sshlogin>.
 
@@ -3896,9 +3896,13 @@ as 1M-12*2.024*2k.
 GNU B<parallel> is very liberal in quoting. You only need to quote
 characters that have special meaning in shell:
 
+=for pod2rst next-code-block: text
+
   ( ) $ ` ' " < > ; | \
 
 and depending on context these needs to be quoted, too:
+
+=for pod2rst next-code-block: text
 
   ~ & ! ? space * { #
 
@@ -4410,13 +4414,19 @@ you, file a bug-report.
 
 If you get:
 
+=for pod2rst next-code-block: text
+
   Can't exec "command": No such file or directory
 
 or:
 
+=for pod2rst next-code-block: text
+
   open3: exec of by command failed
 
 or:
+
+=for pod2rst next-code-block: text
 
   /bin/bash: command: command not found
 

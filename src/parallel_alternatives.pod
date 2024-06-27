@@ -1214,6 +1214,8 @@ B<rush> has some string manipulations that can be emulated by putting
 this into ~/.parallel/config (/ is used instead of %, and % is used
 instead of ^ as that is closer to bash's ${var%postfix}):
 
+=for pod2rst next-code-block: text
+
   --rpl '{:} s:(\.[^/]+)*$::'
   --rpl '{:%([^}]+?)} s:$$1(\.[^/]+)*$::'
   --rpl '{/:%([^}]*?)} s:.*/(.*)$$1(\.[^/]+)*$:$1:'
@@ -1367,6 +1369,8 @@ If you I<really> want the B<for>-loop:
       done
 
 Contrary to B<rush> this also works if the value is complex like:
+
+=for pod2rst next-code-block: text
 
   My brother's 12" records
 
@@ -1858,7 +1862,7 @@ emulated with GNU B<parallel>:
     $ loopy touch '{= $_=seq()*5 =}'.txt
 
     $ loop --until-contains 200 -- \
-        ./get_response_code.sh --site mysite.biz`
+        ./get_response_code.sh --site mysite.biz
     $ loopy --halt now,success=1 \
         './get_response_code.sh --site mysite.biz | match 200'
 
@@ -4402,17 +4406,17 @@ cause segfault.
 
 =head3 EXAMPLES
 
-simple.dat:
+  simple.dat:
+  
+    sleep 5
+    foo
+    cat alire.toml
+    loc src/parallelize.adb
+    sh loc src/*.ad?
+  
+  1$ bin/parallelize -v <simple.dat
 
-  sleep 5
-  foo
-  cat alire.toml
-  loc src/parallelize.adb
-  sh loc src/*.ad?
-
-1$ bin/parallelize -v <simple.dat
-
-1$ parallel <simple.dat
+  1$ parallel <simple.dat
 
 https://github.com/simonjwright/parallelize
 (Last checked: 2024-04)
@@ -4605,6 +4609,8 @@ buffers on disk, they may not clean up, if they are killed.
 =head2 SPCCHAR: Dealing badly with special file names.
 
 It is not uncommon for users to create files like:
+
+=for pod2rst next-code-block: text
 
   My brother's 12" *** record  (costs $$$).jpg
 

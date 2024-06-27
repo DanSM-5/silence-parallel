@@ -2053,6 +2053,8 @@ your environment:
 
 Output:
 
+=for pod2rst next-code-block: text
+
   Joe's var is green
 
 The disadvantage is that if your environment is huge B<env_parallel>
@@ -2789,6 +2791,8 @@ This technique can be used for:
 
 =item Common LISP:
 
+=for pod2rst next-code-block: clisp
+
   #!/usr/bin/parallel --shebang-wrap /usr/bin/clisp
   
   (format t "~&~S~&" 'Arguments)
@@ -2959,6 +2963,8 @@ B<--help> will print a summary of the most important options:
 
 Output:
 
+=for pod2rst next-code-block: text
+
   Usage:
   
   parallel [options] [command [arguments]] < list_of_arguments
@@ -3031,6 +3037,8 @@ generated using B<--citation>:
   parallel --citation
 
 Output:
+
+=for pod2rst next-code-block: bash
 
   Academic tradition requires you to cite works you base your article on.
   When using programs that use GNU Parallel to process data for publication

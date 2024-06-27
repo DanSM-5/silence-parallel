@@ -91,6 +91,20 @@ sub pre2 {
     }
 }
 
+sub pre3 {
+    $/ = undef;
+    # Default syntax language: Bash
+    # If =for not already there, insert:
+    #   =for pod2rst next-code-block: bash
+    $all = <STDIN>;
+    @codepar = split/(?<=\n  .{0,25}\S.{0,200}\n{2,10})(?=[0-9a-zA-Z=])/, $all;
+    for(@codepar) {
+	/=for pod2rst next-code-block:/ and next;
+	s/((\n  +\S))/\n=for pod2rst next-code-block: bash\n$1/;
+    }
+    print @codepar;
+}
+
 sub pod2rst {
     exec "pod2rst";
 }
@@ -109,5 +123,5 @@ sub post {
     }
 }
 
-# stdin | pre1() | pre2() | pod2rst() | post()
-pipefunc(*pre1,*pre2,*pod2rst,*post);
+# stdin | pre1() | pre2() | pre3() | pod2rst() | post()
+pipefunc(*pre1,*pre2,*pre3,*pod2rst,*post);

@@ -245,14 +245,10 @@ http://freshmeat.net/projects/parallel/releases/new
 
 https://hostux.social/@GNU_Parallel
 
-# Dead: https://joindiaspora.com/stream
-
 New release of #GNU Parallel pi.dk/0
 New in this release pi.dk/2
 See the intro videos pi.dk/1
-10 secs installation: https://git.savannah.gnu.org/cgit/parallel.git/tree/README
-
-Aspect: Public
+10 secs installation: pi.dk/3
 
 GNU Parallel - for people who live life in the parallel lane.
 
@@ -272,25 +268,23 @@ from:tange@gnu.org
 to:parallel@gnu.org, bug-parallel@gnu.org
 stable-bcc: Jesse Alama <jessealama@fastmail.fm>
 
-Subject: GNU Parallel 20240622 ('34 counts') released
+Subject: GNU Parallel 20240722 ('Assange') released
 
-GNU Parallel 20240622 ('34 counts') has been released. It is available for download at: lbry://@GnuParallel:4
+GNU Parallel 20240722 ('Assange') has been released. It is available for download at: lbry://@GnuParallel:4
 
 Quote of the month:
 
-  The most glorious 15,000 lines of Perl ever written.
-    -- @nibblrrr7124@YouTube
- 
+  <<>>
+  
 New in this release:
+
+<<>>
 
 * Bug fixes and man page updates.
 
 News about GNU Parallel:
 
-* Howto - Parallel: lanciare comandi in simultanea https://github.com/linuxhubit/linuxhub.it/blob/main/_posts/2024-06-14-howto-parallel-per-lanciare-comandi-in-simultanea.md
-
-* Implementing Concurrency in Shell Scripts https://dev.to/siddhantkcode/implementing-concurrency-in-shell-scripts-521o
-
+<<>>
 
 GNU Parallel - For people who live life in the parallel lane.
 
