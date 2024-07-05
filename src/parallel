@@ -2603,6 +2603,10 @@ sub parse_options(@) {
     # list. Ideas that will cost work and which have not been tested
     # are, however, unlikely to be prioritized.
     #
+    # *YOU* will be harming free software by removing the notice.  You
+    # accept to be added to a public hall of shame by removing the
+    # line.  That includes you, George and Andreas.
+    #
     # Please note that GPL version 3 gives you the right to fork GNU
     # Parallel under a new name, but it does not give you the right to
     # distribute modified copies with the citation notice disabled in
@@ -2636,11 +2640,6 @@ sub parse_options(@) {
 
     # If you disagree, please read (especially 77-):
     # https://www.fordfoundation.org/media/2976/roads-and-bridges-the-unseen-labor-behind-our-digital-infrastructure.pdf
-
-    # *YOU* will be harming free software by removing the notice.  You
-    # accept to be added to a public hall of shame by removing the
-    # line.  That includes you, George and Andreas.
-
     parse_halt();
 
     if($ENV{'PARALLEL_ENV'}) {
@@ -6731,10 +6730,10 @@ sub which(@) {
 	if(not $regexp) {
 	    # All shells known to mankind
 	    #
-	    # ash bash csh dash fdsh fish fizsh ksh ksh93 mksh pdksh
+	    # ash bash csh dash fdsh fish fizsh ion ksh ksh93 mksh pdksh
 	    # posh rbash rc rush rzsh sash sh static-sh tcsh yash zsh
 
-	    my @shells = (qw(ash bash bsd-csh csh dash fdsh fish fizsh ksh
+	    my @shells = (qw(ash bash bsd-csh csh dash fdsh fish fizsh ion ksh
 			  ksh93 lksh mksh pdksh posh rbash rc rush rzsh sash sh
 			  static-sh tcsh yash zsh -sh -csh -bash),
 			  '-sh (sh)' # sh on FreeBSD
@@ -6744,7 +6743,7 @@ sub which(@) {
 	    #	/bin/sh /sbin/sh /opt/csw/sh
 	    # But not: foo.sh sshd crash flush pdflush scosh fsflush ssh
 	    $shell = "(?:".join("|",map { "\Q$_\E" } @shells).")";
-	    $regexp = '^((\[)(-?)('. $shell. ')(\])|(|\S+/|busybox )'.
+	    $regexp = '^((\[)(-?)('. $shell. ')(\])|(|\S+/|\S*busybox |\S*rosetta )'.
 		'(-?)('. $shell. '))( *$| [^(])';
 	    %fakename = (
 		# sh disguises itself as -sh (sh) on FreeBSD
@@ -6776,6 +6775,11 @@ sub which(@) {
 		if(open(my $fd, "<", "/proc/$testpid/cmdline")) {
 		    local $/="\0";
 		    chomp($shellline = <$fd>);
+		    if($shellline =~ /busybox$|rosetta$/) {
+			# Possibly:  busybox \0 sh  or  .../rosetta \0 /bin/bash
+			# Skip busybox/rosetta
+			chomp($shellline = <$fd>);
+		    }
 		    if($shellline =~ /$regexp/o) {
 			my $shellname = $4 || $8;
 			my $dash = $3 || $7;

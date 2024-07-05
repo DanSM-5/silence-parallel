@@ -284,6 +284,16 @@ New in this release:
 
 News about GNU Parallel:
 
+https://v2thegreat.com/2024/06/19/lessons-learned-from-scaling-to-multi-terabyte-datasets/
+
+https://medium.com/@nfrozi/efisiensi-maksimal-cara-paralelisasi-perintah-di-cli-linux-f4fda3afe2a0
+
+https://usercomp.com/news/1295687/parallel-ssh-file-transfer-with-gnuparallel
+https://usercomp.com/news/1300817/gnu-parallel-process-one-line-with-pipe
+https://datascience.101workbook.org/06-hpc/06-parallel/01-intro-to-gnu-parallel/#gsc.tab=0
+
+https://www.cyberciti.biz/faq/linux-unix-copy-a-file-to-multiple-directories-using-cp-command/
+
 <<>>
 
 GNU Parallel - For people who live life in the parallel lane.

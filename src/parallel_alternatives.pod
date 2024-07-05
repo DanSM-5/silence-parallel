@@ -118,6 +118,10 @@ The following features are in some of the comparable tools:
 
 =item E7. Only spawn new jobs if load is less than a limit
 
+=item E8. Full command has non-zero exit value if one job has non-zero exit value
+
+=item E9. Jobs can be started without reading all input first
+
 =back
 
 
@@ -183,7 +187,7 @@ parallel:
 
 =item O1 O2 O3 O4 O5 O6 O7 O8 O9 O10
 
-=item E1 E2 E3 E4 E5 E6 E7
+=item E1 E2 E3 E4 E5 E6 E7 E8 E9
 
 =item R1 R2 R3 R4 R5 R6 R7 R8 R9
 
@@ -204,7 +208,7 @@ Summary (see legend above):
 
 =item - O2 O3 - O5 O6
 
-=item E1 - - - - - -
+=item E1 - - - - - - E8 E9
 
 =item - - - - - x - - -
 
@@ -541,7 +545,7 @@ using GNU B<parallel>:
        'pnmscale 0.5 | pnmtojpeg | sem --id diskio cat > th_{}'
 
 https://www.gnu.org/software/pexec/
-(Last checked: 2010-12)
+(Last checked: 2024-06)
 
 
 =head2 DIFFERENCES BETWEEN xjobs AND GNU Parallel
@@ -614,7 +618,7 @@ using GNU B<parallel>:
   1$ parallel mogrify -flip ::: *.jpg
 
 https://github.com/exzombie/prll
-(Last checked: 2019-01)
+(Last checked: 2024-06)
 
 
 =head2 DIFFERENCES BETWEEN dxargs AND GNU Parallel
@@ -645,7 +649,7 @@ berlios.de/usage.html ported to GNU B<parallel>:
      find dir -execdir sem cmd {} \;
 
 https://github.com/cklin/mdm
-(Last checked: 2019-01)
+(Last checked: 2014-06)
 
 
 =head2 DIFFERENCES BETWEEN xapply AND GNU Parallel
@@ -708,8 +712,8 @@ using GNU B<parallel>:
 
   11$ parallel '[ -f {} ] && echo {}' < List | ...
 
-https://www.databits.net/~ksb/msrc/local/bin/xapply/xapply.html (Last
-checked: 2010-12)
+https://www.databits.net/~ksb/msrc/local/bin/xapply/xapply.html
+(Last checked: 2010-12)
 
 
 =head2 DIFFERENCES BETWEEN AIX apply AND GNU Parallel
@@ -753,55 +757,358 @@ ssw_aix_71/com.ibm.aix.cmds1/apply.htm
 
 =head2 DIFFERENCES BETWEEN paexec AND GNU Parallel
 
+Summary (see legend above):
+
+=over
+
+=item I1 - - - - - I7
+
+=item - - M3 - - -
+
+=item (O1) O2 O3 (O4) (O5) O6 - O8 x -
+
+=item E1 - - - (E5) - - -
+
+=item R1 - - - x R6 - R8 R9
+
+=item - -
+
+=back
+
 B<paexec> can run jobs in parallel on both the local and remote computers.
 
-B<paexec> requires commands to print a blank line as the last
-output. This means you will have to write a wrapper for most programs.
-
 B<paexec> has a job dependency facility so a job can depend on another
-job to be executed successfully. Sort of a poor-man's B<make>.
+job to be executed successfully. Sort of a poor-man's B<make>. This
+can partly be emulated in GNU B<parallel> with B<tsort>.
 
-=head3 EXAMPLES FROM paexec's EXAMPLE CATALOG
+B<paexec> fails if output of a single line is > 2 GB. Output of a 2 GB
+line requires 6 GB RAM. Lines of standard output is interleaved (but
+there is no half line mixing), and output of standard error
+mixes. Combined with B<paexec_reorder> output order can be the same as
+input order. In certain situations B<paexec> will eat the last newline
+of standard output.
 
-Here are the examples from B<paexec>'s example catalog with the equivalent
+There seems to be no way to make 4 jobs run on a remote server with 4
+cores and 16 jobs on a remote server with 16 cores.
+
+
+=head3 EXAMPLES FROM man paexec
+
+Here are the examples from B<man paexec> with the equivalent using GNU
+B<parallel>.
+
+  1$ paexec -t '/usr/bin/ssh -x' -n 'host1 host2 host3' \
+       -le -g -c calculate-me < tasks.txt |
+     paexec_reorder -Mf -Sl
+
+  # GNU Parallel cannot stop processing jobs that depend on another.
+  # It can either try all:
+  1$ tsort tasks.txt |
+       parallel --ssh '/usr/bin/ssh -x' -S "host1,host2,host3" \
+         --tagstring {#} --pipe -N1 --log my.log calculate-me
+
+  # Or it can stop at the first failing:
+  1$ tsort tasks.txt |
+       parallel --ssh '/usr/bin/ssh -x' -S "host1,host2,host3" \
+         --tagstring {#} --halt now,fail=1 --pipe -N1 --log my.log calculate-me
+
+  # To retry the the failed and missing tasks:
+  1$ tsort tasks.txt |
+       parallel --ssh '/usr/bin/ssh -x' -S "host1,host2,host3" \
+         --tagstring {#} --halt now,fail=1 --pipe -N1 --joblog my.log \
+         --resume-failed calculate-me
+
+  2$ ls -1 *.wav | paexec -x -n +4 -c 'oggenc -Q'
+
+  2$ ls -1 *.wav | parallel -j4 oggenc -Q
+
+  3$ ls -1 *.wav | paexec -xCil -n+4 flac -f --silent
+
+  3$ ls -1 *.wav | parallel --tagstring {#} -j4 'echo {}; flac -f --silent {}'
+
+  4$ { uname -s; uname -r; uname -m; } |
+       paexec -x -lp -n+2 -c banner |
+       paexec_reorder -l
+
+  4$ { uname -s; uname -r; uname -m; } |
+       parallel --tagstring '{#}' -k \
+         'banner {} | perl -pe "s/^/getppid().\" \"/e"'
+
+  5$ find . -name '*.dat' -print0 |
+       paexec -0 -n+10 -C -J// scp // remoteserver:/remote/path
+
+  5$ find . -name '*.dat' -print0 |
+       parallel -0 -j10 -I// scp // remoteserver:/remote/path
+
+  6$ ls -1 *.txt | paexec -n+10 -J%% -c 'awk "BEGIN {print toupper(\"%%\")}"'
+
+  6$ ls -1 *.txt | parallel -j10 -I%% 'awk "BEGIN {print toupper(\"%%\")}"'
+
+=head3 EXAMPLES FROM presentation/paexec.tex
+
+  7$ ls -1 *.wav | \
+     paexec -x -c 'flac -s' -n +4 > /dev/null
+
+  7$ ls -1 *.wav | \
+     parallel -j4 flac -s > /dev/null
+
+  8$ cat ~/bin/toupper
+     #!/usr/bin/awk -f
+     {
+        print " ", toupper($0)
+        print ""  # empty line -- end-of-task marker!
+        fflush()  # We must flush stdout!
+     }
+
+     cat tasks
+     apple
+     bananas
+     orange
+
+     paexec -t ssh -c ~/bin/toupper -n 'server1 server2' < tasks
+
+  8$ parallel --pipe -n1 -S server1,server2 ~/bin/toupper < tasks
+
+  9$ paexec -lr -t ssh -c ~/bin/toupper -n 'server1 server2' < tasks
+
+  9$ # GNU Parallel has no easy way to prepend the server
+     parallel --tagstring {#} --pipe -n1 -S server1,server2 ~/bin/toupper < tasks
+     cat tasks | parallel --tagstring {#} --pipe -n1 -S server1,server2 --plus \
+       ~/bin/toupper '| perl -pe "s/^/{sshlogin}/"'  < tasks
+
+  10$ paexec -n +4 -c ~/bin/toupper < tasks
+
+  10$ parallel -j4 --pipe -n1 ~/bin/toupper < tasks
+
+  11$ paexec -x -t ssh -n 'server1 server2' \
+        -c "awk 'BEGIN {print toupper(ARGV[1])}' "  < tasks
+
+  11$ parallel  -S 'server1,server2' \
+        "awk 'BEGIN {print toupper(ARGV[1])}'" < tasks
+
+  12$ paexec -x -C -t ssh -n 'server1 server2' \
+        awk 'BEGIN {print toupper(ARGV[1])}' < tasks
+
+  12$ parallel -S 'server1,server2' -q \
+        awk 'BEGIN {print toupper(ARGV[1])}' < tasks
+
+  13$ paexec -Z240 -x -t ssh -n 'server1 badhostname server2' \
+        -c "awk 'BEGIN {print toupper(ARGV[1])}' " < tasks 
+
+  13$ parallel --filter-hosts -S 'server1,badhostname,server2' \
+        "awk 'BEGIN {print toupper(ARGV[1])}' " < tasks
+
+  14$ cat ~/bin/pbanner
+      #!/usr/bin/env sh
+      while read task; do
+         banner -f M "$task" | pv -qL 300
+         echo "$PAEXEC_EOT" # end-of-task marker
+      done
+
+      cat tasks
+      pae
+      xec
+
+      paexec -l -mt='SE@X-L0S0!&' -c ~/bin/pbanner -n +2 < tasks |
+        paexec_reorder -mt='SE@X-L0S0!&'
+
+  14$ paexec -y -lc ~/bin/pbanner -n+2 < tasks | paexec_reorder -y
+
+  14$ paexec -l -x -c banner -n+2 < tasks
+
+  14$ parallel --pipe -n1 -j2 ~/bin/pbanner < tasks
+
+  16$ cat ~/tmp/packages_to_build
+      audio/cd-discid audio/abcde
+      textproc/gsed audio/abcde
+      audio/cdparanoia audio/abcde
+      audio/id3v2 audio/abcde
+      audio/id3 audio/abcde
+      misc/mkcue audio/abcde
+      shells/bash audio/abcde
+      devel/libtool-base audio/cdparanoia
+      devel/gmake audio/cdparanoia
+      devel/libtool-base audio/id3lib
+      devel/gmake audio/id3v2
+      audio/id3lib audio/id3v2
+      devel/m4 devel/bison
+      lang/f2c devel/libtool-base
+      devel/gmake misc/mkcue
+      devel/bison shells/bash
+
+      cat ~/bin/pkg_builder
+      #!/usr/bin/awk -f
+      
+      {
+         print "build " $0
+         print "success" # build succeeded! (paexec -ms=)
+         print ""        # end-of-task marker
+         fflush()        # we must flush stdout
+      }
+
+      paexec -g -l -c ~/bin/pkg_builder -n 'server2 server1' \
+        -t ssh < ~/tmp/packages_to_build | paexec_reorder
+
+  # GNU Parallel cannot postpone jobs that depend on another.
+  # In some cases this will work
+  16$ tsort ~/tmp/packages_to_build | parallel -S server2,server1 \
+        --pipe -n1 ~/bin/pkg_builder
+
+  17$ cat ~/bin/pkg_builder
+      #!/usr/bin/awk -f
+      
+      {
+         print "build " $0
+         if ($0 == "devel/gmake")
+            print "failure" # Oh no...
+            exit 255     # Exit value needed for GNU Parallel
+         else
+            print "success" # build succeeded!
+      
+         print ""        # end-of-task marker
+         fflush()        # we must flush stdout
+      }
+
+      paexec -gl -c ~/bin/pkg_builder -n 'server2 server1' \
+        -t ssh < ~/tmp/packages_to_build | paexec_reorder
+
+  # GNU Parallel cannot refrain from starting jobs, that depend on others
+  # In some cases this will work
+  17$ tsort ~/tmp/packages_to_build | parallel -S server2,server1 \
+        --halt now,fail=1 --pipe -n1 ~/bin/pkg_builder
+
+  18$ cat ~/bin/pkg_builder
+      #!/usr/bin/awk -f
+      
+      {
+         "hostname -s" | getline hostname
+         print "build " $0 " on " hostname
+      
+         if (hostname == "server1" && $0 == "textproc/gsed")
+            exit 139
+            # Damn it, I'm dying...
+            # Exit value is needed by GNU Parallel
+         else
+            print "success" # Yes! :-)
+      
+         print ""        # end-of-task marker
+         fflush()        # we must flush stdout
+      }
+      
+      paexec -gl -Z300 -t ssh -c ~/bin/pkg_builder \
+        -n 'server2 server1' < ~/tmp/packages_to_build |
+        paexec_reorder > result
+
+  # GNU Parallel retries a job on another server, if --retries > 1
+  17$ tsort ~/tmp/packages_to_build | parallel -S server2,server1 \
+        --halt now,fail=1 --retries 2 --pipe -n1 ~/bin/pkg_builder
+
+  18$ ls -1 *.wav | paexec -x -c 'flac -s' -n+3 >/dev/null
+
+  18$ ls -1 *.wav | parallel -j3 flac -s >/dev/null
+
+  19$ ls -1 *.wav | paexec -ixC -n+3 oggenc -Q | grep .
+
+  19$ ls -1 *.wav | parallel -j3 'echo {}; oggenc -Q {}' | grep .
+
+  20$ cat calc
+      #!/bin/sh
+      # $1 -- task given on input
+      if test $1 = huge; then
+          sleep 6
+      else
+          sleep 1
+      fi
+      echo "task $1 done"
+
+      printf 'small1\nsmall2\nsmall3\nsmall4\nsmall5\nhuge\n' |
+        time -p paexec -c ~/bin/calc -n +2 -xg | grep -v success
+
+  20$ printf 'small1\nsmall2\nsmall3\nsmall4\nsmall5\nhuge\n' |
+        time -p parallel -j2 ~/bin/calc | grep -v success                                 
+
+  21$ printf 'small1\nsmall2\nsmall3\nsmall4\nweight: huge 6\n' |
+        time -p paexec -c ~/bin/calc -n +2 -x -W1 | grep -v success
+
+  21$ # GNU Parallel does not support weighted jobs.
+      # It can be simulated by sorting:
+      printf 'small1\nsmall2\nsmall3\nsmall4\nweight: huge 6\n' |
+        perl -pe 's/^weight: (.*) (\d+)/$2 $1/ or s/^/1 /' |
+        sort -nr | time parallel ~/bin/calc '{=s/^\d* //=}' |
+        grep -v success
+
+=head3 EXAMPLES FROM paexec's example dir
+
+Here are the examples from B<paexec>'s example dir with the equivalent
 using GNU B<parallel>:
 
-=head4 1_div_X_run
+=head4 all_substr
 
-  1$ ../../paexec -s -l -c "`pwd`/1_div_X_cmd" -n +1 <<EOF [...]
+  $ paexec -lpe -c "`pwd`/cmd" -n +3 <<EOF
 
-  1$ parallel echo {} '|' `pwd`/1_div_X_cmd <<EOF [...]
+  $ parallel -j3 --pipe -n1 --tagstring {#} \
+      './cmd | perl -pe "s/^/getppid().\" \"/e"' <<EOF
 
-=head4 all_substr_run
+=head4 cc_wrapper
 
-  2$ ../../paexec -lp -c "`pwd`/all_substr_cmd" -n +3 <<EOF [...]
-
-  2$ parallel echo {} '|' `pwd`/all_substr_cmd <<EOF [...]
-
-=head4 cc_wrapper_run
-
-  3$ ../../paexec -c "env CC=gcc CFLAGS=-O2 `pwd`/cc_wrapper_cmd" \
+  $ paexec -c "env CC=gcc CFLAGS=-O2 `pwd`/cmd" \
              -n 'host1 host2' \
-             -t '/usr/bin/ssh -x' <<EOF [...]
+             -t '/usr/bin/ssh -x' <<EOF
 
-  3$ parallel echo {} '|' "env CC=gcc CFLAGS=-O2 `pwd`/cc_wrapper_cmd" \
-             -S host1,host2 <<EOF [...]
+  $ parallel --pipe -n1 -S 'host1,host2' \
+      "env CC=gcc CFLAGS=-O2 `pwd`/cmd" <<EOF
 
-     # This is not exactly the same, but avoids the wrapper
-     parallel gcc -O2 -c -o {.}.o {} \
-             -S host1,host2 <<EOF [...]
+  # This is not exactly the same, but avoids the wrapper
+  $ parallel -S host1,host2 gcc -O2 -c -o {.}.o {} <<EOF
 
-=head4 toupper_run
+=head4 cc_wrapper2
 
-  4$ ../../paexec -lp -c "`pwd`/toupper_cmd" -n +10 <<EOF [...]
+  $ ls -1 $PWD/*.c | paexec -c "env $CC $CFLAGS -c " -n +4 -x
 
-  4$ parallel echo {} '|' ./toupper_cmd <<EOF [...]
+  $ ls -1 $PWD/*.c | parallel -j4 "env $CC $CFLAGS -c"
 
-     # Without the wrapper:
-     parallel echo {} '| awk {print\ toupper\(\$0\)}' <<EOF [...]
+=head4 dirtest
+
+  $ paexec -gx -l -c 'test -d' -md=';' -n +3 < tasks
+
+  # GNU Parallel cannot refrain from starting jobs, that depend on others
+  $ parallel -j3 --tag test -d '{= s/.*;// =}; echo $?'  < tasks
+
+=head4 divide
+
+  $ paexec -s -l -c cmd_divide -n +3 <<EOF
+
+  # GNU Parallel cannot refrain from starting jobs, that depend on others
+  $ parallel -j3 --pipe -n1 cmd_divide <<EOF
+
+=head4 make_package
+
+  1$ paexec -g -le -c "`pwd`/cmd" -n +3 < tasks | paexec_reorder -g -Ms
+
+  # GNU Parallel cannot refrain from starting jobs, that depend on others
+  1$ cat < tasks | parallel --pipe -n1 -j3 "`pwd`/cmd"
+
+  2$ paexec -g -le -c "`pwd`/cmd" -n +3 < tasks_cycle
+
+  2$ tsort < tasks_cycle | parallel --pipe -n1 -j3 "`pwd`/cmd"
+
+=head4 toupper
+
+  $ input | paexec -c "`pwd`/cmd" -n +2 | cut -b 2-
+
+  $ input | parallel --pipe -n1 -j2 "`pwd`/cmd" | cut -b 2-
+
+  $ # Without the wrapper:
+    input | parallel --pipe -n1 -j2 'awk {print\ toupper\(\$0\)}'
+
+=head4 wav2flac
+
+  $ ls -1 "$dir"/*.wav | paexec -x -c 'flac --silent' -n +"$num"
+
+  $ ls -1 "$dir"/*.wav | parallel -j $num flac --silent
 
 https://github.com/cheusov/paexec
-(Last checked: 2010-12)
+(Last checked: 2024-06)
 
 
 =head2 DIFFERENCES BETWEEN map(sitaramc) AND GNU Parallel
@@ -989,7 +1296,7 @@ and that it is run under a shell that supports '**' globbing (such as B<zsh>):
   4$ parallel lame -V 2 FULLPATH DIRNAME/BASENAME.mp3 ::: ~/Music/*.wav
 
 https://github.com/danielgtaylor/ladon
-(Last checked: 2019-01)
+(Last checked: 2024-06)
 
 
 =head2 DIFFERENCES BETWEEN jobflow AND GNU Parallel
@@ -1067,7 +1374,7 @@ jobs. This can be emulated by GNU B<parallel> using B<bash>'s B<ulimit>:
   5$ seq 100 | parallel echo '{= $_>10 and $_<=20 or skip() =}'
 
 https://github.com/rofl0r/jobflow
-(Last checked: 2022-05)
+(Last checked: 2024-06)
 
 
 =head2 DIFFERENCES BETWEEN gargs AND GNU Parallel
@@ -1641,10 +1948,10 @@ computer has 8 cores).
 
 GNU B<parallel> can be used as a poor-man's version of ClusterSSH:
 
-B<parallel --nonall -S server-a,server-b do_stuff foo bar>
+  parallel --nonall -S server-a,server-b do_stuff foo bar
 
 https://github.com/duncs/clusterssh
-(Last checked: 2010-12)
+(Last checked: 2024-06)
 
 
 =head2 DIFFERENCES BETWEEN coshell AND GNU Parallel
@@ -1693,7 +2000,7 @@ It can be emulated with GNU B<parallel> using this Bash function:
   }
 
 https://github.com/tfogo/spread
-(Last checked: 2024-04)
+(Last checked: 2024-06)
 
 
 =head2 DIFFERENCES BETWEEN pyargs AND GNU Parallel
@@ -1737,7 +2044,7 @@ and fails on B<pyargs traceroute gnu.org fsf.org>.
   parallel seq ::: 1 2 3 4 5 6
 
 https://github.com/robertblackwell/pyargs
-(Last checked: 2019-01)
+(Last checked: 2024-01)
 
 
 =head2 DIFFERENCES BETWEEN concurrently AND GNU Parallel
@@ -2022,7 +2329,7 @@ template to generate the jobs, but requires jobs to be in a
 file. Output from the jobs mix.
 
 https://github.com/john01dav/spp
-(Last checked: 2019-01)
+(Last checked: 2024-06)
 
 
 =head2 DIFFERENCES BETWEEN paral AND GNU Parallel
@@ -2092,7 +2399,7 @@ the GNU B<parallel> command):
        echo g && sleep 0.5 && echo h"
 
 https://github.com/amattn/paral
-(Last checked: 2019-01)
+(Last checked: 2024-06)
 
 
 =head2 DIFFERENCES BETWEEN concurr AND GNU Parallel
@@ -2120,7 +2427,7 @@ B<concurr> deals badly empty input files and with output larger than
 64 KB.
 
 https://github.com/mmstick/concurr
-(Last checked: 2019-01)
+(Last checked: 2024-01)
 
 
 =head2 DIFFERENCES BETWEEN lesser-parallel AND GNU Parallel
@@ -2134,7 +2441,7 @@ hardly any options, whereas B<parallel --embed> gives you the full
 GNU B<parallel> experience.
 
 https://github.com/kou1okada/lesser-parallel
-(Last checked: 2019-01)
+(Last checked: 2024-06)
 
 
 =head2 DIFFERENCES BETWEEN npm-parallel AND GNU Parallel
@@ -2145,7 +2452,7 @@ There are no examples and very little documentation, so it is hard to
 compare to GNU B<parallel>.
 
 https://github.com/spion/npm-parallel
-(Last checked: 2019-01)
+(Last checked: 2024-06)
 
 
 =head2 DIFFERENCES BETWEEN machma AND GNU Parallel
@@ -2359,7 +2666,7 @@ https://github.com/codingo/Interlace
 I have been unable to get the code to run at all. It seems unfinished.
 
 https://github.com/otonvm/Parallel
-(Last checked: 2019-02)
+(Last checked: 2024-06)
 
 
 =head2 DIFFERENCES BETWEEN k-bx par AND GNU Parallel
@@ -2434,7 +2741,7 @@ will cause the system to freeze if there are so many jobs that there
 is not enough memory to run them all at the same time.
 
 https://github.com/royriojas/shell-executor
-(Last checked: 2019-02)
+(Last checked: 2024-06)
 
 
 =head2 DIFFERENCES BETWEEN non-GNU par AND GNU Parallel
@@ -2555,7 +2862,7 @@ corresponding GNU B<sem> and GNU B<parallel> commands:
      wait
 
 https://github.com/akramer/lateral
-(Last checked: 2019-03)
+(Last checked: 2024-06)
 
 
 =head2 DIFFERENCES BETWEEN with-this AND GNU Parallel
@@ -2589,7 +2896,7 @@ B<with-this> gives some additional information, so the output has to
 be cleaned before piping it to the next command.
 
 https://github.com/amritb/with-this.git
-(Last checked: 2019-03)
+(Last checked: 2024-06)
 
 
 =head2 DIFFERENCES BETWEEN Tollef's parallel (moreutils) AND GNU Parallel
@@ -2736,7 +3043,7 @@ lost. B<threader> buffers in RAM, so output bigger than the machine's
 virtual memory will cause the machine to crash.
 
 https://github.com/voodooEntity/threader
-(Last checked: 2020-04)
+(Last checked: 2024-06)
 
 
 =head2 DIFFERENCES BETWEEN runp AND GNU Parallel
@@ -3020,7 +3327,7 @@ composed commands.
 
 
 https://github.com/ctbur/async/
-(Last checked: 2023-01)
+(Last checked: 2024-06)
 
 
 =head2 DIFFERENCES BETWEEN pardi AND GNU Parallel
@@ -3121,7 +3428,7 @@ You cannot quote space in the command, so you cannot run composed
 commands like B<sh -c "echo a; echo b">.
 
 https://gitlab.com/netikras/bthread
-(Last checked: 2021-01)
+(Last checked: 2024-06)
 
 
 =head2 DIFFERENCES BETWEEN simple_gpu_scheduler AND GNU Parallel
@@ -3187,7 +3494,7 @@ Summary (see legend above):
      seq 3 | parallel echo true >> gpu.queue
 
 https://github.com/ExpectationMax/simple_gpu_scheduler
-(Last checked: 2021-01)
+(Last checked: 2024-06)
 
 
 =head2 DIFFERENCES BETWEEN parasweep AND GNU Parallel
@@ -3250,7 +3557,7 @@ https://github.com/eviatarbach/parasweep
 (Last checked: 2021-01)
 
 
-=head2 DIFFERENCES BETWEEN parallel-bash AND GNU Parallel
+=head2 DIFFERENCES BETWEEN parallel-bash(2021) AND GNU Parallel
 
 Summary (see legend above):
 
@@ -3313,8 +3620,99 @@ running jobs.
 
   4$ something | parallel -j 5 echo {} {}
 
-https://reposhub.com/python/command-line-tools/Akianonymus-parallel-bash.html
-(Last checked: 2021-06)
+https://github.com/Akianonymus/parallel-bash/
+(Last checked: 2024-06)
+
+
+=head2 DIFFERENCES BETWEEN parallel-bash(2024) AND GNU Parallel
+
+Summary (see legend above):
+
+=over
+
+=item I1 I2 - - - - -
+
+=item - - M3 - - M6
+
+=item - O2 O3 - O5 O6 - O8 x O10
+
+=item E1 - - - - - -
+
+=item - - - - - - - - -
+
+=item - -
+
+=back
+
+B<parallel-bash> is written in pure bash. It is really fast (overhead
+of ~0.05 ms/job compared to GNU B<parallel>'s 3-10 ms/job). So if your
+jobs are extremely short lived, and you can live with the quite
+limited command, this may be useful.
+
+It seems the number of jobs must be divisible by B<-p>, so it
+sometimes does not run the jobs:
+
+  # Does nothing
+  $ seq 3 | parallel-bash -p 4 bash -c 'touch myfile-{}'
+
+This should create myfile-1..3, but creates nothing.
+
+It splits the input into queues. Each queue is of length B<-p>. So
+this will make 250 queues and run all 250 processes in parallel:
+
+  $ seq 1000 | parallel-bash -p 4 bash -c 'sleep {}'
+
+This is quite different from B<parallel-bash>(2021) where B<-p> is the
+number of workers - similar to B<--jobs> in GNU B<parallel>.
+
+In other words: B<parallel-bash> does I<not> quarantee that only 4 jobs
+will be run in parallel. This can overload your machine:
+
+  # Warning: This will start 25000 processes - not just 4
+  $ seq 100000 | parallel-bash -p 4 sleep {}
+
+If you are unlucky all long jobs may end up in the same queue:
+
+  $ printf "%b\n" 1 1 1 1 5 5 5 5 1 1 1 1 |
+      time parallel -P4 sleep {}
+  (7 seconds)
+  $ printf "%b\n" 1 1 1 1 5 5 5 5 1 1 1 1 |
+      time ./parallel-bash.bash -p 4 -c sleep {}
+  (20 seconds)
+
+Ctrl-C kills the jobs (as expected). Ctrl-Z does not suspend running jobs.
+
+
+=head3 EXAMPLES FROM parallel-bash
+
+  1$ main() { echo "${1}" ;}
+     export -f main
+
+  1$ printf "%b\n" {1..1000} | ./parallel-bash -p 10 main {}
+
+  1$ printf "%b\n" {1..1000} | parallel -j 100 main {}
+
+  2$ # Number of inputs must be divisible by 5
+     some_input | parallel-bash -p 5 echo
+
+  2$ some_input | parallel -j 5 echo
+
+  3$ # Number of inputs must be divisible by 5
+     parallel-bash -p 5 echo < some_file
+
+  3$ parallel -j 5 echo < some_file
+
+  4$ # Number of lines in 'some string' must be divisible by 5
+     parallel-bash -p 5 echo <<< 'some string'
+
+  4$ parallel -j 5 -c echo <<< 'some string'
+
+  5$ something | parallel-bash -p 5 echo {}
+
+  5$ something | parallel -j 5 echo {}
+
+https://github.com/Akianonymus/parallel-bash/
+(Last checked: 2024-06)
 
 
 =head2 DIFFERENCES BETWEEN bash-concurrent AND GNU Parallel
@@ -3336,7 +3734,7 @@ It uses an O(n*n) algorithm, so if you have 1000 independent jobs it
 takes 22 seconds to start it.
 
 https://github.com/themattrix/bash-concurrent
-(Last checked: 2021-02)
+(Last checked: 2024-06)
 
 
 =head2 DIFFERENCES BETWEEN spawntool AND GNU Parallel
@@ -3361,7 +3759,6 @@ Summary (see legend above):
 
 B<spawn> reads a full command line from stdin which it executes in
 parallel.
-
 
 http://code.google.com/p/spawntool/
 (Last checked: 2021-07)
@@ -3426,7 +3823,7 @@ Summary (see legend above):
 
 =over
 
-=item I1 I2 - - - - I7
+=item I1 I2 - - - - (I7)
 
 =item - - M3 - - M6
 
@@ -3443,6 +3840,34 @@ Summary (see legend above):
 B<go-parallel> uses Go templates for replacement strings. Quite
 similar to the I<{= perl expr =}> replacement string.
 
+The basic replacement strings can be emulated by putting this into
+B<~/.parallel/config>:
+
+  --rpl '{{.Input}} '
+  --rpl '{{.Time}} use DateTime; $_= DateTime->from_epoch(time);'
+  --rpl '{{.Start}} use DateTime; $_= DateTime->from_epoch($^T);'
+
+Then you can do:
+
+  seq 10 | parallel sleep {{.Input}}';' echo {{.Start}} {{.Time}}
+  seq 10 | go-parallel -t 'bash -c "sleep {{.Input}}; echo \"{{.Start}}\" \"{{.Time}}\""'
+
+If the input is too long (64K), you get no error:
+
+   perl -e 'print "works."."x"x100' | parallel.go -t 'echo {{noExt .Input}} '
+   perl -e 'print "fails."."x"x100_000_000' | parallel.go -t 'echo {{noExt .Input}} '
+
+Special chars are quoted:
+
+   echo '"&+<>' | go-parallel echo
+   "&+<>
+
+but not shell quoted when using replacement strings:
+
+   echo '"&+<>' | go-parallel -t 'echo {{.Input}}'
+   &#34;&amp;&#43;&lt;&gt;
+
+
 =head3 EXAMPLES FROM go-parallel
 
   1$ go-parallel -a ./files.txt -t 'cp {{.Input}} {{.Input | dirname | dirname}}'
@@ -3457,8 +3882,14 @@ similar to the I<{= perl expr =}> replacement string.
 
   3$ parallel -a ./files.txt echo mkdir -p {} {/.}
 
+  4$ time find ~/src/go -type f | go-parallel md5sum > /dev/null
+
+  4$ time find ~/src/go -type f | parallel md5sum > /dev/null
+     # Though you would probably do this instead:
+     time find ~/src/go -type f | parallel -X md5sum > /dev/null
+
 https://github.com/mylanconnolly/parallel
-(Last checked: 2021-07)
+(Last checked: 2024-06)
 
 
 =head2 DIFFERENCES BETWEEN p AND GNU Parallel
@@ -4067,7 +4498,7 @@ jobs to run in parallel.
 It is half as fast as GNU B<parallel> for short jobs.
 
 https://github.com/thilinaba/bash-parallel
-(Last checked: 2023-05)
+(Last checked: 2024-06)
 
 
 =head2 DIFFERENCES BETWEEN PaSH AND GNU Parallel
@@ -4305,7 +4736,7 @@ Summary (see legend above):
 
 =item - - - - - -
 
-=item - O2 O3 N/A - O6 - x x ?O10
+=item - O2 O3 x - O6 - x x ?O10
 
 =item E1 - - - E5 - -
 
@@ -4421,6 +4852,7 @@ cause segfault.
 https://github.com/simonjwright/parallelize
 (Last checked: 2024-04)
 
+
 =head2 Todo
 
 https://github.com/justanhduc/task-spooler
@@ -4477,7 +4909,7 @@ This test stresses whether output mixes.
 
   paralleltool="parallel -j 30"
 
-  cat <<-EOF > mycommand
+  cat <<-'EOF' > mycommand
   #!/bin/bash
 
   # If a, b, c, d, e, and f mix: Very bad
@@ -4487,18 +4919,26 @@ This test stresses whether output mixes.
   perl -e 'print STDERR "d"x3000_000," "'
   perl -e 'print STDOUT "e"x3000_000," "'
   perl -e 'print STDERR "f"x3000_000," "'
-  echo
-  echo >&2
+  echo "stdout line 1 of id $@"
+  echo "stderr line 1 of id $@" >&2
+  perl -e 'print STDOUT "A"x3000_000," "'
+  perl -e 'print STDERR "B"x3000_000," "'
+  perl -e 'print STDOUT "C"x3000_000," "'
+  perl -e 'print STDERR "D"x3000_000," "'
+  perl -e 'print STDOUT "E"x3000_000," "'
+  perl -e 'print STDERR "F"x3000_000," "'
+  echo "stdout line 2 of id $@"
+  echo "stderr line 2 of id $@" >&2
   EOF
   chmod +x mycommand
 
   # Run 30 jobs in parallel
   seq 30 |
-    $paralleltool ./mycommand > >(tr -s abcdef) 2> >(tr -s abcdef >&2)
+    $paralleltool -j 30  ./mycommand > >(tr -s a-zA-Z) 2> >(tr -s a-zA-Z >&2)
 
   # 'a c e' and 'b d f' should always stay together
-  # and there should only be a single line per job
-
+  # For each job there be 2 lines of standard output and standard error
+  # They should not be interleaved with other id's
 
 =head2 STDERRMERGE: Stderr is merged with stdout
 
@@ -4674,7 +5114,12 @@ Some tools become very slow if output lines have many words.
   #!/bin/bash
   
   paralleltool="parallel -j0"
-  
+
+  wcc() {
+      parallel --recend '' --block 100M --pipe 'LC_ALL=C wc' |
+        datamash -W sum 1 sum 2 sum 3
+  }
+
   cat <<-EOF > mycommand
   #!/bin/bash
   
@@ -4683,7 +5128,7 @@ Some tools become very slow if output lines have many words.
   chmod +x mycommand
   
   # Run 1 job
-  seq 1 | $paralleltool ./mycommand | LC_ALL=C wc
+  seq 1 | $paralleltool ./mycommand | wcc
 
 
 =head1 AUTHOR
