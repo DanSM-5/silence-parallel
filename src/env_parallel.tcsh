@@ -30,8 +30,15 @@
 
 set _parallel_exit_CODE=0
 if ("`alias env_parallel`" == '' || ! $?PARALLEL_CSH) then
-  # Activate alias
-  alias env_parallel '(setenv PARALLEL_CSH "\!*"; source `which env_parallel.csh`)'
+  set _parallel_eNv_pAtH=`which env_parallel.tcsh`
+  if ( $status == 0 ) then
+    # Activate alias
+    alias env_parallel '(setenv PARALLEL_CSH "\!*"; source '$_parallel_eNv_pAtH')'
+    unset _parallel_eNv_pAtH
+  else
+    echo 'env_parallel: Error: env_parallel.tcsh must be in $PATH ('$PATH')'
+    unset _parallel_eNv_pAtH
+  endif
 else
   # Get the --env variables if set
   # --env _ should be ignored

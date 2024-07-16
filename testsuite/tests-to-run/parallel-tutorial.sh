@@ -23,7 +23,7 @@ srcdir=$(echo "$testsuitedir" | perl -pe 's=$ENV{HOME}==')
 export SERVER1=parallel@lo
 export SERVER2=csh@lo
 export PARALLEL=-k
-perl -ne '$/="\n\n"; /^Output/../^[^O]\S/ and next; /^  / and print;' "$testsuitedir"/../src/parallel_tutorial.pod |
+perl -ne '$/="\n\n"; /^Output/../^[^O=]\S/ and next; /^  / and print;' "$testsuitedir"/../src/parallel_tutorial.pod |
     egrep -v 'curl|tty|parallel_tutorial|interactive|example.(com|net)' |
     egrep -v 'shellquote|works|num128|--filter-hosts|--tmux|my_id' |
     perl -pe 's/username@//;s/user@//;

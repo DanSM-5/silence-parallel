@@ -132,9 +132,16 @@ install_oracle_client() {
     fi
     # libaio
     sudo apt install libaio1t64
+    sudo ln -s libaio.so.1t64 /usr/lib/x86_64-linux-gnu/libaio.so.1
     perl -MCPAN -e 'install DBD::Oracle'
     # TODO set up vagrant oracle server
     git clone https://github.com/oracle/vagrant-projects.git
+    (
+	cd vagrant-projects/OracleDatabase/21.3.0-XE
+	export VM_ORACLE_PWD=`goodpasswd`
+	echo export VM_ORACLE_PWD="$VM_ORACLE_PWD" >> ~/.passwords
+	vagrant up
+    )
     # TODO set up default passwd
     echo sudo su - oracle -c "'/home/oracle/setPassword.sh $oracle_password'" |
 	vagrant ssh

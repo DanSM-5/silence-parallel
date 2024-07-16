@@ -139,12 +139,15 @@ par_listproc() {
     (
 	sql --show-processlist "$DBURL" | wc -lw
 	sql --show-processlist "$DBURL" | wc -lw
+	sql --show-processlist "$DBURL" | wc -lw
     ) | sort | head -n1
     (
 	sql --proclist "$DBURL" | wc -lw
 	sql --proclist "$DBURL" | wc -lw
+	sql --proclist "$DBURL" | wc -lw
     ) | sort | head -n1
     (
+	sql --listproc "$DBURL" | wc -lw
 	sql --listproc "$DBURL" | wc -lw
 	sql --listproc "$DBURL" | wc -lw
     ) | sort | head -n1

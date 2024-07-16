@@ -8,6 +8,19 @@
 # Each should be taking 1-3s and be possible to run in parallel
 # I.e.: No race conditions, no logins
 
+par_keep_order_make_job_1_output_fast() {
+    echo '# EXAMPLE: Keep order, but make job 1 output fast'
+    doit() {
+      echo "$@" ERR >&2
+      echo "$@" out
+      sleep 0.$1
+      echo "$@" ERR >&2
+      echo "$@" out
+    }
+    export -f doit
+    parallel -k -u doit {= 'seq() > 1 and $opt::ungroup = 0' =} ::: 9 1 2 3
+}
+
 par_citation_no_config_dir() {
     echo '### bug #64329: parallel --citation will loop forever unless the config dir exists'
     t=$(mktemp -d)

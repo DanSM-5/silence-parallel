@@ -1980,7 +1980,7 @@ sub options_completion_hash() {
 	 "gnu[Behave like GNU parallel]" => \$opt::gnu,
 	 "link|xapply[Link input sources]" => \$opt::link,
 	 "linkinputsource|xapplyinputsource=i" => \@opt::linkinputsource,
-	 # Before changing these lines, please read
+	 # Before changing these lines,  please read
 	 # https://www.gnu.org/software/parallel/parallel_design.html#citation-notice
 	 # https://git.savannah.gnu.org/cgit/parallel.git/tree/doc/citation-notice-faq.txt
 	 # You accept to be put in a public hall-of-shame by removing
@@ -2561,7 +2561,7 @@ sub parse_options(@) {
 
     # If you want GNU Parallel to be maintained in the future you
     # should keep this.
-    # *YOU* will be harming free software by removing the notice.
+    # _YOU_ will be harming free software by removing the notice.
     #
     # Funding a free software project is hard. GNU Parallel is no
     # exception. On top of that it seems the less visible a project
@@ -2603,7 +2603,7 @@ sub parse_options(@) {
     # list. Ideas that will cost work and which have not been tested
     # are, however, unlikely to be prioritized.
     #
-    # *YOU* will be harming free software by removing the notice.  You
+    # _YOU_ will be harming free software by removing the notice.  You
     # accept to be added to a public hall of shame by removing the
     # line.  That includes you, George and Andreas.
     #
@@ -2638,7 +2638,7 @@ sub parse_options(@) {
     # This is because _YOU_ actively make it harder to justify
     # spending time developing GNU Parallel by removing it.
 
-    # If you disagree, please read (especially 77-):
+    # If you disagree,  please read (especially 77-):
     # https://www.fordfoundation.org/media/2976/roads-and-bridges-the-unseen-labor-behind-our-digital-infrastructure.pdf
     parse_halt();
 
@@ -2793,7 +2793,7 @@ sub check_invalid_option_combinations() {
 
 sub init_globals() {
     # Defaults:
-    $Global::version = 20240623;
+    $Global::version = 20240624;
     $Global::progname = 'parallel';
     $::name = "GNU Parallel";
     $Global::infinity = 2**31;
@@ -5850,7 +5850,7 @@ sub usage() {
 	 "  Tange, O. (2024, June 22). GNU Parallel 20240622 ('34 counts').",
 	 "  Zenodo. https://doi.org/10.5281/zenodo.12518196",
 	 "",
-	 # Before changing these lines, please read
+	 # Before changing these lines,  please read
 	 # https://www.gnu.org/software/parallel/parallel_design.html#citation-notice
 	 # https://git.savannah.gnu.org/cgit/parallel.git/tree/doc/citation-notice-faq.txt
 	 # You accept to be put in a  public hall of shame  by removing
@@ -5883,11 +5883,10 @@ sub citation_notice() {
 	     "  Tange, O. (2024, June 22). GNU Parallel 20240622 ('34 counts').",
 	     "  Zenodo. https://doi.org/10.5281/zenodo.12518196",
 	     "",
-	     # Before changing these line,  please read
+	     # Before changing these line,   please read
 	     # https://www.gnu.org/software/parallel/parallel_design.html#citation-notice and
 	     # https://git.savannah.gnu.org/cgit/parallel.git/tree/doc/citation-notice-faq.txt
-	     # You accept to be put in a public hall of shame by
-	     # removing these lines
+	     # You accept to be put in a public hall of shame by removing these lines
 	     "This helps funding further development; AND IT WON'T COST YOU A CENT.",
 	     "If you pay 10000 EUR you should feel free to use GNU Parallel without citing.",
 	     "",
@@ -8526,7 +8525,8 @@ sub user_requested_processes($) {
     my $opt_P = shift;
     my $processes;
     if(defined $opt_P) {
-	if (-f $opt_P) {
+	if (-f $opt_P and not $opt_P =~ /^[-+]?\d+%?$/) {
+	    # This is a file. Ignore files called +10% 4 -3
 	    $Global::max_procs_file = $opt_P;
 	    my $opt_P_file = ::slurp_or_exit($Global::max_procs_file);
 	    if($opt_P_file !~ /\S/) {

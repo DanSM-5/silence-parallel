@@ -281,13 +281,10 @@ par__man_fish() {
 
     set myarray arrays 'with  = & " !'" '" work, too
     echo $myarray[1] $myarray[2] $myarray[3] $myarray[4]
-    sleep 0.1
+    echo "# these 4 fail often. Race condition?"
     env_parallel -k echo '$myarray[{}]' ::: 1 2 3 4
-    sleep 0.1
     env_parallel -k -S server echo '$myarray[{}]' ::: 1 2 3 4
-    sleep 0.1
     env_parallel -k --env myarray echo '$myarray[{}]' ::: 1 2 3 4
-    sleep 0.1
     env_parallel -k --env myarray -S server echo '$myarray[{}]' ::: 1 2 3 4
 
     env_parallel --argsep --- env_parallel -k echo ::: multi level --- env_parallel

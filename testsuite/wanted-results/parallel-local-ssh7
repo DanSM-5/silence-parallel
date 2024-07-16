@@ -453,10 +453,11 @@ par__man_fish	    variables with  = & " ! ' work
 par__man_fish	multiline
 par__man_fish	    variables with  = & " ! ' work
 par__man_fish	arrays with  = & " ! ' work, too
-par__man_fish	
+par__man_fish	# these 4 fail often. Race condition?
+par__man_fish	arrays
+par__man_fish	with  = & " ! '
 par__man_fish	work,
 par__man_fish	too
-par__man_fish	
 par__man_fish	arrays
 par__man_fish	with  = & " ! '
 par__man_fish	work,

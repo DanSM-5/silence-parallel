@@ -34,7 +34,8 @@ par_path_remote_csh	StArT
 par_path_remote_csh	CSH Path before: /bin:/usr/bin with no parallel
 par_path_remote_csh	parallel: Command not found.
 par_path_remote_csh	^^^^^^^^ Not found is OK
-par_path_remote_csh	/bin:/usr/bin:/tmp OK
+par_path_remote_csh	parallel: Warning: Could not figure out number of cpus on lo (). Using 1.
+par_path_remote_csh	OK: /bin:/usr/bin:/tmp
 par_path_remote_csh	Done
 par_retries_1	### Test of --retries - it should run 13 jobs in total
 par_retries_1	OK

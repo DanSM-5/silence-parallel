@@ -434,6 +434,8 @@ B<--session> is supported.
 
 =item arrays
 
+Arrays normally work, but fail intermitently.
+
   set myarray arrays work, too
   env_parallel -k echo '$myarray[{}]' ::: 1 2 3
   env_parallel -k -S server echo '$myarray[{}]' ::: 1 2 3
