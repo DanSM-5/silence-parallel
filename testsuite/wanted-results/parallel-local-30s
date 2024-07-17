@@ -1527,9 +1527,6 @@ par__groupby_pipepart	csv , s/^(\d+[\t ,]+){2}(\d+).*/$2/	NewRec
 par__groupby_pipepart	csv , s/^(\d+[\t ,]+){2}(\d+).*/$2/	  90001   90001 1170031
 par__keeporder_roundrobin	bug #50081: --keep-order --round-robin should give predictable results
 par__keeporder_roundrobin	OK
-par__memory_leak	### Test for memory leaks
-par__memory_leak	Of 300 runs of 1 job at least one should be bigger than a 3000 job run
-par__memory_leak	Good: No memleak detected.
 par__plus_dyn_repl	Dynamic replacement strings defined by --plus
 par__plus_dyn_repl	myval
 par__plus_dyn_repl	myval

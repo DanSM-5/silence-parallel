@@ -1,9 +1,12 @@
 par_few_duplicate_run $CSV	par_few_duplicate_run $CSV
 par_few_duplicate_run $CSV	### With many workers there will be some duplicates
-par_few_duplicate_run $CSV	Error:
-par_few_duplicate_run $CSV	csv:///%2Frun%2Fshm%2Fcsv is not a valid DBURL
+par_few_duplicate_run $CSV	sql: Error: csv:///%2Frun%2Fshm%2Fcsv is not a valid DBURL
 par_few_duplicate_run $CSV	
-par_few_duplicate_run $CSV	sql [-hnr] [--table-size] [--db-size] [-p pass-through] [-s string] dburl [command]
+par_few_duplicate_run $CSV	Usage:
+par_few_duplicate_run $CSV	sql [-hnr] [--table-size] [--db-size] [-p pass-through] [-s string] dburl [sqlcommand]
+par_few_duplicate_run $CSV	sql [-hnr] [--table-size] [--db-size] [-p pass-through] [-s string] dburl < sql_command_file
+par_few_duplicate_run $CSV	
+par_few_duplicate_run $CSV	See 'man sql' for the options
 par_few_duplicate_run $CSV	OK
 par_few_duplicate_run $MYSQL	par_few_duplicate_run $MYSQL
 par_few_duplicate_run $MYSQL	### With many workers there will be some duplicates

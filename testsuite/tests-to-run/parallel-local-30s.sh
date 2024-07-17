@@ -514,24 +514,6 @@ par_race_condition1() {
     rm /tmp/parallel_race_cond
 }
 
-par__memory_leak() {
-    a_run() {
-	seq $1 |time -v parallel true 2>&1 |
-	grep 'Maximum resident' |
-	field 6;
-    }
-    export -f a_run
-    echo "### Test for memory leaks"
-    echo "Of 300 runs of 1 job at least one should be bigger than a 3000 job run"
-    . env_parallel.bash
-    parset small_max,big ::: 'seq 300 | parallel a_run 1 | jq -s max' 'a_run 3000'
-    if [ $small_max -lt $big ] ; then
-	echo "Bad: Memleak likely."
-    else
-	echo "Good: No memleak detected."
-    fi
-}
-
 par_slow_total_jobs() {
     echo 'bug #51006: Slow total_jobs() eats job'
     (echo a; sleep 15; echo b; sleep 15; seq 2) |

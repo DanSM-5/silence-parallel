@@ -63,7 +63,6 @@ EOF
     sql $MYSQL_TEST_DBURL/sqlunittest <"$unittest"
 }
 
-
 testtable() {
     tbl=$1
     cat <<EOF
@@ -97,7 +96,7 @@ par_sql_aliases() {
     sql sql:sql::sqlunittest "SELECT 'Yes it works' as 'Test sql:sql::alias';"
 }
 
-par_noheaders() {
+par__noheaders() {
     echo "### Test --noheaders --no-headers -n"
     testtable noheader | sql "$DBURL"
     sql -n "$DBURL" 'select * from noheader order by id' |
@@ -108,7 +107,7 @@ par_noheaders() {
 	parallel -k --colsep '\t' echo {2} {1}
 }
 
-par_--sep() {
+par_sep() {
     echo "### Test --sep -s";
     sql --no-headers -s : pg:/// 'select 1,2' |
 	parallel --colsep ':' echo {2} {1}
@@ -116,7 +115,7 @@ par_--sep() {
 	parallel --colsep ':' echo {2} {1}
 }
 
-par_--passthrough() {
+par_passthrough() {
     echo "### Test --passthrough -p";
     testtable passthrough | sql "$DBURL"
     sql -p -H "$DBURL" 'select * from passthrough'
@@ -125,14 +124,14 @@ par_--passthrough() {
     echo
 }
 
-par_--html() {
+par_html() {
     echo "### Test --html";
     testtable html | sql "$DBURL"
     sql --html "$DBURL" 'select * from html'
     echo
 }
 
-par_listproc() {
+par__listproc() {
     echo "### Test --show-processlist|proclist|listproc";
     # Take the minimum of 3 runs to avoid error counting
     # if one of the other jobs happens to be running    
@@ -153,43 +152,40 @@ par_listproc() {
     ) | sort | head -n1
 }
 
-par_dbsize() {
+par__dbsize() {
     echo "### Test --db-size --dbsize";
     sql --dbsize "$DBURL" | wc -w
     sql --db-size "$DBURL" | wc -w
 }
 
-par_tablesize() {
+par__tablesize() {
     echo "### Test --table-size --tablesize"
     sql --showtables "$DBURL" | grep TBL | parallel sql "$DBURL" drop table
     sql --tablesize "$DBURL" | wc -l
     sql --table-size "$DBURL" | wc -l
 }
 
-par_--debug() {
+par_debug() {
     echo "### Test --debug"
     stdout sql --debug "$DBURL" "SELECT 'Yes it does' as 'Test if --debug works';" |
 	replace_tmpdir |
 	perl -pe 's:/...........sql:/tmpfile:g'
 }
 
-par_-_version() {
+par_version() {
     echo "### Test --version -V"
     sql --version | wc
     sql -V | wc
 }
 
-par_-r() {
+par_retry() {
     echo "### Test -r - retry 3 times"
     stdout sql -r --debug pg://nongood@127.0.0.3:2227/ "SELECT 'This should fail 3 times';"
-}
-
-par_--retries() {
     echo "### Test --retries=s"
     stdout sql --retries=4 --debug pg://nongood@127.0.0.3:2227/ "SELECT 'This should fail 4 times';"
 }
 
-par_--help() {
+par_help() {
     echo "### Test --help -h"
     sql --help
     sql -h
@@ -198,4 +194,4 @@ par_--help() {
 
 export -f $(compgen -A function | grep par_)
 compgen -A function | G par_ "$@" | LC_ALL=C sort |
-    parallel --timeout 10 -j0 --tag -k --joblog /tmp/jl-`basename $0` '{} 2>&1'
+    parallel --timeout 1000% -j0 --tag -k --joblog /tmp/jl-`basename $0` '{} 2>&1'

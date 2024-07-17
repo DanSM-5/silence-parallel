@@ -1,0 +1,3 @@
+par__memory_leak	### Test for memory leaks
+par__memory_leak	Of 300 runs of 1 job at least one should be bigger than a 3000 job run
+par__memory_leak	Good: No memleak detected.

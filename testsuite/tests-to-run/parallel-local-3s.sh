@@ -1541,7 +1541,7 @@ line2"' 'echo "command2"'
     ) | replace_tmpdir
 }
 
-par_parset2() {
+par__parset2() {
     echo '### parset into array'
     (
 	. `which env_parallel.bash`

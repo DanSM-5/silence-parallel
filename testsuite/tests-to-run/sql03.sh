@@ -84,7 +84,7 @@ par_test_dburl_colon() {
 
 par_multiarg_on_command_line() {
     echo "### Test oracle with multiple arguments on the command line"
-    echo ":oraunittest oracle://hr:hr@oracle11.tange.dk/xe" >> ~/.sql/aliases
+    echo ":oraunittest oracle://SYSTEM:$VM_ORACLE_PWD@/FREE" >> ~/.sql/aliases
     uniqify ~/.sql/aliases
     sql :oraunittest "WHENEVER SQLERROR EXIT FAILURE" "SELECT 'arg2' FROM DUAL;" "SELECT 'arg3' FROM DUAL;"
 }
@@ -106,7 +106,11 @@ par_showdatabases() {
 
 par_listproc() {
     echo "### Test --listproc"
-    sql --listproc :oraunittest
+    sql --listproc :oraunittest |
+	perl -ne '/select 1 from dual|user_objects|user_tablespaces|connect_by_filtering/ and next;
+                  s/[21]\.\d+/1.99999/;
+                  s/ +/ /g;
+                  print'
     sql --listproc $MYSQL_TEST_DBURL |
 	perl -pe 's/^\d+/XXX/'
 }

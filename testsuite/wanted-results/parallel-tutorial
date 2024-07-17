@@ -976,9 +976,11 @@ foo quuz
 bar baz
 bar quuz
   sql $DBURL 'SELECT * FROM mytable ORDER BY Seq;'
-Error:
-SELECT * FROM mytable ORDER BY Seq; is not a valid DBURL
-sql [-hnr] [--table-size] [--db-size] [-p pass-through] [-s string] dburl [command]
+sql: Error: SELECT * FROM mytable ORDER BY Seq; is not a valid DBURL
+Usage:
+sql [-hnr] [--table-size] [--db-size] [-p pass-through] [-s string] dburl [sqlcommand]
+sql [-hnr] [--table-size] [--db-size] [-p pass-through] [-s string] dburl < sql_command_file
+See 'man sql' for the options
   parallel --sqlmaster $DBURLTABLE echo ::: foo bar ::: baz quuz
 parallel: Error: echo is not a valid DBURL
   parallel --sqlworker $DBURLTABLE echo ::: foo bar ::: baz quuz

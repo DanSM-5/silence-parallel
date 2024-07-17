@@ -2,18 +2,24 @@ CSV	do_dburl CSV
 CSV	par_append	p_wrapper par_append $CSV
 CSV	par_append	Exit=0
 CSV	par_append	Exit=0
-CSV	par_append	Error:
-CSV	par_append	csv:///%2Frun%2Fshm is not a valid DBURL
+CSV	par_append	sql: Error: csv:///%2Frun%2Fshm is not a valid DBURL
 CSV	par_append	
-CSV	par_append	sql [-hnr] [--table-size] [--db-size] [-p pass-through] [-s string] dburl [command]
+CSV	par_append	Usage:
+CSV	par_append	sql [-hnr] [--table-size] [--db-size] [-p pass-through] [-s string] dburl [sqlcommand]
+CSV	par_append	sql [-hnr] [--table-size] [--db-size] [-p pass-through] [-s string] dburl < sql_command_file
+CSV	par_append	
+CSV	par_append	See 'man sql' for the options
 CSV	par_empty	p_wrapper par_empty $CSV
 CSV	par_empty	Do nothing: TBL99999 does not exist because it is not created
 CSV	par_empty	Exit=0
 CSV	par_empty	Exit=0
-CSV	par_empty	Error:
-CSV	par_empty	csv:///%2Frun%2Fshm is not a valid DBURL
+CSV	par_empty	sql: Error: csv:///%2Frun%2Fshm is not a valid DBURL
 CSV	par_empty	
-CSV	par_empty	sql [-hnr] [--table-size] [--db-size] [-p pass-through] [-s string] dburl [command]
+CSV	par_empty	Usage:
+CSV	par_empty	sql [-hnr] [--table-size] [--db-size] [-p pass-through] [-s string] dburl [sqlcommand]
+CSV	par_empty	sql [-hnr] [--table-size] [--db-size] [-p pass-through] [-s string] dburl < sql_command_file
+CSV	par_empty	
+CSV	par_empty	See 'man sql' for the options
 CSV	par_no_table	p_wrapper par_no_table $CSV
 CSV	par_no_table	bug #50018: --dburl without table dies
 CSV	par_no_table	255
@@ -21,10 +27,13 @@ CSV	par_no_table	255
 CSV	par_no_table	255
 CSV	par_no_table	Exit=0
 CSV	par_no_table	Exit=0
-CSV	par_no_table	Error:
-CSV	par_no_table	csv:///%2Frun%2Fshm is not a valid DBURL
+CSV	par_no_table	sql: Error: csv:///%2Frun%2Fshm is not a valid DBURL
 CSV	par_no_table	
-CSV	par_no_table	sql [-hnr] [--table-size] [--db-size] [-p pass-through] [-s string] dburl [command]
+CSV	par_no_table	Usage:
+CSV	par_no_table	sql [-hnr] [--table-size] [--db-size] [-p pass-through] [-s string] dburl [sqlcommand]
+CSV	par_no_table	sql [-hnr] [--table-size] [--db-size] [-p pass-through] [-s string] dburl < sql_command_file
+CSV	par_no_table	
+CSV	par_no_table	See 'man sql' for the options
 CSV	par_no_table	parallel: Error: The DBURL (csv:///%2Frun%2Fshm) must contain a table.
 CSV	par_no_table	parallel: Error: The DBURL (csv:///%2Frun%2Fshm) must contain a table.
 CSV	par_no_table	parallel: Error: The DBURL (csv:///%2Frun%2Fshm) must contain a table.
@@ -56,10 +65,13 @@ CSV	par_shuf	5 d
 CSV	par_shuf	5 e
 CSV	par_shuf	Exit=0
 CSV	par_shuf	Exit=0
-CSV	par_shuf	Error:
-CSV	par_shuf	csv:///%2Frun%2Fshm is not a valid DBURL
+CSV	par_shuf	sql: Error: csv:///%2Frun%2Fshm is not a valid DBURL
 CSV	par_shuf	
-CSV	par_shuf	sql [-hnr] [--table-size] [--db-size] [-p pass-through] [-s string] dburl [command]
+CSV	par_shuf	Usage:
+CSV	par_shuf	sql [-hnr] [--table-size] [--db-size] [-p pass-through] [-s string] dburl [sqlcommand]
+CSV	par_shuf	sql [-hnr] [--table-size] [--db-size] [-p pass-through] [-s string] dburl < sql_command_file
+CSV	par_shuf	
+CSV	par_shuf	See 'man sql' for the options
 CSV	par_sql_joblog	p_wrapper par_sql_joblog $CSV
 CSV	par_sql_joblog	### should only give a single --joblog heading
 CSV	par_sql_joblog	### --sqlmaster/--sqlworker
@@ -168,73 +180,103 @@ CSV	par_sql_joblog	24	:	999.999	 999.999	0	0	0	0	sleep .3;echo 5 d
 CSV	par_sql_joblog	25	:	999.999	 999.999	0	0	0	0	sleep .3;echo 5 e
 CSV	par_sql_joblog	Exit=0
 CSV	par_sql_joblog	Exit=0
-CSV	par_sql_joblog	Error:
-CSV	par_sql_joblog	csv:///%2Frun%2Fshm is not a valid DBURL
+CSV	par_sql_joblog	sql: Error: csv:///%2Frun%2Fshm is not a valid DBURL
 CSV	par_sql_joblog	
-CSV	par_sql_joblog	sql [-hnr] [--table-size] [--db-size] [-p pass-through] [-s string] dburl [command]
+CSV	par_sql_joblog	Usage:
+CSV	par_sql_joblog	sql [-hnr] [--table-size] [--db-size] [-p pass-through] [-s string] dburl [sqlcommand]
+CSV	par_sql_joblog	sql [-hnr] [--table-size] [--db-size] [-p pass-through] [-s string] dburl < sql_command_file
+CSV	par_sql_joblog	
+CSV	par_sql_joblog	See 'man sql' for the options
 CSV	par_sqlandworker	p_wrapper par_sqlandworker $CSV
 CSV	par_sqlandworker	Exit=0
 CSV	par_sqlandworker	Exit=0
-CSV	par_sqlandworker	Error:
-CSV	par_sqlandworker	csv:///%2Frun%2Fshm is not a valid DBURL
+CSV	par_sqlandworker	sql: Error: csv:///%2Frun%2Fshm is not a valid DBURL
 CSV	par_sqlandworker	
-CSV	par_sqlandworker	sql [-hnr] [--table-size] [--db-size] [-p pass-through] [-s string] dburl [command]
+CSV	par_sqlandworker	Usage:
+CSV	par_sqlandworker	sql [-hnr] [--table-size] [--db-size] [-p pass-through] [-s string] dburl [sqlcommand]
+CSV	par_sqlandworker	sql [-hnr] [--table-size] [--db-size] [-p pass-through] [-s string] dburl < sql_command_file
+CSV	par_sqlandworker	
+CSV	par_sqlandworker	See 'man sql' for the options
 CSV	par_sqlandworker_compress_linebuffer_tag	p_wrapper par_sqlandworker_compress_linebuffer_tag $CSV
 CSV	par_sqlandworker_compress_linebuffer_tag	Exit=0
 CSV	par_sqlandworker_compress_linebuffer_tag	Exit=0
-CSV	par_sqlandworker_compress_linebuffer_tag	Error:
-CSV	par_sqlandworker_compress_linebuffer_tag	csv:///%2Frun%2Fshm is not a valid DBURL
+CSV	par_sqlandworker_compress_linebuffer_tag	sql: Error: csv:///%2Frun%2Fshm is not a valid DBURL
 CSV	par_sqlandworker_compress_linebuffer_tag	
-CSV	par_sqlandworker_compress_linebuffer_tag	sql [-hnr] [--table-size] [--db-size] [-p pass-through] [-s string] dburl [command]
+CSV	par_sqlandworker_compress_linebuffer_tag	Usage:
+CSV	par_sqlandworker_compress_linebuffer_tag	sql [-hnr] [--table-size] [--db-size] [-p pass-through] [-s string] dburl [sqlcommand]
+CSV	par_sqlandworker_compress_linebuffer_tag	sql [-hnr] [--table-size] [--db-size] [-p pass-through] [-s string] dburl < sql_command_file
+CSV	par_sqlandworker_compress_linebuffer_tag	
+CSV	par_sqlandworker_compress_linebuffer_tag	See 'man sql' for the options
 CSV	par_sqlandworker_linebuffer	p_wrapper par_sqlandworker_linebuffer $CSV
 CSV	par_sqlandworker_linebuffer	Exit=0
 CSV	par_sqlandworker_linebuffer	Exit=0
-CSV	par_sqlandworker_linebuffer	Error:
-CSV	par_sqlandworker_linebuffer	csv:///%2Frun%2Fshm is not a valid DBURL
+CSV	par_sqlandworker_linebuffer	sql: Error: csv:///%2Frun%2Fshm is not a valid DBURL
 CSV	par_sqlandworker_linebuffer	
-CSV	par_sqlandworker_linebuffer	sql [-hnr] [--table-size] [--db-size] [-p pass-through] [-s string] dburl [command]
+CSV	par_sqlandworker_linebuffer	Usage:
+CSV	par_sqlandworker_linebuffer	sql [-hnr] [--table-size] [--db-size] [-p pass-through] [-s string] dburl [sqlcommand]
+CSV	par_sqlandworker_linebuffer	sql [-hnr] [--table-size] [--db-size] [-p pass-through] [-s string] dburl < sql_command_file
+CSV	par_sqlandworker_linebuffer	
+CSV	par_sqlandworker_linebuffer	See 'man sql' for the options
 CSV	par_sqlandworker_linebuffer_tag	p_wrapper par_sqlandworker_linebuffer_tag $CSV
 CSV	par_sqlandworker_linebuffer_tag	Exit=0
 CSV	par_sqlandworker_linebuffer_tag	Exit=0
-CSV	par_sqlandworker_linebuffer_tag	Error:
-CSV	par_sqlandworker_linebuffer_tag	csv:///%2Frun%2Fshm is not a valid DBURL
+CSV	par_sqlandworker_linebuffer_tag	sql: Error: csv:///%2Frun%2Fshm is not a valid DBURL
 CSV	par_sqlandworker_linebuffer_tag	
-CSV	par_sqlandworker_linebuffer_tag	sql [-hnr] [--table-size] [--db-size] [-p pass-through] [-s string] dburl [command]
+CSV	par_sqlandworker_linebuffer_tag	Usage:
+CSV	par_sqlandworker_linebuffer_tag	sql [-hnr] [--table-size] [--db-size] [-p pass-through] [-s string] dburl [sqlcommand]
+CSV	par_sqlandworker_linebuffer_tag	sql [-hnr] [--table-size] [--db-size] [-p pass-through] [-s string] dburl < sql_command_file
+CSV	par_sqlandworker_linebuffer_tag	
+CSV	par_sqlandworker_linebuffer_tag	See 'man sql' for the options
 CSV	par_sqlandworker_lo	p_wrapper par_sqlandworker_lo $CSV
 CSV	par_sqlandworker_lo	Exit=0
 CSV	par_sqlandworker_lo	Exit=0
-CSV	par_sqlandworker_lo	Error:
-CSV	par_sqlandworker_lo	csv:///%2Frun%2Fshm is not a valid DBURL
+CSV	par_sqlandworker_lo	sql: Error: csv:///%2Frun%2Fshm is not a valid DBURL
 CSV	par_sqlandworker_lo	
-CSV	par_sqlandworker_lo	sql [-hnr] [--table-size] [--db-size] [-p pass-through] [-s string] dburl [command]
+CSV	par_sqlandworker_lo	Usage:
+CSV	par_sqlandworker_lo	sql [-hnr] [--table-size] [--db-size] [-p pass-through] [-s string] dburl [sqlcommand]
+CSV	par_sqlandworker_lo	sql [-hnr] [--table-size] [--db-size] [-p pass-through] [-s string] dburl < sql_command_file
+CSV	par_sqlandworker_lo	
+CSV	par_sqlandworker_lo	See 'man sql' for the options
 CSV	par_sqlandworker_results	p_wrapper par_sqlandworker_results $CSV
 CSV	par_sqlandworker_results	Exit=0
 CSV	par_sqlandworker_results	Exit=0
-CSV	par_sqlandworker_results	Error:
-CSV	par_sqlandworker_results	csv:///%2Frun%2Fshm is not a valid DBURL
+CSV	par_sqlandworker_results	sql: Error: csv:///%2Frun%2Fshm is not a valid DBURL
 CSV	par_sqlandworker_results	
-CSV	par_sqlandworker_results	sql [-hnr] [--table-size] [--db-size] [-p pass-through] [-s string] dburl [command]
+CSV	par_sqlandworker_results	Usage:
+CSV	par_sqlandworker_results	sql [-hnr] [--table-size] [--db-size] [-p pass-through] [-s string] dburl [sqlcommand]
+CSV	par_sqlandworker_results	sql [-hnr] [--table-size] [--db-size] [-p pass-through] [-s string] dburl < sql_command_file
+CSV	par_sqlandworker_results	
+CSV	par_sqlandworker_results	See 'man sql' for the options
 CSV	par_sqlandworker_tag	p_wrapper par_sqlandworker_tag $CSV
 CSV	par_sqlandworker_tag	Exit=0
 CSV	par_sqlandworker_tag	Exit=0
-CSV	par_sqlandworker_tag	Error:
-CSV	par_sqlandworker_tag	csv:///%2Frun%2Fshm is not a valid DBURL
+CSV	par_sqlandworker_tag	sql: Error: csv:///%2Frun%2Fshm is not a valid DBURL
 CSV	par_sqlandworker_tag	
-CSV	par_sqlandworker_tag	sql [-hnr] [--table-size] [--db-size] [-p pass-through] [-s string] dburl [command]
+CSV	par_sqlandworker_tag	Usage:
+CSV	par_sqlandworker_tag	sql [-hnr] [--table-size] [--db-size] [-p pass-through] [-s string] dburl [sqlcommand]
+CSV	par_sqlandworker_tag	sql [-hnr] [--table-size] [--db-size] [-p pass-through] [-s string] dburl < sql_command_file
+CSV	par_sqlandworker_tag	
+CSV	par_sqlandworker_tag	See 'man sql' for the options
 CSV	par_sqlandworker_total_jobs	p_wrapper par_sqlandworker_total_jobs $CSV
 CSV	par_sqlandworker_total_jobs	Exit=0
 CSV	par_sqlandworker_total_jobs	Exit=0
-CSV	par_sqlandworker_total_jobs	Error:
-CSV	par_sqlandworker_total_jobs	csv:///%2Frun%2Fshm is not a valid DBURL
+CSV	par_sqlandworker_total_jobs	sql: Error: csv:///%2Frun%2Fshm is not a valid DBURL
 CSV	par_sqlandworker_total_jobs	
-CSV	par_sqlandworker_total_jobs	sql [-hnr] [--table-size] [--db-size] [-p pass-through] [-s string] dburl [command]
+CSV	par_sqlandworker_total_jobs	Usage:
+CSV	par_sqlandworker_total_jobs	sql [-hnr] [--table-size] [--db-size] [-p pass-through] [-s string] dburl [sqlcommand]
+CSV	par_sqlandworker_total_jobs	sql [-hnr] [--table-size] [--db-size] [-p pass-through] [-s string] dburl < sql_command_file
+CSV	par_sqlandworker_total_jobs	
+CSV	par_sqlandworker_total_jobs	See 'man sql' for the options
 CSV	par_sqlandworker_unbuffer	p_wrapper par_sqlandworker_unbuffer $CSV
 CSV	par_sqlandworker_unbuffer	Exit=0
 CSV	par_sqlandworker_unbuffer	Exit=0
-CSV	par_sqlandworker_unbuffer	Error:
-CSV	par_sqlandworker_unbuffer	csv:///%2Frun%2Fshm is not a valid DBURL
+CSV	par_sqlandworker_unbuffer	sql: Error: csv:///%2Frun%2Fshm is not a valid DBURL
 CSV	par_sqlandworker_unbuffer	
-CSV	par_sqlandworker_unbuffer	sql [-hnr] [--table-size] [--db-size] [-p pass-through] [-s string] dburl [command]
+CSV	par_sqlandworker_unbuffer	Usage:
+CSV	par_sqlandworker_unbuffer	sql [-hnr] [--table-size] [--db-size] [-p pass-through] [-s string] dburl [sqlcommand]
+CSV	par_sqlandworker_unbuffer	sql [-hnr] [--table-size] [--db-size] [-p pass-through] [-s string] dburl < sql_command_file
+CSV	par_sqlandworker_unbuffer	
+CSV	par_sqlandworker_unbuffer	See 'man sql' for the options
 INFLUX	do_dburl INFLUX
 INFLUX	par_append	p_wrapper par_append $INFLUX
 INFLUX	par_append	Exit=255
