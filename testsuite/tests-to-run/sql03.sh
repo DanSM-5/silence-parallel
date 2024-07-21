@@ -4,6 +4,9 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+# Start
+(cd "$testsuitedir"; stdout make startdb) >/dev/tty
+
 mysqlrootpass=${mysqlrootpass:-M-b+Ydjq4ejT4E}
 MYSQL_ADMIN_DBURL=mysql://root:$mysqlrootpass@/mysql
 

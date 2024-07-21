@@ -6,6 +6,25 @@
 
 echo '### test --env _, env_parallel for different shells'
 
+retry() {
+    times=$1
+    shift
+    declare -a array_runs
+    first_run=$($@)
+    array_runs+=("$first_run")
+    for ((i=1; i<=$times; i++)); do
+        run=$($@)
+        exit=$?
+        if [[ " ${array_runs[@]} " =~ " $run " ]]; then
+            echo "$run"
+            return $exit
+        fi
+    done
+    echo "$run"
+    return $exit
+}
+export -f retry
+
 #
 ## par_*_man = tests from the man page
 #
@@ -286,7 +305,6 @@ par__man_fish() {
     env_parallel -k -S server echo '$myarray[{}]' ::: 1 2 3 4
     env_parallel -k --env myarray echo '$myarray[{}]' ::: 1 2 3 4
     env_parallel -k --env myarray -S server echo '$myarray[{}]' ::: 1 2 3 4
-
     env_parallel --argsep --- env_parallel -k echo ::: multi level --- env_parallel
 
     env_parallel ::: true false true false
@@ -812,12 +830,7 @@ par_--env_underscore_fish() {
     set myarray and arrays in;
 
     echo Test copying;
-    env_parallel myfunc ::: work;
-    env_parallel -S server myfunc ::: work;
-    env_parallel --env myfunc,myvar,myarray,myecho myfunc ::: work;
-    env_parallel --env myfunc,myvar,myarray,myecho -S server myfunc ::: work;
-    env_parallel --env _ myfunc ::: work;
-    env_parallel --env _ -S server myfunc ::: work;
+    echo '*** Moved to parallel-ssh-fish.sh ***'
 
     echo Test ignoring;
     env_parallel --env _ -S server not_copied_alias ::: error=OK;
@@ -3149,14 +3162,7 @@ _EOF
 
 export -f $(compgen -A function | grep par_)
 
-# --retries 2 due to ssh_exchange_identification: read: Connection reset by peer
-
-#compgen -A function | grep par_ | sort | parallel --delay $D -j$P --tag -k '{} 2>&1'
-#compgen -A function | grep par_ | sort |
-compgen -A function | G par_ "$@" | LC_ALL=C sort |
-#    parallel --joblog /tmp/jl-`basename $0` --delay $D -j$P --tag -k '{} 2>&1'
-    # 2019-07-14 200% too high for 16 GB/4 thread
-    parallel --joblog /tmp/jl-`basename $0` -j75% --retries 2 --tag -k '{} 2>&1' |
+clean_output() {
     perl -pe 's/line \d\d+/line 99/g;
               s/\d+ >= \d+/999 >= 999/;
               s/sh:? \d?\d\d:/sh: 999:/;
@@ -3168,3 +3174,18 @@ compgen -A function | G par_ "$@" | LC_ALL=C sort |
 	      s!/tmp/par-job-\d+_.....!script!g;
     	      s/script: \d\d+/script: 99/g;
 	      '
+}
+    
+# --retries 2 due to ssh_exchange_identification: read: Connection reset by peer
+
+#compgen -A function | grep par_ | sort | parallel --delay $D -j$P --tag -k '{} 2>&1'
+#compgen -A function | grep par_ | sort |
+compgen -A function | G par_ "$@" | LC_ALL=C sort | G -v fish |
+    # 2019-07-14 200% too high for 16 GB/4 thread
+    parallel --joblog /tmp/jl-`basename $0` -j75% --retries 2 --tag -k '{} 2>&1' |
+    clean_output
+
+compgen -A function | G par_ "$@" | LC_ALL=C sort | G fish |
+    # 2024-07-18 fish is prone to racing
+    parallel --joblog /tmp/jl-`basename $0` -j1 --retries 2 --tag -k '{} 2>&1' |
+    clean_output

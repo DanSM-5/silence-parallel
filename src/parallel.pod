@@ -1775,7 +1775,7 @@ If in doubt use B<-X> as that will most likely do what is needed.
 See also: B<-X> B<--xargs>
 
 
-=item B<--memfree> I<size> (beta testing)
+=item B<--memfree> I<size>
 
 Minimum memory free when starting another job.
 
@@ -1879,7 +1879,7 @@ is somewhat slower than B<--block>.
 See also: UNIT PREFIX B<--pipe> B<--block> B<-m> B<-X> B<--max-args>
 
 
-=item B<--nonall> (beta testing)
+=item B<--nonall>
 
 B<--onall> with no arguments.
 
@@ -1894,7 +1894,7 @@ servers.
 See also: B<--onall> B<--sshlogin>
 
 
-=item B<--onall> (beta testing)
+=item B<--onall>
 
 Run all the jobs on all computers given with B<--sshlogin>.
 

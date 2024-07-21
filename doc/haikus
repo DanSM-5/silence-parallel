@@ -15,14 +15,14 @@ Output is in sync
 write a haiku about gnu parallel and the :::+  option
 
 
+  o GNU Parallel é muito foda, acabei de usar ele pra dividir um CSV
+    -- @pumpkin_link@twitter Johnny Cage.dev 
+
   GNU Parallel and Tmux are the two tools I rely on daily for my work. Indispensable.
     -- @mitchelvalentino1569@YouTube
 
-
-  parallel is frickin great for launching jobs on multiple
-  machines. Ansible and Jenkins and others may be good too but I was
-  able to jump right in with parallel.
-    -- dwhite21787@reddit
+  今始めて知ったが GNU parallel ってコマンドクソ便利じゃん。なんで今まで自分のアンテナに引っかからなかったんだろう…。
+    -- @kawaz@twitter Yoshiaki Kawazu
 
   Big fan of GNU parallel!
     -- lovelyloafers@reddit
@@ -220,6 +220,11 @@ https://negfeedback.blogspot.com/2020/05/indispensable-command-line-tools.html
     -- @alinajaf@twitter
 
 === Used ===
+
+  parallel is frickin great for launching jobs on multiple
+  machines. Ansible and Jenkins and others may be good too but I was
+  able to jump right in with parallel.
+    -- dwhite21787@reddit
 
   The most glorious 15,000 lines of Perl ever written.
     -- @nibblrrr7124@YouTube

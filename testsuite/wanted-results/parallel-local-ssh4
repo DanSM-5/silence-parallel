@@ -160,7 +160,8 @@ par_--nonall_results	/TMP/nonall/slash/sh@lo/1
 par_--nonall_results	/TMP/nonall/slash/sh@lo/1/seq
 par_--nonall_results	/TMP/nonall/slash/sh@lo/1/stderr
 par_--nonall_results	/TMP/nonall/slash/sh@lo/1/stdout
-par_--tmux_length	### works
+par_--tmux_length	### tmux examples that earlier blocked
+par_--tmux_length	Runtime 14 seconds on non-loaded machine
 par_--tmux_length	See output with: tmux -S /TMP/tmsXXXXX attach
 par_--tmux_length	See output with: tmux -S /TMP/tmsXXXXX attach
 par_--tmux_length	### These blocked due to length

@@ -129,7 +129,8 @@ function env_parallel
         perl -ne 'chomp;
           ($name,$val)=split(/ /,$_,2);
           $name=~/^(HOME|USER|COLUMNS|FISH_VERSION|LINES|PWD|SHLVL|_|
-                    history|status|version)$|\./x and next;
+                    fish_kill_signal|fish_pid|history|hostname|status|
+		    status_generation|version)$|\./x and next;
           if($val=~/^'"'"'/) { next; }
           print "set $name \"\$$name\";\n";
         ')
@@ -160,7 +161,8 @@ function env_parallel
         ($name,$val)=split(/ /,$_,2);
         # Ignore read-only vars
         $name=~/^(HOME|USER|COLUMNS|FISH_VERSION|LINES|PWD|SHLVL|_|
-                  fish_pid|history|hostname|status|version)$/x and next;
+                  fish_kill_signal|fish_pid|history|hostname|status|
+		  status_generation|version)$/x and next;
         # Single quote $val
 	if($val =~ /[^-_.+a-z0-9\/]/i) {
 	  $val =~ s/\047/\047"\047"\047/g;  # "-quote single quotes

@@ -21,7 +21,7 @@ par__memory_leak() {
     parset small_max,big ::: 'seq 300 | parallel a_run 1 | jq -s max' 'a_run 3000'
     # Perl 5.38.2 has a small leak (~300KB) - not present in 5.2X.X
     # TODO find out which perl version introduces this
-    echo "`date` [ $small_max < $big ]" >> /tmp/parallel-mem-leak.log
+    echo "`date` [ $small_max < $big ]" >> /tmp/parallel-mem-leak.out
     if [ $(($small_max+500)) -lt $big ] ; then
 	echo "Bad: Memleak likely. [ $small_max < $big ]"
     else

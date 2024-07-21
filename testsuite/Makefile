@@ -133,12 +133,12 @@ startvm:
 stopvm:
 	parallel -j0 --tag -k '${stop}' ::: ${namedservers} || true
 
+startdb:
+	sql oracle://SYSTEM:$$VM_ORACLE_PWD@/FREE "select 'Oracle is running' from dual;" || \
+	  (cd vagrant-projects/OracleDatabase/23.4.0-Free && vagrant up && \
+	   sql oracle://SYSTEM:$$VM_ORACLE_PWD@/FREE "select 'Oracle is running' from dual;")
 stopdb:
 	cd vagrant-projects/OracleDatabase/23.4.0-Free; vagrant suspend
-
-startdb:
-	cd vagrant-projects/OracleDatabase/23.4.0-Free; vagrant up
-	sql oracle://SYSTEM:$$VM_ORACLE_PWD@/FREE "select 'Oracle is running' from dual;"
 
 ### Distribution
 installparallel: ../src/parallel

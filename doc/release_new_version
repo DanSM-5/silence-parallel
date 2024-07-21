@@ -268,40 +268,35 @@ from:tange@gnu.org
 to:parallel@gnu.org, bug-parallel@gnu.org
 stable-bcc: Jesse Alama <jessealama@fastmail.fm>
 
-Subject: GNU Parallel 20240722 ('Assange') released
+Subject: GNU Parallel 20240722 ('Assange') released [stable]
 
 GNU Parallel 20240722 ('Assange') has been released. It is available for download at: lbry://@GnuParallel:4
 
 Quote of the month:
 
-  <<>>
+  parallel is frickin great for launching jobs on multiple
+  machines. Ansible and Jenkins and others may be good too but I was
+  able to jump right in with parallel.
+    -- dwhite21787@reddit
   
 New in this release:
 
-<<>>
+* No new features. This is a candidate for a stable release.
 
 * Bug fixes and man page updates.
 
 News about GNU Parallel:
 
-* Scientific Workflows at Scale using GNU Parallel https://www.escience-conference.org/2023/tutorials/gnu_parallel/
+* Scientific Workflows at Scale using GNU Parallel https://web.cvent.com/event/f318e73c-2230-432a-a044-b75625020543/websitePage:afd80266-008e-414b-9f94-2fd9b4dd1924?session=fe79a785-ec60-414c-8d2b-c29208f53d4c&shareLink=true
 
-https://web.cvent.com/event/f318e73c-2230-432a-a044-b75625020543/websitePage:afd80266-008e-414b-9f94-2fd9b4dd1924?session=fe79a785-ec60-414c-8d2b-c29208f53d4c&shareLink=true
+* Use GNU Parallel to render blender movies distributed by a bunch of nodes https://github.com/tfmoraes/blender_gnu_parallel_render
 
-?https://www.jvt.me/posts/2022/04/28/shell-queue/
-?https://github.com/tfmoraes/blender_gnu_parallel_render
+* Lessons Learned from Scaling to Multi-Terabyte Datasets https://v2thegreat.com/2024/06/19/lessons-learned-from-scaling-to-multi-terabyte-datasets/
 
-https://v2thegreat.com/2024/06/19/lessons-learned-from-scaling-to-multi-terabyte-datasets/
+* Efisiensi Maksimal: Cara Paralelisasi Perintah di CLI Linux https://medium.com/@nfrozi/efisiensi-maksimal-cara-paralelisasi-perintah-di-cli-linux-f4fda3afe2a0
 
-https://medium.com/@nfrozi/efisiensi-maksimal-cara-paralelisasi-perintah-di-cli-linux-f4fda3afe2a0
+* Introduction to GNU parallel https://datascience.101workbook.org/06-hpc/06-parallel/01-intro-to-gnu-parallel/#gsc.tab=0
 
-https://usercomp.com/news/1295687/parallel-ssh-file-transfer-with-gnuparallel
-https://usercomp.com/news/1300817/gnu-parallel-process-one-line-with-pipe
-https://datascience.101workbook.org/06-hpc/06-parallel/01-intro-to-gnu-parallel/#gsc.tab=0
-
-https://www.cyberciti.biz/faq/linux-unix-copy-a-file-to-multiple-directories-using-cp-command/
-
-<<>>
 
 GNU Parallel - For people who live life in the parallel lane.
 

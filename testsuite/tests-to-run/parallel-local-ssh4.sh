@@ -189,7 +189,8 @@ par__--tmux_different_shells() {
 }
 
 par_--tmux_length() {
-    echo '### works'
+    echo '### tmux examples that earlier blocked'
+    echo 'Runtime 14 seconds on non-loaded machine'
     short_TMPDIR() {
 	# TMPDIR must be short for -M                                                         
 	export TMPDIR=/tmp/ssh/'                                                              
