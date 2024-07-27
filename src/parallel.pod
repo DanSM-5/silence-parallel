@@ -447,6 +447,27 @@ To understand positional replacement strings see B<{>I<n>B<}>.
 See also: B<{=>I<perl expression>B<=}> B<{>I<n>B<}>
 
 
+=item B{I<rpl>:I<format>} (alpha testing)
+
+Format replacement string.
+
+Use I<format> to format I<rpl>. I<format> is a format string used in
+B<printf>. I<rpl> is a replacement string.
+
+Examples:
+
+  {#:%04d} - Job number ({#}) with 4 digits prepended with 0
+  {%:%02d} - Job slot ({%}) with 2 digits prepended with 0
+  {:%6s} - Input line ({}) right aligned 6 chars wide
+  {/:%12s} - Basename ({/}) right aligned 12 chars wide
+  {2:%8.2f} - Second input source ({2}) 8 chars wide, 2 decimals
+
+Format strings also works on replacement strings defined via B<--rpl>
+that start with '{'.
+
+See also: B<{}> B<{>I<n>B<}> B<--rpl>
+
+
 =item B<:::> I<arguments>
 
 Use arguments on the command line as input source.

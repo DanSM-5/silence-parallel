@@ -4,6 +4,12 @@
  
 Quote of the month:
 
+  Recently executed a flawless live data migration of ~2.4pb using GNU parallel for scale and bash scripts.
+    -- @mechanicker@twitter Dhruva
+
+  by extreme do you mean extremely slow? you could do it at least 100x faster using awk + grep + gnu parallel
+    -- @ObssessedDev@twitter
+
   gnu parallel is amazing
     -- Tarun Agarwal @axrawal
 

@@ -8,7 +8,31 @@
 # Each should be taking 3-10s and be possible to run in parallel
 # I.e.: No race conditions, no logins
 
-par_pty() {
+par_format_string() {
+    echo Format string + {}
+    parallel echo 12.346 98.765 == {:%.3f} ::: 12.34567 ::: 98.76543
+    echo Format string + {.}
+    parallel echo 12.000 98.000 == {.:%.3f} ::: 12.34567 ::: 98.76543
+    echo Format string + {2}
+    parallel echo 98.765 == {2:%.3f} ::: 12.34567 ::: 98.76543
+    echo Format string + {2.}
+    parallel echo 98.000 == {2.:%.3f} ::: 12.34567 ::: 98.76543
+    echo Format string + {2.}{}
+    parallel echo 98.00012.34567 98.76543 == {2.:%.3f}{} ::: 12.34567 ::: 98.76543
+    echo Dynamic replacement strings
+    echo {dyn} + format
+    parallel --rpl '{/(\d)/(.*)} s/$$1/$$2/g;' echo 12.44 98.77 == {/3/44:%8.2f}  ::: 12.34567 ::: 98.76543
+    echo {Positional dyn} + format
+    parallel --rpl '{/(\d)/(.*)} s/$$1/$$2/g;' echo 12.44 98.77 98.765 == {/3/44:%8.2f} {2:%.3f} ::: 12.34567 ::: 98.76543
+    echo {dyn__postfix}
+    parallel --rpl '{/(\d)/(.*)__} s/$$1/$$2/g;' echo 12.444567 98.765444 == {/3/44__}  ::: 12.34567 ::: 98.76543
+    echo {dyn__postfix} + format
+    parallel --rpl '{/(\d)/(.*)__} s/$$1/$$2/g;' echo 00012.44 == {/3/44__:%08.2f}  ::: 12.34567
+    echo dyn without {}
+    parallel --rpl '/(\d)/(.*)} s/$$1/$$2/g;' echo 12.444567 98.765444 == /3/44}  ::: 12.34567 ::: 98.76543
+}
+
+ par_pty() {
     parallel 'echo {} > {}' ::: 1 2 3
     echo 1 > files 
     echo 'xargs Expect: 3 1'

@@ -4,6 +4,8 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+# On a 64G machine this uses 24G RAM + 5 min
+
 make stopvm >/dev/null 2>/dev/null
 TMPDIR=${TMPDIR:-/tmp}
 mkdir -p $TMPDIR

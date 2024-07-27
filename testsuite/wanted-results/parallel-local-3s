@@ -781,6 +781,27 @@ par_eta	par_eta	ETA: 0s Left: 0 AVG: 0.00s  local:0/0/0%/0.0s [K
 par_exitval_signal	### Test --joblog with exitval and Test --joblog with signal -- timing dependent
 par_exitval_signal	exitval=128+6 OK
 par_exitval_signal	signal OK
+par_format_string	Format string + {}
+par_format_string	12.346 98.765 == 12.346 98.765
+par_format_string	Format string + {.}
+par_format_string	12.000 98.000 == 12.000 98.000
+par_format_string	Format string + {2}
+par_format_string	98.765 == 98.765
+par_format_string	Format string + {2.}
+par_format_string	98.000 == 98.000
+par_format_string	Format string + {2.}{}
+par_format_string	98.00012.34567 98.76543 == 98.00012.34567 98.76543
+par_format_string	Dynamic replacement strings
+par_format_string	{dyn} + format
+par_format_string	12.44 98.77 ==    12.44    98.77
+par_format_string	{Positional dyn} + format
+par_format_string	12.44 98.77 98.765 ==    12.44    98.77 98.765
+par_format_string	{dyn__postfix}
+par_format_string	12.444567 98.765444 == 12.444567 98.765444
+par_format_string	{dyn__postfix} + format
+par_format_string	00012.44 == 00012.44
+par_format_string	dyn without {}
+par_format_string	12.444567 98.765444 == 12.444567 98.765444
 par_jobslot_repl	bug #46232: {%} with --bar/--eta/--shuf or --halt xx% broken
 par_jobslot_repl	1
 par_jobslot_repl	2
