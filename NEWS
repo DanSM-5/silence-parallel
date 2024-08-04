@@ -1,3 +1,14 @@
+20240822
+
+New in this release:
+
+* --match Match input source with regexp to set replacement fields.
+
+* {:%fmt} Use printf formatting of replacement strings.
+
+
+<<>>
+
 20240722
 
 New in this release:
@@ -32,9 +43,11 @@ New in this release:
 
 News about GNU Parallel:
 
-* Howto - Parallel: lanciare comandi in simultanea https://github.com/linuxhubit/linuxhub.it/blob/main/_posts/2024-06-14-howto-parallel-per-lanciare-comandi-in-simultanea.md
+* Howto - Parallel: lanciare comandi in simultanea
+  https://github.com/linuxhubit/linuxhub.it/blob/main/_posts/2024-06-14-howto-parallel-per-lanciare-comandi-in-simultanea.md
 
-* Implementing Concurrency in Shell Scripts https://dev.to/siddhantkcode/implementing-concurrency-in-shell-scripts-521o
+* Implementing Concurrency in Shell Scripts
+  https://dev.to/siddhantkcode/implementing-concurrency-in-shell-scripts-521o
 
 
 20240522

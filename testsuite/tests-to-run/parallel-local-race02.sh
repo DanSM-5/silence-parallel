@@ -6,6 +6,24 @@
 
 # These fail regularly
 
+env_underscore() {
+    echo WHY DOES THIS FAIL?
+    echo '### --env _'
+    echo ignored_var >> ~/.parallel/ignored_vars
+    unset $(compgen -A function | grep par_)
+    ignored_var="ERROR IF COPIED"
+    export ignored_var
+    fUbAr="OK from fubar" parallel -S parallel@lo --env _ echo '$fUbAr $ignored_var' ::: test
+    echo 'In csh this may fail with ignored_var: Undefined variable.'
+    fUbAr="OK from fubar" parallel -S csh@lo --env _ echo '$fUbAr $ignored_var' ::: test
+
+    echo '### --env _ with explicit mentioning of normally ignored var $ignored_var'
+    ignored_var="should be copied"
+    fUbAr="OK from fubar" parallel -S parallel@lo --env ignored_var,_ echo '$fUbAr $ignored_var' ::: test
+    fUbAr="OK from fubar" parallel -S csh@lo --env ignored_var,_ echo '$fUbAr $ignored_var' ::: test
+}
+env_underscore
+
 ctrlz_should_suspend_children() {
     echo 'bug #46120: Suspend should suspend (at least local) children'
     echo 'it should burn 1.9 CPU seconds, but no more than that'
@@ -236,6 +254,6 @@ par_continuous_output() {
 }
 
 export -f $(compgen -A function | grep par_)
-compgen -A function | grep par_ | sort |
+compgen -A function | G "$@" | grep par_ | sort |
     #    parallel --joblog /tmp/jl-`basename $0` -j10 --tag -k '{} 2>&1'
         parallel -o --joblog /tmp/jl-`basename $0` -j1 --tag -k '{} 2>&1'

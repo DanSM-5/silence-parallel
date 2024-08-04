@@ -87,7 +87,7 @@ par_--env_underscore_ksh	aliases in functions work
 par_--env_underscore_ksh	aliases in functions work
 par_--env_underscore_ksh	/bin/ksh: myecho: not found
 par_--env_underscore_ksh	OK if no myecho    ^^^^^^^^^^^^^^^^^
-par_--env_underscore_ksh	script: myecho: not found
+par_--env_underscore_ksh	script[9]: myecho: not found
 par_--env_underscore_ksh	OK if no myecho    ^^^^^^^^^^^^^^^^^
 par_--env_underscore_ksh	/bin/ksh: myfunc: not found
 par_--env_underscore_ksh	OK if no myfunc         ^^^^^^^^^^^^^^^^^
@@ -101,8 +101,8 @@ par_--env_underscore_mksh	variables in aliases in and arrays in functions work
 par_--env_underscore_mksh	variables in aliases in and arrays in functions work
 par_--env_underscore_mksh	variables in aliases in and arrays in functions work
 par_--env_underscore_mksh	variables in aliases in and arrays in functions work
-par_--env_underscore_mksh	EW: script[9]: not_copied_alias: inaccessible or not found
-par_--env_underscore_mksh	EW: script[9]: not_copied_func: inaccessible or not found
+par_--env_underscore_mksh	W: script[9]: not_copied_alias: inaccessible or not found
+par_--env_underscore_mksh	W: script[9]: not_copied_func: inaccessible or not found
 par_--env_underscore_mksh	error=OK
 par_--env_underscore_mksh	error=OK
 par_--env_underscore_mksh	aliases in and arrays in functions work
@@ -113,9 +113,9 @@ par_--env_underscore_mksh	aliases in functions work
 par_--env_underscore_mksh	The myecho alias is replaced in the function causing this not to fail
 par_--env_underscore_mksh	aliases in functions work
 par_--env_underscore_mksh	The myecho alias is replaced in the function causing this not to fail
-par_--env_underscore_mksh	EW: /bin/mksh: myfunc: inaccessible or not found
+par_--env_underscore_mksh	W: /bin/mksh: myfunc: inaccessible or not found
 par_--env_underscore_mksh	OK if no myfunc         ^^^^^^^^^^^^^^^^^
-par_--env_underscore_mksh	EW: script[9]: myfunc: inaccessible or not found
+par_--env_underscore_mksh	W: script[9]: myfunc: inaccessible or not found
 par_--env_underscore_mksh	OK if no myfunc         ^^^^^^^^^^^^^^^^^
 par_--env_underscore_sh	### sh
 par_--env_underscore_sh	### Testing of --env _
@@ -1130,12 +1130,12 @@ par_env_parallel_--session_mksh	### Test env_parallel --session
 par_env_parallel_--session_mksh	### level0 should be hidden, level1 should be transferred
 par_env_parallel_--session_mksh	
 par_env_parallel_--session_mksh	fail
-par_env_parallel_--session_mksh	EW: script[9]: level0func: inaccessible or not found
-par_env_parallel_--session_mksh	EW: script[9]: level0alias: inaccessible or not found
+par_env_parallel_--session_mksh	W: script[9]: level0func: inaccessible or not found
+par_env_parallel_--session_mksh	W: script[9]: level0alias: inaccessible or not found
 par_env_parallel_--session_mksh	
 par_env_parallel_--session_mksh	fail
-par_env_parallel_--session_mksh	EW: /bin/mksh: level0func: inaccessible or not found
-par_env_parallel_--session_mksh	EW: /bin/mksh: level0alias: inaccessible or not found
+par_env_parallel_--session_mksh	W: /bin/mksh: level0func: inaccessible or not found
+par_env_parallel_--session_mksh	W: /bin/mksh: level0alias: inaccessible or not found
 par_env_parallel_--session_mksh	l1var
 par_env_parallel_--session_mksh	l1func
 par_env_parallel_--session_mksh	l1alias
@@ -1147,20 +1147,20 @@ par_env_parallel_--session_mksh	level1 array OK
 par_env_parallel_--session_mksh	### level0+1 should be hidden, level2 should be transferred
 par_env_parallel_--session_mksh	
 par_env_parallel_--session_mksh	fail
-par_env_parallel_--session_mksh	EW: script[9]: level0func: inaccessible or not found
-par_env_parallel_--session_mksh	EW: script[9]: level0alias: inaccessible or not found
+par_env_parallel_--session_mksh	W: script[9]: level0func: inaccessible or not found
+par_env_parallel_--session_mksh	W: script[9]: level0alias: inaccessible or not found
 par_env_parallel_--session_mksh	
 par_env_parallel_--session_mksh	fail
-par_env_parallel_--session_mksh	EW: /bin/mksh: level0func: inaccessible or not found
-par_env_parallel_--session_mksh	EW: /bin/mksh: level0alias: inaccessible or not found
+par_env_parallel_--session_mksh	W: /bin/mksh: level0func: inaccessible or not found
+par_env_parallel_--session_mksh	W: /bin/mksh: level0alias: inaccessible or not found
 par_env_parallel_--session_mksh	
 par_env_parallel_--session_mksh	fail
-par_env_parallel_--session_mksh	EW: script[9]: level1func: inaccessible or not found
-par_env_parallel_--session_mksh	EW: script[9]: level1alias: inaccessible or not found
+par_env_parallel_--session_mksh	W: script[9]: level1func: inaccessible or not found
+par_env_parallel_--session_mksh	W: script[9]: level1alias: inaccessible or not found
 par_env_parallel_--session_mksh	
 par_env_parallel_--session_mksh	fail
-par_env_parallel_--session_mksh	EW: /bin/mksh: level1func: inaccessible or not found
-par_env_parallel_--session_mksh	EW: /bin/mksh: level1alias: inaccessible or not found
+par_env_parallel_--session_mksh	W: /bin/mksh: level1func: inaccessible or not found
+par_env_parallel_--session_mksh	W: /bin/mksh: level1alias: inaccessible or not found
 par_env_parallel_--session_mksh	l2var
 par_env_parallel_--session_mksh	l2func
 par_env_parallel_--session_mksh	l2alias
@@ -1172,12 +1172,12 @@ par_env_parallel_--session_mksh	level2 array OK
 par_env_parallel_--session_mksh	### level0 should be hidden, level1+2 should be transferred
 par_env_parallel_--session_mksh	
 par_env_parallel_--session_mksh	fail
-par_env_parallel_--session_mksh	EW: script[9]: level0func: inaccessible or not found
-par_env_parallel_--session_mksh	EW: script[9]: level0alias: inaccessible or not found
+par_env_parallel_--session_mksh	W: script[9]: level0func: inaccessible or not found
+par_env_parallel_--session_mksh	W: script[9]: level0alias: inaccessible or not found
 par_env_parallel_--session_mksh	
 par_env_parallel_--session_mksh	fail
-par_env_parallel_--session_mksh	EW: /bin/mksh: level0func: inaccessible or not found
-par_env_parallel_--session_mksh	EW: /bin/mksh: level0alias: inaccessible or not found
+par_env_parallel_--session_mksh	W: /bin/mksh: level0func: inaccessible or not found
+par_env_parallel_--session_mksh	W: /bin/mksh: level0alias: inaccessible or not found
 par_env_parallel_--session_mksh	l1var
 par_env_parallel_--session_mksh	l1func
 par_env_parallel_--session_mksh	l1alias
@@ -1219,10 +1219,10 @@ par_env_parallel_--session_mksh	l2var
 par_env_parallel_--session_mksh	l2func
 par_env_parallel_--session_mksh	l2alias
 par_env_parallel_--session_mksh	level2 array OK
-par_env_parallel_--session_mksh	EW: /bin/mksh: aliasbefore: inaccessible or not found
-par_env_parallel_--session_mksh	EW: script[9]: aliasbefore: inaccessible or not found
-par_env_parallel_--session_mksh	EW: /bin/mksh: funcbefore: inaccessible or not found
-par_env_parallel_--session_mksh	EW: script[9]: funcbefore: inaccessible or not found
+par_env_parallel_--session_mksh	W: /bin/mksh: aliasbefore: inaccessible or not found
+par_env_parallel_--session_mksh	W: script[9]: aliasbefore: inaccessible or not found
+par_env_parallel_--session_mksh	W: /bin/mksh: funcbefore: inaccessible or not found
+par_env_parallel_--session_mksh	W: script[9]: funcbefore: inaccessible or not found
 par_env_parallel_--session_mksh	no_before
 par_env_parallel_--session_mksh	no_before
 par_env_parallel_--session_mksh	no_before
@@ -1689,6 +1689,8 @@ par_funky_ash	'par_funky_ash	 !"#$%&'"'"'()*+,-./0123456789
 par_funky_ash	3 arg alias_works
 par_funky_ash	3 arg alias_works_over_ssh
 par_funky_bash	
+par_funky_bash		
+par_funky_bash		
 par_funky_bash	-funkymultiline
 par_funky_bash	-funkymultiline
 par_funky_bash	  space  6  
@@ -1700,8 +1702,8 @@ par_funky_bash	3 arg alias_works
 par_funky_bash	3 arg alias_works_over_ssh
 par_funky_bash	Funkyline-par_funky_bash	 !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~€‚ƒ„…†‡ˆ‰Š‹Œ‘’“”•–—˜™š›œŸ ¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º»¼½¾¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏĞÑÒÓÔÕÖ×ØÙÚÛÜİŞßàáâãäåæçèéêëìíîïğñòóôõö÷øùúûüışÿ-funkyline
 par_funky_bash	Funkyline-par_funky_bash	 !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~€‚ƒ„…†‡ˆ‰Š‹Œ‘’“”•–—˜™š›œŸ ¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º»¼½¾¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏĞÑÒÓÔÕÖ×ØÙÚÛÜİŞßàáâãäåæçèéêëìíîïğñòóôõö÷øùúûüışÿ-funkyline
-par_funky_bash	Funkymultiline-	
-par_funky_bash	Funkymultiline-	
+par_funky_bash	Funkymultiline-
+par_funky_bash	Funkymultiline-
 par_funky_bash	assoc_val_a
 par_funky_bash	assoc_val_a
 par_funky_bash	function_works

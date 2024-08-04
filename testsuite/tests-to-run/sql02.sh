@@ -14,7 +14,7 @@ par_sqlite() {
 	# create database & table
 	sql $CMDSQL:///sqltest.$CMDSQL "CREATE TABLE foo(n INT, t TEXT);"
 	sql --list-tables $CMDSQL:///sqltest.$CMDSQL
-	file sqltest.$CMDSQL
+	file sqltest.$CMDSQL | perl -pe 's/ version \d+//'
 	sql $CMDSQL:///sqltest.$CMDSQL "INSERT INTO foo VALUES(1,'Line 1');"
 	sql $CMDSQL:///sqltest.$CMDSQL "INSERT INTO foo VALUES(2,'Line 2');"
 	sql $CMDSQL:///sqltest.$CMDSQL "SELECT * FROM foo;"

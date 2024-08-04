@@ -268,7 +268,7 @@ from:tange@gnu.org
 to:parallel@gnu.org, bug-parallel@gnu.org
 stable-bcc: Jesse Alama <jessealama@fastmail.fm>
 
-Subject: GNU Parallel 20240822 ('Southport/<<>>') released <<[stable]>>
+Subject: GNU Parallel 20240822 ('Bangladesh/Southport/<<>>') released <<[stable]>>
 
 GNU Parallel 20240822 ('<<>>') has been released. It is available for download at: lbry://@GnuParallel:4
 
@@ -278,12 +278,17 @@ Quote of the month:
   
 New in this release:
 
+* A format string can be added to replacement strings: {#:%04d}
+
 <<>>
+
 <<* No new features. This is a candidate for a stable release.>>
 
 * Bug fixes and man page updates.
 
 News about GNU Parallel:
+
+https://www.linkedin.com/pulse/powerful-gnu-parallel-more-than-loop-zhenguo-zhang-18dxc
 
 https://contentbase.com/blog/increase-file-transfer-speed-parallel-rsync/
 

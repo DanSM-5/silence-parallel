@@ -1855,7 +1855,7 @@ SQLITE	par_empty	p_wrapper par_empty $SQLITE
 SQLITE	par_empty	Do nothing: TBL99999 does not exist because it is not created
 SQLITE	par_empty	Exit=0
 SQLITE	par_empty	Exit=0
-SQLITE	par_empty	Parse error near line 1: no such table: TBL99999
+SQLITE	par_empty	Parse error near line 1: no such table: TBL99999 (1)
 SQLITE	par_no_table	p_wrapper par_no_table $SQLITE
 SQLITE	par_no_table	bug #50018: --dburl without table dies
 SQLITE	par_no_table	255

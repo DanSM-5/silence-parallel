@@ -75,22 +75,6 @@ par_--nonall_results() {
     rm -r "$tmp"    
 }
 
-par_env_underscore() {
-    echo '### --env _'
-    echo ignored_var >> ~/.parallel/ignored_vars
-    unset $(compgen -A function | grep par_)
-    ignored_var="should not be copied"
-    export ignored_var
-    fUbAr="OK FUBAR" parallel -S parallel@lo --env _ echo '$fUbAr $ignored_var' ::: test
-    echo 'In csh this may fail with ignored_var: Undefined variable.'
-    fUbAr="OK FUBAR" parallel -S csh@lo --env _ echo '$fUbAr $ignored_var' ::: test 2>&1
-
-    echo '### --env _ with explicit mentioning of normally ignored var $ignored_var'
-    ignored_var="should be copied"
-    fUbAr="OK FUBAR" parallel -S parallel@lo --env ignored_var,_ echo '$fUbAr $ignored_var' ::: test
-    fUbAr="OK FUBAR" parallel -S csh@lo --env ignored_var,_ echo '$fUbAr $ignored_var' ::: test 2>&1
-}    
-
 par_warn_when_exporting_func() {
     echo 'bug #40137: SHELL not bash: Warning when exporting funcs'
     myrun() {

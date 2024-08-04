@@ -178,6 +178,7 @@ You have a bunch of file. You want them sorted into dirs. The dir of
 each file should be named the first letter of the file name.
 
   parallel 'mkdir -p {=s/(.).*/$1/=}; mv {} {=s/(.).*/$1/=}' ::: *
+  parallel --match '(.)' 'mkdir -p {1.1} && mv {} {1.1}' ::: *
 
 
 =head2 EXAMPLE: Composed command with multiple input sources
@@ -188,6 +189,57 @@ You have a dir with files named as 24 hours in 5 minute intervals:
   parallel [ -f {1}:{2} ] "||" echo {1}:{2} does not exist \
     ::: {00..23} ::: {00..55..5}
 
+
+=head2 EXAMPLE: Match parts of input source
+
+Match first initial and last name:
+
+  parallel --match '(.).* (.*)' echo {1.1}. {1.2} \
+    ::: "Arthur Dent" "Ford Prefect" "Tricia McMillan" "Zaphod Beeblebrox"
+
+Re-arrange (stupid) US date format into (nice) ISO-8601:
+
+  parallel --match '(.*)/(.*)/(.*)' echo {1.3}-{1.1}-{1.2} \
+    ::: 12/31/1969 01/19/2038 06/01/2002
+
+Match url into domain and path:
+
+  parallel --match 'https://(.*?)/(.*)' echo Domain: {1.1} Path: {1.2} \
+    ::: https://example.com/dir/page https://gnu.org/s/parallel
+
+Match host:port from a log file:
+
+  cat log |
+    parallel --match '\b([a-z0-9.]+):(\d+)\b' echo host:{1.1} port:{1.2}
+
+Reorder comma-separated values:
+
+  parallel --match '(.*),(.*)' echo Second: {1.2}, First: {1.1} \
+    ::: "Arthur,Babel fish" "Adams,Betelgeuse" "Arcturan,Bistro"
+
+Capitalize word:
+
+  parallel --match '([a-z])([a-z]*) ([a-z])([a-z]*)' \
+    echo '{=1.1 $_=uc($_) =}{1.2} {=1.3 $_=uc($_) =}{1.4}' \
+    ::: "pan galactic" "gargle blaster"
+
+Make an international dialing prefix table:
+
+  dial=(
+    "DK(Denmark) 00,45"
+    "US(United States) 011,1"
+    "JP(Japan) 010,81"
+    "AU(Australia) 0011,61"
+    "CA(Canada) 011,1"
+    "RU(Russia) 810,7"
+    "TH(Thailand) 001,66"
+    "TW(Taiwan) 002,886"
+  )
+  parallel --match '(.*)\((.*)\) (.*),(.*)' --match +1 \
+    echo From {1.1}/{1.2} to {2.1}/{2.2} dial {1.3}-{2.4} \
+    ::: "${dial[@]}" ::: "${dial[@]}"
+
+Note how input source 2 reuses the B<--match> from input source 1.
 
 =head2 EXAMPLE: Calling Bash functions
 
@@ -446,7 +498,7 @@ and the rest a ' ' a perl expression is used to look at the 3rd input
 source. If the value modulo 2 is 1: Use ":" otherwise use " ":
 
   parallel -k echo {1}'{=3 $_=$_%2?":":" "=}'{2}{3} \
-    ::: {0..12} ::: {0..5} ::: {0..9}
+    ::: {0..23} ::: {0..5} ::: {0..9}
 
 
 =head2 EXAMPLE: Aggregating content of files

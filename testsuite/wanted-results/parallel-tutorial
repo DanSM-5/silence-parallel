@@ -720,6 +720,7 @@ BASH_FUNC_replace_tmpdir%%
 BASH_FUNC_run_once%%
 BASH_FUNC_run_test%%
 _
+mysqlrootpass
 qTMPDIR
 qqTMPDIR
 testsuitedir

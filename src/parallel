@@ -65,7 +65,11 @@ sub set_input_source_header($$) {
 			@opt::filter) {
 			# Skip if undefined
 			$_ or next;
-		      s:\{$s(|/|//|\.|/\.)\}:\{$id$1\}:g;
+			s<\{$s(
+				(\.\d+)? # Sub position = {3.2}
+				(|/|//|\.|/\.) # Known replacement strings
+				(:%.*?)? # Formatting
+			  )\}><\{$id$1\}>gx;
 			# {=header1 ... =}  =>  {=1 ... =}
 		      s:$left $s (.*?) $right:$l$id$1$r:gx;
 		    }
@@ -2039,6 +2043,7 @@ sub options_completion_hash() {
 	  "[Use at most max-args arguments per command line]:max-args"
 	  => \$opt::max_replace_args),
 	 "col-sep|colsep|C=s[Column separator]:regexp" => \$opt::colsep,
+	 "match=s[Matching regexp]:regexp" => \@opt::match,
 	 "csv[Treat input as CSV-format]"=> \$opt::csv,
 	 ("help|h[Print a summary of the options to GNU parallel and exit]"
 	  => \$opt::help),
@@ -2793,7 +2798,7 @@ sub check_invalid_option_combinations() {
 
 sub init_globals() {
     # Defaults:
-    $Global::version = 20240723;
+    $Global::version = 20240808;
     $Global::progname = 'parallel';
     $::name = "GNU Parallel";
     $Global::infinity = 2**31;
@@ -13358,21 +13363,35 @@ sub new($) {
 	    #
 	    # Replace $$1 in {= perl expr =} with groupings in shorthand string
 	    #
-	    #	parallel --rpl '{/(\.\S+)/(\.\S+)} s/$$1/$$2_REPLACE/g;' echo {/.gz/.lz} ::: UU.tar.gz
+	    #   parallel --rpl '{/(\.\S+)/(\.\S+)} s/$$1/$$2_REPLACE/g;' \
+	    #     echo {/.gz/.lz} ::: UU.tar.gz
 	    #
 	    # {/.gz/.lz} =>
-	    #   \177< $_pAr_gRp1 = ".gz";$_pAr_gRp2 = ".lz";s/${_pAr_gRp1}/${_pAr_gRp2}_REPLACE/g; \177>
+	    #   \177<
+	    #         $_pAr_gRp1 = ".gz";
+	    #         $_pAr_gRp2 = ".lz";
+	    #         s/${_pAr_gRp1}/${_pAr_gRp2}_REPLACE/g;
+	    #   \177>
 	    # {/.gz/.lz:%8.2s} =>
-	    #   \177< $_pAr_gRp1 = ".gz";$_pAr_gRp2 = ".lz";s/${_pAr_gRp1}/${_pAr_gRp2}_REPLACE/g;; $_ = sprintf("%8.2f",$_); \177>
+	    #   \177<
+	    #         $_pAr_gRp1 = ".gz";
+	    #         $_pAr_gRp2 = ".lz";
+	    #         s/${_pAr_gRp1}/${_pAr_gRp2}_REPLACE/g;;
+	    #         $_ = sprintf("%8.2f",$_);
+	    #   \177>
 	    #
-	    sub replacer_format {
+	    sub replacer_rpl {
 		my $rpl = shift;
+		my $rv = $Global::rpl{$rpl};
+		return replacer($rv,@_);
+	    }
+	    sub replacer {
+		my $rv = shift;
 		my $unchanged = shift;
 		my $position = shift;
 		my $grp_regexp = shift;
 		my $grp_string = shift;
 		my $formatstring = shift;
-
 		$grp_string =~ /^${grp_regexp}$/ or
 		::die_bug("Match failed: '$grp_regexp' on $grp_string");
 		# Dummy entry to start $grp[n] at 1.
@@ -13384,10 +13403,9 @@ sub new($) {
 			push @grp, eval '$'.$i;
 		    }
 		}
-		my $rv = $Global::rpl{$rpl};
-		# replace $$1 with $_pAr_gRp1, $$2 with $_pAr_gRp2
+		# replace $$1 with ${_pAr_gRp1}, $$2 with ${_pAr_gRp2}
 		# in the code to be executed
-		$rv =~ s/\$\$ (\d+)/\$_pAr_gRp$1/gx;
+		$rv =~ s/\$\$ (\d+)/\$\{_pAr_gRp$1\}/gx;
 		# prepend with $_pAr_gRp1 = perlquote($1),
 		my $set_args = "";
 		for(my $i = 1;defined $grp[$i]; $i++) {
@@ -13400,16 +13418,31 @@ sub new($) {
 		if(length $formatstring > 0) {
 		    $formatcode = ";\$_ = sprintf('$formatstring',\$_);";
 		}
-		::debug("rpl","match: $rpl ¤ $unchanged ¤ $position ¤ ".
-			"$grp_regexp ¤ $formatstring\n");
+		if($position =~ s/\.(\d+)//) {
+		    # {2.3} => There must be a corresponding --match
+		    my $field = $1;
+		    my $re = $opt::match[$position-1];
+		    if($re=~/^\+(\d+)/) {
+			# multiple --match: Reuse --match $1
+			$re = $opt::match[$1-1];
+		    }
+		    if(not defined $re) {
+			::error("{$position.$field} requires ".
+				"corresponding --match");
+			::wait_and_exit(255);
+		    }
+		    if($re =~ /\001/) {
+			::error("\\001 is not supported in --match");
+			::wait_and_exit(255);
+		    }
+		    $rv = "m\001$re\001 or ".
+			"::warning(\"'\$_' did not match '$re'\"); ".
+			"\$_ = \$$field; $rv";
+		}
+		::debug("rpl","match: $rv ¤ $unchanged ¤ $position ¤ ".
+			"$set_args ¤ $rv ¤ $grp_regexp ¤ $formatstring\n");
 		return($unchanged . "\177<" . $position . $set_args .
 		       $rv . $formatcode. "\177>");
-	    }
-	    sub replacer_no_format {
-		replacer_format(@_);
-	    }
-	    sub replacer {
-		replacer_format(@_);
 	    }
 	    if($rpl =~ /^\{/) {
 		my ($prefix,$grp_regexp,$postfix) =
@@ -13421,39 +13454,40 @@ sub new($) {
 			       \} $	       # }
 			       /xs;
 		my $format_regexp = ":%.*?";
-		q {
+		q{
 		    # Regexp using named captures - kept for documentation
 		    # It is easier to understand than the backward compatible version
 		    # Look for: { position prefix group format postfix }
 		    while($s =~
-			  s{(?<unchanged> (?: ^|\177> ) (?: [^\177]*|[\177][^<>] )*?)
- 			    \{
- 			    (?<position> -?\d+)?
- 			    \Q$prefix\E \s*
+		    	  s{(?<unchanged> (?: ^|\177> ) (?: [^\177]*|[\177][^<>] )*?)
+  			    \{
+ 			    (?<position> -?\d+(?:\.\d+)? \s*)?
+ 			    \Q$prefix\E
  			    (?<grp>$grp_regexp)
  			    \Q$postfix\E
  			    (?<format> $format_regexp)
  			    \}
- 			   }
-			   {
- 			     replacer_format($rpl, $+{unchanged}, $+{position},
- 			     		     $grp_regexp, $+{grp}, $+{format});
-                           }gsex){};
+			   }
+			  {
+				replacer_rpl($rpl, $+{unchanged},
+ 					     $+{position}, $grp_regexp,
+ 					     $+{grp}, $+{format});
+ 			  }gsex){};
 		    # Look for: { position prefix group postfix }
 		    while($s =~
 			  s{(?<unchanged> (?: ^|\177> ) (?: [^\177]*|[\177][^<>] )*?)
   			    \{
- 			    (?<position> -?\d+)?
- 			    \Q$prefix\E \s*
+ 			    (?<position> -?\d+(?:\.\d+)? \s*)?
+ 			    \Q$prefix\E
  			    (?<grp>$grp_regexp)
  			    \Q$postfix\E
  			    \}
 			   }
-			   {
-				replacer_no_format($rpl, $+{unchanged},
- 						   $+{position}, $grp_regexp,
- 						   $+{grp});
- 			   }gsex){}
+			  {
+				replacer_rpl($rpl, $+{unchanged},
+ 					     $+{position}, $grp_regexp,
+ 					     $+{grp});
+ 			  }gsex){}
 		};
 		{
 		    # This a rewrite of the above to perl 5.8
@@ -13462,30 +13496,29 @@ sub new($) {
 		    while($s =~
 			  s{( (?: ^|\177> ) (?: [^\177]*|[\177][^<>] )*?)
   			    \{
- 			    (-?\d+)?
- 			    \Q$prefix\E \s*
+ 			    (-?\d+(?:\.\d+)? \s*)?
+ 			    \Q$prefix\E
  			    ($grp_regexp)
  			    \Q$postfix\E
  			    ($format_regexp)
  			    \}
 			   }
 			   {
-				replacer_format($rpl, $1, $2,
- 						      $grp_regexp, $3, $+);
+				replacer_rpl($rpl, $1, $2, $grp_regexp, $3, $+);
  			   }gsex){}
 		    # Look for: { position prefix group postfix }
+		    # (Same above - except "format")
 		    while($s =~
 			  s{( (?: ^|\177> ) (?: [^\177]*|[\177][^<>] )*?)
   			    \{
- 			    (-?\d+)?
- 			    \Q$prefix\E \s*
+ 			    (-?\d+(?:\.\d+)? \s*)?
+ 			    \Q$prefix\E
  			    ($grp_regexp)
  			    \Q$postfix\E
  			    \}
   			   }
 			   {
-				replacer_no_format($rpl, $1, $2,
- 							 $grp_regexp, $3);
+				replacer_rpl($rpl, $1, $2, $grp_regexp, $3);
  			   }gsex){}
 		}
 	    } else {
@@ -13505,8 +13538,8 @@ sub new($) {
  			    \Q$postfix\E
 			   }
 			   {
-				replacer($rpl, $+{unchanged}, $+{position},
- 					       $grp_regexp, $+{grp});
+				replacer_rpl($rpl, $+{unchanged}, $+{position},
+ 					     $grp_regexp, $+{grp});
  			   }gsex){};
 		};
 		{
@@ -13520,10 +13553,20 @@ sub new($) {
  			    ($grp_regexp)
  			    \Q$postfix\E
  			   }
-			   { replacer($rpl, $1, $2, $grp_regexp, $3); }gsex){};
+			  {
+				replacer_rpl($rpl, $1, $2, $grp_regexp, $3);
+ 			  }gsex){};
 		}
 	    }
 	}
+	# Perl positional replacement fields {=1.2 perlexpr =}
+	while($s =~
+	      s{ \177<                   # {=
+ 		 (-?\d+(?:\.\d+)\s*)	 # position
+		 (([^\177]+|\177\177)*)  # perl expr
+		 \177>			 # =}
+ 		 }
+	      { replacer($2, '', $1,''); }gsex){};
 	return $s;
     }
     
@@ -13564,6 +13607,7 @@ sub new($) {
 	# Replace rpl-definitions with the corresponding perl code
 	$_ = replace_rpl_def($_);
     }
+    
     # Add {} if no replacement strings in @command
     ($replacecount_ref, $len_ref, @command) =
 	replacement_counts_and_lengths($transfer_files, $return_files,

@@ -504,8 +504,9 @@ lsh_setup() {
 	mkdir -p .lsh
 	rm -f ".lsh/yarrow-seed-file"
 	lsh-make-seed -o ".lsh/yarrow-seed-file"
-	lsh -c aes256-ctr --sloppy-host-authentication \
-	    --capture-to ~/.lsh/host-acls -l $user server echo Added host-auth
+	# TODO need to enter 'y' here
+	lsh --sloppy-host-authentication \
+	    --capture-to ~/.lsh/host-acls -l $user $server echo Added host-auth
 	rm -f .lsh/identity .lsh/identity.pub
 	lsh-keygen | lsh-writekey -c none
 	export_key_to_local_users() {

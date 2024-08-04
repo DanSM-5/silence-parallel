@@ -157,10 +157,10 @@ par_env_parallel_big_env() {
     echo '### bug #54128: command too long when exporting big env'
     . env_parallel.bash
     env_parallel --session
-    a=`rand | perl -pe 's/\0//g'| head -c 10000`
+    a=`rand | perl -pe 's/\0//g'| head -c 40000`
     env_parallel -Slo echo ::: OK 2>&1
-    a=`rand | perl -pe 's/\0//g'| head -c 20000`
-    env_parallel -Slo echo should ::: fail 2>/dev/null || echo OK
+    a=`rand | perl -pe 's/\0//g'| head -c 50000`
+    env_parallel -Slo echo THIS SHOULD ::: FAIL 2>/dev/null || echo OK
 }
 
 par_no_route_to_host() {

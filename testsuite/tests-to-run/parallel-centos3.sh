@@ -74,7 +74,6 @@ start_centos3
     ssh $SSHLOGIN1 cat .ssh/id_rsa.pub | ssh $SSHLOGIN2 'cat >>.ssh/authorized_keys'
     ssh $SSHLOGIN1 'cat .ssh/id_rsa.pub >>.ssh/authorized_keys; chmod 600 .ssh/authorized_keys'
     ssh $SSHLOGIN1 'ssh -o StrictHostKeyChecking=no localhost true; ssh -o StrictHostKeyChecking=no '$SSHLOGIN2' true;'
-    ssh $SSHLOGIN1 parallel echo {}: ssh $SSHLOGIN1 parallel ::: OK
 ) &
 
 . env_parallel.bash
@@ -105,3 +104,4 @@ env_parallel --env par_shellshock_bug --env LC_ALL --env SSHLOGIN2 \
 	     -S $SSHLOGIN1 --tag '{} 2>&1' \
 	     ::: $(compgen -A function | grep par_ | sort) \
 	     2> >(grep -Ev 'shopt: not found|declare: not found|No xauth data')
+ssh $SSHLOGIN1 parallel echo {}: ssh $SSHLOGIN1 parallel ::: OK

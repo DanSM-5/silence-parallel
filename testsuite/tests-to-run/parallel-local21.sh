@@ -207,7 +207,7 @@ par_shebang_wrap_ruby() {
     script="$TMPDIR"/shebang_wrap_ruby
     cat <<'EOF' > "$script"
 #!/usr/local/bin/parallel --shebang-wrap -k /usr/bin/ruby
-  
+
 print "Arguments "
 puts ARGV
 EOF
@@ -234,13 +234,117 @@ EOF
     rm "$script"
 }
 
+par_shebang_wrap_groovy() {
+    script="$TMPDIR"/shebang_wrap_groovy
+    unset DISPLAY
+    cat <<'EOF' > "$script"
+#!/usr/local/bin/parallel --shebang-wrap -k /snap/bin/groovy
+
+println "Arguments: ${args.join(' ')}"
+EOF
+    chmod 755 "$script"
+    "$script" arg1 arg2 "arg3.1  arg3.2"
+    rm "$script"
+}
+
+par_shebang_wrap_racket() {
+    script="$TMPDIR"/shebang_wrap_racket
+    unset DISPLAY
+    cat <<'EOF' > "$script"
+#!/usr/local/bin/parallel --shebang-wrap -k /usr/bin/racket
+#lang racket
+
+;; Get the command-line arguments, skipping the script name
+(define args (vector->list (current-command-line-arguments)))
+
+;; Format the arguments as a string
+(define formatted-args (string-join args " "))
+
+;; Print the result
+(printf "Arguments: ~a\n" formatted-args)
+EOF
+    chmod 755 "$script"
+    "$script" arg1 arg2 "arg3.1  arg3.2"
+    rm "$script"
+}
+
+par_shebang_wrap_scheme() {
+    script="$TMPDIR"/shebang_wrap_scheme
+    unset DISPLAY
+    cat <<'EOF' > "$script"
+#!/usr/local/bin/parallel --shebang-wrap -k /usr/bin/env guile
+!#
+
+(define (print-arguments args)
+  (display "Arguments: ")
+  (for-each (lambda (arg)
+              (display arg)
+              (display " "))
+            args)
+  (newline))
+
+(print-arguments (cdr (command-line)))
+EOF
+    chmod 755 "$script"
+    stdout "$script" arg1 arg2 "arg3.1  arg3.2" |
+	grep -v ';;;' | grep -v shebang_wrap_sche
+    rm "$script"
+}
+
+par_shebang_wrap_awk() {
+    script="$TMPDIR"/shebang_wrap_awk
+    unset DISPLAY
+    cat <<'EOF' > "$script"
+#!/usr/local/bin/parallel --shebang-wrap -k /usr/bin/awk -f
+
+BEGIN {
+    printf "Arguments: "
+    for (i = 1; i < ARGC; i++) {
+        printf "%s ", ARGV[i]
+    }
+    printf "\n"
+}
+EOF
+    chmod 755 "$script"
+    "$script" arg1 arg2 "arg3.1  arg3.2"
+    rm "$script"
+}
+
+par_shebang_wrap_fsharp() {
+    script="$TMPDIR"/shebang_wrap_fsharp.fsx
+    unset DISPLAY
+    cat <<'EOF' > "$script"
+#!/usr/local/bin/parallel --shebang-wrap -k /usr/bin/fsharpi
+
+let args = (System.Environment.GetCommandLineArgs()
+  |> Array.tail |> Array.tail |> Array.tail)
+printfn "Arguments: %A" args
+EOF
+    chmod 755 "$script"
+    "$script" arg1 arg2 "arg3.1  arg3.2"
+    rm "$script"
+}
+
+par_shebang_wrap_julia() {
+    script="$TMPDIR"/shebang_wrap_julia
+    unset DISPLAY
+    cat <<'EOF' > "$script"
+#!/usr/local/bin/parallel --shebang-wrap -k /snap/bin/julia
+
+println("Arguments: ", join(ARGS, " "))
+EOF
+    chmod 755 "$script"
+    "$script" arg1 arg2 "arg3.1  arg3.2"
+    rm "$script"
+}
+
 par_shebang_wrap_clisp() {
     # clisp cannot handle dirs w/ shell wildcards
     TMPDIR=/tmp
     script="$TMPDIR"/shebang_wrap_clisp
     cat <<'EOF' > "$script"
 #!/usr/local/bin/parallel --shebang-wrap -k /usr/bin/clisp
-  
+
 (format t "~&~S~&" 'Arguments)
 (format t "~&~S~&" *args*)
 EOF

@@ -16,6 +16,11 @@ export -f stdsort
 # Test amount of parallelization
 # parallel --shuf --jl /tmp/myjl -j1 'export JOBS={1};'bash tests-to-run/parallel-local-0.3s.sh ::: {1..16} ::: {1..5}
 
+par_--rpl_group_bug() {
+    echo 'Bug in --rpl group: $$1_'
+    parallel --rpl '{a(.)b} s/$$1_c/o/g' echo {aDb} ::: GD_cD_cd
+}
+
 par_env_parallel_recordenv() {
     echo 'bug #65127: env_parallel --record-env and --recordenv should do the same.'
     . env_parallel.bash

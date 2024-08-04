@@ -134,7 +134,7 @@ B<Bash, Csh, or Tcsh aliases>: Use B<env_parallel>.
 
 B<Zsh, Fish, Ksh, and Pdksh functions and aliases>: Use B<env_parallel>.
 
-=item B<{}>
+=item B<{}> (alpha testing)
 
 Input line.
 
@@ -155,7 +155,7 @@ See also: B<--plus> B<{.}> B<{/}> B<{//}> B<{/.}> B<{#}> B<{%}>
 B<{>I<n>B<}> B<{=>I<perl expression>B<=}>
 
 
-=item B<{.}>
+=item B<{.}> (alpha testing)
 
 Input line without extension.
 
@@ -173,7 +173,7 @@ The replacement string B<{.}> can be changed with B<--extensionreplace>
 See also: B<{}> B<--extensionreplace>
 
 
-=item B<{/}>
+=item B<{/}> (alpha testing)
 
 Basename of input line.
 
@@ -183,7 +183,7 @@ directory part removed.
 See also: B<{}> B<--basenamereplace>
 
 
-=item B<{//}>
+=item B<{//}> (alpha testing)
 
 Dirname of input line.
 
@@ -193,7 +193,7 @@ line. See B<dirname>(1).
 See also: B<{}> B<--dirnamereplace>
 
 
-=item B<{/.}>
+=item B<{/.}> (alpha testing)
 
 Basename of input line without extension.
 
@@ -204,7 +204,7 @@ B<{/}> and B<{.}>.
 See also: B<{}> B<--basenameextensionreplace>
 
 
-=item B<{#}>
+=item B<{#}> (alpha testing)
 
 Sequence number of the job to run.
 
@@ -214,7 +214,7 @@ job being run. It contains the same number as $PARALLEL_SEQ.
 See also: B<{}> B<--seqreplace>
 
 
-=item B<{%}>
+=item B<{%}> (alpha testing)
 
 Job slot number.
 
@@ -249,7 +249,7 @@ Notice how {%} and $PARALLEL_JOBSLOT differ in the retry run of C and D.
 See also: B<{}> B<--jobs> B<--slotreplace>
 
 
-=item B<{>I<n>B<}>
+=item B<{>I<n>B<}> (alpha testing)
 
 Argument from input source I<n> or the I<n>'th argument.
 
@@ -263,7 +263,7 @@ See also: B<{}> B<{>I<n>.B<}> B<{>I<n>/B<}> B<{>I<n>//B<}>
 B<{>I<n>/.B<}> B<--colsep>
 
 
-=item B<{>I<n>.B<}>
+=item B<{>I<n>.B<}> (alpha testing)
 
 Argument from input source I<n> or the I<n>'th argument without
 extension.
@@ -278,7 +278,7 @@ extension removed.
 See also: B<{>I<n>B<}> B<{.}>
 
 
-=item B<{>I<n>/B<}>
+=item B<{>I<n>/B<}> (alpha testing)
 
 Basename of argument from input source I<n> or the I<n>'th argument.
 
@@ -292,7 +292,7 @@ directory (if any) removed.
 See also: B<{>I<n>B<}> B<{/}>
 
 
-=item B<{>I<n>//B<}>
+=item B<{>I<n>//B<}> (alpha testing)
 
 Dirname of argument from input source I<n> or the I<n>'th argument.
 
@@ -305,7 +305,7 @@ the I<n>'th argument (when used with B<-N>). See B<dirname>(1).
 See also: B<{>I<n>B<}> B<{//}>
 
 
-=item B<{>I<n>/.B<}>
+=item B<{>I<n>/.B<}> (alpha testing)
 
 Basename of argument from input source I<n> or the I<n>'th argument
 without extension.
@@ -321,7 +321,7 @@ directory (if any) and extension removed.
 See also: B<{>I<n>B<}> B<{/.}>
 
 
-=item B<{=>I<perl expression>B<=}>
+=item B<{=>I<perl expression>B<=}> (alpha testing)
 
 Replace with calculated I<perl expression>.
 
@@ -438,7 +438,7 @@ See also: B<--rpl> B<--parens> B<{}> B<{=>I<n> I<perl expression>B<=}>
 B<--filter>
 
 
-=item B<{=>I<n> I<perl expression>B<=}>
+=item B<{=>I<n> I<perl expression>B<=}> (alpha testing)
 
 Positional equivalent to B<{=>I<perl expression>B<=}>.
 
@@ -447,7 +447,7 @@ To understand positional replacement strings see B<{>I<n>B<}>.
 See also: B<{=>I<perl expression>B<=}> B<{>I<n>B<}>
 
 
-=item B{I<rpl>:I<format>} (alpha testing)
+=item B<{>I<rpl>:I<format>B<}> (alpha testing)
 
 Format replacement string.
 
@@ -1796,6 +1796,34 @@ If in doubt use B<-X> as that will most likely do what is needed.
 See also: B<-X> B<--xargs>
 
 
+=item B<--match> I<regexp> (alpha testing)
+
+Match input source with regexp to set replacement fields.
+
+Each capture group i.e. '(...)' can be accessed with a replacement
+field. The replacement fields are named B<{m.n}> where m is the input
+source and n is the capture group number:
+
+  parallel --match '(.*),(.*)_(.*)' echo {1.2} {1.3} {1.1} \
+    ::: Gold,Heart_of
+  parallel --match '(.*),' --match '([a-z]+)' echo {1.1}{2.1} \
+    ::: Milli,bar ::: 10ways
+
+To reuse a B<--match> simply use B<+n> where n is the input
+source. E.g. B<+2> for the second:
+
+  parallel --match +2 --match '([A-Za-z]+)' echo {1.1} {2.1} \
+    ::: /Improbability/ ::: 10drive
+
+To only set B<--match> for input source 2, make a dummy B<--match> for
+input source 1:
+
+  parallel --match '' --match '([a-z]+)' echo {1} {2.1} \
+    ::: Telephone ::: 10sanitizer
+
+See also: B<{>I<n>B<}>
+
+
 =item B<--memfree> I<size>
 
 Minimum memory free when starting another job.
@@ -2759,10 +2787,10 @@ the replacement string and adding a regular expression between the
 parenthesis. The matching string will be inserted as $$1:
 
   parallel --rpl '{%(.*?)} s/$$1//' echo {%.tar.gz} ::: my.tar.gz
-  parallel --rpl '{:%(.+?)} s:$$1(\.[^/]+)*$::' \
-    echo {:%_file} ::: my_file.tar.gz
-  parallel -n3 --rpl '{/:%(.*?)} s:.*/(.*)$$1(\.[^/]+)*$:$1:' \
-    echo job {#}: {2} {2.} {3/:%_1} ::: a/b.c c/d.e f/g_1.h.i
+  parallel --rpl '{:+(.+?)} s:$$1(\.[^/]+)*$::' \
+    echo {:+_file} ::: my_file.tar.gz
+  parallel -n3 --rpl '{/:+(.*?)} s:.*/(.*)$$1(\.[^/]+)*$:$1:' \
+    echo job {#}: {2} {2.} {3/:+_1} ::: a/b.c c/d.e f/g_1.h.i
 
 You can even use multiple matches:
 

@@ -8,7 +8,75 @@
 # Each should be taking 10-30s and be possible to run in parallel
 # I.e.: No race conditions, no logins
 
-par_tee_too_many_args() {
+par_--match() {
+    export PARALLEL=-k
+    echo Basic match
+    parallel --match '(.*)/([a-zA-Z]+)' echo {1.2} {1.1} \
+	     ::: works/This "works, too"/This
+
+    echo Simple CSV-parsing
+    echo https://gnu.org/s/parallel,myfile |
+	parallel --match '(.*),(.*)' echo url={1.1} filename={1.2}
+
+    echo Dummy --match for input source 1, real --match for input source 2
+    parallel --match '' --match '(.*)/([A-Z]+)' echo {2.1} {1} ::: works ::: This/SKIP
+
+    echo Reuse --match
+    parallel --match +2 --match '([A-Z]+)' echo {2.1} {1.1} \
+	     ::: ignoreOK ::: ignoreALL
+
+    echo With --header :
+    parallel --header : --match +2 --match '([A-Z]+)' echo {B.1} {A.1} \
+	     ::: A ignoreOK ::: B ignoreALL
+
+    echo Failure to match/Partial match
+    parallel --match '([a-z]+)' echo {1.1} ::: matches FAILS MATCHESpartly
+    
+    echo Test error: missing --match
+    parallel --match 'dummy' echo {2.1} ::: should fail
+
+    echo 'Test error: \001 in match'
+    ctrl_a=$(perl -e 'printf "%c",1')
+    parallel --match "$ctrl_a" echo {1.1} ::: fail
+
+    echo From man parallel_examples
+    parallel --match '(.)' --dr 'mkdir -p {1.1} && mv {} {1.1}' ::: afile bfile adir
+    parallel --match '(.).* (.*)' echo {1.1}. {1.2} \
+	     ::: "Arthur Dent" "Ford Prefect" "Tricia McMillan" "Zaphod Beeblebrox"
+    parallel --match '(.*)/(.*)/(.*)' echo {1.3}-{1.1}-{1.2} \
+	     ::: 12/31/1969 01/19/2038 06/01/2002
+    parallel --match 'https://(.*?)/(.*)' echo Domain: {1.1} Path: {1.2} \
+	     ::: https://example.com/dir/page https://gnu.org/s/parallel
+    parallel --match '(.*),(.*)' echo Second: {1.2}, First: {1.1} \
+	     ::: "Arthur,Babel fish" "Adams,Betelgeuse" "Arcturan,Bistro"
+    parallel --match '([a-z])([a-z]*) ([a-z])([a-z]*)' \
+	     echo '{=1.1 $_=uc($_) =}{1.2} {=1.3 $_=uc($_) =}{1.4}' \
+	     ::: "pan galactic" "gargle blaster"
+    dial=(
+	"DK(Denmark) 00,45"
+	"US(United States) 011,1"
+	"JP(Japan) 010,81"
+	"AU(Australia) 0011,61"
+	"CA(Canada) 011,1"
+	"RU(Russia) 810,7"
+	"TH(Thailand) 001,66"
+	"TW(Taiwan) 002,886"
+    )
+    parallel --match '(.*)\((.*)\) (.*),(.*)' --match +1 \
+	     echo From {1.1}/{1.2} to {2.1}/{2.2} dial {1.3}-{2.4} \
+	     ::: "${dial[@]}" ::: "${dial[@]}"
+    
+    echo Capture groups CSV-parsing - not implemented
+    echo https://gnu.org/s/parallel,myfile |
+	parallel --match '(?<url>.*),(?<file>.*)' echo url={url} filename={file}
+
+    echo Non posistional replacement fields - not implemented
+    parallel --match '(.*),(.*)_(.*)' echo {.2} {.3} {.1} ::: Gold,Heart_of
+
+    echo TODO Ignore case?
+}
+
+par__tee_too_many_args() {
     echo '### Fail if there are more arguments than --jobs'
     seq 11 | stdout parallel -k --tag --pipe -j4 --tee grep {} ::: {1..4}
     tmp=`mktemp`
@@ -48,7 +116,7 @@ par__load_from_PARALLEL() {
 	zcat | sort -n | md5sum
 }
 
-par_quote_special_results() {
+par__quote_special_results() {
     echo "### Test --results on file systems with limited UTF8 support"
     export LC_ALL=C
     doit() {
@@ -217,7 +285,7 @@ par_opt_arg_eaten() {
     printf '1\0002\0003\0004\0005\000' | stdout parallel -k -0 -i repl echo repl OK
 }
 
-par_nice() {
+par__nice() {
     echo 'Check that --nice works'
     # parallel-20160422 OK
     check_for_2_bzip2s() {
@@ -342,7 +410,7 @@ par_END() {
     (echo include this; echo END; echo not this) | parallel -k --eof END echo
 }
 
-par_xargs_compat() {
+par__xargs_compat() {
     echo xargs compatibility
     a_b-c() { echo a_b; echo c; }
     a_b_-c-d() { echo a_b' '; echo c; echo d; }
