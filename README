@@ -1,3 +1,41 @@
+                Silence Parallel
+
+This is a fork of GNU Parallel. It offers the the addition of not being
+constantly annoyed by not have run the citation sub command.
+
+The rationale behind this change is that it is not nice to force people
+to type will cite when using a program for simple personal use or keeping
+track of the number of times that you have use the program for personal
+purposes.
+
+This forks offers a parallel command which is silent. It won't count you
+how many times you use it and it won't bother you constantly with logs
+about citing nor require you to type "will cite" as a friendly program must do.
+Other than that this fork remains fully compatible with the original with the
+mayor difference that the "--citation" flag results in a NOOP instead of
+ignoring other arguments or options.
+However, if you intend to use the program for academic purposes,
+you should follow the will of the author and cite the original project.
+This is a great tool which deserves support and maybe one day the upstream
+will make the program more friendly and this fork won't be needed.
+
+This fork does not offer the 10 second install. Instead you should be able
+to copy the required files from this repository and place them in your path.
+> cp src/parallel src/sem src/sql src/niceload /directory/in/your/path
+Or follow the instructions in this file below.
+
+If you do prefer to use the original project but you don't want to be
+forced to type "will cite", here some tips to use original parallel.
+
+- Use the "--will-cite" argument flag which will silence logs for a single execution.
+- Create a "will-cite" file in parallel home where parallel home is one of the following:
+    - PARALLEL_HOME environment variable
+    - $HOME/.parallel
+  You can run something like this:
+  "mkdir -p ~/.parallel && touch ~/.parallel/will-cite".
+  Optionally if you already used parallel, you can remove the file
+  "runs-without-willing-to-cite" and free some precious 4KiB from your storage.
+
 
 			     GNU Parallel
 
