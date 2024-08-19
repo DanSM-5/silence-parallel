@@ -413,7 +413,7 @@ env_parallel() {
     unset _get_ignored_VARS
 
     # --record-env
-    if perl -e 'exit grep { /^--record-env$/ } @ARGV' -- "$@"; then
+    if perl -e 'exit grep { /^--record-?env$/ } @ARGV' -- "$@"; then
 	true skip
     else
 	(_names_of_ALIASES;
@@ -605,7 +605,7 @@ _parset_main() {
     fi
     if [ "$_parset_NAME" = "--version" ] ; then
 	# shellcheck disable=SC2006
-	echo "parset 20240522 (GNU parallel `parallel --minversion 1`)"
+	echo "parset 20240722 (GNU parallel `parallel --minversion 1`)"
 	echo "Copyright (C) 2007-2024 Ole Tange, http://ole.tange.dk and Free Software"
 	echo "Foundation, Inc."
 	echo "License GPLv3+: GNU GPL version 3 or later <https://gnu.org/licenses/gpl.html>"

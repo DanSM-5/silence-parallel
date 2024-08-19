@@ -548,7 +548,7 @@ parse_options();
 
 my $pass_through_options = (defined $::opt_p) ? join(" ",@{$::opt_p}) : "";
 my $dburl_or_alias = shift;
-if (not defined $dburl_or_alias) { Usage("No DBURL given"); exit -1; }
+if (not defined $dburl_or_alias) { usage("No DBURL given"); exit -1; }
 my %dburl = parse_dburl(get_alias($dburl_or_alias));
 
 my $interactive_command;
@@ -670,7 +670,7 @@ $Global::Initfile && unlink $Global::Initfile;
 exit ($err);
 
 sub parse_options {
-    $Global::version = 20240522;
+    $Global::version = 20240722;
     $Global::progname = 'sql';
 
     # This must be done first as this may exec myself
@@ -716,7 +716,7 @@ sub parse_options {
 	       "verbose|v" => \$::opt_verbose,
 	) || die_usage();
 
-    if(defined $::opt_help) { die_usage(); }
+    if(defined $::opt_help) { usage(); exit(0); }
     if(defined $::opt_version) { version(); exit(0); }
     $Global::debug = $::opt_debug;
 }
@@ -865,8 +865,8 @@ sub oracle_commands {
 sub sqlite_commands {
     my ($database_driver,%opt) = (@_);
     if(not find_command_in_path($database_driver)) {
-	print STDERR "Database driver '$database_driver' not supported\n";
-	exit -1;
+	print STDERR "sql: Database driver '$database_driver' not supported\n";
+	exit 255;
     }
     my $sep = defined($::opt_s) ? "-separator '$::opt_s'" : "";
     my $password = defined($opt{'password'}) ? "--password=".$opt{'password'} : "";
@@ -1073,15 +1073,6 @@ sub find_command_in_path {
     return $path;
 }
 
-sub Usage {
-    if(@_) {
-	print "Error:\n";
-	print map{ "$_\n" } @_;
-	print "\n";
-    }
-    print "sql [-hnr] [--table-size] [--db-size] [-p pass-through] [-s string] dburl [command]\n";
-}
-
 sub get_alias {
     my $alias = shift;
     $alias =~ s/^(sql:)*//; # Accept aliases prepended with sql:
@@ -1134,7 +1125,7 @@ sub get_alias {
     if($dburl) {
 	return get_alias($dburl.$rest);
     } else {
-	Usage("$alias is not defined in @search");
+	usage("$alias is not defined in @search");
 	exit(-1);
     }
 }
@@ -1199,7 +1190,7 @@ sub parse_dburl {
 	      " port ", $options{port}, " database ", $options{database},
 	      " query ",$options{query}, "\n");
     } else {
-	Usage("$url is not a valid DBURL");
+	usage("$url is not a valid DBURL");
 	exit -1;
     }
     return %options;
@@ -1262,9 +1253,13 @@ sub die_usage {
 
 sub usage {
     # Returns: N/A
+    if(@_) {
+	print map{ "$Global::progname: Error: $_\n" } @_;
+	print "\n";
+    }
     print "Usage:\n";
-    print "$Global::progname [options] dburl [sqlcommand]\n";
-    print "$Global::progname [options] dburl < sql_command_file\n";
+    print "$Global::progname [-hnr] [--table-size] [--db-size] [-p pass-through] [-s string] dburl [sqlcommand]\n";
+    print "$Global::progname [-hnr] [--table-size] [--db-size] [-p pass-through] [-s string] dburl < sql_command_file\n";
     print "\n";
     print "See 'man $Global::progname' for the options\n";
 }

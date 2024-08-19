@@ -62,28 +62,34 @@ start_centos3
     cd testsuite/ 2>/dev/null
     cd ..
     ssh $SSHLOGIN1 'mkdir -p .parallel bin; touch .parallel/will-cite'
-    scp -q .*/src/{parallel,sem,sql,niceload,env_parallel*} $SSHLOGIN1:bin/
-    ssh $SSHLOGIN1 'echo PATH=\$PATH:\$HOME/bin >> .bashrc'
+    scp -q src/{parallel,sem,sql,niceload,env_parallel*} $SSHLOGIN1:bin/
+    if ssh $SSHLOGIN1 parallel ::: true ; then
+	true
+    else
+	ssh $SSHLOGIN1 'echo PATH=\$PATH:\$HOME/bin >> .bashrc'
+    fi
+    
     ssh $SSHLOGIN1 '[ -e .ssh/id_rsa.pub ] || ssh-keygen -t rsa -P "" -f .ssh/id_rsa'
     # Allow login from centos3 to $SSHLOGIN2 (that is shellshock hardened)
     ssh $SSHLOGIN1 cat .ssh/id_rsa.pub | ssh $SSHLOGIN2 'cat >>.ssh/authorized_keys'
     ssh $SSHLOGIN1 'cat .ssh/id_rsa.pub >>.ssh/authorized_keys; chmod 600 .ssh/authorized_keys'
     ssh $SSHLOGIN1 'ssh -o StrictHostKeyChecking=no localhost true; ssh -o StrictHostKeyChecking=no '$SSHLOGIN2' true;'
+    ssh $SSHLOGIN1 parallel echo {}: ssh $SSHLOGIN1 parallel ::: OK
 ) &
 
-. `which env_parallel.bash`
+. env_parallel.bash
 env_parallel --session
 
 par_shellshock_bug() {
     bash -c 'echo bug \#43358: shellshock breaks exporting functions using --env name;
       echo Non-shellshock-hardened to non-shellshock-hardened;
-      funky() { echo Function $1; };
+      funky() { echo OK: Function $1; };
       export -f funky;
       PARALLEL_SHELL=bash parallel --env funky -S localhost funky ::: non-shellshock-hardened'
 
     bash -c 'echo bug \#43358: shellshock breaks exporting functions using --env name;
       echo Non-shellshock-hardened to shellshock-hardened;
-      funky() { echo Function $1; };
+      funky() { echo OK: Function $1; };
       export -f funky;
       PARALLEL_SHELL=bash parallel --env funky -S '$SSHLOGIN2' funky ::: shellshock-hardened'
 }
@@ -94,7 +100,7 @@ par_shellshock_bug() {
 export LC_ALL=C
 export TMPDIR=/tmp
 unset DISPLAY
-env_parallel --env par_shellshock_bug --env LC_ALL --env SSHLOGIN2 --env _ \
+env_parallel --env par_shellshock_bug --env LC_ALL --env SSHLOGIN2 \
 	     -vj9 -k --joblog /tmp/jl-`basename $0` --retries 3 \
 	     -S $SSHLOGIN1 --tag '{} 2>&1' \
 	     ::: $(compgen -A function | grep par_ | sort) \

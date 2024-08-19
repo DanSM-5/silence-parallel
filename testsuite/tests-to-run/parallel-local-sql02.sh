@@ -7,9 +7,10 @@
 # GNU Parallel SQL tests
 # The tests must be able to run in parallel
 
+me=$(whoami)
 export SQLITE=sqlite3:///%2Frun%2Fshm%2Fparallel.db
-export PG=pg://`whoami`:`whoami`@localhost/`whoami`
-export MYSQL=mysql://`whoami`:`whoami`@lo/`whoami`
+export PG=pg://$me:$me@localhost/$me
+export MYSQL=mysql://$me:$me@/$me
 export CSV=csv:///%2Frun%2Fshm%2Fcsv
 
 rm -f /run/shm/parallel.db

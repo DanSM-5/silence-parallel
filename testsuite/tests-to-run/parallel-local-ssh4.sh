@@ -25,22 +25,24 @@ par__test_different_rsync_versions() {
     echo '### different versions of rsync need fixups'
     echo '### no output is good'
     doit() {
-	rm -f 'a`b`c\<d\$e\{#\}g\"h\ i'$2 'a`b`c\<d\$e\{#\}g\"h\ i'$2.out
-	touch 'a`b`c\<d\$e\{#\}g\"h\ i'$2
+	full=$1
+	short=$2
+	rm -f 'a`b`c\<d\$e\{#\}g\"h\ i'$short 'a`b`c\<d\$e\{#\}g\"h\ i'$short.out
+	touch 'a`b`c\<d\$e\{#\}g\"h\ i'$short
 	TMPDIR=/tmp tmp=$(mktemp -d)
 	(
-	    echo "#!/bin/bash"
-	    echo $1' "$@"'
+	    echo '#!/bin/bash'
+	    echo $full' "$@"'
 	) > "$tmp"/rsync
 	chmod +x "$tmp"/rsync
 	PATH="$tmp":"$PATH"
 	# Test basic rsync
-	if stdout rsync "$tmp"/rsync sh@lo:rsync.$2 >/dev/null ; then
+	if stdout rsync "$tmp"/rsync sh@lo:rsync.$short >/dev/null ; then
 	   echo Basic use works: $2
-	   stdout parallel --trc {}.out -S sh@lo cp {} {}.out ::: 'a`b`c\<d\$e\{#\}g\"h\ i'$2
-	   stdout rm 'a`b`c\<d\$e\{#\}g\"h\ i'$2 'a`b`c\<d\$e\{#\}g\"h\ i'$2.out
+	   stdout parallel --trc {}.out -S sh@lo cp {} {}.out ::: 'a`b`c\<d\$e\{#\}g\"h\ i'$short
+	   stdout rm 'a`b`c\<d\$e\{#\}g\"h\ i'$short 'a`b`c\<d\$e\{#\}g\"h\ i'$short.out
 	else
-	    echo Basic use failed - not tested: $2
+	    echo Basic use failed - not tested: $short
 	fi
 	rm -rf "$tmp"
     }
@@ -187,7 +189,8 @@ par__--tmux_different_shells() {
 }
 
 par_--tmux_length() {
-    echo '### works'
+    echo '### tmux examples that earlier blocked'
+    echo 'Runtime 14 seconds on non-loaded machine'
     short_TMPDIR() {
 	# TMPDIR must be short for -M                                                         
 	export TMPDIR=/tmp/ssh/'                                                              
@@ -234,5 +237,5 @@ par_z_multiple_hosts_repeat_arg() {
 
 export -f $(compgen -A function | grep par_)
 compgen -A function | G par_ "$@" | LC_ALL=C sort |
-    parallel --timeout 10000% -j6 --tag -k --joblog /tmp/jl-`basename $0` '{} 2>&1' |
+    parallel --timeout 250 -j6 --tag -k --joblog /tmp/jl-`basename $0` '{} 2>&1' |
     perl -pe 's:/usr/bin:/bin:g;'

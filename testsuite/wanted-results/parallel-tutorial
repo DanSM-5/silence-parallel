@@ -8,7 +8,6 @@
   160d3159 9480cf5c a101512f 150b7ac0 206a65dc 86f2bb6b bdf1a2bc 96bc6d06
   7f8237c2 0964b67f bccf8a93 332528fa 11e5ab43 2a6226a6 ceb197ab 7f03c061
   $ bash install.sh
-/usr/bin/bash: -c: line 1: `     fetch -o - http://pi.dk/3 ) > install.sh'
   parallel -k echo ::: A B C > abc-file
   parallel -k echo ::: D E F > def-file
   perl -e 'printf "A\0B\0C\0"' > abc0-file
@@ -19,10 +18,7 @@
   perl -e 'for(1..1000000){print "$_\n"}' > num1000000
   (echo %head1; echo %head2; \
 sleep .3
-/usr/bin/bash: -c: line 3: syntax error: unexpected end of file
-sleep .3
    perl -e 'for(1..10){print "$_\n"}') > num_%header
-/usr/bin/bash: -c: line 1: `   perl -e 'for(1..10){print "$_\n"}') > num_%header'
   perl -e 'print "HHHHAAABBBCCC"' > fixedlen
   parallel echo ::: A B C
   parallel -a abc-file echo
@@ -349,7 +345,6 @@ foo
   perl -e 'print "@ARGV\n"'
   [CTRL-D]
 /usr/bin/bash: line 2: Warning:: command not found
-/usr/bin/bash: -c: line 3: `  Warning: are doing (in which case: YOU ARE AWESOME!) or you forgot'
   parallel --trim r echo pre-{}-post ::: ' A '
 pre- A-post
   parallel --trim l echo pre-{}-post ::: ' A '
@@ -499,7 +494,6 @@ Computer:jobs running/jobs completed/%of started jobs/Average seconds to complet
   seq 1000 | parallel -j10 --bar '(echo -n {};sleep 0.1)' \
     2> >(perl -pe 'BEGIN{$/="\r";$|=1};s/\r/\n/g' |
          zenity --timeout=15 --progress --auto-kill --auto-close)
- 
   parallel --joblog /tmp/log exit  ::: 1 2 3 0
   cat /tmp/log;
   parallel --joblog /tmp/log exit  ::: 1 2 3 0
@@ -726,8 +720,6 @@ BASH_FUNC_replace_tmpdir%%
 BASH_FUNC_run_once%%
 BASH_FUNC_run_test%%
 _
-mysqlrootpass
-oracle_password
 qTMPDIR
 qqTMPDIR
 testsuitedir
@@ -984,9 +976,11 @@ foo quuz
 bar baz
 bar quuz
   sql $DBURL 'SELECT * FROM mytable ORDER BY Seq;'
-Error:
-SELECT * FROM mytable ORDER BY Seq; is not a valid DBURL
-sql [-hnr] [--table-size] [--db-size] [-p pass-through] [-s string] dburl [command]
+sql: Error: SELECT * FROM mytable ORDER BY Seq; is not a valid DBURL
+Usage:
+sql [-hnr] [--table-size] [--db-size] [-p pass-through] [-s string] dburl [sqlcommand]
+sql [-hnr] [--table-size] [--db-size] [-p pass-through] [-s string] dburl < sql_command_file
+See 'man sql' for the options
   parallel --sqlmaster $DBURLTABLE echo ::: foo bar ::: baz quuz
 parallel: Error: echo is not a valid DBURL
   parallel --sqlworker $DBURLTABLE echo ::: foo bar ::: baz quuz
@@ -1083,7 +1077,6 @@ Warning: unknown mime-type for "Arguments @ARGV\n" -- using "application/octet-s
 Error: no such file "Arguments @ARGV\n"
   #!/usr/bin/parallel --shebang-wrap /usr/bin/python
   print 'Arguments', str(sys.argv)
-/usr/bin/bash: -c: line 4: `  print 'Arguments', str(sys.argv)'
   #!/usr/bin/parallel --shebang-wrap /bin/bash
   echo Arguments "$@"
 Arguments
@@ -1096,10 +1089,8 @@ Arguments
   #!/usr/bin/parallel --shebang-wrap /usr/bin/Rscript --vanilla --slave
   args <- commandArgs(trailingOnly = TRUE)
   print(paste("Arguments ",args))
-/usr/bin/bash: -c: line 3: `  args <- commandArgs(trailingOnly = TRUE)'
   #!/usr/bin/parallel --shebang-wrap ARG={} /usr/bin/gnuplot
   print "Arguments ", system('echo $ARG')
-/usr/bin/bash: -c: line 3: `  print "Arguments ", system('echo $ARG')'
   #!/usr/bin/parallel --shebang-wrap /usr/bin/ruby
   print "Arguments "
   puts ARGV
@@ -1113,12 +1104,9 @@ Error: no such file "Arguments "
     printf (" %s", arg_list{i});
   endfor
   printf ("\n");
-/usr/bin/bash: -c: line 3: `  printf ("Arguments");'
   #!/usr/bin/parallel --shebang-wrap /usr/bin/clisp
   (format t "~&~S~&" 'Arguments)
   (format t "~&~S~&" *args*)
-/usr/bin/bash: -c: line 3: unexpected EOF while looking for matching `''
-/usr/bin/bash: -c: line 5: syntax error: unexpected end of file
   #!/usr/bin/parallel --shebang-wrap /usr/bin/php
   <?php
   echo "Arguments";
@@ -1130,11 +1118,9 @@ Error: no such file "Arguments "
   ?>
 Arguments
 /usr/bin/bash: line 2: ?php: No such file or directory
-/usr/bin/bash: -c: line 4: `  foreach(array_slice($argv,1) as $v)'
   #!/usr/bin/parallel --shebang-wrap /usr/bin/node
   var myArgs = process.argv.slice(2);
   console.log('Arguments ', myArgs);
-/usr/bin/bash: -c: line 1: `  var myArgs = process.argv.slice(2);'
   #!/usr/bin/parallel --shebang-wrap /usr/bin/lua
   io.write "Arguments"
   for a = 1, #arg do
@@ -1143,11 +1129,9 @@ Arguments
   end
   print(")
 /usr/bin/bash: line 3: io.write: command not found
-/usr/bin/bash: -c: line 4: `  for a = 1, #arg do'
   #!/usr/bin/parallel --shebang-wrap ARGV={} /usr/bin/csharp
   var argv = Environment.GetEnvironmentVariable("ARGV");
   print("Arguments "+argv);
-/usr/bin/bash: -c: line 3: `  var argv = Environment.GetEnvironmentVariable("ARGV");'
   sem 'sleep 1; echo The first finished' &&
     echo The first is now running in the background &&
     sem 'sleep 1; echo The second finished' &&

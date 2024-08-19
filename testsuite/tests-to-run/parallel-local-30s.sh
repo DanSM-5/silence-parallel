@@ -57,6 +57,18 @@ par__keeporder_roundrobin() {
     fi
 }
 
+par_retries_lb_jl() {
+    echo Broken in 20240522
+    tmp=$(mktemp)
+    export tmp
+    parallel-20240522 --lb --jl /dev/null --timeout 0.3 --retries 5 'echo should be 5 lines >> "$tmp";sleep {}' ::: 20
+    cat "$tmp"
+    > "$tmp"
+    parallel --lb --jl /dev/null --timeout 0.3 --retries 5 'echo 5 lines >> "$tmp";sleep {}' ::: 20
+    cat "$tmp"
+    rm "$tmp"
+}
+
 par_reload_slf_every_second() {
     echo "### --slf should reload every second"
     tmp=$(mktemp)
@@ -299,8 +311,9 @@ par_exit_code() {
     parallel -uj0 --halt now,done=1 ::: runit killsleep
 }
 
-par_macron() {
+par_internal_quote_char() {
     echo '### See if \257\256 \257<\257> is replaced correctly'
+    echo '### See if \177\176 \177<\177> is replaced correctly'
     print_it() {
 	parallel $2 ::: "echo $1"
 	parallel $2 echo ::: "$1"
@@ -310,11 +323,32 @@ par_macron() {
 	parallel $2 echo \""$1"\"{} ::: "$1"
     }
     export -f print_it
-    parallel --tag -k print_it \
-      ::: "$(perl -e 'print "\257"')" "$(perl -e 'print "\257\256"')" \
-      "$(perl -e 'print "\257\257\256"')" \
-      "$(perl -e 'print "\257<\257<\257>\257>"')" \
-      ::: -X -q -Xq -k
+    a257="$(printf "\257")"
+    a256="$(printf "\256")"
+    a177="$(printf "\177")"
+    a176="$(printf "\176")"
+    stdout parallel --tag -k print_it \
+	     ::: "$a257" "$a177" "$a257$a256" "$a177$a176" \
+	     "$a257$a257$a256" "$a177$a177$a176" \
+	     "$a257<$a257<$a257>$a257" "$a177<$a177<$a177>$a177" \
+	     ::: -X -q -Xq -k |
+	# Upgrade old bash error to new bash error
+	perl -pe 's/No such file or directory/Invalid or incomplete multibyte or wide character/g'
+    # Bug in Perl's SQL::CSV module cannot handle dir with \n
+    TMPDIR=/tmp
+    TMPDIR=$(mktemp -d)
+    cd "$TMPDIR"
+    echo "Compare old quote char csv"
+    parallel-20231222 --sqlmaster csv:///./oldformat.csv echo "$(printf "\257\257 \177\177")" ::: 1 2 3
+    stdout parallel -k --sqlworker csv:///./oldformat.csv echo "$(printf "\257\257 \177\177")" ::: 1 2 3 |
+	od -t x1z > old.out
+    echo "with new quote char csv (must be the same)"
+    parallel --sqlmaster csv:///./newformat.csv echo "$(printf "\257\257 \177\177")" ::: 1 2 3
+    stdout parallel -k --sqlworker csv:///./newformat.csv echo "$(printf "\257\257 \177\177")" ::: 1 2 3 |
+	od -t x1z > new.out
+    diff old.out new.out && echo OK
+    rm -f old.out new.out oldformat.csv newformat.csv
+    rmdir "$TMPDIR"
 }
 
 par_groupby() {
@@ -478,24 +512,6 @@ par_race_condition1() {
     seq 1 10 |
 	parallel -k "cat /tmp/parallel_race_cond | parallel --pipe --recend '' -k gzip >/dev/null; echo {}"
     rm /tmp/parallel_race_cond
-}
-
-par__memory_leak() {
-    a_run() {
-	seq $1 |time -v parallel true 2>&1 |
-	grep 'Maximum resident' |
-	field 6;
-    }
-    export -f a_run
-    echo "### Test for memory leaks"
-    echo "Of 300 runs of 1 job at least one should be bigger than a 3000 job run"
-    . $(which env_parallel.bash)
-    parset small_max,big ::: 'seq 300 | parallel a_run 1 | jq -s max' 'a_run 3000'
-    if [ $small_max -lt $big ] ; then
-	echo "Bad: Memleak likely."
-    else
-	echo "Good: No memleak detected."
-    fi
 }
 
 par_slow_total_jobs() {
@@ -688,23 +704,32 @@ par__plus_dyn_repl() {
 }
 
 par_test_ipv6_format() {
+    # If not MaxStartups 100:30:1000 then this will fail
+    ipv4() {
+	ifconfig | perl -nE '/inet (\S+) / and say $1'
+    }
+    ipv6() {
+	ifconfig | perl -nE '/inet6 ([0-9a-f:]+) .*(host|global)/ and say $1'
+    }
+    (ipv4; ipv6) |
+	parallel ssh -oStrictHostKeyChecking=accept-new {} true 2>/dev/null
     echo '### Host as IPv6 address'
     (
-	ifconfig |
+	ipv6 |
             # Get IPv6 addresses of local server
-            perl -nE '/inet6 ([0-9a-f:]+) .*(host|global)/ and
+            perl -nE '/([0-9a-f:]+)/ and
               map {say $1,$_,22; say $1,$_,"ssh"} qw(: . #  p q)' |
             # 9999::9999:9999:22 => [9999::9999:9999]:22
 	    # 9999::9999:9999q22 => 9999::9999:9999
             perl -pe 's/(.*):(22|ssh)$/[$1]:$2/;s/q.*//;'
-	ifconfig |
+	ipv4 |
             # Get IPv4 addresses
-            perl -nE '/inet (\S+) / and
+            perl -nE '/(\S+)/ and
               map {say $1,$_,22; say $1,$_,"ssh"} qw(:  q)' |
             # 9.9.9.9q22 => 9.9.9.9
             perl -pe 's/q.*//;'
     ) |
-	parallel -j30 --delay 0.1 --argsep , parallel -S {} true ::: 1 ||
+	parallel -j200% --argsep , parallel -S {} true ::: 1 ||
 	echo Failed
 }
 

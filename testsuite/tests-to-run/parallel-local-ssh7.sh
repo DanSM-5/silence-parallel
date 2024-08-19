@@ -6,6 +6,25 @@
 
 echo '### test --env _, env_parallel for different shells'
 
+retry() {
+    times=$1
+    shift
+    declare -a array_runs
+    first_run=$($@)
+    array_runs+=("$first_run")
+    for ((i=1; i<=$times; i++)); do
+        run=$($@)
+        exit=$?
+        if [[ " ${array_runs[@]} " =~ " $run " ]]; then
+            echo "$run"
+            return $exit
+        fi
+    done
+    echo "$run"
+    return $exit
+}
+export -f retry
+
 #
 ## par_*_man = tests from the man page
 #
@@ -281,11 +300,11 @@ par__man_fish() {
 
     set myarray arrays 'with  = & " !'" '" work, too
     echo $myarray[1] $myarray[2] $myarray[3] $myarray[4]
+    echo "# these 4 fail often. Race condition?"
     env_parallel -k echo '$myarray[{}]' ::: 1 2 3 4
     env_parallel -k -S server echo '$myarray[{}]' ::: 1 2 3 4
     env_parallel -k --env myarray echo '$myarray[{}]' ::: 1 2 3 4
     env_parallel -k --env myarray -S server echo '$myarray[{}]' ::: 1 2 3 4
-
     env_parallel --argsep --- env_parallel -k echo ::: multi level --- env_parallel
 
     env_parallel ::: true false true false
@@ -295,7 +314,8 @@ par__man_fish() {
     echo exit value $status should be 255 `sleep 1`
 _EOF
   )
-  ssh fish@lo "$myscript" | LC_ALL=C sort
+  ssh fish@lo "$myscript"
+    #| LC_ALL=C sort
 }
 
 par__man_ksh() {
@@ -810,12 +830,7 @@ par_--env_underscore_fish() {
     set myarray and arrays in;
 
     echo Test copying;
-    env_parallel myfunc ::: work;
-    env_parallel -S server myfunc ::: work;
-    env_parallel --env myfunc,myvar,myarray,myecho myfunc ::: work;
-    env_parallel --env myfunc,myvar,myarray,myecho -S server myfunc ::: work;
-    env_parallel --env _ myfunc ::: work;
-    env_parallel --env _ -S server myfunc ::: work;
+    echo '*** Moved to parallel-ssh-fish.sh ***'
 
     echo Test ignoring;
     env_parallel --env _ -S server not_copied_alias ::: error=OK;
@@ -826,7 +841,9 @@ par_--env_underscore_fish() {
     echo Test single ignoring;
     echo myvar > ~/.parallel/ignored_vars;
     env_parallel --env _ myfunc ::: work;
+    sleep 0.1
     env_parallel --env _ -S server myfunc ::: work;
+    sleep 0.1
     echo myarray >> ~/.parallel/ignored_vars;
     env_parallel --env _ myfunc ::: work;
     env_parallel --env _ -S server myfunc ::: work;
@@ -842,11 +859,11 @@ par_--env_underscore_fish() {
     echo "OK if   ^^^^^^^^^^^^^^^^^ no myfunc" >&2;
 _EOF
   )
-
   # Old versions of fish sometimes throw up bugs all over,
   # but seem to work OK otherwise. So ignore these errors.
-  ssh fish@lo "$myscript" 2>&1 |
-      perl -ne '/fish:|fish\(/ and next; print'
+  stdout ssh fish@lo "$myscript" |
+      perl -ne '/^\^|fish:|fish\(/ and next; print' |
+      perl -pe 's/^[ ~^]+$//g'
 }
 
 par_--env_underscore_ksh() {
@@ -894,7 +911,11 @@ par_--env_underscore_ksh() {
     echo "OK if no myfunc         ^^^^^^^^^^^^^^^^^" >&2;
 _EOF
   )
-  ssh ksh@lo "$myscript"
+  stdout ssh ksh@lo "$myscript" |
+      # /bin/ksh[999]: myfunc[1]: myecho: not found
+      # =>
+      # /bin/ksh: myecho: not found
+      perl -pe 's/\[\d+\]:.*\[\d+\]:/:/;'
 }
 
 par_--env_underscore_mksh() {
@@ -909,6 +930,7 @@ par_--env_underscore_mksh() {
     . `which env_parallel.mksh`;
     env_parallel --record-env;
     alias myecho="echo \$myvar aliases in";
+    # The alias is replaced in the function
     myfunc() { myecho ${myarray[@]} functions $*; };
     myvar="variables in";
     myarray=(and arrays in);
@@ -932,9 +954,9 @@ par_--env_underscore_mksh() {
     env_parallel --env _ -S server myfunc ::: work;
     echo myecho >> ~/.parallel/ignored_vars;
     env_parallel --env _ myfunc ::: work;
-    echo "OK if no myecho    ^^^^^^^^^^^^^^^^^" >&2;
+    echo The myecho alias is replaced in the function causing this not to fail
     env_parallel --env _ -S server myfunc ::: work;
-    echo "OK if no myecho    ^^^^^^^^^^^^^^^^^" >&2;
+    echo The myecho alias is replaced in the function causing this not to fail
     echo myfunc >> ~/.parallel/ignored_vars;
     env_parallel --env _ myfunc ::: work;
     echo "OK if no myfunc         ^^^^^^^^^^^^^^^^^" >&2;
@@ -942,7 +964,8 @@ par_--env_underscore_mksh() {
     echo "OK if no myfunc         ^^^^^^^^^^^^^^^^^" >&2;
 _EOF
   )
-  ssh mksh@lo "$myscript"
+  stdout ssh mksh@lo "$myscript" |
+      perl -pe 's/^[EŴ]:/EW:/g'
 }
 
 par_--env_underscore_sh() {
@@ -2762,7 +2785,8 @@ par_env_parallel_--session_fish() {
     set -e PARALLEL_IGNORED_NAMES
 _EOF
   )
-  ssh fish@lo "$myscript" 2>&1
+  ssh fish@lo "$myscript" 2>&1 |
+      perl -pe 's/^[ ~^]+$//g'
 }
 
 par_env_parallel_--session_ksh() {
@@ -2942,7 +2966,8 @@ par_env_parallel_--session_mksh() {
     unset PARALLEL_IGNORED_NAMES
 _EOF
   )
-  ssh mksh@lo "$myscript"
+  stdout ssh mksh@lo "$myscript" |
+      perl -pe 's/^[EŴ]:/EW:/g'
 }
 
 par_env_parallel_--session_sh() {
@@ -3137,14 +3162,7 @@ _EOF
 
 export -f $(compgen -A function | grep par_)
 
-# --retries 2 due to ssh_exchange_identification: read: Connection reset by peer
-
-#compgen -A function | grep par_ | sort | parallel --delay $D -j$P --tag -k '{} 2>&1'
-#compgen -A function | grep par_ | sort |
-compgen -A function | G par_ "$@" | LC_ALL=C sort |
-#    parallel --joblog /tmp/jl-`basename $0` --delay $D -j$P --tag -k '{} 2>&1'
-    # 2019-07-14 200% too high for 16 GB/4 thread
-    parallel --joblog /tmp/jl-`basename $0` -j75% --retries 2 --tag -k '{} 2>&1' |
+clean_output() {
     perl -pe 's/line \d\d+/line 99/g;
               s/\d+ >= \d+/999 >= 999/;
               s/sh:? \d?\d\d:/sh: 999:/;
@@ -3156,3 +3174,18 @@ compgen -A function | G par_ "$@" | LC_ALL=C sort |
 	      s!/tmp/par-job-\d+_.....!script!g;
     	      s/script: \d\d+/script: 99/g;
 	      '
+}
+    
+# --retries 2 due to ssh_exchange_identification: read: Connection reset by peer
+
+#compgen -A function | grep par_ | sort | parallel --delay $D -j$P --tag -k '{} 2>&1'
+#compgen -A function | grep par_ | sort |
+compgen -A function | G par_ "$@" | LC_ALL=C sort | G -v fish |
+    # 2019-07-14 200% too high for 16 GB/4 thread
+    parallel --joblog /tmp/jl-`basename $0` -j75% --retries 2 --tag -k '{} 2>&1' |
+    clean_output
+
+compgen -A function | G par_ "$@" | LC_ALL=C sort | G fish |
+    # 2024-07-18 fish is prone to racing
+    parallel --joblog /tmp/jl-`basename $0` -j1 --retries 2 --tag -k '{} 2>&1' |
+    clean_output

@@ -37,7 +37,7 @@ par_influx() {
     (
 	# create database & table
 	sql influx:/// "CREATE DATABASE parallel;"
-	sql --show-databases influx:///
+	sql --show-databases influx:/// | grep -v $(whoami)
 	# insert
 	(echo INSERT cpu,host=serverA,region=us_west value=0.64;
 	 echo INSERT cpu,host=serverA,region=us_west value=0.65;
@@ -57,5 +57,5 @@ par_influx() {
 
 
 export -f $(compgen -A function | grep par_)
-compgen -A function | grep par_ | sort |
+compgen -A function | G "$@" par_ | sort |
     parallel -j0 --tag -k --joblog +/tmp/jl-`basename $0` '{} 2>&1'

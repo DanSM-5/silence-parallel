@@ -231,6 +231,6 @@ par__test_build_and_install() {
 #}
 
 export -f $(compgen -A function | grep par_)
-compgen -A function | grep par_ | LC_ALL=C sort |
+compgen -A function | G "$@" par_ | LC_ALL=C sort |
     parallel --timeout 1000% -j10 --tag -k --joblog /tmp/jl-`basename $0` '{} 2>&1' |
     perl -pe 's:/usr/bin:/bin:g'

@@ -1,12 +1,11 @@
 par_listproc	### Test --listproc
-par_listproc	SELECT	   CPU_TIME/100000, SYS.V_$SQL.SQL_TEXT, USERNAME FROM	   SYS.V_$SQL, SYS.V_$SESSION WHERE	SYS.V_$SQL.SQL_ID = SYS.V_$SESSION.SQL_ID(+) AND username IS NOT NULL ORDER BY CPU_TIME DESC
-par_listproc	                                                                                   *
-par_listproc	ERROR at line 1:
-par_listproc	ORA-00942: table or view does not exist
 par_listproc	
+par_listproc	CPU_TIME/100000 SQL_TEXT																																																																																																																												 USERNAME
+par_listproc	--------------- ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- --------------------------------------------------------------------------------------------------------------------------------
+par_listproc		1.99999 SELECT	 CPU_TIME/100000, SYS.V_$SQL.SQL_TEXT, USERNAME FROM	 SYS.V_$SQL, SYS.V_$SESSION WHERE	SYS.V_$SQL.SQL_ID = SYS.V_$SESSION.SQL_ID(+) AND username IS NOT NULL ORDER BY CPU_TIME DESC																																																																																																					 SYSTEM
 par_listproc	
 par_listproc	Id	User	Host	db	Command	Time	State	Info
-par_listproc	XXX	sqlunittest	localhost	sqlunittest	Query	0	starting	show processlist
+par_listproc	XXX	sqlunittest	localhost	sqlunittest	Query	0	init	show processlist
 par_multiarg_on_command_line	### Test oracle with multiple arguments on the command line
 par_multiarg_on_command_line	
 par_multiarg_on_command_line	'ARG
@@ -36,28 +35,52 @@ par_newline_on_commandline		 3
 par_newline_on_commandline	
 par_showdatabases	### Test --show-databases
 par_showdatabases	
-par_showdatabases	TABLESPACE_NAME 	       BLOCK_SIZE INITIAL_EXTENT NEXT_EXTENT MIN_EXTENTS MAX_EXTENTS   MAX_SIZE PCT_INCREASE MIN_EXTLEN STATUS	  CONTENTS  LOGGING   FOR EXTENT_MAN ALLOCATIO SEGMEN DEF_TAB_ RETENTION   BIG PREDICA ENC COMPRESS_FOR
-par_showdatabases	------------------------------ ---------- -------------- ----------- ----------- ----------- ---------- ------------ ---------- --------- --------- --------- --- ---------- --------- ------ -------- ----------- --- ------- --- ------------
-par_showdatabases	SYSTEM				     8192	   65536		       1  2147483645 2147483645 		  65536 ONLINE	  PERMANENT LOGGING   NO  LOCAL      SYSTEM    MANUAL DISABLED NOT APPLY   NO  HOST    NO
-par_showdatabases	SYSAUX				     8192	   65536		       1  2147483645 2147483645 		  65536 ONLINE	  PERMANENT LOGGING   NO  LOCAL      SYSTEM    AUTO   DISABLED NOT APPLY   NO  HOST    NO
-par_showdatabases	UNDOTBS1			     8192	   65536		       1  2147483645 2147483645 		  65536 ONLINE	  UNDO	    LOGGING   NO  LOCAL      SYSTEM    MANUAL DISABLED NOGUARANTEE NO  HOST    NO
-par_showdatabases	TEMP				     8192	 1048576     1048576	       1	     2147483645 	   0	1048576 ONLINE	  TEMPORARY NOLOGGING NO  LOCAL      UNIFORM   MANUAL DISABLED NOT APPLY   NO  HOST    NO
-par_showdatabases	USERS				     8192	   65536		       1  2147483645 2147483645 		  65536 ONLINE	  PERMANENT LOGGING   NO  LOCAL      SYSTEM    AUTO   DISABLED NOT APPLY   NO  HOST    NO
+par_showdatabases	TABLESPACE_NAME 	       BLOCK_SIZE INITIAL_EXTENT NEXT_EXTENT MIN_EXTENTS MAX_EXTENTS   MAX_SIZE PCT_INCREASE MIN_EXTLEN STATUS	  CONTENTS		LOGGING   FOR EXTENT_MAN ALLOCATIO SEGMEN DEF_TAB_ RETENTION   BIG PREDICA ENC COMPRESS_FOR		      DEF_INME DEF_INME DEF_INMEMORY_DI DEF_INMEMORY_COMP DEF_INMEMORY_ SHARED	      DEF_INDE INDEX_COMPRES DEF_CELLMEMORY   DEF_INMEMORY DEF_INMEMORY_SERVICE_NAME																																																																																																																										    LOST_WR C
+par_showdatabases	------------------------------ ---------- -------------- ----------- ----------- ----------- ---------- ------------ ---------- --------- --------------------- --------- --- ---------- --------- ------ -------- ----------- --- ------- --- ------------------------------ -------- -------- --------------- ----------------- ------------- ------------- -------- ------------- ---------------- ------------ ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- ------- -
+par_showdatabases	SYSTEM				     8192	   65536		       1  2147483645 2147483645 		  65536 ONLINE	  PERMANENT		LOGGING   YES LOCAL	 SYSTEM    MANUAL DISABLED NOT APPLY   YES HOST    NO				      DISABLED								SHARED	      DISABLED																																																																																																																																			    OFF     N
+par_showdatabases	SYSAUX				     8192	   65536		       1  2147483645 2147483645 		  65536 ONLINE	  PERMANENT		LOGGING   YES LOCAL	 SYSTEM    AUTO   DISABLED NOT APPLY   YES HOST    NO				      DISABLED								SHARED	      DISABLED																																																																																																																																			    OFF     N
+par_showdatabases	UNDOTBS1			     8192	   65536		       1  2147483645 2147483645 		  65536 ONLINE	  UNDO			LOGGING   NO  LOCAL	 SYSTEM    MANUAL DISABLED NOGUARANTEE YES HOST    NO				      DISABLED								SHARED	      DISABLED																																																																																																																																			    OFF     N
+par_showdatabases	TEMP				     8192	 1048576     1048576	       1	     2147483645 	   0	1048576 ONLINE	  TEMPORARY		NOLOGGING NO  LOCAL	 UNIFORM   MANUAL DISABLED NOT APPLY   NO  HOST    NO				      DISABLED								SHARED	      DISABLED																																																																																																																																			    OFF     N
+par_showdatabases	USERS				     8192	   65536		       1  2147483645 2147483645 		  65536 ONLINE	  PERMANENT		LOGGING   NO  LOCAL	 SYSTEM    AUTO   DISABLED NOT APPLY   YES HOST    NO				      DISABLED								SHARED	      DISABLED																																																																																																																																			    OFF     N
 par_showdatabases	
 par_showtables	### Test --show-tables
 par_showtables	
 par_showtables	
 par_showtables	
 par_showtables	--------------------------------------------------------------------------------------------------------------------------------
-par_showtables	7 rows selected.
-par_showtables	COUNTRIES
-par_showtables	DEPARTMENTS
-par_showtables	EMPLOYEES
-par_showtables	JOBS
-par_showtables	JOB_HISTORY
-par_showtables	LOCATIONS
+par_showtables	31 rows selected.
+par_showtables	AQ$_SCHEDULES
+par_showtables	HELP
+par_showtables	MVIEW$_ADV_AJG
+par_showtables	MVIEW$_ADV_BASETABLE
+par_showtables	MVIEW$_ADV_CLIQUE
+par_showtables	MVIEW$_ADV_ELIGIBLE
+par_showtables	MVIEW$_ADV_EXCEPTIONS
+par_showtables	MVIEW$_ADV_FILTER
+par_showtables	MVIEW$_ADV_FILTERINSTANCE
+par_showtables	MVIEW$_ADV_FJG
+par_showtables	MVIEW$_ADV_GC
+par_showtables	MVIEW$_ADV_INFO
+par_showtables	MVIEW$_ADV_JOURNAL
+par_showtables	MVIEW$_ADV_LEVEL
+par_showtables	MVIEW$_ADV_LOG
+par_showtables	MVIEW$_ADV_OUTPUT
+par_showtables	MVIEW$_ADV_PARAMETERS
+par_showtables	MVIEW$_ADV_PLAN
+par_showtables	MVIEW$_ADV_PRETTY
+par_showtables	MVIEW$_ADV_ROLLUP
+par_showtables	MVIEW$_ADV_SQLDEPEND
+par_showtables	MVIEW$_ADV_TEMP
+par_showtables	MVIEW$_ADV_WORKLOAD
 par_showtables	OBJECT_NAME
-par_showtables	REGIONS
+par_showtables	OL$
+par_showtables	OL$HINTS
+par_showtables	OL$NODES
+par_showtables	REDO_DB
+par_showtables	REDO_LOG
+par_showtables	SCHEDULER_JOB_ARGS_TBL
+par_showtables	SCHEDULER_PROGRAM_ARGS_TBL
+par_showtables	SQLPLUS_PRODUCT_PROFILE
 par_sql_from_url	### Test reading sql from url command line
 par_sql_from_url	Test reading SQL from command line
 par_sql_from_url	Yes it works
@@ -100,12 +123,18 @@ par_test_alias_with_statement	Query from stdin
 par_test_cyclic	### Test cyclic alias .sql/aliases
 par_test_cyclic	:cyclic3 is a cyclic alias
 par_test_dburl_colon	### Test dburl :
-par_test_dburl_colon	Error:
-par_test_dburl_colon	: is not defined in ~/.sql/aliases ~/.dburl.aliases /etc/sql/aliases /usr/local/bin/dburl.aliases /usr/local/bin/dburl.aliases.dist
+par_test_dburl_colon	sql: Error: : is not defined in ~/.sql/aliases ~/.dburl.aliases /etc/sql/aliases /usr/local/bin/dburl.aliases /usr/local/bin/dburl.aliases.dist
 par_test_dburl_colon	
-par_test_dburl_colon	sql [-hnr] [--table-size] [--db-size] [-p pass-through] [-s string] dburl [command]
+par_test_dburl_colon	Usage:
+par_test_dburl_colon	sql [-hnr] [--table-size] [--db-size] [-p pass-through] [-s string] dburl [sqlcommand]
+par_test_dburl_colon	sql [-hnr] [--table-size] [--db-size] [-p pass-through] [-s string] dburl < sql_command_file
+par_test_dburl_colon	
+par_test_dburl_colon	See 'man sql' for the options
 par_test_empty_dburl	### Test empty dburl
-par_test_empty_dburl	Error:
-par_test_empty_dburl	 is not a valid DBURL
+par_test_empty_dburl	sql: Error:  is not a valid DBURL
 par_test_empty_dburl	
-par_test_empty_dburl	sql [-hnr] [--table-size] [--db-size] [-p pass-through] [-s string] dburl [command]
+par_test_empty_dburl	Usage:
+par_test_empty_dburl	sql [-hnr] [--table-size] [--db-size] [-p pass-through] [-s string] dburl [sqlcommand]
+par_test_empty_dburl	sql [-hnr] [--table-size] [--db-size] [-p pass-through] [-s string] dburl < sql_command_file
+par_test_empty_dburl	
+par_test_empty_dburl	See 'man sql' for the options

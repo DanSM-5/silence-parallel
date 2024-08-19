@@ -134,12 +134,11 @@ stopvm:
 	parallel -j0 --tag -k '${stop}' ::: ${namedservers} || true
 
 startdb:
-	true TODO should start Oracle in vagrant
-startdb-old:
-	#echo shutdown abort | sudo su - oracle -c "sqlplus / as sysdba"
-	sudo parallel /etc/init.d/{} status '||' /etc/init.d/{} restart ::: postgresql mysql # oracle-xe
-	VBoxManage startvm OracleXE || true
-	parallel 'ping {} | read' :::  oracle11.tange.dk
+	sql oracle://SYSTEM:$$VM_ORACLE_PWD@/FREE "select 'Oracle is running' from dual;" || \
+	  (cd vagrant-projects/OracleDatabase/23.4.0-Free && vagrant up && \
+	   sql oracle://SYSTEM:$$VM_ORACLE_PWD@/FREE "select 'Oracle is running' from dual;")
+stopdb:
+	cd vagrant-projects/OracleDatabase/23.4.0-Free; vagrant suspend
 
 ### Distribution
 installparallel: ../src/parallel

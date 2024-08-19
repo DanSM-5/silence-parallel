@@ -69,47 +69,6 @@ par_--env_underscore_dash	/bin/dash: 1: myecho: not found
 par_--env_underscore_dash	OK if no myecho    ^^^^^^^^^^^^^^^^^
 par_--env_underscore_dash	script: 2: myecho: not found
 par_--env_underscore_dash	OK if no myecho    ^^^^^^^^^^^^^^^^^
-par_--env_underscore_fish	### fish
-par_--env_underscore_fish	Fish is broken
-par_--env_underscore_fish	### Testing of --env _
-par_--env_underscore_fish	Test copying
-par_--env_underscore_fish	variables in aliases and arrays in functions work
-par_--env_underscore_fish	variables in aliases and arrays in functions work
-par_--env_underscore_fish	variables in aliases and arrays in functions work
-par_--env_underscore_fish	variables in aliases and arrays in functions work
-par_--env_underscore_fish	variables in aliases and arrays in functions work
-par_--env_underscore_fish	variables in aliases and arrays in functions work
-par_--env_underscore_fish	Test ignoring
-par_--env_underscore_fish	script (line 99): 
-par_--env_underscore_fish	not_copied_alias 'error=OK'
-par_--env_underscore_fish	^
-par_--env_underscore_fish	script (line 99): 
-par_--env_underscore_fish	not_copied_func 'error=OK'
-par_--env_underscore_fish	^
-par_--env_underscore_fish	error=OK
-par_--env_underscore_fish	error=OK
-par_--env_underscore_fish	Test single ignoring
-par_--env_underscore_fish	aliases and arrays in functions work
-par_--env_underscore_fish	aliases and arrays in functions work
-par_--env_underscore_fish	aliases functions work
-par_--env_underscore_fish	aliases functions work
-par_--env_underscore_fish	      myecho $myarray functions $argv
-par_--env_underscore_fish	      ^
-par_--env_underscore_fish	in function 'myfunc' with arguments 'work'
-par_--env_underscore_fish	OK if   ^^^^^^^^^^^^^^^^^ no myecho
-par_--env_underscore_fish	script (line 4): 
-par_--env_underscore_fish	      myecho $myarray functions $argv
-par_--env_underscore_fish	      ^
-par_--env_underscore_fish	in function 'myfunc' with arguments 'work'
-par_--env_underscore_fish		called on line 99 of file script
-par_--env_underscore_fish	OK if   ^^^^^^^^^^^^^^^^^ no myecho
-par_--env_underscore_fish	myfunc work
-par_--env_underscore_fish	^
-par_--env_underscore_fish	OK if   ^^^^^^^^^^^^^^^^^ no myfunc
-par_--env_underscore_fish	script (line 6): 
-par_--env_underscore_fish	myfunc work
-par_--env_underscore_fish	^
-par_--env_underscore_fish	OK if   ^^^^^^^^^^^^^^^^^ no myfunc
 par_--env_underscore_ksh	### ksh
 par_--env_underscore_ksh	### Testing of --env _
 par_--env_underscore_ksh	variables in aliases in and arrays in functions work
@@ -128,7 +87,7 @@ par_--env_underscore_ksh	aliases in functions work
 par_--env_underscore_ksh	aliases in functions work
 par_--env_underscore_ksh	/bin/ksh: myecho: not found
 par_--env_underscore_ksh	OK if no myecho    ^^^^^^^^^^^^^^^^^
-par_--env_underscore_ksh	script[9]: myecho: not found
+par_--env_underscore_ksh	script: myecho: not found
 par_--env_underscore_ksh	OK if no myecho    ^^^^^^^^^^^^^^^^^
 par_--env_underscore_ksh	/bin/ksh: myfunc: not found
 par_--env_underscore_ksh	OK if no myfunc         ^^^^^^^^^^^^^^^^^
@@ -142,8 +101,8 @@ par_--env_underscore_mksh	variables in aliases in and arrays in functions work
 par_--env_underscore_mksh	variables in aliases in and arrays in functions work
 par_--env_underscore_mksh	variables in aliases in and arrays in functions work
 par_--env_underscore_mksh	variables in aliases in and arrays in functions work
-par_--env_underscore_mksh	W: script[9]: not_copied_alias: inaccessible or not found
-par_--env_underscore_mksh	W: script[9]: not_copied_func: inaccessible or not found
+par_--env_underscore_mksh	EW: script[9]: not_copied_alias: inaccessible or not found
+par_--env_underscore_mksh	EW: script[9]: not_copied_func: inaccessible or not found
 par_--env_underscore_mksh	error=OK
 par_--env_underscore_mksh	error=OK
 par_--env_underscore_mksh	aliases in and arrays in functions work
@@ -151,12 +110,12 @@ par_--env_underscore_mksh	aliases in and arrays in functions work
 par_--env_underscore_mksh	aliases in functions work
 par_--env_underscore_mksh	aliases in functions work
 par_--env_underscore_mksh	aliases in functions work
-par_--env_underscore_mksh	OK if no myecho    ^^^^^^^^^^^^^^^^^
+par_--env_underscore_mksh	The myecho alias is replaced in the function causing this not to fail
 par_--env_underscore_mksh	aliases in functions work
-par_--env_underscore_mksh	OK if no myecho    ^^^^^^^^^^^^^^^^^
-par_--env_underscore_mksh	W: /bin/mksh: myfunc: inaccessible or not found
+par_--env_underscore_mksh	The myecho alias is replaced in the function causing this not to fail
+par_--env_underscore_mksh	EW: /bin/mksh: myfunc: inaccessible or not found
 par_--env_underscore_mksh	OK if no myfunc         ^^^^^^^^^^^^^^^^^
-par_--env_underscore_mksh	W: script[9]: myfunc: inaccessible or not found
+par_--env_underscore_mksh	EW: script[9]: myfunc: inaccessible or not found
 par_--env_underscore_mksh	OK if no myfunc         ^^^^^^^^^^^^^^^^^
 par_--env_underscore_sh	### sh
 par_--env_underscore_sh	### Testing of --env _
@@ -429,56 +388,6 @@ par__man_dash	    variables with  = & " ! ' work
 par__man_dash	exit value 2 should be 2
 par__man_dash	Unknown option: no-such-option
 par__man_dash	exit value 255 should be 255
-par__man_fish	### fish
-par__man_fish	Unknown option: no-such-option
-par__man_fish	    variables with  = & " ! ' work
-par__man_fish	    variables with  = & " ! ' work
-par__man_fish	    variables with  = & " ! ' work
-par__man_fish	    variables with  = & " ! ' work
-par__man_fish	    variables with  = & " ! ' work
-par__man_fish	### From man env_parallel
-par__man_fish	aliases with = & " ! ' work
-par__man_fish	aliases with = & " ! ' work
-par__man_fish	aliases with = & " ! ' work
-par__man_fish	aliases with = & " ! ' work
-par__man_fish	aliases with = & " ! ' work
-par__man_fish	arrays
-par__man_fish	arrays
-par__man_fish	arrays
-par__man_fish	arrays
-par__man_fish	arrays with  = & " ! ' work, too
-par__man_fish	env_parallel
-par__man_fish	exit value 2 should be 2
-par__man_fish	exit value 255 should be 255 `sleep 1`
-par__man_fish	functions with  = & " ! ' work
-par__man_fish	functions with  = & " ! ' work
-par__man_fish	functions with  = & " ! ' work
-par__man_fish	functions with  = & " ! ' work
-par__man_fish	functions with  = & " ! ' work
-par__man_fish	level
-par__man_fish	multi
-par__man_fish	multiline
-par__man_fish	multiline
-par__man_fish	multiline
-par__man_fish	multiline
-par__man_fish	multiline
-par__man_fish	too
-par__man_fish	too
-par__man_fish	too
-par__man_fish	too
-par__man_fish	variables with  = & " ! ' work
-par__man_fish	variables with  = & " ! ' work
-par__man_fish	variables with  = & " ! ' work
-par__man_fish	variables with  = & " ! ' work
-par__man_fish	variables with  = & " ! ' work
-par__man_fish	with  = & " ! '
-par__man_fish	with  = & " ! '
-par__man_fish	with  = & " ! '
-par__man_fish	with  = & " ! '
-par__man_fish	work,
-par__man_fish	work,
-par__man_fish	work,
-par__man_fish	work,
 par__man_ksh	### ksh
 par__man_ksh	### From man env_parallel
 par__man_ksh	aliases with = & " ! ' work
@@ -1108,35 +1017,6 @@ par_env_parallel_--session_dash	after aliasafter_OK
 par_env_parallel_--session_dash	after aliasafter_OK
 par_env_parallel_--session_dash	after varafter_OK
 par_env_parallel_--session_dash	after varafter_OK
-par_env_parallel_--session_fish	### Test env_parallel --session
-par_env_parallel_--session_fish	fish: Unknown command: aliasbefore
-par_env_parallel_--session_fish	fish: 
-par_env_parallel_--session_fish	aliasbefore must_fail
-par_env_parallel_--session_fish	^
-par_env_parallel_--session_fish	fish: Unknown command: aliasbefore
-par_env_parallel_--session_fish	script (line 6): 
-par_env_parallel_--session_fish	aliasbefore must_fail
-par_env_parallel_--session_fish	^
-par_env_parallel_--session_fish	fish: Unknown command: funcbefore
-par_env_parallel_--session_fish	fish: 
-par_env_parallel_--session_fish	funcbefore must_fail
-par_env_parallel_--session_fish	^
-par_env_parallel_--session_fish	fish: Unknown command: funcbefore
-par_env_parallel_--session_fish	script (line 6): 
-par_env_parallel_--session_fish	funcbefore must_fail
-par_env_parallel_--session_fish	^
-par_env_parallel_--session_fish	no_before
-par_env_parallel_--session_fish	no_before
-par_env_parallel_--session_fish	no_before
-par_env_parallel_--session_fish	no_before
-par_env_parallel_--session_fish	after aliasafter_OK
-par_env_parallel_--session_fish	after aliasafter_OK
-par_env_parallel_--session_fish	after funcafter_OK
-par_env_parallel_--session_fish	after funcafter_OK
-par_env_parallel_--session_fish	after varafter_OK
-par_env_parallel_--session_fish	after varafter_OK
-par_env_parallel_--session_fish	array after arrayafter_OK
-par_env_parallel_--session_fish	array after arrayafter_OK
 par_env_parallel_--session_ksh	### Test env_parallel --session
 par_env_parallel_--session_ksh	### level0 should be hidden, level1 should be transferred
 par_env_parallel_--session_ksh	
@@ -1250,12 +1130,12 @@ par_env_parallel_--session_mksh	### Test env_parallel --session
 par_env_parallel_--session_mksh	### level0 should be hidden, level1 should be transferred
 par_env_parallel_--session_mksh	
 par_env_parallel_--session_mksh	fail
-par_env_parallel_--session_mksh	W: script[9]: level0func: inaccessible or not found
-par_env_parallel_--session_mksh	W: script[9]: level0alias: inaccessible or not found
+par_env_parallel_--session_mksh	EW: script[9]: level0func: inaccessible or not found
+par_env_parallel_--session_mksh	EW: script[9]: level0alias: inaccessible or not found
 par_env_parallel_--session_mksh	
 par_env_parallel_--session_mksh	fail
-par_env_parallel_--session_mksh	W: /bin/mksh: level0func: inaccessible or not found
-par_env_parallel_--session_mksh	W: /bin/mksh: level0alias: inaccessible or not found
+par_env_parallel_--session_mksh	EW: /bin/mksh: level0func: inaccessible or not found
+par_env_parallel_--session_mksh	EW: /bin/mksh: level0alias: inaccessible or not found
 par_env_parallel_--session_mksh	l1var
 par_env_parallel_--session_mksh	l1func
 par_env_parallel_--session_mksh	l1alias
@@ -1267,20 +1147,20 @@ par_env_parallel_--session_mksh	level1 array OK
 par_env_parallel_--session_mksh	### level0+1 should be hidden, level2 should be transferred
 par_env_parallel_--session_mksh	
 par_env_parallel_--session_mksh	fail
-par_env_parallel_--session_mksh	W: script[9]: level0func: inaccessible or not found
-par_env_parallel_--session_mksh	W: script[9]: level0alias: inaccessible or not found
+par_env_parallel_--session_mksh	EW: script[9]: level0func: inaccessible or not found
+par_env_parallel_--session_mksh	EW: script[9]: level0alias: inaccessible or not found
 par_env_parallel_--session_mksh	
 par_env_parallel_--session_mksh	fail
-par_env_parallel_--session_mksh	W: /bin/mksh: level0func: inaccessible or not found
-par_env_parallel_--session_mksh	W: /bin/mksh: level0alias: inaccessible or not found
+par_env_parallel_--session_mksh	EW: /bin/mksh: level0func: inaccessible or not found
+par_env_parallel_--session_mksh	EW: /bin/mksh: level0alias: inaccessible or not found
 par_env_parallel_--session_mksh	
 par_env_parallel_--session_mksh	fail
-par_env_parallel_--session_mksh	W: script[9]: level1func: inaccessible or not found
-par_env_parallel_--session_mksh	W: script[9]: level1alias: inaccessible or not found
+par_env_parallel_--session_mksh	EW: script[9]: level1func: inaccessible or not found
+par_env_parallel_--session_mksh	EW: script[9]: level1alias: inaccessible or not found
 par_env_parallel_--session_mksh	
 par_env_parallel_--session_mksh	fail
-par_env_parallel_--session_mksh	W: /bin/mksh: level1func: inaccessible or not found
-par_env_parallel_--session_mksh	W: /bin/mksh: level1alias: inaccessible or not found
+par_env_parallel_--session_mksh	EW: /bin/mksh: level1func: inaccessible or not found
+par_env_parallel_--session_mksh	EW: /bin/mksh: level1alias: inaccessible or not found
 par_env_parallel_--session_mksh	l2var
 par_env_parallel_--session_mksh	l2func
 par_env_parallel_--session_mksh	l2alias
@@ -1292,12 +1172,12 @@ par_env_parallel_--session_mksh	level2 array OK
 par_env_parallel_--session_mksh	### level0 should be hidden, level1+2 should be transferred
 par_env_parallel_--session_mksh	
 par_env_parallel_--session_mksh	fail
-par_env_parallel_--session_mksh	W: script[9]: level0func: inaccessible or not found
-par_env_parallel_--session_mksh	W: script[9]: level0alias: inaccessible or not found
+par_env_parallel_--session_mksh	EW: script[9]: level0func: inaccessible or not found
+par_env_parallel_--session_mksh	EW: script[9]: level0alias: inaccessible or not found
 par_env_parallel_--session_mksh	
 par_env_parallel_--session_mksh	fail
-par_env_parallel_--session_mksh	W: /bin/mksh: level0func: inaccessible or not found
-par_env_parallel_--session_mksh	W: /bin/mksh: level0alias: inaccessible or not found
+par_env_parallel_--session_mksh	EW: /bin/mksh: level0func: inaccessible or not found
+par_env_parallel_--session_mksh	EW: /bin/mksh: level0alias: inaccessible or not found
 par_env_parallel_--session_mksh	l1var
 par_env_parallel_--session_mksh	l1func
 par_env_parallel_--session_mksh	l1alias
@@ -1339,10 +1219,10 @@ par_env_parallel_--session_mksh	l2var
 par_env_parallel_--session_mksh	l2func
 par_env_parallel_--session_mksh	l2alias
 par_env_parallel_--session_mksh	level2 array OK
-par_env_parallel_--session_mksh	W: /bin/mksh: aliasbefore: inaccessible or not found
-par_env_parallel_--session_mksh	W: script[9]: aliasbefore: inaccessible or not found
-par_env_parallel_--session_mksh	W: /bin/mksh: funcbefore: inaccessible or not found
-par_env_parallel_--session_mksh	W: script[9]: funcbefore: inaccessible or not found
+par_env_parallel_--session_mksh	EW: /bin/mksh: aliasbefore: inaccessible or not found
+par_env_parallel_--session_mksh	EW: script[9]: aliasbefore: inaccessible or not found
+par_env_parallel_--session_mksh	EW: /bin/mksh: funcbefore: inaccessible or not found
+par_env_parallel_--session_mksh	EW: script[9]: funcbefore: inaccessible or not found
 par_env_parallel_--session_mksh	no_before
 par_env_parallel_--session_mksh	no_before
 par_env_parallel_--session_mksh	no_before
@@ -1635,17 +1515,6 @@ par_env_parallel_dash	bug #50435: Remote fifo broke in 20150522
 par_env_parallel_dash	bug #52534: Tail of multiline alias is ignored
 par_env_parallel_dash	data from stdin
 par_env_parallel_dash	data from stdin
-par_env_parallel_fish	bug #50435: Remote fifo broke in 20150522
-par_env_parallel_fish	data from stdin
-par_env_parallel_fish	OK
-par_env_parallel_fish	data from stdin
-par_env_parallel_fish	OK
-par_env_parallel_fish	OK: 0==0
-par_env_parallel_fish	### Test failing command with --cat
-par_env_parallel_fish	data from stdin
-par_env_parallel_fish	OK: 1==1
-par_env_parallel_fish	data from stdin
-par_env_parallel_fish	OK: 1==1
 par_env_parallel_ksh	OK
 par_env_parallel_ksh	OK
 par_env_parallel_ksh	alias line 1
@@ -1758,7 +1627,6 @@ par_environment_too_big_bash	parallel: Error: Command line too long (999 >= 999)
 par_environment_too_big_bash	parallel: Error: Command line too long (999 >= 999) at input 0: fail_bigfunc_quote_remote
 par_environment_too_big_csh	Not implemented
 par_environment_too_big_dash	moved to hwdep1.sh
-par_environment_too_big_fish	Not implemented
 par_environment_too_big_ksh	bug #50815: env_parallel should warn if the environment is too big
 par_environment_too_big_ksh	OK_bigvar
 par_environment_too_big_ksh	OK_bigvar_remote
@@ -1821,8 +1689,6 @@ par_funky_ash	'par_funky_ash	 !"#$%&'"'"'()*+,-./0123456789
 par_funky_ash	3 arg alias_works
 par_funky_ash	3 arg alias_works_over_ssh
 par_funky_bash	
-par_funky_bash		
-par_funky_bash		
 par_funky_bash	-funkymultiline
 par_funky_bash	-funkymultiline
 par_funky_bash	  space  6  
@@ -1834,8 +1700,8 @@ par_funky_bash	3 arg alias_works
 par_funky_bash	3 arg alias_works_over_ssh
 par_funky_bash	Funkyline-par_funky_bash	 !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~€‚ƒ„…†‡ˆ‰Š‹Œ‘’“”•–—˜™š›œŸ ¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º»¼½¾¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏĞÑÒÓÔÕÖ×ØÙÚÛÜİŞßàáâãäåæçèéêëìíîïğñòóôõö÷øùúûüışÿ-funkyline
 par_funky_bash	Funkyline-par_funky_bash	 !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~€‚ƒ„…†‡ˆ‰Š‹Œ‘’“”•–—˜™š›œŸ ¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º»¼½¾¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏĞÑÒÓÔÕÖ×ØÙÚÛÜİŞßàáâãäåæçèéêëìíîïğñòóôõö÷øùúûüışÿ-funkyline
-par_funky_bash	Funkymultiline-
-par_funky_bash	Funkymultiline-
+par_funky_bash	Funkymultiline-	
+par_funky_bash	Funkymultiline-	
 par_funky_bash	assoc_val_a
 par_funky_bash	assoc_val_a
 par_funky_bash	function_works
@@ -1861,38 +1727,6 @@ par_funky_dash	'	'
 par_funky_dash	'par_funky_dash	 !"#$%&'"'"'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~€‚ƒ„…†‡ˆ‰Š‹Œ‘’“”•–—˜™š›œŸ ¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º»¼½¾¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏĞÑÒÓÔÕÖ×ØÙÚÛÜİŞßàáâãäåæçèéêëìíîïğñòóôõö÷øùúûüışÿ'
 par_funky_dash	3 arg alias_works
 par_funky_dash	3 arg alias_works_over_ssh
-par_funky_fish	env_parallel: Warning: ASCII value 1 in variables is not supported
-par_funky_fish	3 arg alias_works
-par_funky_fish	env_parallel: Warning: ASCII value 1 in variables is not supported
-par_funky_fish	function_works
-par_funky_fish	myvar  works
-par_funky_fish	myenvvar  works
-par_funky_fish	  space  6  
-par_funky_fish	
-par_funky_fish	
-par_funky_fish	
-par_funky_fish	Funky-	 par_funky_fish	 !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~€‚ƒ„…†‡ˆ‰Š‹Œ‘’“”•–—˜™š›œŸ ¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º»¼½¾¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏĞÑÒÓÔÕÖ×ØÙÚÛÜİŞßàáâãäåæçèéêëìíîïğñòóôõö÷øùúûüışÿ-funky
-par_funky_fish	Funkyenv-	par_funky_fish	 !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~€‚ƒ„…†‡ˆ‰Š‹Œ‘’“”•–—˜™š›œŸ ¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º»¼½¾¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏĞÑÒÓÔÕÖ×ØÙÚÛÜİŞßàáâãäåæçèéêëìíîïğñòóôõö÷øùúûüışÿ-funkyenv
-par_funky_fish	
-par_funky_fish	
-par_funky_fish	
-par_funky_fish	env_parallel: Warning: ASCII value 1 in variables is not supported
-par_funky_fish	3 arg alias_works_over_ssh
-par_funky_fish	env_parallel: Warning: ASCII value 1 in variables is not supported
-par_funky_fish	function_works_over_ssh
-par_funky_fish	myvar  works
-par_funky_fish	myenvvar  works
-par_funky_fish	  space  6  
-par_funky_fish	
-par_funky_fish	
-par_funky_fish	
-par_funky_fish	Funky-	 par_funky_fish	 !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~€‚ƒ„…†‡ˆ‰Š‹Œ‘’“”•–—˜™š›œŸ ¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º»¼½¾¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏĞÑÒÓÔÕÖ×ØÙÚÛÜİŞßàáâãäåæçèéêëìíîïğñòóôõö÷øùúûüışÿ-funky
-par_funky_fish	Funkyenv-	par_funky_fish	 !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~€‚ƒ„…†‡ˆ‰Š‹Œ‘’“”•–—˜™š›œŸ ¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º»¼½¾¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏĞÑÒÓÔÕÖ×ØÙÚÛÜİŞßàáâãäåæçèéêëìíîïğñòóôõö÷øùúûüışÿ-funkyenv
-par_funky_fish	
-par_funky_fish	
-par_funky_fish	
-par_funky_fish	
-par_funky_fish	'	 par_funky_fish	 !"#$%&'"'"'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~€‚ƒ„…†‡ˆ‰Š‹Œ‘’“”•–—˜™š›œŸ ¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º»¼½¾¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏĞÑÒÓÔÕÖ×ØÙÚÛÜİŞßàáâãäåæçèéêëìíîïğñòóôõö÷øùúûüışÿ'
 par_funky_ksh	
 par_funky_ksh	par_funky_ksh	 !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~€‚ƒ„…†‡ˆ‰Š‹Œ‘’“”•–—˜™š›œŸ ¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º»¼½¾¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏĞÑÒÓÔÕÖ×ØÙÚÛÜİŞßàáâãäåæçèéêëìíîïğñòóôõö÷øùúûüışÿ-funky
 par_funky_ksh	par_funky_ksh	 !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~€‚ƒ„…†‡ˆ‰Š‹Œ‘’“”•–—˜™š›œŸ ¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º»¼½¾¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏĞÑÒÓÔÕÖ×ØÙÚÛÜİŞßàáâãäåæçèéêëìíîïğñòóôõö÷øùúûüışÿ-funky
@@ -2057,7 +1891,6 @@ par_parset_dash	2
 par_parset_dash	3
 par_parset_dash	Exit value 2 = 2
 par_parset_dash	Exit value 2 = 2
-par_parset_fish	Not implemented
 par_parset_ksh	parset
 par_parset_ksh	### parset into array
 par_parset_ksh	foo bar baz
@@ -2219,3 +2052,160 @@ par_parset_zsh	   myecho myvar myarr  0 myfun foo myecho myvar myarr  0 myfun ba
 par_parset_zsh	myecho myvar myarr  0 myfun foo myecho myvar myarr  0 myfun bar myecho myvar myarr  0 myfun baz
 par_parset_zsh	Exit value 2 = 2
 par_parset_zsh	Exit value 2 = 2
+par_--env_underscore_fish	### fish
+par_--env_underscore_fish	Fish is broken
+par_--env_underscore_fish	### Testing of --env _
+par_--env_underscore_fish	Test copying
+par_--env_underscore_fish	*** Moved to parallel-ssh-fish.sh ***
+par_--env_underscore_fish	Test ignoring
+par_--env_underscore_fish	script (line 99): 
+par_--env_underscore_fish	not_copied_alias 'error=OK'
+par_--env_underscore_fish	script (line 99): 
+par_--env_underscore_fish	not_copied_func 'error=OK'
+par_--env_underscore_fish	error=OK
+par_--env_underscore_fish	error=OK
+par_--env_underscore_fish	Test single ignoring
+par_--env_underscore_fish	aliases and arrays in functions work
+par_--env_underscore_fish	aliases and arrays in functions work
+par_--env_underscore_fish	aliases functions work
+par_--env_underscore_fish	aliases functions work
+par_--env_underscore_fish	      myecho $myarray functions $argv
+par_--env_underscore_fish	
+par_--env_underscore_fish	in function 'myfunc' with arguments 'work'
+par_--env_underscore_fish	OK if   ^^^^^^^^^^^^^^^^^ no myecho
+par_--env_underscore_fish	script (line 4): 
+par_--env_underscore_fish	      myecho $myarray functions $argv
+par_--env_underscore_fish	
+par_--env_underscore_fish	in function 'myfunc' with arguments 'work'
+par_--env_underscore_fish		called on line 99 of file script
+par_--env_underscore_fish	OK if   ^^^^^^^^^^^^^^^^^ no myecho
+par_--env_underscore_fish	myfunc work
+par_--env_underscore_fish	OK if   ^^^^^^^^^^^^^^^^^ no myfunc
+par_--env_underscore_fish	script (line 6): 
+par_--env_underscore_fish	myfunc work
+par_--env_underscore_fish	OK if   ^^^^^^^^^^^^^^^^^ no myfunc
+par__man_fish	### fish
+par__man_fish	### From man env_parallel
+par__man_fish	aliases with = & " ! ' work
+par__man_fish	aliases with = & " ! ' work
+par__man_fish	aliases with = & " ! ' work
+par__man_fish	aliases with = & " ! ' work
+par__man_fish	aliases with = & " ! ' work
+par__man_fish	functions with  = & " ! ' work
+par__man_fish	functions with  = & " ! ' work
+par__man_fish	functions with  = & " ! ' work
+par__man_fish	functions with  = & " ! ' work
+par__man_fish	functions with  = & " ! ' work
+par__man_fish	variables with  = & " ! ' work
+par__man_fish	variables with  = & " ! ' work
+par__man_fish	variables with  = & " ! ' work
+par__man_fish	variables with  = & " ! ' work
+par__man_fish	variables with  = & " ! ' work
+par__man_fish	multiline
+par__man_fish	    variables with  = & " ! ' work
+par__man_fish	multiline
+par__man_fish	    variables with  = & " ! ' work
+par__man_fish	multiline
+par__man_fish	    variables with  = & " ! ' work
+par__man_fish	multiline
+par__man_fish	    variables with  = & " ! ' work
+par__man_fish	multiline
+par__man_fish	    variables with  = & " ! ' work
+par__man_fish	arrays with  = & " ! ' work, too
+par__man_fish	# these 4 fail often. Race condition?
+par__man_fish	arrays
+par__man_fish	with  = & " ! '
+par__man_fish	work,
+par__man_fish	too
+par__man_fish	arrays
+par__man_fish	with  = & " ! '
+par__man_fish	work,
+par__man_fish	too
+par__man_fish	arrays
+par__man_fish	with  = & " ! '
+par__man_fish	work,
+par__man_fish	too
+par__man_fish	arrays
+par__man_fish	with  = & " ! '
+par__man_fish	work,
+par__man_fish	too
+par__man_fish	multi
+par__man_fish	level
+par__man_fish	env_parallel
+par__man_fish	exit value 2 should be 2
+par__man_fish	Unknown option: no-such-option
+par__man_fish	exit value 255 should be 255 `sleep 1`
+par_env_parallel_--session_fish	### Test env_parallel --session
+par_env_parallel_--session_fish	fish: Unknown command: aliasbefore
+par_env_parallel_--session_fish	fish: 
+par_env_parallel_--session_fish	aliasbefore must_fail
+par_env_parallel_--session_fish	
+par_env_parallel_--session_fish	fish: Unknown command: aliasbefore
+par_env_parallel_--session_fish	script (line 6): 
+par_env_parallel_--session_fish	aliasbefore must_fail
+par_env_parallel_--session_fish	
+par_env_parallel_--session_fish	fish: Unknown command: funcbefore
+par_env_parallel_--session_fish	fish: 
+par_env_parallel_--session_fish	funcbefore must_fail
+par_env_parallel_--session_fish	
+par_env_parallel_--session_fish	fish: Unknown command: funcbefore
+par_env_parallel_--session_fish	script (line 6): 
+par_env_parallel_--session_fish	funcbefore must_fail
+par_env_parallel_--session_fish	
+par_env_parallel_--session_fish	no_before
+par_env_parallel_--session_fish	no_before
+par_env_parallel_--session_fish	no_before
+par_env_parallel_--session_fish	no_before
+par_env_parallel_--session_fish	after aliasafter_OK
+par_env_parallel_--session_fish	after aliasafter_OK
+par_env_parallel_--session_fish	after funcafter_OK
+par_env_parallel_--session_fish	after funcafter_OK
+par_env_parallel_--session_fish	after varafter_OK
+par_env_parallel_--session_fish	after varafter_OK
+par_env_parallel_--session_fish	array after arrayafter_OK
+par_env_parallel_--session_fish	array after arrayafter_OK
+par_env_parallel_fish	bug #50435: Remote fifo broke in 20150522
+par_env_parallel_fish	data from stdin
+par_env_parallel_fish	OK
+par_env_parallel_fish	data from stdin
+par_env_parallel_fish	OK
+par_env_parallel_fish	OK: 0==0
+par_env_parallel_fish	### Test failing command with --cat
+par_env_parallel_fish	data from stdin
+par_env_parallel_fish	OK: 1==1
+par_env_parallel_fish	data from stdin
+par_env_parallel_fish	OK: 1==1
+par_environment_too_big_fish	Not implemented
+par_funky_fish	env_parallel: Warning: ASCII value 1 in variables is not supported
+par_funky_fish	3 arg alias_works
+par_funky_fish	env_parallel: Warning: ASCII value 1 in variables is not supported
+par_funky_fish	function_works
+par_funky_fish	myvar  works
+par_funky_fish	myenvvar  works
+par_funky_fish	  space  6  
+par_funky_fish	
+par_funky_fish	
+par_funky_fish	
+par_funky_fish	Funky-	 par_funky_fish	 !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~€‚ƒ„…†‡ˆ‰Š‹Œ‘’“”•–—˜™š›œŸ ¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º»¼½¾¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏĞÑÒÓÔÕÖ×ØÙÚÛÜİŞßàáâãäåæçèéêëìíîïğñòóôõö÷øùúûüışÿ-funky
+par_funky_fish	Funkyenv-	par_funky_fish	 !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~€‚ƒ„…†‡ˆ‰Š‹Œ‘’“”•–—˜™š›œŸ ¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º»¼½¾¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏĞÑÒÓÔÕÖ×ØÙÚÛÜİŞßàáâãäåæçèéêëìíîïğñòóôõö÷øùúûüışÿ-funkyenv
+par_funky_fish	
+par_funky_fish	
+par_funky_fish	
+par_funky_fish	env_parallel: Warning: ASCII value 1 in variables is not supported
+par_funky_fish	3 arg alias_works_over_ssh
+par_funky_fish	env_parallel: Warning: ASCII value 1 in variables is not supported
+par_funky_fish	function_works_over_ssh
+par_funky_fish	myvar  works
+par_funky_fish	myenvvar  works
+par_funky_fish	  space  6  
+par_funky_fish	
+par_funky_fish	
+par_funky_fish	
+par_funky_fish	Funky-	 par_funky_fish	 !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~€‚ƒ„…†‡ˆ‰Š‹Œ‘’“”•–—˜™š›œŸ ¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º»¼½¾¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏĞÑÒÓÔÕÖ×ØÙÚÛÜİŞßàáâãäåæçèéêëìíîïğñòóôõö÷øùúûüışÿ-funky
+par_funky_fish	Funkyenv-	par_funky_fish	 !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~€‚ƒ„…†‡ˆ‰Š‹Œ‘’“”•–—˜™š›œŸ ¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º»¼½¾¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏĞÑÒÓÔÕÖ×ØÙÚÛÜİŞßàáâãäåæçèéêëìíîïğñòóôõö÷øùúûüışÿ-funkyenv
+par_funky_fish	
+par_funky_fish	
+par_funky_fish	
+par_funky_fish	
+par_funky_fish	'	 par_funky_fish	 !"#$%&'"'"'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~€‚ƒ„…†‡ˆ‰Š‹Œ‘’“”•–—˜™š›œŸ ¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º»¼½¾¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏĞÑÒÓÔÕÖ×ØÙÚÛÜİŞßàáâãäåæçèéêëìíîïğñòóôõö÷øùúûüışÿ'
+par_parset_fish	Not implemented

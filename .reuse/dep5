@@ -14,6 +14,10 @@ License: GPL-3.0-or-later
 Files: doc/citation-notice-faq.txt CREDITS NEWS README src/parallel_cheat_bw.fodt packager/debian/README doc/parallel*directive doc/screenshot.png
 Copyright: 2007-2022 Ole Tange, http://ole.tange.dk and Free Software Foundation, Inc.
 License: GFDL-1.3-or-later
+
+Files: doc/citation-notice-faq.txt CREDITS NEWS README src/parallel_cheat_bw.fodt packager/debian/README doc/parallel*directive doc/screenshot.png
+Copyright: 2007-2022 Ole Tange, http://ole.tange.dk and Free Software Foundation, Inc.
+# Dual license - copy of the previous paragraph
 License: CC-BY-SA-4.0
 
 Files: testsuite/input-files/perl-v5.14.2/* testsuite/input-files/perllib/*

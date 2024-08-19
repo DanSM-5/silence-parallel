@@ -23,7 +23,7 @@ srcdir=$(echo "$testsuitedir" | perl -pe 's=$ENV{HOME}==')
 export SERVER1=parallel@lo
 export SERVER2=csh@lo
 export PARALLEL=-k
-perl -ne '$/="\n\n"; /^Output/../^[^O]\S/ and next; /^  / and print;' "$testsuitedir"/../src/parallel_tutorial.pod |
+perl -ne '$/="\n\n"; /^Output/../^[^O=]\S/ and next; /^  / and print;' "$testsuitedir"/../src/parallel_tutorial.pod |
     egrep -v 'curl|tty|parallel_tutorial|interactive|example.(com|net)' |
     egrep -v 'shellquote|works|num128|--filter-hosts|--tmux|my_id' |
     perl -pe 's/username@//;s/user@//;
@@ -121,13 +121,15 @@ perl -ne '$/="\n\n"; /^Output/../^[^O]\S/ and next; /^  / and print;' "$testsuit
 	      s:par......par:tempfile:g;
 	      s:^tempfile\n::g;
 	      #+(zenity:2012805): Gtk-WARNING **: 02:25:32.662: cannot open display:
-	      s,.zenity.*cannot open display:,,;
+	      #+(zenity:3135184): Gtk-WARNING **: 20:03:27.525: Failed to open display
+	      s,.zenity.*open display.*\n,,;
 	      # --progress => 1:local / 4 / 4
 	      s,1:local / . / .,1:local / 9 / 9,;
 	      # bash: -c: line 1: .set a="tempfile"; if( { test -d "$a" } ) echo "$a is a dir"
 	      s{.*bash: .*set a=".*".*test -d.*is a dir.*\n}{};
 	      # /usr/bin/bash: -c: line 1: syntax error near unexpected token .)
-	      s{.*bash: .*syntax error near unexpected token.*\n}{};
+	      # /usr/bin/bash: -c: line 5: syntax error: unexpected end of file
+	      s{.*bash: -c: line .*\n}{};
 	      # This is input_file
 	      s{^This is input_file.*\n}{};
 	      ' | uniq

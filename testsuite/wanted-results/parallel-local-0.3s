@@ -1,3 +1,6 @@
+par_-q_perl_program	### test08 -q and perl
+par_-q_perl_program	b
+par_-q_perl_program	d
 par_0_no_newline	A single zero without \n should not be ignored
 par_0_no_newline	0
 par_PARALLEL_ENV	### PARALLEL_ENV as variable
@@ -221,6 +224,8 @@ par_empty_string_quote	bug #37694: Empty string argument skipped when using --qu
 par_empty_string_quote	3
 par_env_parallel_pipefail	### test env_parallel with pipefail + inherit_errexit
 par_env_parallel_pipefail	OK
+par_env_parallel_recordenv	bug #65127: env_parallel --record-env and --recordenv should do the same.
+par_env_parallel_recordenv	There should be no difference
 par_eof_on_command_line_input_source	### Test of eof string on :::
 par_eof_on_command_line_input_source	foo
 par_exit_val	### Test bug #45619: "--halt" erroneous error exit code (should give 0)
@@ -236,6 +241,11 @@ par_file_ending_in_newline	### Hans found a bug giving unitialized variable
 par_file_ending_in_newline	gzip /tmp/parallel_f1
 par_file_ending_in_newline	gzip '/tmp/parallel_f2
 par_file_ending_in_newline	'
+par_filter_dryrun	bug #65840: --dry-run doesnot apply filters
+par_filter_dryrun	Is good
+par_filter_dryrun	Is OK
+par_filter_dryrun	echo Is good 
+par_filter_dryrun	echo Is OK 
 par_fish	### https://github.com/fish-shell/fish-shell/issues/5582
 par_fish	OK
 par_group-by_colsep_space	### --colsep " " should work like ","

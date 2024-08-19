@@ -16,6 +16,55 @@ export -f stdsort
 # Test amount of parallelization
 # parallel --shuf --jl /tmp/myjl -j1 'export JOBS={1};'bash tests-to-run/parallel-local-0.3s.sh ::: {1..16} ::: {1..5}
 
+par_env_parallel_recordenv() {
+    echo 'bug #65127: env_parallel --record-env and --recordenv should do the same.'
+    . env_parallel.bash
+    a=""
+    b=""
+    > ~/.parallel/ignored_vars
+    env_parallel --record-env
+    a=$(md5sum ~/.parallel/ignored_vars)
+    > ~/.parallel/ignored_vars
+    env_parallel --recordenv
+    b=$(md5sum ~/.parallel/ignored_vars)
+    echo There should be no difference
+    diff <(echo "$a") <(echo "$b")
+    > ~/.parallel/ignored_vars
+}
+
+par_-q_perl_program() {
+    echo "### test08 -q and perl"
+    (
+	echo flyp
+	echo _PRE 8
+	echo 'hatchname> 8'
+    ) > a
+    (
+	echo flyp
+	echo _PRE 9
+	echo 'hatchname> 8'
+    ) > b
+    (
+	echo flyp
+	echo _PRE 19
+	echo 'hatchname> 19'
+    ) > c
+    (
+	echo flyp
+	echo _PRE 19
+	echo 'hatchname> 9'
+    ) > d
+    ls |
+	parallel -q  perl -ne '/_PRE (\d+)/ and $p=$1; /hatchname> (\d+)/ and $1!=$p and print $ARGV,"\n"' |
+	sort
+}
+
+par_filter_dryrun() {
+    echo 'bug #65840: --dry-run doesnot apply filters'
+    parallel -k --filter='"{1}" ne "Not"' echo '{1} {2} {3}' ::: Not Is ::: good OK
+    parallel --dr -k --filter='"{1}" ne "Not"' echo '{1} {2} {3}' ::: Not Is ::: good OK
+}
+
 par_uninstalled_sshpass() {
     echo '### sshpass must be installed for --sshlogin user:pass@host'
     sshpass=$(command -v sshpass)
@@ -897,9 +946,14 @@ par_results_json() {
 par_locale_quoting() {
     echo "### quoting in different locales"
     printf '\243`/tmp/test\243`\n'
-    printf '\243`/tmp/test\243`\n' | LC_ALL=zh_HK.big5hkscs xargs echo '$LC_ALL'
+    printf '\243`/tmp/test\243`\n' |
+	LC_ALL=zh_HK.big5hkscs xargs echo '$LC_ALL'
     # LC_ALL should be zh_HK.big5hkscs, but that makes quoting hard.
-    printf '\243`/tmp/test\243`\n' | LC_ALL=zh_HK.big5hkscs parallel -v echo '$LC_ALL'
+    (
+	printf '\243`/tmp/test\243`\n' |
+	    LC_ALL=zh_HK.big5hkscs parallel -v echo '$LC_ALL' 2>&1
+	# Locale 'zh_HK.big5hkscs' is unsupported, and may crash the interpreter.
+    ) | G -av is.unsupported,.and.may.crash.the.interpreter.
 }
 
 par_PARALLEL_ENV() {

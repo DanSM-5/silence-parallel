@@ -18,7 +18,9 @@ ssh $SSHLOGIN1 touch .parallel/will-cite
     cd $testsuitedir 
     scp -q "$testsuitedir"/../src/{parallel,sem,sql,niceload,env_parallel*} $SSHLOGIN1:bin/
 )
-. `which env_parallel.bash`
+# Moving the functions to FreeBSD is a bit tricky:
+#   We use env_parallel.bash to copy the functions to FreeBSD
+. env_parallel.bash
 env_parallel --session
 
 par_no_more_procs() {
@@ -86,11 +88,6 @@ par_env_parallel() {
     env_parallel myalias ::: foo
 }
 
-# Moving the functions to FreeBSD is a bit tricky:
-#   We use env_parallel.bash to copy the functions to FreeBSD
-
-. `which env_parallel.bash`
-
 #   GNU/Linux runs bash, but the FreeBSD runs (a)sh,
 #   (a)sh does not support 'export -f' so any function exported
 #   must be unset
@@ -103,9 +100,8 @@ unset TMPDIR
 #   As the copied environment is written in Bash dialect
 #   we get 'shopt'-errors and 'declare'-errors.
 #   We can safely ignore those.
-
 export LC_ALL=C
-PARALLEL_SHELL=sh env_parallel --timeout 100 --env _ -vj4 -k --joblog /tmp/jl-`basename $0` --retries 3 \
+PARALLEL_SHELL=sh env_parallel --timeout 100 -vj4 -k --joblog /tmp/jl-`basename $0` --retries 3 \
 	     -S $SSHLOGIN1 --tag '{} 2>&1' \
-	     ::: $(compgen -A function | grep par_ | sort) \
+	     ::: $(compgen -A function | G "$@" par_ | sort) \
 	     2> >(grep -Ev 'shopt: not found|declare: not found')

@@ -1775,7 +1775,7 @@ If in doubt use B<-X> as that will most likely do what is needed.
 See also: B<-X> B<--xargs>
 
 
-=item B<--memfree> I<size> (alpha testing)
+=item B<--memfree> I<size>
 
 Minimum memory free when starting another job.
 
@@ -1879,7 +1879,7 @@ is somewhat slower than B<--block>.
 See also: UNIT PREFIX B<--pipe> B<--block> B<-m> B<-X> B<--max-args>
 
 
-=item B<--nonall> (alpha testing)
+=item B<--nonall>
 
 B<--onall> with no arguments.
 
@@ -1894,7 +1894,7 @@ servers.
 See also: B<--onall> B<--sshlogin>
 
 
-=item B<--onall> (alpha testing)
+=item B<--onall>
 
 Run all the jobs on all computers given with B<--sshlogin>.
 
@@ -3130,12 +3130,14 @@ The jobs will be run on a list of remote computers.
 
 =item Z<> @I<hostgroups>/
 
-One or more groups this sshlogin belongs to (See
-B<--hostgroup>). Multiple groups are separated by '+'. The I<sshlogin>
-will always be added to a hostgroup named the same as I<sshlogin>.
+One or more groups this sshlogin belongs to. Multiple groups are
+separated by '+'. The I<sshlogin> will always be added to a hostgroup
+named the same as I<sshlogin>.
 
 If only the I<@hostgroup> is given, only the sshlogins in that
 hostgroup will be used. Multiple I<@hostgroup> can be given.
+
+See B<--hostgroup>.
 
 Examples: B<@prod/>, B<@dev+remote/>
 
@@ -3170,17 +3172,18 @@ Examples: B<alice>, B<bob>
 =item Z<> :I<password>
 
 Use I<password> for authentication (using B<sshpass>). B<password>
-cannot contain space. If I<password> is omitted use B<$SSHPASS>. If
-B<:> is omitted use B<ssh>'s default authentication. In this case
-login must not require a password (B<ssh-agent> and B<ssh-copy-id> may
-help with that).
+cannot contain space. If I<password> is omitted, GNU B<parallel> will
+use B<$SSHPASS>. If B<:> is omitted use B<ssh>'s default
+authentication. In this case login must not require a password
+(B<ssh-agent> and B<ssh-copy-id> may help with that).
 
 Examples: B<:mypassword>, B<:>
 
 
 =item Z<> I<host>
 
-Hostname or IP address of server.
+Hostname or IP address of server. (This is what you will use the
+most).
 
 Examples: B<server01>, B<10.1.2.3>, B<[2001:470:142:4::a]>,
 B<2001:470:142:5::116>.
@@ -3893,9 +3896,13 @@ as 1M-12*2.024*2k.
 GNU B<parallel> is very liberal in quoting. You only need to quote
 characters that have special meaning in shell:
 
+=for pod2rst next-code-block: text
+
   ( ) $ ` ' " < > ; | \
 
 and depending on context these needs to be quoted, too:
+
+=for pod2rst next-code-block: text
 
   ~ & ! ? space * { #
 
@@ -4407,13 +4414,19 @@ you, file a bug-report.
 
 If you get:
 
+=for pod2rst next-code-block: text
+
   Can't exec "command": No such file or directory
 
 or:
 
+=for pod2rst next-code-block: text
+
   open3: exec of by command failed
 
 or:
+
+=for pod2rst next-code-block: text
 
   /bin/bash: command: command not found
 

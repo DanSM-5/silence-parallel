@@ -84,15 +84,23 @@ par_quote_special_results() {
 	   mkfs.fat mkfs.vfat mkfs.msdos mkfs.f2fs |
 	perl -pe 's:(/dev/loop|par-test-loop)\S+:$1:g;s/ +/ /g' |
 	G -v MB/s -v GB/s -v UUID -v Binutils -v 150000 -v exfatprogs |
+	G -v ID.SIZE.PATH |
+	# mkfs.xfs -f      = crc=1 finobt=1, sparse=1, rmapbt=0
+	# mkfs.xfs -f      = reflink=1 bigtime=0 inobtcount=0
+	G -v crc=..finobt=...sparse=...rmapbt= -v reflink=..bigtime=..inobtcount= |
+	# mkfs.xfs -f     log =internal log bsize=4096 blocks=16384, version=2
+	G -v log.=internal.log.bsize= |
 	# mkfs.btrfs Incompat features: extref, skinny-metadata, no-holes
 	# mke2fs 1.46.5 (30-Dec-2021)
 	# btrfs-progs v6.6.3
- 	G -vP Incompat.features -v mke2fs.[.0-9]{5} -v btrfs-progs.v[.0-9]{5} |
+ 	G -vP Incompat.features -vP mke2fs.[.0-9]{5} -vP btrfs-progs.v[.0-9]{5} |
+	# F2FS-tools: mkfs.f2fs Ver: 1.14.0 (2020-08-24)
+ 	G -vP mkfs.f2fs.Ver:.[.0-9]{5} |
 	# See https://btrfs.readthedocs.io for more
 	# mkfs.f2fs Info: Overprovision segments = 27 (GC reserved = 18)
 	G -v 'See http' -v Overprovision |
 	# mkfs.f2fs /dev/loop 147952 70136 77816 48% /tmp/par-test-loop
-	perl -pe 's:/dev/loop \d+ \d+ \d+:/dev/loop 999999 99999 99999:'
+	perl -pe 's:/dev/loop \d+ \d+ \d+ \d+:/dev/loop 999999 99999 99999 9:'
     # Skip:
     #   mkfs.bfs - ro
     #   mkfs.cramfs - ro

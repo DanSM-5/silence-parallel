@@ -905,6 +905,24 @@ combined in the correct order.
     {}0000000-{}9999999 https://example.com/the/big/file > file
 
 
+=head2 EXAMPLE: Keep order, but make job 1 output fast
+
+If you want the output of job 1 unbuffered, but otherwise keep the
+order, you can do this:
+
+    doit() {
+      echo "$@" ERR >&2
+      echo "$@" out
+      sleep 0.$1
+      echo "$@" ERR >&2
+      echo "$@" out
+    }
+    export -f doit
+    parallel -k -u doit {= 'seq() > 1 and $opt::ungroup = 0' =} ::: 9 1 2 3
+
+It will output job 1 with less overhead.
+
+
 =head2 EXAMPLE: Parallel grep
 
 B<grep -r> greps recursively through directories. GNU B<parallel> can

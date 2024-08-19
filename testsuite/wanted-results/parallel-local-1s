@@ -211,6 +211,23 @@ par_keep_order	### Bug made 3 go before 1 2
 par_keep_order	1
 par_keep_order	2
 par_keep_order	3
+par_keep_order_make_job_1_output_fast	# EXAMPLE: Keep order, but make job 1 output fast
+par_keep_order_make_job_1_output_fast	9 ERR
+par_keep_order_make_job_1_output_fast	9 out
+par_keep_order_make_job_1_output_fast	9 ERR
+par_keep_order_make_job_1_output_fast	9 out
+par_keep_order_make_job_1_output_fast	1 out
+par_keep_order_make_job_1_output_fast	1 out
+par_keep_order_make_job_1_output_fast	1 ERR
+par_keep_order_make_job_1_output_fast	1 ERR
+par_keep_order_make_job_1_output_fast	2 out
+par_keep_order_make_job_1_output_fast	2 out
+par_keep_order_make_job_1_output_fast	2 ERR
+par_keep_order_make_job_1_output_fast	2 ERR
+par_keep_order_make_job_1_output_fast	3 out
+par_keep_order_make_job_1_output_fast	3 out
+par_keep_order_make_job_1_output_fast	3 ERR
+par_keep_order_make_job_1_output_fast	3 ERR
 par_long_input	### Long input lines should not fail if they are not used
 par_long_input	a a a a
 par_long_input	b b b b
