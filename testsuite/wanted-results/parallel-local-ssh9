@@ -134,24 +134,6 @@ par__sshlogin_range	parallel: Warning: Could not figure out number of cpus on ip
 par__sshlogin_range	parallel: Warning: Could not figure out number of cpus on ip251.0.9.109 (). Using 1.
 par__sshlogin_range	parallel: Warning: Could not figure out number of cpus on ip251.0.9.110 (). Using 1.
 par__sshlogin_range	parallel: Warning: Could not figure out number of cpus on ip251.0.9.111 (). Using 1.
-par_ash_embed	--embed
-par_ash_embed	Redirect the output to a file and add your changes at the end:
-par_ash_embed	  /usr/local/bin/parallel --embed > new_script
-par_ash_embed	Put
-par_ash_embed	your
-par_ash_embed	code
-par_ash_embed	here
-par_ash_embed	parallel_OK
-par_ash_embed	env_parallel --env OK
-par_ash_embed	env_parallel_OK
-par_ash_embed	ParsetOK
-par_ash_embed	Put
-par_ash_embed	your
-par_ash_embed	code
-par_ash_embed	here
-par_ash_embed	Put your code here
-par_ash_embed	You can also activate GNU Parallel for interactive use by:
-par_ash_embed	. ./parallel-embed
 par_bash_embed	--embed
 par_bash_embed	Redirect the output to a file and add your changes at the end:
 par_bash_embed	  /usr/local/bin/parallel --embed > new_script

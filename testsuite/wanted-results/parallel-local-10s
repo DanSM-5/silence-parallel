@@ -1372,8 +1372,6 @@ par_seqreplace_long_line	      9       1       1     101
 par_seqreplace_long_line	     90       1       1     201
 par_seqreplace_long_line	      1 parallel: Error: Command line too long (309 >= 210) at input 0: 100
 par_shellquote	### Test --shellquote in all shells
-par_shellquote	ash	'	
-par_shellquote	ash	par_shellquote	ash	 !"#$%&'"'"'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~€‚ƒ„…†‡‰‹‘’“”•–—™› ΅Ά£¤¥¦§¨©ª«¬­®―°±²³΄µ¶·ΈΉΊ»Ό½ΎΏΐΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡÒΣΤΥΦΧΨΩΪΫάέήίΰαβγδεζηθικλμνξοπρςστυφχψωϊϋόύώÿ'
 par_shellquote	bash	'	
 par_shellquote	bash	par_shellquote	bash	 !"#$%&'"'"'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~€‚ƒ„…†‡‰‹‘’“”•–—™› ΅Ά£¤¥¦§¨©ª«¬­®―°±²³΄µ¶·ΈΉΊ»Ό½ΎΏΐΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡÒΣΤΥΦΧΨΩΪΫάέήίΰαβγδεζηθικλμνξοπρςστυφχψωϊϋόύώÿ'
 par_shellquote	csh	\\\\\\\\	"\

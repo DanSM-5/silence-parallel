@@ -19,7 +19,7 @@ torresults:
 
 
 torsync:
-	torsocks rsync -Hazv --exclude='*.{pdf,gz,bz2,html,deb}' --exclude authorized_keys --exclude .vagrant/ --exclude actual-results --delete ./ tortest:privat/parallel/
+	torsocks rsync -Hazv --exclude='*.{pdf,gz,bz2,html,deb}' --exclude authorized_keys --exclude .vagrant/ --exclude actual-results --exclude '*hwdep*' --delete ./ tortest:privat/parallel/
 	make tortest
 
 web:

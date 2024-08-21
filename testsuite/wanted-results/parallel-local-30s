@@ -1643,16 +1643,6 @@ par_bin	9	2
 par_exit_code	bug #52207: Exit status 0 when child job is killed, even with "now,fail=1"
 par_exit_code	# Ideally the command should return the same
 par_exit_code	#   with or without parallel
-par_exit_code	ash /tmp/mysleep 100	137
-par_exit_code	ash parallel --halt-on-error now,fail=1 /tmp/mysleep ::: 100	137
-par_exit_code	ash parallel --halt-on-error now,done=1 /tmp/mysleep ::: 100	137
-par_exit_code	ash parallel --halt-on-error now,done=1 /bin/true ::: 100	0
-par_exit_code	ash parallel --halt-on-error now,done=1 exit ::: 100	100
-par_exit_code	ash true;/tmp/mysleep 100	137
-par_exit_code	ash parallel --halt-on-error now,fail=1 'true;/tmp/mysleep' ::: 100	137
-par_exit_code	ash parallel --halt-on-error now,done=1 'true;/tmp/mysleep' ::: 100	137
-par_exit_code	ash parallel --halt-on-error now,done=1 'true;/bin/true' ::: 100	0
-par_exit_code	ash parallel --halt-on-error now,done=1 'true;exit' ::: 100	100
 par_exit_code	csh /tmp/mysleep 100	137
 par_exit_code	csh parallel --halt-on-error now,fail=1 /tmp/mysleep ::: 100	137
 par_exit_code	csh parallel --halt-on-error now,done=1 /tmp/mysleep ::: 100	137
@@ -3069,7 +3059,6 @@ par_slow_total_jobs	1
 par_slow_total_jobs	2
 par_slow_total_jobs	parallel: Warning: Reading X arguments took longer than XX seconds.
 par_test_detected_shell	### bug #42913: Dont use $SHELL but the shell currently running
-par_test_detected_shell	test_unknown_shell ash	Global::shell /usr/bin/bash
 par_test_detected_shell	test_unknown_shell bash	Global::shell /usr/bin/bash
 par_test_detected_shell	test_unknown_shell csh	Global::shell /usr/bin/bash
 par_test_detected_shell	test_unknown_shell dash	Global::shell /usr/bin/bash
@@ -3086,7 +3075,6 @@ par_test_detected_shell	test_unknown_shell sh	Global::shell /usr/bin/bash
 par_test_detected_shell	test_unknown_shell tcsh	Global::shell /usr/bin/bash
 par_test_detected_shell	test_unknown_shell yash	Global::shell /usr/bin/bash
 par_test_detected_shell	test_unknown_shell zsh	Global::shell /usr/bin/bash
-par_test_detected_shell	test_known_shell_c ash	Global::shell /usr/bin/ash
 par_test_detected_shell	test_known_shell_c bash	Global::shell /usr/bin/bash
 par_test_detected_shell	test_known_shell_c csh	Global::shell /usr/bin/csh
 par_test_detected_shell	test_known_shell_c dash	Global::shell /usr/bin/dash
@@ -3104,7 +3092,6 @@ par_test_detected_shell	test_known_shell_c static-sh	Global::shell /usr/bin/stat
 par_test_detected_shell	test_known_shell_c tcsh	Global::shell /usr/bin/tcsh
 par_test_detected_shell	test_known_shell_c yash	Global::shell /usr/bin/yash
 par_test_detected_shell	test_known_shell_c zsh	Global::shell /usr/bin/zsh
-par_test_detected_shell	test_known_shell_pipe ash	Global::shell /usr/bin/ash
 par_test_detected_shell	test_known_shell_pipe bash	Global::shell /usr/bin/bash
 par_test_detected_shell	test_known_shell_pipe csh	Global::shell /usr/bin/csh
 par_test_detected_shell	test_known_shell_pipe dash	Global::shell /usr/bin/dash

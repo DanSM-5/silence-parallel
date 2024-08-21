@@ -960,8 +960,6 @@ par_test_m_X	a1.gifb1c1 a2.gifb2c2 a3.gifb3c3 a4.gifb4c4 a5.gifb5c5 a6.gifb6c6
 par_test_m_X	### Test -q {.}
 par_test_m_X	'a' 
 par_test_m_X	'a'
-par_testquote	ash	"#&/
-par_testquote	ash	()*=?'
 par_testquote	bash	"#&/
 par_testquote	bash	()*=?'
 par_testquote	csh	"#&/

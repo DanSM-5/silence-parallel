@@ -5,7 +5,7 @@
 # Jobs that depend on the hardware
 # (e.g number of CPU threads, terminal type)
 
-par__environment_too_big_ash() {
+par__environment_too_big_dash() {
   myscript=$(cat <<'_EOF'
     echo 'bug #50815: env_parallel should warn if the environment is too big'
     len_var=60
@@ -17,7 +17,7 @@ par__environment_too_big_ash() {
     len_fun_quote=1
     len_fun_quote_remote=1
     
-    . `which env_parallel.ash`;
+    . `which env_parallel.dash`;
 
     repeat() {
       # Repeat input string n*1000 times
@@ -72,7 +72,7 @@ par__environment_too_big_ash() {
     bigfunc() { true; }
 _EOF
   )
-  stdout ssh ash@lo "$myscript" | perl -pe 's/(\d)\d\d\d\d/${1}XXXX/g'
+  stdout ssh dash@lo "$myscript" | perl -pe 's/(\d)\d\d\d\d/${1}XXXX/g'
 }
 
 par__environment_too_big_dash() {

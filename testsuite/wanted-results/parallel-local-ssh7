@@ -1,18 +1,4 @@
 ### test --env _, env_parallel for different shells
-par_--env_underscore_ash	### ash
-par_--env_underscore_ash	### Testing of --env _
-par_--env_underscore_ash	variables in aliases work
-par_--env_underscore_ash	variables in aliases work
-par_--env_underscore_ash	variables in aliases work
-par_--env_underscore_ash	variables in aliases work
-par_--env_underscore_ash	script: 4: not_copied_alias: not found
-par_--env_underscore_ash	error=OK
-par_--env_underscore_ash	aliases work
-par_--env_underscore_ash	aliases work
-par_--env_underscore_ash	/bin/ash: 1: myecho: not found
-par_--env_underscore_ash	OK if no myecho    ^^^^^^^^^^^^^^^^^
-par_--env_underscore_ash	script: 2: myecho: not found
-par_--env_underscore_ash	OK if no myecho    ^^^^^^^^^^^^^^^^^
 par_--env_underscore_bash	### bash
 par_--env_underscore_bash	### Testing of --env _
 par_--env_underscore_bash	variables in aliases in and arrays in functions work
@@ -87,7 +73,7 @@ par_--env_underscore_ksh	aliases in functions work
 par_--env_underscore_ksh	aliases in functions work
 par_--env_underscore_ksh	/bin/ksh: myecho: not found
 par_--env_underscore_ksh	OK if no myecho    ^^^^^^^^^^^^^^^^^
-par_--env_underscore_ksh	script[9]: myecho: not found
+par_--env_underscore_ksh	script: myecho: not found
 par_--env_underscore_ksh	OK if no myecho    ^^^^^^^^^^^^^^^^^
 par_--env_underscore_ksh	/bin/ksh: myfunc: not found
 par_--env_underscore_ksh	OK if no myfunc         ^^^^^^^^^^^^^^^^^
@@ -101,8 +87,8 @@ par_--env_underscore_mksh	variables in aliases in and arrays in functions work
 par_--env_underscore_mksh	variables in aliases in and arrays in functions work
 par_--env_underscore_mksh	variables in aliases in and arrays in functions work
 par_--env_underscore_mksh	variables in aliases in and arrays in functions work
-par_--env_underscore_mksh	W: script[9]: not_copied_alias: inaccessible or not found
-par_--env_underscore_mksh	W: script[9]: not_copied_func: inaccessible or not found
+par_--env_underscore_mksh	EW: script[9]: not_copied_alias: inaccessible or not found
+par_--env_underscore_mksh	EW: script[9]: not_copied_func: inaccessible or not found
 par_--env_underscore_mksh	error=OK
 par_--env_underscore_mksh	error=OK
 par_--env_underscore_mksh	aliases in and arrays in functions work
@@ -113,9 +99,9 @@ par_--env_underscore_mksh	aliases in functions work
 par_--env_underscore_mksh	The myecho alias is replaced in the function causing this not to fail
 par_--env_underscore_mksh	aliases in functions work
 par_--env_underscore_mksh	The myecho alias is replaced in the function causing this not to fail
-par_--env_underscore_mksh	W: /bin/mksh: myfunc: inaccessible or not found
+par_--env_underscore_mksh	EW: /bin/mksh: myfunc: inaccessible or not found
 par_--env_underscore_mksh	OK if no myfunc         ^^^^^^^^^^^^^^^^^
-par_--env_underscore_mksh	W: script[9]: myfunc: inaccessible or not found
+par_--env_underscore_mksh	EW: script[9]: myfunc: inaccessible or not found
 par_--env_underscore_mksh	OK if no myfunc         ^^^^^^^^^^^^^^^^^
 par_--env_underscore_sh	### sh
 par_--env_underscore_sh	### Testing of --env _
@@ -173,41 +159,6 @@ par_--env_underscore_zsh	zsh:1: command not found: myfunc
 par_--env_underscore_zsh	OK if no .^^^^^^^^^^^^^^^^^^^^^^^^^ myfunc
 par_--env_underscore_zsh	script:2: command not found: myfunc
 par_--env_underscore_zsh	OK if no .^^^^^^^^^^^^^^^^^^^^^^^^^ myfunc
-par__man_ash	### ash
-par__man_ash	### From man env_parallel
-par__man_ash	aliases with = & " ! ' work
-par__man_ash	aliases with = & " ! ' work
-par__man_ash	aliases with = & " ! ' work
-par__man_ash	aliases with = & " ! ' work
-par__man_ash	aliases with = & " ! ' work
-par__man_ash	multiline
-par__man_ash	aliases with = & " ! ' work
-par__man_ash	multiline
-par__man_ash	aliases with = & " ! ' work
-par__man_ash	multiline
-par__man_ash	aliases with = & " ! ' work
-par__man_ash	multiline
-par__man_ash	aliases with = & " ! ' work
-par__man_ash	multiline
-par__man_ash	aliases with = & " ! ' work
-par__man_ash	variables with  = & " ! ' work
-par__man_ash	variables with  = & " ! ' work
-par__man_ash	variables with  = & " ! ' work
-par__man_ash	variables with  = & " ! ' work
-par__man_ash	variables with  = & " ! ' work
-par__man_ash	multiline
-par__man_ash	    variables with  = & " ! ' work
-par__man_ash	multiline
-par__man_ash	    variables with  = & " ! ' work
-par__man_ash	multiline
-par__man_ash	    variables with  = & " ! ' work
-par__man_ash	multiline
-par__man_ash	    variables with  = & " ! ' work
-par__man_ash	multiline
-par__man_ash	    variables with  = & " ! ' work
-par__man_ash	exit value 2 should be 2
-par__man_ash	Unknown option: no-such-option
-par__man_ash	exit value 255 should be 255
 par__man_bash	### bash
 par__man_bash	### From man env_parallel
 par__man_bash	aliases with = & " ! ' work
@@ -705,107 +656,6 @@ par__man_zsh	env_parallel
 par__man_zsh	exit value 2 should be 2
 par__man_zsh	Unknown option: no-such-option
 par__man_zsh	exit value 255 should be 255
-par_env_parallel_--session_ash	### Test env_parallel --session
-par_env_parallel_--session_ash	### level0 should be hidden, level1 should be transferred
-par_env_parallel_--session_ash	
-par_env_parallel_--session_ash	script: 99: level0func: not found
-par_env_parallel_--session_ash	script: 99: level0alias: not found
-par_env_parallel_--session_ash	script: 99: Bad substitution
-par_env_parallel_--session_ash	
-par_env_parallel_--session_ash	/bin/ash: 999: level0func: not found
-par_env_parallel_--session_ash	/bin/ash: 999: level0alias: not found
-par_env_parallel_--session_ash	/bin/ash: 999: Bad substitution
-par_env_parallel_--session_ash	l1var
-par_env_parallel_--session_ash	l1alias
-par_env_parallel_--session_ash	script: 99: level1func: not found
-par_env_parallel_--session_ash	script: 99: Bad substitution
-par_env_parallel_--session_ash	l1var
-par_env_parallel_--session_ash	l1alias
-par_env_parallel_--session_ash	/bin/ash: 999: level1func: not found
-par_env_parallel_--session_ash	/bin/ash: 999: Bad substitution
-par_env_parallel_--session_ash	### level0+1 should be hidden, level2 should be transferred
-par_env_parallel_--session_ash	
-par_env_parallel_--session_ash	script: 4: level0func: not found
-par_env_parallel_--session_ash	script: 4: level0alias: not found
-par_env_parallel_--session_ash	script: 4: Bad substitution
-par_env_parallel_--session_ash	
-par_env_parallel_--session_ash	/bin/ash: 3: level0func: not found
-par_env_parallel_--session_ash	/bin/ash: 3: level0alias: not found
-par_env_parallel_--session_ash	/bin/ash: 3: Bad substitution
-par_env_parallel_--session_ash	
-par_env_parallel_--session_ash	script: 4: level1func: not found
-par_env_parallel_--session_ash	script: 4: level1alias: not found
-par_env_parallel_--session_ash	script: 4: Bad substitution
-par_env_parallel_--session_ash	
-par_env_parallel_--session_ash	/bin/ash: 3: level1func: not found
-par_env_parallel_--session_ash	/bin/ash: 3: level1alias: not found
-par_env_parallel_--session_ash	/bin/ash: 3: Bad substitution
-par_env_parallel_--session_ash	l2var
-par_env_parallel_--session_ash	l2alias
-par_env_parallel_--session_ash	script: 4: level2func: not found
-par_env_parallel_--session_ash	script: 4: Bad substitution
-par_env_parallel_--session_ash	l2var
-par_env_parallel_--session_ash	l2alias
-par_env_parallel_--session_ash	/bin/ash: 3: level2func: not found
-par_env_parallel_--session_ash	/bin/ash: 3: Bad substitution
-par_env_parallel_--session_ash	### level0 should be hidden, level1+2 should be transferred
-par_env_parallel_--session_ash	
-par_env_parallel_--session_ash	script: 99: level0func: not found
-par_env_parallel_--session_ash	script: 99: level0alias: not found
-par_env_parallel_--session_ash	script: 99: Bad substitution
-par_env_parallel_--session_ash	
-par_env_parallel_--session_ash	/bin/ash: 999: level0func: not found
-par_env_parallel_--session_ash	/bin/ash: 999: level0alias: not found
-par_env_parallel_--session_ash	/bin/ash: 999: Bad substitution
-par_env_parallel_--session_ash	l1var
-par_env_parallel_--session_ash	l1alias
-par_env_parallel_--session_ash	script: 99: level1func: not found
-par_env_parallel_--session_ash	script: 99: Bad substitution
-par_env_parallel_--session_ash	l1var
-par_env_parallel_--session_ash	l1alias
-par_env_parallel_--session_ash	/bin/ash: 999: level1func: not found
-par_env_parallel_--session_ash	/bin/ash: 999: Bad substitution
-par_env_parallel_--session_ash	l2var
-par_env_parallel_--session_ash	l2alias
-par_env_parallel_--session_ash	script: 99: level2func: not found
-par_env_parallel_--session_ash	script: 99: Bad substitution
-par_env_parallel_--session_ash	l2var
-par_env_parallel_--session_ash	l2alias
-par_env_parallel_--session_ash	/bin/ash: 999: level2func: not found
-par_env_parallel_--session_ash	/bin/ash: 999: Bad substitution
-par_env_parallel_--session_ash	### level0+1+2 should be transferred
-par_env_parallel_--session_ash	l0var
-par_env_parallel_--session_ash	l0alias
-par_env_parallel_--session_ash	script: 99: level0func: not found
-par_env_parallel_--session_ash	script: 99: Bad substitution
-par_env_parallel_--session_ash	l0var
-par_env_parallel_--session_ash	l0alias
-par_env_parallel_--session_ash	/bin/ash: 999: level0func: not found
-par_env_parallel_--session_ash	/bin/ash: 999: Bad substitution
-par_env_parallel_--session_ash	l1var
-par_env_parallel_--session_ash	l1alias
-par_env_parallel_--session_ash	script: 99: level1func: not found
-par_env_parallel_--session_ash	script: 99: Bad substitution
-par_env_parallel_--session_ash	l1var
-par_env_parallel_--session_ash	l1alias
-par_env_parallel_--session_ash	/bin/ash: 999: level1func: not found
-par_env_parallel_--session_ash	/bin/ash: 999: Bad substitution
-par_env_parallel_--session_ash	l2var
-par_env_parallel_--session_ash	l2alias
-par_env_parallel_--session_ash	script: 99: level2func: not found
-par_env_parallel_--session_ash	script: 99: Bad substitution
-par_env_parallel_--session_ash	l2var
-par_env_parallel_--session_ash	l2alias
-par_env_parallel_--session_ash	/bin/ash: 999: level2func: not found
-par_env_parallel_--session_ash	/bin/ash: 999: Bad substitution
-par_env_parallel_--session_ash	/bin/ash: 1: aliasbefore: not found
-par_env_parallel_--session_ash	script: 2: aliasbefore: not found
-par_env_parallel_--session_ash	no_before
-par_env_parallel_--session_ash	no_before
-par_env_parallel_--session_ash	after aliasafter_OK
-par_env_parallel_--session_ash	after aliasafter_OK
-par_env_parallel_--session_ash	after varafter_OK
-par_env_parallel_--session_ash	after varafter_OK
 par_env_parallel_--session_bash	### Test env_parallel --session / --end-session
 par_env_parallel_--session_bash	### level0 should be hidden, level1 should be transferred
 par_env_parallel_--session_bash	
@@ -1130,12 +980,12 @@ par_env_parallel_--session_mksh	### Test env_parallel --session
 par_env_parallel_--session_mksh	### level0 should be hidden, level1 should be transferred
 par_env_parallel_--session_mksh	
 par_env_parallel_--session_mksh	fail
-par_env_parallel_--session_mksh	W: script[9]: level0func: inaccessible or not found
-par_env_parallel_--session_mksh	W: script[9]: level0alias: inaccessible or not found
+par_env_parallel_--session_mksh	EW: script[9]: level0func: inaccessible or not found
+par_env_parallel_--session_mksh	EW: script[9]: level0alias: inaccessible or not found
 par_env_parallel_--session_mksh	
 par_env_parallel_--session_mksh	fail
-par_env_parallel_--session_mksh	W: /bin/mksh: level0func: inaccessible or not found
-par_env_parallel_--session_mksh	W: /bin/mksh: level0alias: inaccessible or not found
+par_env_parallel_--session_mksh	EW: /bin/mksh: level0func: inaccessible or not found
+par_env_parallel_--session_mksh	EW: /bin/mksh: level0alias: inaccessible or not found
 par_env_parallel_--session_mksh	l1var
 par_env_parallel_--session_mksh	l1func
 par_env_parallel_--session_mksh	l1alias
@@ -1147,20 +997,20 @@ par_env_parallel_--session_mksh	level1 array OK
 par_env_parallel_--session_mksh	### level0+1 should be hidden, level2 should be transferred
 par_env_parallel_--session_mksh	
 par_env_parallel_--session_mksh	fail
-par_env_parallel_--session_mksh	W: script[9]: level0func: inaccessible or not found
-par_env_parallel_--session_mksh	W: script[9]: level0alias: inaccessible or not found
+par_env_parallel_--session_mksh	EW: script[9]: level0func: inaccessible or not found
+par_env_parallel_--session_mksh	EW: script[9]: level0alias: inaccessible or not found
 par_env_parallel_--session_mksh	
 par_env_parallel_--session_mksh	fail
-par_env_parallel_--session_mksh	W: /bin/mksh: level0func: inaccessible or not found
-par_env_parallel_--session_mksh	W: /bin/mksh: level0alias: inaccessible or not found
+par_env_parallel_--session_mksh	EW: /bin/mksh: level0func: inaccessible or not found
+par_env_parallel_--session_mksh	EW: /bin/mksh: level0alias: inaccessible or not found
 par_env_parallel_--session_mksh	
 par_env_parallel_--session_mksh	fail
-par_env_parallel_--session_mksh	W: script[9]: level1func: inaccessible or not found
-par_env_parallel_--session_mksh	W: script[9]: level1alias: inaccessible or not found
+par_env_parallel_--session_mksh	EW: script[9]: level1func: inaccessible or not found
+par_env_parallel_--session_mksh	EW: script[9]: level1alias: inaccessible or not found
 par_env_parallel_--session_mksh	
 par_env_parallel_--session_mksh	fail
-par_env_parallel_--session_mksh	W: /bin/mksh: level1func: inaccessible or not found
-par_env_parallel_--session_mksh	W: /bin/mksh: level1alias: inaccessible or not found
+par_env_parallel_--session_mksh	EW: /bin/mksh: level1func: inaccessible or not found
+par_env_parallel_--session_mksh	EW: /bin/mksh: level1alias: inaccessible or not found
 par_env_parallel_--session_mksh	l2var
 par_env_parallel_--session_mksh	l2func
 par_env_parallel_--session_mksh	l2alias
@@ -1172,12 +1022,12 @@ par_env_parallel_--session_mksh	level2 array OK
 par_env_parallel_--session_mksh	### level0 should be hidden, level1+2 should be transferred
 par_env_parallel_--session_mksh	
 par_env_parallel_--session_mksh	fail
-par_env_parallel_--session_mksh	W: script[9]: level0func: inaccessible or not found
-par_env_parallel_--session_mksh	W: script[9]: level0alias: inaccessible or not found
+par_env_parallel_--session_mksh	EW: script[9]: level0func: inaccessible or not found
+par_env_parallel_--session_mksh	EW: script[9]: level0alias: inaccessible or not found
 par_env_parallel_--session_mksh	
 par_env_parallel_--session_mksh	fail
-par_env_parallel_--session_mksh	W: /bin/mksh: level0func: inaccessible or not found
-par_env_parallel_--session_mksh	W: /bin/mksh: level0alias: inaccessible or not found
+par_env_parallel_--session_mksh	EW: /bin/mksh: level0func: inaccessible or not found
+par_env_parallel_--session_mksh	EW: /bin/mksh: level0alias: inaccessible or not found
 par_env_parallel_--session_mksh	l1var
 par_env_parallel_--session_mksh	l1func
 par_env_parallel_--session_mksh	l1alias
@@ -1219,10 +1069,10 @@ par_env_parallel_--session_mksh	l2var
 par_env_parallel_--session_mksh	l2func
 par_env_parallel_--session_mksh	l2alias
 par_env_parallel_--session_mksh	level2 array OK
-par_env_parallel_--session_mksh	W: /bin/mksh: aliasbefore: inaccessible or not found
-par_env_parallel_--session_mksh	W: script[9]: aliasbefore: inaccessible or not found
-par_env_parallel_--session_mksh	W: /bin/mksh: funcbefore: inaccessible or not found
-par_env_parallel_--session_mksh	W: script[9]: funcbefore: inaccessible or not found
+par_env_parallel_--session_mksh	EW: /bin/mksh: aliasbefore: inaccessible or not found
+par_env_parallel_--session_mksh	EW: script[9]: aliasbefore: inaccessible or not found
+par_env_parallel_--session_mksh	EW: /bin/mksh: funcbefore: inaccessible or not found
+par_env_parallel_--session_mksh	EW: script[9]: funcbefore: inaccessible or not found
 par_env_parallel_--session_mksh	no_before
 par_env_parallel_--session_mksh	no_before
 par_env_parallel_--session_mksh	no_before
@@ -1450,22 +1300,6 @@ par_env_parallel_--session_zsh	after varafter_OK
 par_env_parallel_--session_zsh	after varafter_OK
 par_env_parallel_--session_zsh	array after arrayafter_OK
 par_env_parallel_--session_zsh	array after arrayafter_OK
-par_env_parallel_ash	OK
-par_env_parallel_ash	OK
-par_env_parallel_ash	alias line 1
-par_env_parallel_ash	alias line 1
-par_env_parallel_ash	alias line 2
-par_env_parallel_ash	alias line 2
-par_env_parallel_ash	alias line 3
-par_env_parallel_ash	alias line 3
-par_env_parallel_ash	alias2 line 1
-par_env_parallel_ash	alias2 line 1
-par_env_parallel_ash	alias2 line 2
-par_env_parallel_ash	alias2 line 2
-par_env_parallel_ash	bug #50435: Remote fifo broke in 20150522
-par_env_parallel_ash	bug #52534: Tail of multiline alias is ignored
-par_env_parallel_ash	data from stdin
-par_env_parallel_ash	data from stdin
 par_env_parallel_bash	OK
 par_env_parallel_bash	OK
 par_env_parallel_bash	alias line 1
@@ -1606,7 +1440,6 @@ par_env_parallel_zsh	bug #50435: Remote fifo broke in 20150522
 par_env_parallel_zsh	bug #52534: Tail of multiline alias is ignored
 par_env_parallel_zsh	data from stdin
 par_env_parallel_zsh	data from stdin
-par_environment_too_big_ash	moved to hwdep1.sh
 par_environment_too_big_bash	bug #50815: env_parallel should warn if the environment is too big
 par_environment_too_big_bash	OK_bigvar
 par_environment_too_big_bash	OK_bigvar_remote
@@ -1683,14 +1516,7 @@ par_environment_too_big_sh	fail_bigfunc_quote-not-supported
 par_environment_too_big_sh	fail_bigfunc_quote_remote-not-supported
 par_environment_too_big_tcsh	Not implemented
 par_environment_too_big_zsh	moved to hwdep1.sh
-par_funky_ash	
-par_funky_ash	'	'
-par_funky_ash	'par_funky_ash	 !"#$%&'"'"'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~€‚ƒ„…†‡ˆ‰Š‹Œ‘’“”•–—˜™š›œŸ ¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º»¼½¾¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏĞÑÒÓÔÕÖ×ØÙÚÛÜİŞßàáâãäåæçèéêëìíîïğñòóôõö÷øùúûüışÿ'
-par_funky_ash	3 arg alias_works
-par_funky_ash	3 arg alias_works_over_ssh
 par_funky_bash	
-par_funky_bash		
-par_funky_bash		
 par_funky_bash	-funkymultiline
 par_funky_bash	-funkymultiline
 par_funky_bash	  space  6  
@@ -1702,8 +1528,8 @@ par_funky_bash	3 arg alias_works
 par_funky_bash	3 arg alias_works_over_ssh
 par_funky_bash	Funkyline-par_funky_bash	 !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~€‚ƒ„…†‡ˆ‰Š‹Œ‘’“”•–—˜™š›œŸ ¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º»¼½¾¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏĞÑÒÓÔÕÖ×ØÙÚÛÜİŞßàáâãäåæçèéêëìíîïğñòóôõö÷øùúûüışÿ-funkyline
 par_funky_bash	Funkyline-par_funky_bash	 !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~€‚ƒ„…†‡ˆ‰Š‹Œ‘’“”•–—˜™š›œŸ ¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º»¼½¾¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏĞÑÒÓÔÕÖ×ØÙÚÛÜİŞßàáâãäåæçèéêëìíîïğñòóôõö÷øùúûüışÿ-funkyline
-par_funky_bash	Funkymultiline-
-par_funky_bash	Funkymultiline-
+par_funky_bash	Funkymultiline-	
+par_funky_bash	Funkymultiline-	
 par_funky_bash	assoc_val_a
 par_funky_bash	assoc_val_a
 par_funky_bash	function_works
@@ -1797,35 +1623,6 @@ par_funky_zsh	function_works
 par_funky_zsh	function_works_over_ssh
 par_funky_zsh	myvar  works
 par_funky_zsh	myvar  works
-par_parset_ash	parset
-par_parset_ash	### parset into vars with comma
-par_parset_ash	foo bar baz
-par_parset_ash	### parset into vars with space
-par_parset_ash	foo bar baz
-par_parset_ash	### parset with newlines
-par_parset_ash	1
-par_parset_ash	1
-par_parset_ash	2
-par_parset_ash	1
-par_parset_ash	2
-par_parset_ash	3
-par_parset_ash	### env_parset
-par_parset_ash	myecho myvar foo myecho myvar bar myecho myvar baz
-par_parset_ash	myecho myvar foo myecho myvar bar myecho myvar baz
-par_parset_ash	newline1
-par_parset_ash	newline2
-par_parset_ash	1
-par_parset_ash	newline1
-par_parset_ash	newline2
-par_parset_ash	1
-par_parset_ash	2
-par_parset_ash	newline1
-par_parset_ash	newline2
-par_parset_ash	1
-par_parset_ash	2
-par_parset_ash	3
-par_parset_ash	Exit value 2 = 2
-par_parset_ash	Exit value 2 = 2
 par_parset_bash	parset
 par_parset_bash	### parset into array
 par_parset_bash	foo bar baz

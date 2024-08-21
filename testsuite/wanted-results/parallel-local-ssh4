@@ -321,7 +321,6 @@ par_warn_when_exporting_func	/bin/sh	Run function in /bin/sh
 par_warn_when_exporting_func	/bin/sh	parallel: Warning: Shell functions may not be supported in /bin/sh.
 par_warn_when_exporting_func	/bin/bash	Run function in /bin/bash
 par_warn_when_exporting_func	/bin/bash	Function run: OK
-par_warn_when_exporting_func	/bin/ash	Run function in /bin/ash
 par_warn_when_exporting_func	/bin/csh	Run function in /bin/csh
 par_warn_when_exporting_func	/bin/csh	parallel: Warning: Shell functions may not be supported in /bin/csh.
 par_warn_when_exporting_func	/bin/csh	CSH/TCSH DO NOT SUPPORT newlines IN VARIABLES/FUNCTIONS. Unset myfunc

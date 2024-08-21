@@ -2798,7 +2798,7 @@ sub check_invalid_option_combinations() {
 
 sub init_globals() {
     # Defaults:
-    $Global::version = 20240808;
+    $Global::version = 20240822;
     $Global::progname = 'parallel';
     $::name = "GNU Parallel";
     $Global::infinity = 2**31;
@@ -3806,7 +3806,7 @@ sub pQ($) {
 }
 
 sub unquote_printf() {
-    # Convert \t \n \r \000 \0
+    # Convert \t \n \r \xFF \000 \0
     # Inputs:
     #	$string = string with \t \n \r \num \0
     # Returns:
@@ -3815,7 +3815,11 @@ sub unquote_printf() {
     s/\\t/\t/g;
     s/\\n/\n/g;
     s/\\r/\r/g;
+    # Hex: \xFF
+    s/\\x([0-9a-fA-F]+)/eval 'sprintf "\\x'.$1.'"'/ge;
+    # Octal: \007
     s/\\(\d\d\d)/eval 'sprintf "\\'.$1.'"'/ge;
+    # Single digit octal: \7
     s/\\(\d)/eval 'sprintf "\\'.$1.'"'/ge;
     return $_;
 }
@@ -5852,8 +5856,8 @@ sub usage() {
 	 "If you use programs that use GNU Parallel to process data for an article in a",
 	 "scientific publication, please cite:",
 	 "",
-	 "  Tange, O. (2024, July 22). GNU Parallel 20240722 ('Assange').",
-	 "  Zenodo. https://doi.org/10.5281/zenodo.12789352",
+	 "  Tange, O. (2024, August 22). GNU Parallel 20240822 ('Southport').",
+	 "  Zenodo. https://doi.org/10.5281/zenodo.13357237",
 	 "",
 	 # Before changing these lines,  please read
 	 # https://www.gnu.org/software/parallel/parallel_design.html#citation-notice
@@ -5885,8 +5889,8 @@ sub citation_notice() {
 	     "If you use programs that use GNU Parallel to process data for an article in a",
 	     "scientific publication, please cite:",
 	     "",
-	     "  Tange, O. (2024, July 22). GNU Parallel 20240722 ('Assange').",
-	     "  Zenodo. https://doi.org/10.5281/zenodo.12789352",
+	     "  Tange, O. (2024, August 22). GNU Parallel 20240822 ('Southport').",
+	     "  Zenodo. https://doi.org/10.5281/zenodo.13357237",
 	     "",
 	     # Before changing these line,   please read
 	     # https://www.gnu.org/software/parallel/parallel_design.html#citation-notice and
@@ -6012,20 +6016,20 @@ sub citation() {
 	"If you use programs that use GNU Parallel to process data for an article in a",
 	"scientific publication, please cite:",
 	"",
-	"\@software{tange_2024_12789352,",
+	"\@software{tange_2024_13357237,",
 	"      author       = {Tange, Ole},",
-	"      title        = {GNU Parallel 20240722 ('Assange')},",
-	"      month        = Jul,",
+	"      title        = {GNU Parallel 20240822 ('Southport')},",
+	"      month        = Aug,",
 	"      year         = 2023,",
 	"      note         = {{GNU Parallel is a general parallelizer to run",
 	"                       multiple serial command line programs in parallel",
 	"                       without changing them.}},",
 	"      publisher    = {Zenodo},",
-	"      doi          = {10.5281/zenodo.12789352},",
-	"      url          = {https://doi.org/10.5281/zenodo.12789352}",
+	"      doi          = {10.5281/zenodo.13357237},",
+	"      url          = {https://doi.org/10.5281/zenodo.13357237}",
 	"}",
 	"",
-	"(Feel free to use \\nocite{tange_2024_12789352})",
+	"(Feel free to use \\nocite{tange_2024_13357237})",
 	"",
 	# Before changing these lines, please read
 	# https://www.gnu.org/software/parallel/parallel_design.html#citation-notice and

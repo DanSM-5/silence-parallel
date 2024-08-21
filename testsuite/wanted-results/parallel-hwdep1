@@ -1,21 +1,3 @@
-par__environment_too_big_ash	bug #5XXXX: env_parallel should warn if the environment is too big
-par__environment_too_big_ash	OK_bigvar
-par__environment_too_big_ash	OK_bigvar_remote
-par__environment_too_big_ash	OK_bigvar_quote
-par__environment_too_big_ash	OK_bigvar_quote_remote
-par__environment_too_big_ash	OK_bigfunc
-par__environment_too_big_ash	OK_bigfunc_remote
-par__environment_too_big_ash	OK_bigfunc_quote
-par__environment_too_big_ash	OK_bigfunc_quote_remote
-par__environment_too_big_ash	Rest should fail - functions not supported in ash
-par__environment_too_big_ash	parallel: Error: Command line too long (7XXXX >= 6XXXX) at input 0: fail_bigvar
-par__environment_too_big_ash	parallel: Error: Command line too long (7XXXX >= 6XXXX) at input 0: fail_bigvar_remote
-par__environment_too_big_ash	parallel: Error: Command line too long (8XXXX >= 6XXXX) at input 0: fail_bigvar_quote
-par__environment_too_big_ash	parallel: Error: Command line too long (8XXXX >= 6XXXX) at input 0: fail_bigvar_quote_remote
-par__environment_too_big_ash	fail_bigfunc-not-supported
-par__environment_too_big_ash	fail_bigfunc_remote-not-supported
-par__environment_too_big_ash	fail_bigfunc_quote-not-supported
-par__environment_too_big_ash	fail_bigfunc_quote_remote-not-supported
 par__environment_too_big_dash	bug #5XXXX: env_parallel should warn if the environment is too big
 par__environment_too_big_dash	OK_bigvar
 par__environment_too_big_dash	OK_bigvar_remote

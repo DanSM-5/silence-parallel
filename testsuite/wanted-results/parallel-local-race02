@@ -1,7 +1,10 @@
 WHY DOES THIS FAIL?
 ### --env _
+OK from fubar test
 In csh this may fail with ignored_var: Undefined variable.
 ### --env _ with explicit mentioning of normally ignored var $ignored_var
+OK from fubar should be copied test
+OK from fubar should be copied test
 bug #46120: Suspend should suspend (at least local) children
 it should burn 1.9 CPU seconds, but no more than that
 The 5 second sleep will make it be killed by timeout when it fgs

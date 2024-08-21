@@ -6,8 +6,22 @@ New in this release:
 
 * {:%fmt} Use printf formatting of replacement strings.
 
+* Bug fixes and man page updates.
 
-<<>>
+News about GNU Parallel:
+
+* Powerful GNU parallel, more than a loop
+  https://www.linkedin.com/pulse/powerful-gnu-parallel-more-than-loop-zhenguo-zhang-18dxc
+
+* How To Increase File Transfer Speed Using Parallel Rsync?
+  https://contentbase.com/blog/increase-file-transfer-speed-parallel-rsync/
+
+* Converting WebP Images to PNG Using parallel and dwebp
+  https://bytefreaks.net/2024/07/27
+
+* Turbocharging the Box CLI with GNU Parallel
+  https://medium.com/box-developer-blog/turbocharging-the-box-cli-with-gnu-parallel-ee44c48811c0
+
 
 20240722
 

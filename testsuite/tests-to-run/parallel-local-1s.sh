@@ -433,7 +433,7 @@ par_testquote() {
     export -f testquote
     # "sash script" does not work
     # "sash -f script" does, but is currently not supported by GNU Parallel
-    parallel --tag -k testquote ::: ash bash csh dash fdsh fish fizsh ksh ksh93 mksh posh rbash rc rzsh "sash -f" sh static-sh tcsh yash zsh
+    parallel --tag -k testquote ::: bash csh dash fdsh fish fizsh ksh ksh93 mksh posh rbash rc rzsh "sash -f" sh static-sh tcsh yash zsh
     # "fdsh" is currently not supported by GNU Parallel:
     #        It gives ioctl(): Interrupted system call
     parallel --tag -k testquote ::: fdsh

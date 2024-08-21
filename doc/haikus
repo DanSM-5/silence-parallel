@@ -4,10 +4,6 @@
  
 Quote of the month:
 
-  honestly the coolest software i've ever seen gotta be gnu parallel or
-  ffmpeg, nothing like them
-    -- @scootykins scoot
-
   Recently executed a flawless live data migration of ~2.4pb using GNU parallel for scale and bash scripts.
     -- @mechanicker@twitter Dhruva
 
@@ -230,6 +226,10 @@ https://negfeedback.blogspot.com/2020/05/indispensable-command-line-tools.html
     -- @alinajaf@twitter
 
 === Used ===
+
+  honestly the coolest software i've ever seen gotta be gnu parallel or
+  ffmpeg, nothing like them
+    -- @scootykins scoot
 
   parallel is frickin great for launching jobs on multiple
   machines. Ansible and Jenkins and others may be good too but I was

@@ -861,7 +861,7 @@ B<--trim n>.
 I<regexp> is a Perl Regular Expression:
 https://perldoc.perl.org/perlre.html
 
-See also: B<--csv> B<{>I<n>B<}> B<--trim> B<--link>
+See also: B<--csv> B<{>I<n>B<}> B<--trim> B<--link> B<--match>
 
 
 =item B<--combineexec> I<name>
@@ -942,7 +942,7 @@ See also: B<--compress>
 
 Treat input as CSV-format.
 
-B<--colsep> sets the field delimiter. It works very much like
+B<--colsep> sets the field delimiter. B<--csv> works very much like
 B<--colsep> except it deals correctly with quoting. Compare:
 
    echo '"1 big, 2 small","2""x4"" plank",12.34' |
@@ -957,9 +957,9 @@ Even quoted newlines are parsed correctly:
     echo 'Line 2 in field 1";value 2') |
      parallel --csv --colsep ';' echo Field 1: {1} Field 2: {2}
 
-When used with B<--pipe> only pass full CSV-records.
+When used with B<--pipe> it will only pass full CSV-records.
 
-See also: B<--pipe> B<--link> B<{>I<n>B<}> B<--colsep> B<--header>
+See also: B<--pipe> B<--link> B<{>I<n>B<}> B<--colsep> B<--header> B<--match>
 
 
 =item B<--ctag> (obsolete: use B<--color> B<--tag>)
@@ -1000,10 +1000,10 @@ See also: TIME POSTFIXES B<--retries> B<--ssh-delay>
 
 =item B<-d> I<delim>
 
-Input items are terminated by I<delim>.
+Input records are terminated by I<delim>.
 
 The specified delimiter may be characters, C-style character escapes
-such as \n, or octal or hexadecimal escape codes.  Octal and
+such as \n, or octal (\012) or hexadecimal (\x0A) escape codes.  Octal and
 hexadecimal escape codes are understood as for the printf command.
 
 See also: B<--colsep>
@@ -1800,9 +1800,13 @@ See also: B<-X> B<--xargs>
 
 Match input source with regexp to set replacement fields.
 
-Each capture group i.e. '(...)' can be accessed with a replacement
-field. The replacement fields are named B<{m.n}> where m is the input
-source and n is the capture group number:
+With B<--match> you can often avoid pre-processing your input with
+B<awk> or similar to extract the relevant fields.
+
+You can access each capture group i.e. the parenthesis in regexp
+'(...)' with a replacement field. The replacement fields are named
+B<{m.n}> where m is the input source and n is the capture group
+number:
 
   parallel --match '(.*),(.*)_(.*)' echo {1.2} {1.3} {1.1} \
     ::: Gold,Heart_of
@@ -1821,7 +1825,7 @@ input source 1:
   parallel --match '' --match '([a-z]+)' echo {1} {2.1} \
     ::: Telephone ::: 10sanitizer
 
-See also: B<{>I<n>B<}>
+See also: B<{>I<n>B<}> B<--colsep>
 
 
 =item B<--memfree> I<size>

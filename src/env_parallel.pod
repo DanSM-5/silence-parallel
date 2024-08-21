@@ -384,7 +384,7 @@ B<--session> is supported.
 =back
 
 
-=head2 fish (alpha testing)
+=head2 fish (beta testing)
 
 =head3 Installation
 

@@ -268,35 +268,34 @@ from:tange@gnu.org
 to:parallel@gnu.org, bug-parallel@gnu.org
 stable-bcc: Jesse Alama <jessealama@fastmail.fm>
 
-Subject: GNU Parallel 20240822 ('Bangladesh/Southport/<<>>') released <<[stable]>>
+Subject: GNU Parallel 20240822 ('Southport') released
 
-GNU Parallel 20240822 ('<<>>') has been released. It is available for download at: lbry://@GnuParallel:4
+GNU Parallel 20240822 ('Southport') has been released. It is available for download at: lbry://@GnuParallel:4
 
 Quote of the month:
 
-  <<>>
+  honestly the coolest software i've ever seen gotta be gnu parallel or
+  ffmpeg, nothing like them
+    -- @scootykins scoot
   
 New in this release:
 
-* A format string can be added to replacement strings: {#:%04d}
+* --match Match input source with regexp to set replacement fields.
 
-<<>>
-
-<<* No new features. This is a candidate for a stable release.>>
+* {:%fmt} Use printf formatting of replacement strings.
 
 * Bug fixes and man page updates.
 
+
 News about GNU Parallel:
 
-https://www.linkedin.com/pulse/powerful-gnu-parallel-more-than-loop-zhenguo-zhang-18dxc
+* Powerful GNU parallel, more than a loop https://www.linkedin.com/pulse/powerful-gnu-parallel-more-than-loop-zhenguo-zhang-18dxc
 
-https://contentbase.com/blog/increase-file-transfer-speed-parallel-rsync/
+* How To Increase File Transfer Speed Using Parallel Rsync? https://contentbase.com/blog/increase-file-transfer-speed-parallel-rsync/
 
-https://bytefreaks.net/2024/07/27
+* Converting WebP Images to PNG Using parallel and dwebp https://bytefreaks.net/2024/07/27
 
-https://medium.com/box-developer-blog/turbocharging-the-box-cli-with-gnu-parallel-ee44c48811c0
-
-<<>>
+* Turbocharging the Box CLI with GNU Parallel https://medium.com/box-developer-blog/turbocharging-the-box-cli-with-gnu-parallel-ee44c48811c0
 
 
 GNU Parallel - For people who live life in the parallel lane.

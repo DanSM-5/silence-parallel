@@ -16,6 +16,20 @@ export -f stdsort
 # Test amount of parallelization
 # parallel --shuf --jl /tmp/myjl -j1 'export JOBS={1};'bash tests-to-run/parallel-local-0.3s.sh ::: {1..16} ::: {1..5}
 
+par_parcat_args_stdin() {
+    echo 'bug #51690: parcat: read args from stdin'
+    # parcat reads files line by line
+    # so this does not work if TMPDIR contains \n
+    TMPDIR='/tmp/Y/  </i'
+    mkdir -p "$TMPDIR"
+    tmp1=$(mktemp)
+    tmp2=$(mktemp)
+    echo OK1 > "$tmp1"
+    echo OK2 > "$tmp2"
+    (echo "$tmp1"; echo "$tmp2") | parcat | sort
+    rm "$tmp1" "$tmp2"
+}
+
 par_--rpl_group_bug() {
     echo 'Bug in --rpl group: $$1_'
     parallel --rpl '{a(.)b} s/$$1_c/o/g' echo {aDb} ::: GD_cD_cd
@@ -804,20 +818,6 @@ par_X_eta_div_zero() {
 	perl -pe 's/\d+/0/g' |
 	perl -pe 's/Comp.* to complete//' |
 	perl -ne '/../ and print'
-}
-
-par_parcat_args_stdin() {
-    echo 'bug #51690: parcat: read args from stdin'
-    # parcat reads files line by line
-    # so this does not work if TMPDIR contains \n
-    TMPDIR='/tmp/Y/  </i'
-    mkdir -p "$TMPDIR"
-    tmp1=$(mktemp)
-    tmp2=$(mktemp)
-    echo OK1 > "$tmp1"
-    echo OK2 > "$tmp2"
-    (echo "$tmp1"; echo "$tmp2") | parcat | sort
-    rm "$tmp1" "$tmp2"
 }
 
 par_parcat_rm() {

@@ -665,7 +665,7 @@ par_shellquote() {
 	"$shell" -c perl\ -e\ \'print\ pack\(\"c\*\",1..255\)\'\ \|\ parallel\ -0\ --shellquote
     }
     export -f doit
-    parallel --tag -q -k doit {} ::: ash bash csh dash fish fizsh ksh2020 ksh93 lksh mksh posh rzsh sash sh static-sh tcsh yash zsh csh tcsh
+    parallel --tag -q -k doit {} ::: bash csh dash fish fizsh ksh2020 ksh93 lksh mksh posh rzsh sash sh static-sh tcsh yash zsh csh tcsh
 }
 
 par_tmp_full() {

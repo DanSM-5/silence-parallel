@@ -29,63 +29,6 @@ export -f retry
 ## par_*_man = tests from the man page
 #
 
-par__man_ash() {
-  echo '### ash'
-
-  myscript=$(cat <<'_EOF'
-    echo "### From man env_parallel"
-
-    . `which env_parallel.ash`;
-
-    alias myecho='echo aliases with \= \& \" \!'" \'"
-    myecho work
-    env_parallel myecho ::: work
-    env_parallel -S server myecho ::: work
-    env_parallel --env myecho myecho ::: work
-    env_parallel --env myecho -S server myecho ::: work
-
-    alias multiline='echo multiline
-      echo aliases with \= \& \" \!'" \'"
-    multiline work
-    env_parallel multiline ::: work
-    env_parallel -S server multiline ::: work
-    env_parallel --env multiline multiline ::: work
-    env_parallel --env multiline -S server multiline ::: work
-    alias multiline="dummy"
-
-    # Functions are not supported in ash
-
-    myvar='variables with  = & " !'" '"
-    echo "$myvar" work
-    env_parallel echo '"$myvar"' ::: work
-    env_parallel -S server echo '"$myvar"' ::: work
-    env_parallel --env myvar echo '"$myvar"' ::: work
-    env_parallel --env myvar -S server echo '"$myvar"' ::: work
-
-    multivar='multiline
-    variables with  = & " !'" '"
-    echo "$multivar" work
-    env_parallel echo '"$multivar"' ::: work
-    env_parallel -S server echo '"$multivar"' ::: work
-    env_parallel --env multivar echo '"$multivar"' ::: work
-    env_parallel --env multivar -S server echo '"$multivar"' ::: work
-
-    # Arrays are not supported in ash
-
-    # Exporting of functions is not supported
-    # env_parallel --argsep --- env_parallel -k echo ::: multi level --- env_parallel
-
-    env_parallel ::: true false true false
-    echo exit value $? should be 2
-
-    env_parallel --no-such-option 2>&1 >/dev/null
-    # Sleep 1 to delay output to stderr to avoid race
-    echo exit value $? should be 255 `sleep 1`
-_EOF
-  )
-  ssh ash@lo "$myscript"
-}
-
 par__man_bash() {
   echo '### bash'
 
@@ -624,55 +567,6 @@ _EOF
   ssh zsh@lo "$myscript"
 }
 
-
-par_--env_underscore_ash() {
-  echo '### ash'
-  myscript=$(cat <<'_EOF'
-    echo "### Testing of --env _"
-
-    alias not_copied_alias="echo BAD"
-#    not_copied_func() { echo BAD; };
-    not_copied_var=BAD
-#    not_copied_array=(BAD BAD BAD);
-    . `which env_parallel.ash`;
-    env_parallel --record-env;
-    alias myecho="echo \$myvar aliases";
-#    myfunc() { myecho functions $*; };
-    myvar="variables in";
-#    myarray=(and arrays in);
-#    env_parallel myfunc ::: work;
-#    env_parallel -S server myfunc ::: work;
-    env_parallel --env myvar,myecho myecho ::: work;
-    env_parallel --env myvar,myecho -S server myecho ::: work;
-    env_parallel --env _ myecho ::: work;
-    env_parallel --env _ -S server myecho ::: work;
-
-    env_parallel --env _ -S server not_copied_alias ::: error=OK;
-#    env_parallel --env _ -S server not_copied_func ::: error=OK;
-    env_parallel --env _ -S server echo \$not_copied_var ::: error=OK;
-#    env_parallel --env _ -S server echo \${not_copied_array[@]} ::: error=OK;
-
-    echo myvar >> ~/.parallel/ignored_vars;
-    env_parallel --env _ myecho ::: work;
-    env_parallel --env _ -S server myecho ::: work;
-#    echo myarray >> ~/.parallel/ignored_vars;
-#    env_parallel --env _ myfunc ::: work;
-#    env_parallel --env _ -S server myfunc ::: work;
-    echo myecho >> ~/.parallel/ignored_vars;
-    env_parallel --env _ myecho ::: work;
-    echo "OK if no myecho    ^^^^^^^^^^^^^^^^^" >&2;
-    env_parallel --env _ -S server myecho ::: work;
-    echo "OK if no myecho    ^^^^^^^^^^^^^^^^^" >&2;
-#    echo myfunc >> ~/.parallel/ignored_vars;
-#    env_parallel --env _ myfunc ::: work;
-#    echo "OK if no myfunc         ^^^^^^^^^^^^^^^^^" >&2;
-#    env_parallel --env _ -S server myfunc ::: work;
-#    echo "OK if no myfunc         ^^^^^^^^^^^^^^^^^" >&2;
-_EOF
-  )
-  ssh ash@lo "$myscript"
-}
-
 par_--env_underscore_bash() {
   echo '### bash'
   myscript=$(cat <<'_EOF'
@@ -1109,39 +1003,6 @@ _EOF
 # + remote, locally
 # + variables, variables with funky content, arrays, assoc array, functions, aliases
 
-par_funky_ash() {
-  myscript=$(cat <<'_EOF'
-    . `which env_parallel.ash`;
-
-    myvar="myvar  works"
-    funky=`perl -e "print pack \"c*\", 2..255"`
-# Arrays not supported
-#    myarray=("" array_val2 3 "" 5 "  space  6  ")
-#    typeset -A assocarr
-#    assocarr[a]=assoc_val_a
-#    assocarr[b]=assoc_val_b
-    alias alias_echo="echo 3 arg";
-
-    func_echo() {
-      echo $*;
-      echo "$myvar"
-#      echo "${myarray[5]}"
-#      echo ${assocarr[a]}
-      echo Funky-"$funky"-funky
-    }
-
-    env_parallel alias_echo ::: alias_works
-#    env_parallel func_echo ::: function_works
-    env_parallel -S ash@lo alias_echo ::: alias_works_over_ssh
-#    env_parallel -S ash@lo func_echo ::: function_works_over_ssh
-    echo
-    echo "$funky" | parallel --shellquote
-_EOF
-  )
-  # Order is often different. Dunno why. So sort
-  ssh ash@lo "$myscript" 2>&1 | LC_ALL=C sort
-}
-
 par_funky_bash() {
   myscript=$(cat <<'_EOF'
     . `which env_parallel.bash`;
@@ -1452,31 +1313,6 @@ _EOF
   ssh zsh@lo "$myscript" 2>&1 | LC_ALL=C sort
 }
 
-par_env_parallel_ash() {
-  myscript=$(cat <<'_EOF'
-    . `which env_parallel.ash`;
-    echo 'bug #50435: Remote fifo broke in 20150522'
-    # Due to $PARALLEL_TMP being transferred
-    OK=OK
-    echo data from stdin | env_parallel --pipe -S lo --fifo 'cat {} && echo $OK'
-    echo data from stdin | env_parallel --pipe -S lo --cat 'cat {} && echo $OK'
-
-    echo 'bug #52534: Tail of multiline alias is ignored'
-    alias myalias='echo alias line 1
-      echo alias line 2
-      echo alias line 3
-    '
-    alias myalias2='echo alias2 line 1
-      echo alias2 line 2
-    '
-    env_parallel myalias ::: myalias2
-    env_parallel -S lo myalias ::: myalias2
-_EOF
-  )
-  # Order is often different. Dunno why. So sort
-  ssh ash@lo "$myscript" 2>&1 | LC_ALL=C sort
-}
-
 par_env_parallel_bash() {
   myscript=$(cat <<'_EOF'
     echo 'bug #50435: Remote fifo broke in 20150522'
@@ -1668,10 +1504,6 @@ _EOF
   )
   # Order is often different. Dunno why. So sort
   ssh zsh@lo "$myscript" 2>&1 | LC_ALL=C sort
-}
-
-par_environment_too_big_ash() {
-    echo moved to hwdep1.sh
 }
 
 par_environment_too_big_bash() {
@@ -1977,69 +1809,6 @@ par_environment_too_big_tcsh() {
 
 par_environment_too_big_zsh() {
     echo moved to hwdep1.sh
-}
-
-par_parset_ash() {
-  myscript=$(cat <<'_EOF'
-    echo 'parset'
-    . `which env_parallel.ash`
-
-#    Arrays not supported
-#    echo '### parset into array'
-#    parset arr1 echo ::: foo bar baz
-#    echo ${arr1[0]} ${arr1[1]} ${arr1[2]}
-
-    echo '### parset into vars with comma'
-    parset comma3,comma2,comma1 echo ::: baz bar foo
-    echo $comma1 $comma2 $comma3
-
-    echo '### parset into vars with space'
-    parset 'space3 space2 space1' echo ::: baz bar foo
-    echo $space1 $space2 $space3
-
-    echo '### parset with newlines'
-    parset 'newline3 newline2 newline1' seq ::: 3 2 1
-    echo "$newline1"
-    echo "$newline2"
-    echo "$newline3"
-
-#    Arrays not supported
-#    echo '### parset into indexed array vars'
-#    parset 'myarray[6],myarray[5],myarray[4]' echo ::: baz bar foo
-#    echo ${myarray[*]}
-#    echo ${myarray[4]} ${myarray[5]} ${myarray[6]}
-
-    echo '### env_parset'
-    myfun() {
-        myecho myfun "$@";
-    }
-    alias myecho='echo myecho "$myvar"'
-    myvar="myvar"
-#    Arrays not supported
-#    myarr=("myarr  0" "myarr  1" "myarr  2")
-    mynewline="`echo newline1;echo newline2;`"
-#    Arrays not supported
-#    env_parset arr1 myfun ::: foo bar baz
-#    echo "${arr1[0]} ${arr1[1]} ${arr1[2]}"
-    env_parset comma3,comma2,comma1 myecho ::: baz bar foo
-    echo "$comma1 $comma2 $comma3"
-    env_parset 'space3 space2 space1' myecho ::: baz bar foo
-    echo "$space1 $space2 $space3"
-    env_parset 'newline3 newline2 newline1' 'echo "$mynewline";seq' ::: 3 2 1
-    echo "$newline1"
-    echo "$newline2"
-    echo "$newline3"
-#    Arrays not supported
-#    env_parset 'myarray[6],myarray[5],myarray[4]' myfun ::: baz bar foo
-#    echo "${myarray[*]}"
-#    echo "${myarray[4]} ${myarray[5]} ${myarray[6]}"
-    parset a,b,c,d 'echo {};exit {}' ::: 0 1 1 0
-    echo Exit value 2 = $?
-    env_parset a,b,c,d 'echo {};exit {}' ::: 0 1 1 0
-    echo Exit value 2 = $?
-_EOF
-  )
-  ssh ash@lo "$myscript"
 }
 
 par_parset_bash() {
@@ -2447,107 +2216,6 @@ _EOF
 }
 
 ### env_parallel_session
-
-par_env_parallel_--session_ash() {
-  myscript=$(cat <<'_EOF'
-    . `which env_parallel.ash`
-    echo '### Test env_parallel --session'
-
-    level0var=l0var
-# Arrays and functions not supported
-#   level0arr=(level0 array)
-#   level0func() { echo l0func; }
-    alias level0alias='echo l0alias'
-
-    env_parallel --session
-
-    level1var=l1var
-# Arrays and functions not supported
-#    level1arr=(level1 array)
-#    level1func() { echo l1func; }
-    alias level1alias='echo l1alias'
-
-    echo '### level0 should be hidden, level1 should be transferred'
-    env_parallel -Slo 'echo $level0var; level0func; level0alias; echo ${level0arr[*]}' ::: fail
-    env_parallel      'echo $level0var; level0func; level0alias; echo ${level0arr[*]}' ::: fail
-    env_parallel -Slo 'echo $level1var; level1func; level1alias; echo ${level1arr[*]}' ::: OK
-    env_parallel      'echo $level1var; level1func; level1alias; echo ${level1arr[*]}' ::: OK
-
-    env_parallel --session
-
-    level2var=l2var
-# Arrays and functions not supported
-#    level2arr=(level2 array)
-#    level2func() { echo l2func; }
-    alias level2alias='echo l2alias'
-
-    echo '### level0+1 should be hidden, level2 should be transferred'
-    env_parallel -Slo 'echo $level0var; level0func; level0alias; echo ${level0arr[*]}' ::: fail
-    env_parallel      'echo $level0var; level0func; level0alias; echo ${level0arr[*]}' ::: fail
-    env_parallel -Slo 'echo $level1var; level1func; level1alias; echo ${level1arr[*]}' ::: fail
-    env_parallel      'echo $level1var; level1func; level1alias; echo ${level1arr[*]}' ::: fail
-    env_parallel -Slo 'echo $level2var; level2func; level2alias; echo ${level2arr[*]}' ::: OK
-    env_parallel      'echo $level2var; level2func; level2alias; echo ${level2arr[*]}' ::: OK
-
-    env_parallel --endsession
-
-    echo '### level0 should be hidden, level1+2 should be transferred'
-    env_parallel -Slo 'echo $level0var; level0func; level0alias; echo ${level0arr[*]}' ::: fail
-    env_parallel      'echo $level0var; level0func; level0alias; echo ${level0arr[*]}' ::: fail
-    env_parallel -Slo 'echo $level1var; level1func; level1alias; echo ${level1arr[*]}' ::: OK
-    env_parallel      'echo $level1var; level1func; level1alias; echo ${level1arr[*]}' ::: OK
-    env_parallel -Slo 'echo $level2var; level2func; level2alias; echo ${level2arr[*]}' ::: OK
-    env_parallel      'echo $level2var; level2func; level2alias; echo ${level2arr[*]}' ::: OK
-
-    env_parallel --endsession
-
-    echo '### level0+1+2 should be transferred'
-    env_parallel -Slo 'echo $level0var; level0func; level0alias; echo ${level0arr[*]}' ::: OK
-    env_parallel      'echo $level0var; level0func; level0alias; echo ${level0arr[*]}' ::: OK
-    env_parallel -Slo 'echo $level1var; level1func; level1alias; echo ${level1arr[*]}' ::: OK
-    env_parallel      'echo $level1var; level1func; level1alias; echo ${level1arr[*]}' ::: OK
-    env_parallel -Slo 'echo $level2var; level2func; level2alias; echo ${level2arr[*]}' ::: OK
-    env_parallel      'echo $level2var; level2func; level2alias; echo ${level2arr[*]}' ::: OK
-
-    alias aliasbefore='echo before'
-# Functions not supported
-#    varbefore='before'
-#    funcbefore() { echo 'before' "$@"; }
-# Arrays not supported
-#    arraybefore=(array before)
-    env_parallel --session
-    # stuff defined
-    env_parallel aliasbefore ::: must_fail
-    env_parallel -S lo aliasbefore ::: must_fail
-# Functions not supported
-#    env_parallel funcbefore ::: must_fail
-#    env_parallel -S lo funcbefore ::: must_fail
-    env_parallel echo '$varbefore' ::: no_before
-    env_parallel -S lo echo '$varbefore' ::: no_before
-# Arrays not supported
-#    env_parallel echo '${arraybefore[*]}' ::: no_before
-#    env_parallel -S lo echo '${arraybefore[*]}' ::: no_before
-    alias aliasafter='echo after'
-    varafter='after'
-# Functions not supported
-#    funcafter() { echo 'after' "$@"; }
-# Arrays not supported
-#    arrayafter=(array after)
-    env_parallel aliasafter ::: aliasafter_OK
-    env_parallel -S lo aliasafter ::: aliasafter_OK
-# Functions not supported
-#    env_parallel funcafter ::: funcafter_OK
-#    env_parallel -S lo funcafter ::: funcafter_OK
-    env_parallel echo '$varafter' ::: varafter_OK
-    env_parallel -S lo echo '$varafter' ::: varafter_OK
-# Arrays not supported
-#    env_parallel echo '${arrayafter[*]}' ::: arrayafter_OK
-#    env_parallel -S lo echo '${arrayafter[*]}' ::: arrayafter_OK
-    unset PARALLEL_IGNORED_NAMES
-_EOF
-  )
-  ssh ash@lo "$myscript"
-}
 
 par_env_parallel_--session_bash() {
   myscript=$(cat <<'_EOF'
