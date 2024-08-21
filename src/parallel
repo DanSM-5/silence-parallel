@@ -156,6 +156,91 @@ sub halt() {
 }
 
 
+sub __FAST_MODE__() {}
+
+
+sub fast() {
+    my $jobslots = $Global::host{':'}->user_requested_processes($opt::jobs);
+    my $i;
+    my $jobs_per_chunk;
+    my $buffer_len = 100;
+    my $splitstring = ("\n#\0\n");
+    # n = jobslots
+    # Read 100 jobs
+    # Split into n chunks
+    # Read 3*100 jobs
+    # Split into n chunks
+    # Read 3*3*100 jobs (up to at most 300K jobs)
+    # Split into n chunks
+    # Receiver: parallel --block 1k --pipe -N1 --recend '\n#\0\n' dash
+    # TODO --group? --halt? --tag? $PARALLEL_JOBSLOT
+    # _PARALLEL_TAG="foo"
+    # | tagger
+    # _PARALLEL_EXIT
+    # maybe_exit
+    my $executer_fh;
+    if($opt::D eq "fast") {
+	open($executer_fh, "|-", "cat") || die;
+    } else {
+	open($executer_fh, "|-", "parallel --plain -j $jobslots  --block 1k --pipe -N1 --recend '\\n#\\0\\n' $Global::shell") || die;
+    }
+    # Do some testing of a stuck job - dns = 5 sec
+    my $block_start = q{
+	error() {
+	    _exit=$((_exit+1))
+ 	    # --halt-on-error stuff
+	    if [ $_exit -gt 40 ]; then
+	        echo "ERROR: More than 40"
+	        exit 1
+	    fi
+        }
+        
+        _tagger() {
+          {
+            rm -f "$1"
+            # This will fail for either /1 or /2
+            rmdir "$2" 2>/dev/null
+	    # TODO use awk (see fasttag)
+            perl -pe 's{^}{$ENV{PARALLEL_TAGSTRING}}'
+          } < "$1"
+        }
+        
+        _taggerwrap() {
+            _dir=`mktemp -d`
+            mkfifo "$_dir"/1 "$_dir"/2
+            _tagger "$_dir"/1 "$_dir" >&1 &
+            _tagger "$_dir"/2 "$_dir" >&2 &
+            # ( ... ) is needed to deal correctly with 'exit 1'
+            ( eval $@ ; ) >"$_dir"/1 2>"$_dir"/2 || error
+            wait
+        }
+	PARALLEL_TAGSTRING=dummy
+	export PARALLEL_TAGSTRING
+    };
+    my $block_end = "\n# Define get exit value\necho EXIT=\$_exit\n".$splitstring."\n";
+    do {
+	$i = 0;
+	my @jobbuffer;
+	while(my $job = $Global::JobQueue->get()) {
+	    push (@jobbuffer, "PARALLEL_TAGSTRING=".Q($job->tag()).
+	    	 "\n_taggerwrap ". Q($job->replaced()));
+	    ($i++ < $buffer_len) or last;
+	}
+	my $jobs_per_chunk = 1 + ($i / $jobslots);
+	my $j = 0;
+	print $executer_fh $block_start;
+	for(@jobbuffer) {
+	    print $executer_fh $_,"\n";
+	    (++$j % $jobs_per_chunk) or print $executer_fh $block_end,$block_start;
+	}
+	print $executer_fh $block_end;
+	if($buffer_len < 100000) { $buffer_len *= 3; }
+    } while ($i);
+    close $executer_fh;
+    exit(0);
+}
+
+
 sub __PIPE_MODE__() {}
 
 
@@ -2084,7 +2169,7 @@ sub options_completion_hash() {
 	  "first line of a script. The content of the file will be treated ".
 	  "as inputsource]"
 	  => \$opt::shebang),
-	 ("_pipe-means-argfiles[internal]"
+	 ("_pipe-means-argfiles[Internal: Called by --shebang-wrap]"
 	  => \$opt::_pipe_means_argfiles),
 	 "Y" => \$opt::retired,
 	 ("skip-first-line|skipfirstline".
@@ -2141,7 +2226,8 @@ sub options_completion_hash() {
 	 "[Embed GNU parallel in a shell script]" => \$opt::combineexec,
 	 ("filter=s[Only run jobs where filter is true]:filter"
 	  => \@opt::filter),
-	 "_parset=s[Generate shell code for parset]" => \$opt::_parset,
+	 "fast[Run commands fast]" => \$opt::fast,
+	 "_parset=s[Internal: Generate shell code for parset]" => \$opt::_parset,
 	 ("shell-completion|shellcompletion=s".
 	  "[Generate shell code for shell completion]:shell:(bash zsh)"
 	  => \$opt::shellcompletion),
@@ -2248,8 +2334,12 @@ sub parse_options(@) {
     #
     ## Shell
     #
-    $Global::shell = $ENV{'PARALLEL_SHELL'} || parent_shell($$)
-	|| $ENV{'SHELL'} || "/bin/sh";
+    if($opt::fast) {
+	$Global::shell = $ENV{'PARALLEL_SHELL'} || which("dash") || "/bin/sh";
+    } else {
+	$Global::shell = $ENV{'PARALLEL_SHELL'} || parent_shell($$)
+	    || $ENV{'SHELL'} || "/bin/sh";
+    }
     if(not -x $Global::shell and not which($Global::shell)) {
 	::error("Shell '$Global::shell' not found.");
 	wait_and_exit(255);
@@ -2798,7 +2888,7 @@ sub check_invalid_option_combinations() {
 
 sub init_globals() {
     # Defaults:
-    $Global::version = 20240822;
+    $Global::version = 20240823;
     $Global::progname = 'parallel';
     $::name = "GNU Parallel";
     $Global::infinity = 2**31;
@@ -15700,6 +15790,8 @@ sub main() {
 	# Fill all jobslots
 	while(start_more_jobs()) {}
 	spreadstdin();
+    } elsif($opt::fast) {
+	fast();
     } else {
 	# Reap the finished jobs and start more
 	while(reapers() + start_more_jobs()) {}

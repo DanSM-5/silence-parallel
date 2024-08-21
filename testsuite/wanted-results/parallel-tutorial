@@ -720,6 +720,7 @@ BASH_FUNC_replace_tmpdir%%
 BASH_FUNC_run_once%%
 BASH_FUNC_run_test%%
 _
+mysqlrootpass
 qTMPDIR
 qqTMPDIR
 testsuitedir
@@ -1061,16 +1062,19 @@ cat: num_%header: No such file or directory
 /usr/bin/bash: line 2: foo: command not found
   #!/usr/bin/perl
   print "@ARGV\n"
+Warning: unknown mime-type for "@ARGV\n" -- using "application/octet-stream"
 Error: no such file "@ARGV\n"
   parallel perl_echo ::: foo bar
 /usr/bin/bash: line 1: perl_echo: command not found
   #!/usr/bin/parallel --shebang-wrap /usr/bin/perl
   print "@ARGV\n"
+Warning: unknown mime-type for "@ARGV\n" -- using "application/octet-stream"
 Error: no such file "@ARGV\n"
   perl_echo foo bar
 /usr/bin/bash: line 1: perl_echo: command not found
   #!/usr/bin/parallel --shebang-wrap /usr/bin/perl
   print "Arguments @ARGV\n";
+Warning: unknown mime-type for "Arguments @ARGV\n" -- using "application/octet-stream"
 Error: no such file "Arguments @ARGV\n"
   #!/usr/bin/parallel --shebang-wrap /usr/bin/python
   print 'Arguments', str(sys.argv)
@@ -1091,6 +1095,7 @@ Arguments
   #!/usr/bin/parallel --shebang-wrap /usr/bin/ruby
   print "Arguments "
   puts ARGV
+Warning: unknown mime-type for "Arguments " -- using "application/octet-stream"
 Error: no such file "Arguments "
 /usr/bin/bash: line 4: puts: command not found
   #!/usr/bin/parallel --shebang-wrap /usr/bin/octave

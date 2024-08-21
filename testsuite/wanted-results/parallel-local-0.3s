@@ -984,10 +984,10 @@ par_sem_quote	### sem --quote should not add empty argument
 par_sem_quote	echo
 par_sem_quote	
 par_shellcompletion	### --shellcompletion
-par_shellcompletion	bf790ce8a53d1e7e5f8e78b063dc65bc  -
-par_shellcompletion	bf790ce8a53d1e7e5f8e78b063dc65bc  -
-par_shellcompletion	2230e8ac0593f660fccd983596377613  -
-par_shellcompletion	2230e8ac0593f660fccd983596377613  -
+par_shellcompletion	1eba455fe1456f03376f19255aed28d3  -
+par_shellcompletion	1eba455fe1456f03376f19255aed28d3  -
+par_shellcompletion	1ea63315f24ede14c1e8d93c1b64150a  -
+par_shellcompletion	1ea63315f24ede14c1e8d93c1b64150a  -
 par_slow_pipe_regexp	### bug #53718: --pipe --regexp -N blocks
 par_slow_pipe_regexp	This should take a few ms, but took more than 2 hours
 par_slow_pipe_regexp	      0       1       1

@@ -4,9 +4,6 @@
  
 Quote of the month:
 
-  Recently executed a flawless live data migration of ~2.4pb using GNU parallel for scale and bash scripts.
-    -- @mechanicker@twitter Dhruva
-
   by extreme do you mean extremely slow? you could do it at least 100x faster using awk + grep + gnu parallel
     -- @ObssessedDev@twitter
 
@@ -226,6 +223,9 @@ https://negfeedback.blogspot.com/2020/05/indispensable-command-line-tools.html
     -- @alinajaf@twitter
 
 === Used ===
+
+  Recently executed a flawless live data migration of ~2.4pb using GNU parallel for scale and bash scripts.
+    -- @mechanicker@twitter Dhruva
 
   honestly the coolest software i've ever seen gotta be gnu parallel or
   ffmpeg, nothing like them

@@ -134,7 +134,7 @@ B<Bash, Csh, or Tcsh aliases>: Use B<env_parallel>.
 
 B<Zsh, Fish, Ksh, and Pdksh functions and aliases>: Use B<env_parallel>.
 
-=item B<{}> (alpha testing)
+=item B<{}> (beta testing)
 
 Input line.
 
@@ -155,7 +155,7 @@ See also: B<--plus> B<{.}> B<{/}> B<{//}> B<{/.}> B<{#}> B<{%}>
 B<{>I<n>B<}> B<{=>I<perl expression>B<=}>
 
 
-=item B<{.}> (alpha testing)
+=item B<{.}> (beta testing)
 
 Input line without extension.
 
@@ -173,7 +173,7 @@ The replacement string B<{.}> can be changed with B<--extensionreplace>
 See also: B<{}> B<--extensionreplace>
 
 
-=item B<{/}> (alpha testing)
+=item B<{/}> (beta testing)
 
 Basename of input line.
 
@@ -183,7 +183,7 @@ directory part removed.
 See also: B<{}> B<--basenamereplace>
 
 
-=item B<{//}> (alpha testing)
+=item B<{//}> (beta testing)
 
 Dirname of input line.
 
@@ -193,7 +193,7 @@ line. See B<dirname>(1).
 See also: B<{}> B<--dirnamereplace>
 
 
-=item B<{/.}> (alpha testing)
+=item B<{/.}> (beta testing)
 
 Basename of input line without extension.
 
@@ -204,7 +204,7 @@ B<{/}> and B<{.}>.
 See also: B<{}> B<--basenameextensionreplace>
 
 
-=item B<{#}> (alpha testing)
+=item B<{#}> (beta testing)
 
 Sequence number of the job to run.
 
@@ -214,7 +214,7 @@ job being run. It contains the same number as $PARALLEL_SEQ.
 See also: B<{}> B<--seqreplace>
 
 
-=item B<{%}> (alpha testing)
+=item B<{%}> (beta testing)
 
 Job slot number.
 
@@ -249,7 +249,7 @@ Notice how {%} and $PARALLEL_JOBSLOT differ in the retry run of C and D.
 See also: B<{}> B<--jobs> B<--slotreplace>
 
 
-=item B<{>I<n>B<}> (alpha testing)
+=item B<{>I<n>B<}> (beta testing)
 
 Argument from input source I<n> or the I<n>'th argument.
 
@@ -263,7 +263,7 @@ See also: B<{}> B<{>I<n>.B<}> B<{>I<n>/B<}> B<{>I<n>//B<}>
 B<{>I<n>/.B<}> B<--colsep>
 
 
-=item B<{>I<n>.B<}> (alpha testing)
+=item B<{>I<n>.B<}> (beta testing)
 
 Argument from input source I<n> or the I<n>'th argument without
 extension.
@@ -278,7 +278,7 @@ extension removed.
 See also: B<{>I<n>B<}> B<{.}>
 
 
-=item B<{>I<n>/B<}> (alpha testing)
+=item B<{>I<n>/B<}> (beta testing)
 
 Basename of argument from input source I<n> or the I<n>'th argument.
 
@@ -292,7 +292,7 @@ directory (if any) removed.
 See also: B<{>I<n>B<}> B<{/}>
 
 
-=item B<{>I<n>//B<}> (alpha testing)
+=item B<{>I<n>//B<}> (beta testing)
 
 Dirname of argument from input source I<n> or the I<n>'th argument.
 
@@ -305,7 +305,7 @@ the I<n>'th argument (when used with B<-N>). See B<dirname>(1).
 See also: B<{>I<n>B<}> B<{//}>
 
 
-=item B<{>I<n>/.B<}> (alpha testing)
+=item B<{>I<n>/.B<}> (beta testing)
 
 Basename of argument from input source I<n> or the I<n>'th argument
 without extension.
@@ -321,7 +321,7 @@ directory (if any) and extension removed.
 See also: B<{>I<n>B<}> B<{/.}>
 
 
-=item B<{=>I<perl expression>B<=}> (alpha testing)
+=item B<{=>I<perl expression>B<=}> (beta testing)
 
 Replace with calculated I<perl expression>.
 
@@ -438,7 +438,7 @@ See also: B<--rpl> B<--parens> B<{}> B<{=>I<n> I<perl expression>B<=}>
 B<--filter>
 
 
-=item B<{=>I<n> I<perl expression>B<=}> (alpha testing)
+=item B<{=>I<n> I<perl expression>B<=}> (beta testing)
 
 Positional equivalent to B<{=>I<perl expression>B<=}>.
 
@@ -447,7 +447,7 @@ To understand positional replacement strings see B<{>I<n>B<}>.
 See also: B<{=>I<perl expression>B<=}> B<{>I<n>B<}>
 
 
-=item B<{>I<rpl>:I<format>B<}> (alpha testing)
+=item B<{>I<rpl>:I<format>B<}> (beta testing)
 
 Format replacement string.
 
@@ -1102,6 +1102,27 @@ estimate will only be shown when the first job has finished.
 Implies B<--progress>.
 
 See also: B<--bar> B<--progress> B<--total-jobs>
+
+
+=item B<--fast> (alpha testing)
+
+Run jobs fast.
+
+This disables a lot of functionality of GNU B<parallel> to make jobs
+run as fast as possible: Think of it as the nitro racing car compared
+to the Volvo.
+
+Useful for benchmarking and if you have 1000's of tiny jobs.
+
+Compare:
+
+    time parallel echo ::: {1..10} ::: {1..10} ::: {1..10}
+    time parallel --fast echo ::: {1..10} ::: {1..10} ::: {1..10}
+    time parallel --fast echo ::: {1..100} ::: {1..100} ::: {1..100}
+
+Supported options: B<--group> B<--keep-order>
+
+If you need more options: File a bug.
 
 
 =item B<--fg>
@@ -1796,7 +1817,7 @@ If in doubt use B<-X> as that will most likely do what is needed.
 See also: B<-X> B<--xargs>
 
 
-=item B<--match> I<regexp> (alpha testing)
+=item B<--match> I<regexp> (beta testing)
 
 Match input source with regexp to set replacement fields.
 

@@ -1,15 +1,15 @@
 par_nonall	### Test --nonall
-par_nonall	centos8.localdomain
+par_nonall	centos9s.localdomain
 par_nonall	freebsd13.localdomain
 par_nonall_basefile	### Test --nonall --basefile
 par_nonall_basefile	/tmp/nonall--basefile
 par_nonall_basefile	/tmp/nonall--basefile
 par_nonall_sshloginfile_stdin	### Test read sshloginfile from STDIN
-par_nonall_sshloginfile_stdin	centos8.localdomain
-par_nonall_sshloginfile_stdin	centos8.localdomain
+par_nonall_sshloginfile_stdin	centos9s.localdomain
+par_nonall_sshloginfile_stdin	centos9s.localdomain
 par_nonall_u	### Test --nonall -u - should be interleaved x y x y
-par_nonall_u	      1 centos8.localdomain
-par_nonall_u	      1 centos8.localdomain
+par_nonall_u	      1 centos9s.localdomain
+par_nonall_u	      1 centos9s.localdomain
 par_nonall_u	      1 freebsd13.localdomain
 par_nonall_u	      1 freebsd13.localdomain
 par_onall	### Test --onall

@@ -290,7 +290,7 @@ add_server_to_hosts() {
     insert_in_etc_hosts 127.1.2.3 server
     
     insert_in_etc_hosts 127.0.0.2 lo
-    parallel add_single_vagrant_to_etc_hosts {} parallel-server{#} ::: centos8 freebsd13 freebsd14 rhel8 centos3
+    parallel add_single_vagrant_to_etc_hosts {} parallel-server{#} ::: centos9 freebsd13 freebsd14 rhel8 centos3
 }
 
 vagrant_up() {

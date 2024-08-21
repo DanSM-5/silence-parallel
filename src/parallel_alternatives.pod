@@ -1555,11 +1555,11 @@ B<parallelion> is fast: 0.1 ms/job. Similar to B<parallel-bash>.
 
 =head3 EXAMPLES FROM parallelion
 
-  1$ parallelion -progress 'echo {}' {1..1000}
+  1$ parallelion --progress 'echo {}' {1..1000}
 
   1$ parallel --bar echo {} ::: {1..1000}
 
-  2$ parallelion -progress 'echo {}' $(seq 1 999)
+  2$ parallelion --progress 'echo {}' $(seq 1 999)
 
   2$ seq 1 999 | parallel --bar echo
 

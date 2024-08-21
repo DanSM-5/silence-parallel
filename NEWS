@@ -2,6 +2,20 @@
 
 New in this release:
 
+* --fast disables a lot of functionality to speed up running jobs.
+
+* Bug fixes and man page updates.
+
+News about GNU Parallel:
+
+* Job requiring GNU Parallel knowledge
+  https://www.capgemini.com/ca-en/jobs/Id6D4pEBZ6aB2WPS2aAJ/systems-engineer/
+
+
+20240822
+
+New in this release:
+
 * --match Match input source with regexp to set replacement fields.
 
 * {:%fmt} Use printf formatting of replacement strings.
