@@ -134,9 +134,6 @@ write a haiku about gnu parallel and the :::+  option
   Using [GNU Parallel is] super easy if you use xargs, and it is magic for making things multi-process. Then adding in the ssh magic it can do it is an incredible tool that is completely underutilized.
      -- Ancients @Ancients@twitter
 
-  GNU Parallel is one of the most helpful tools I've been using recently, and it's just something like: parallel -j4 'gzip {}' ::: folder/*.csv
-     -- Milton Pividori @miltondp@twitter
-
   This is a fantastic tool, and I wish I had upgraded from xargs years ago!
     -- Stuart Anderson
 
@@ -223,6 +220,9 @@ https://negfeedback.blogspot.com/2020/05/indispensable-command-line-tools.html
     -- @alinajaf@twitter
 
 === Used ===
+
+  GNU Parallel is one of the most helpful tools I've been using recently, and it's just something like: parallel -j4 'gzip {}' ::: folder/*.csv
+     -- Milton Pividori @miltondp@twitter
 
   Recently executed a flawless live data migration of ~2.4pb using GNU parallel for scale and bash scripts.
     -- @mechanicker@twitter Dhruva
