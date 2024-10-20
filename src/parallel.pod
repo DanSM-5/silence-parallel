@@ -3190,11 +3190,11 @@ See also: TIME POSTFIXES B<--sshlogin> B<--delay>
 
 =item B<--sshlogin> I<[@hostgroups/][ncpus/][[user][:[password]]@]host[:port][,...]>
 
-=item B<--sshlogin> I<@hostgroup>
+=item B<--sshlogin> I<@hostgroup>/
 
 =item B<-S> I<[@hostgroups/][ncpus/][ssh command][[user][:[password]]@]host[:port][,...]>
 
-=item B<-S> I<@hostgroup>
+=item B<-S> I<@hostgroup>/
 
 Distribute jobs to remote computers.
 

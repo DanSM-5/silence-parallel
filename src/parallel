@@ -2888,7 +2888,7 @@ sub check_invalid_option_combinations() {
 
 sub init_globals() {
     # Defaults:
-    $Global::version = 20240922;
+    $Global::version = 20241017;
     $Global::progname = 'parallel';
     $::name = "GNU Parallel";
     $Global::infinity = 2**31;
@@ -7376,26 +7376,90 @@ sub new($$) {
     my $local;
     my $string;
     # SSHLogins can have these formats:
-    #	@grp+grp/ncpu//usr/bin/ssh user@server
-    #	ncpu//usr/bin/ssh user@server
-    #	/usr/bin/ssh user@server
-    #	user@server
-    #	ncpu/user@server
-    #	@grp+grp/user@server
-    #	above with: user:password@server
-    #	above with: user@server:port
-    # So:
-    #	[@grp+grp][ncpu/][ssh command ][[user][:password]@][server[:port]]
+    #   @grp1+grp2/ => use only servers in @grp1+grp2
+    #	[@grp+grp/][ncpu/][ssh command ][[user][:password]@][host[:port]]
+    #
+    #   Here most combinations are generated:
+    #     grp=grp1+grp2
+    #     ncpu=4
+    #     ssh=/usr/bin/ssh
+    #     user=user
+    #     pass=pass
+    #     host=host
+    #     port=port
+    #     parallel -k echo {1}{2}{3}{4}{5}{=1'$_ = ($arg[4]||$arg[5]) ? "\@" : ""' =}$host{6} ::: '' @$grp/ ::: '' $ncpu/ ::: '' $ssh' ' ::: '' $user ::: '' :$pass ::: '' :$port
+    #   host
+    #   host:port
+    #   :pass@host
+    #   :pass@host:port
+    #   user@host
+    #   user@host:port
+    #   user:pass@host
+    #   user:pass@host:port
+    #   /usr/bin/ssh host
+    #   /usr/bin/ssh host:port
+    #   /usr/bin/ssh :pass@host
+    #   /usr/bin/ssh :pass@host:port
+    #   /usr/bin/ssh user@host
+    #   /usr/bin/ssh user@host:port
+    #   /usr/bin/ssh user:pass@host
+    #   /usr/bin/ssh user:pass@host:port
+    #   ncpu/host
+    #   ncpu/host:port
+    #   ncpu/:pass@host
+    #   ncpu/:pass@host:port
+    #   ncpu/user@host
+    #   ncpu/user@host:port
+    #   ncpu/user:pass@host
+    #   ncpu/user:pass@host:port
+    #   ncpu//usr/bin/ssh host
+    #   ncpu//usr/bin/ssh host:port
+    #   ncpu//usr/bin/ssh :pass@host
+    #   ncpu//usr/bin/ssh :pass@host:port
+    #   ncpu//usr/bin/ssh user@host
+    #   ncpu//usr/bin/ssh user@host:port
+    #   ncpu//usr/bin/ssh user:pass@host
+    #   ncpu//usr/bin/ssh user:pass@host:port
+    #   @grp1+grp2/host
+    #   @grp1+grp2/host:port
+    #   @grp1+grp2/:pass@host
+    #   @grp1+grp2/:pass@host:port
+    #   @grp1+grp2/user@host
+    #   @grp1+grp2/user@host:port
+    #   @grp1+grp2/user:pass@host
+    #   @grp1+grp2/user:pass@host:port
+    #   @grp1+grp2//usr/bin/ssh host
+    #   @grp1+grp2//usr/bin/ssh host:port
+    #   @grp1+grp2//usr/bin/ssh :pass@host
+    #   @grp1+grp2//usr/bin/ssh :pass@host:port
+    #   @grp1+grp2//usr/bin/ssh user@host
+    #   @grp1+grp2//usr/bin/ssh user@host:port
+    #   @grp1+grp2//usr/bin/ssh user:pass@host
+    #   @grp1+grp2//usr/bin/ssh user:pass@host:port
+    #   @grp1+grp2/ncpu/host
+    #   @grp1+grp2/ncpu/host:port
+    #   @grp1+grp2/ncpu/:pass@host
+    #   @grp1+grp2/ncpu/:pass@host:port
+    #   @grp1+grp2/ncpu/user@host
+    #   @grp1+grp2/ncpu/user@host:port
+    #   @grp1+grp2/ncpu/user:pass@host
+    #   @grp1+grp2/ncpu/user:pass@host:port
+    #   @grp1+grp2/ncpu//usr/bin/ssh host
+    #   @grp1+grp2/ncpu//usr/bin/ssh host:port
+    #   @grp1+grp2/ncpu//usr/bin/ssh :pass@host
+    #   @grp1+grp2/ncpu//usr/bin/ssh :pass@host:port
+    #   @grp1+grp2/ncpu//usr/bin/ssh user@host
+    #   @grp1+grp2/ncpu//usr/bin/ssh user@host:port
+    #   @grp1+grp2/ncpu//usr/bin/ssh user:pass@host
+    #   @grp1+grp2/ncpu//usr/bin/ssh user:pass@host:port
 
-    #	[@grp+grp]/ncpu//usr/bin/ssh user:pass@server:port
-    if($s =~ s:^\@([^/]+)/?::) {
+    #	[@grp+grp/][ncpu/][ssh command ][[user][:password]@][host[:port]]
+    if($s =~ s:^\@([^/]+)/::) {
 	# Look for SSHLogin hostgroups
 	%hostgroups = map { $_ => 1 } split(/\+|,/, $1);
     }
-    # An SSHLogin is always in the hostgroup of its "numcpu/host"
-    $hostgroups{$s} = 1;
 
-    #	[ncpu/]/usr/bin/ssh user:pass@server:port
+    #	[ncpu/][ssh command ][[user][:password]@][host[:port]]
     if ($s =~ s:^(\d+)/::) { $ncpus = $1; }
 
     # Why disallow space in password?
@@ -7407,11 +7471,13 @@ sub new($$) {
     #   cmd 'C:/bin/ssh' user 'user' with password 'C:/bin/ssh'
     # This is impossible to determine.
     # With space forbidden in password it uniquely parses as the 2nd.
-    #	[/usr/bin/ssh ]user:pass@server:port
+    #	[ssh command ][[user][:password]@][host[:port]]
     if($s =~ s/^(.*) //) { $sshcommand = $1; }
 
-    #	[user:pass@]server:port
-    if($s =~ s/^(.+)@//) {
+    #	[[user][:password]@][host[:port]]
+    # An SSHLogin is always in the hostgroup of its "user:pass@host:port"
+    $hostgroups{$s} = 1;
+    if($s =~ s/^(.*)@//) {
 	my $userpw = $1;
 	# user[:pass]
 	if($userpw =~ s/:(.*)//) {
@@ -7422,9 +7488,25 @@ sub new($$) {
 		::wait_and_exit(255);
 	    }
 	}
+	# This might be empty - that is OK
 	$user = $userpw;
     }
-    #	[server]:port
+    #	[host[:port]]
+    # host can have these formats:
+    #   hostname (: as local is dealt with later)
+    #   IPv4 i.p.n.o
+    #   with port
+    #   * :22
+    #   * :ssh
+    #   IPv6:
+    #   * \[b11010000011101]
+    #   * \[o64072/14]
+    #   * \[xd074/14]
+    #   * \[208.116.0.0/14]
+    #   with port
+    #   * .22
+    #   * p22
+    #   * #22
     if(not $s =~ /:.*:/
        and
        $s =~ s/^([-a-z0-9._]+)//i) {
@@ -7446,7 +7528,6 @@ sub new($$) {
 	#   2001:db8::1 port 80 - not supported
 	$host = $1;
     }
-
     #	[:port]
     if($s =~ s/^:(\w+)//i) {
 	$port = $1;
@@ -7468,10 +7549,11 @@ sub new($$) {
 	($user && $user."@").
 	($host && $host).
 	($port && ":$port");
+    my $userpassword = ($user && $user).($password && ":".$password);
     my $pwstring =
 	# Only include the sshcommand in $string if it is set by user
 	($sshcommand && $sshcommand." ").
-	($user && $user. ($password && ":".$password)."@").
+	($userpassword && $userpassword."@").
 	($host && $host).
 	($port && ":$port");
     if($host eq ':') {
