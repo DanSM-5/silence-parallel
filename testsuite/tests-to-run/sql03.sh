@@ -111,7 +111,7 @@ par_listproc() {
     echo "### Test --listproc"
     sql --listproc :oraunittest |
 	perl -ne '/select 1 from dual|user_objects|user_tablespaces|connect_by_filtering/ and next;
-                  s/[21 ]\.\d{5}/1.99999/;
+                  s/[21 ]\.\d{4,5}/1.99999/;
                   s/ +/ /g;
                   print'
     sql --listproc $MYSQL_TEST_DBURL |

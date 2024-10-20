@@ -8871,10 +8871,20 @@ sub sct_gnu_linux($) {
 	my $threads_per_core;
 	my $cores_per_socket;
 	for(@lscpu) {
+	    # lscpu
 	    /^CPU.s.:\s*(\d+)/ and $cpu->{'threads'} = $1;
 	    /^Thread.s. per core:\s*(\d+)/ and $threads_per_core = $1;
 	    /^Core.s. per socket:\s*(\d+)/ and $cores_per_socket = $1;
 	    /^(CPU )?Socket.s.:\s*(\d+)/i and $cpu->{'sockets'} = $2;
+	    # lscpu --all --extended
+	    #    3       0     0       1       1:1:1:0          yes 2900.0000 800.0000 1995.6210
+	    #    1       0     0       1       1:1:1            yes 1300.0000 800.0000  800.0000
+	    /^\s+(\d+)\s+\d+\s+(\d+)\s+(\d+)\s+\d+:\d+:\S+\s/ and do {
+		# Really only the last line matters
+		$cpu->{'threads'} = $1+1;
+		$cpu->{'sockets'} = $2+1;
+		$cpu->{'cores'} = $3+1;
+	    };
 	}
 	if($cores_per_socket and $cpu->{'sockets'}) {
 	    $cpu->{'cores'} = $cores_per_socket * $cpu->{'sockets'};
@@ -8896,7 +8906,7 @@ sub sct_gnu_linux($) {
 	read_cpuinfo(split/(?<=\n)/,$ENV{'PARALLEL_CPUINFO'});
     } elsif($ENV{'PARALLEL_LSCPU'}) {
 	# Use LSCPU from environment - used for testing only
-	read_lscpu(split/(?<=\n)/,$ENV{'PARALLEL_LSCPU'});
+	read_lscpu(split/\n/,$ENV{'PARALLEL_LSCPU'});
     } elsif(-r "$ENV{'PARALLEL_CPUPREFIX'}/cpu0/topology/thread_siblings") {
 	# Use CPUPREFIX from environment - used for testing only
 	read_topology($ENV{'PARALLEL_CPUPREFIX'});
@@ -8906,7 +8916,7 @@ sub sct_gnu_linux($) {
 	# Not debugging: Look at this computer
 	if(!($cpu->{'sockets'} and $cpu->{'cores'} and $cpu->{'threads'})
 	   and
-	   open(my $in_fh, "-|", "lscpu")) {
+	   open(my $in_fh, "-|", "lscpu --all --extended")) {
 	    # Parse output from lscpu
 	    read_lscpu(<$in_fh>);
 	    close $in_fh;

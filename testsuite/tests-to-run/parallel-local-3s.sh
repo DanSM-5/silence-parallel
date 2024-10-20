@@ -1369,6 +1369,94 @@ par__test_cpu_detection_lscpu() {
     compgen -A function | grep ^cpu | sort | parallel -j0 -k test_one
     rm ~/.parallel/tmp/sshlogin/*/cpuspec 2>/dev/null
 }
+par__test_cpu_detection_lscpu_--all_--extended() {
+    pack() { zstd -19 | mmencode; }
+    unpack() { mmencode -u | zstd -d; }
+    export -f unpack
+    # ssh server lscpu --all --extended | pack
+
+    cpu3() {
+	echo '1-2-4-2 Core i5-2410M laptop firewall'
+	echo '
+	KLUv/QRoBQQA0gYWGHCtDnzPzw76rSjXJHV5twOYLUlfqv43WWq5mbDAYo/P3Rr/alsIFuAc
+	t+/adX0Jmv63//6KGvO/U8xmmP8fqSFpPZOv5YtYvoflY1Lhl3jAqjwSlZ5BYBEg8ALb2pEO
+	kGvVfEIAircDrMryswQmQCOci78EmFUDeEAyiFCTmkD1
+	' | unpack
+    }
+
+    cpu13() {
+	echo '1-2-2-2 AMD Neo N36L Dual-Core Processor'
+	echo '
+	KLUv/QRoTQMAgoURFpBNY2syao8D/vfeGkqOTGuz1NTY0pTEmmc+kEmMAeKQU1L1io8POKT9
+	0NGeov2vQ5h7C0ynZBole5e3bjZZj3mN53aUFQ4ggALUaxAYHlqAHBGpjAmBGaAzHIBXAmbV
+	ATDAGAgoKVhdvw==
+	' | unpack
+    }
+    cpu19() {
+	echo '1-2-4-2 ThinkPad A475 AMD PRO A12-8830B R7 (64g)'
+	echo '
+	KLUv/QRoJQQA8kYXGXCtDnzPzw76rSgRSLE7rjbEE0IrrPrfZAGrmTB062XdsOHjM1vXgoH/
+	xa0fELRjjb/ArsBOSdUffNDxv/+iB2QkD5Fc0mPSejbhxBNGPC+XGt9IJFbmsqj0jhIDEiBg
+	w3QNIJFcgPBwhAEJIBYx/SYGA8TZTgGYFYADN9xCOVCeG3FI2w==
+	' | unpack
+    }
+    cpu21() {
+	echo '2-12-24-12 Intel(R) Xeon(R) CPU E5-2620 v3 @ 2.40GHz (kreta)'
+	echo '
+	KLUv/QRojQYA8gkdGHBvDlztQ2HSU/8ZXvMutLS0iaTrVP01X4yZl5XlxoX71m1btty7ravb
+	8lJ2fIwND+H2+9vX7s51e2vNzljzmXu/+wN7VdVAldkt6vpbf/0B5ZCMJBKS/y+UYyrL2Wye
+	Xe3saeeLZhn+FMiwOC+IRTnEDAE4qOFUMuCwz74BUE8tazGNESBEhBMr/mcCUbkH8CBRaVnR
+	Utmi0lKbdTtxAhKCFxDgq4qrB4fssyd+hzTUliaPXXMlXeivPoZcFv1AtK+bJxn3SVtkgXx6
+	tCoL/r+Y
+	' | unpack
+    }
+    cpu22() {
+	echo '1-16-24-16 12900K https://stackoverflow.com/a/71282744/363028'
+	echo '
+	KLUv/QRoHQcAcgwiGHBvDlztQ2HSU/8Yv0AX1nZ3bwlO1V/vBfALb+je992vua+73ee2b7ub
+	tn9/f+rK1a/eejl3egrTrbSMcAULz210bF9oqJ/7/KSwzi5CuM3tub3fbgPSqqqBqhCNWZm9
+	aqsNMMhimzqWaVhs22AQhWnslG3KXle2umLjaQhHRkI0kI2iYSw5RDaosXQnWFJDZdk3gE2r
+	AaEIERhChBNZNPGPBKPKPHiLEhWHkWF4HJyLA2JJed1oAHlHMUYzijHSQmXEO4oxmlEtDApN
+	QezCFCBrSYSKt5G7ixaw9Ml2VwFqvgJs
+	' | unpack
+    }
+    cpu23() {
+	echo '1-14-20-14 https://github.com/nodejs/node/issues/52233#issuecomment-2023768771'
+	echo '
+	KLUv/QRoJQcAMo0jGnBNc3zPzw76LWIb4GzTPebS0iYy0Qqr/ps4mMdssstf1ov5zEWlvvzl
+	HiblK5eh5Cd3HeQjVyXK9OMfNxnVQT//XHTIzhM+Yc9S97zxxmZC/vqqT+LPT9HYApB7gbt1
+	KoFM2l97LYApHNo6CIeG4NC2C1NoTNNsd3sE2x/YuiQapYvFoDSKLoOGKQOhBC6ggXgpkEA0
+	VO13kKWWA5kQ3YTsJmQz37VJpE2QblKQYrhcIOthvksBHXYsUkQpM6SgX0iEoJ4ZIWhvPggs
+	iRBrnLZwBFTkfvsVAbMDGgiSg60Cro5aVQ==
+	' | unpack
+    }
+    cpu24() {
+	echo '1-24-32-24 https://in.mathworks.com/matlabcentral/answers/2100291-matlab-parallel-computing-beyond-8-cores-causing-os-to-crash#comment_3113976'
+	echo '
+	KLUv/QRoHQsAttY4GoBNOszTAR2eDUbFsPkwkPbee8skydcXNmkPOgAuAC0AeC1g3amamS1m
+	6ZQiqbS3ttYCEIVDWwjh8Agc2pZBFBpEom6OzSfXPHJNmUVC0AZjECQYZQYJRB0KQU15PkRP
+	fGIR3rnhDXvslqE8uqNrqp6XleyS3cc7Xo1sdfDqqphGCxcvu3s+ewE9xnRLHjvlKzcx+cn1
+	rSMfuWh4/OPeSj9dO5ULLafs7NtdKVMdfXQVOukKrzApn7I+ozzKorkA5FsQ2Z38yd66e+Yz
+	a6icd3YlzGNWoctfNh273S1vWZTLXw5NqIFYSgIJGFnYyr4BcEsrjQEyCSCIAGQIhiBS4Y+E
+	TSFiA9wB0VQdkzMaTs9TzcD9lry8sZBCrX3I76Ie/D7KiJraeWFJGDH4wPBHl05EiXgccoB2
+	OzxYwCGuPxjIfC63kHF+GajpnoHBk33Vzo8heiJL/27jCygcJJ+kCrJLTb4=
+	' | unpack
+    }
+
+    export -f $(compgen -A function | grep ^cpu)
+
+    test_one() {
+	eval $1 | head -n1
+	export PARALLEL_LSCPU="$(eval $1 | tail -n +2)"
+	echo $(parallel --number-of-sockets) \
+	     $(parallel --number-of-cores) \
+	     $(parallel --number-of-threads) \
+	     $(parallel --number-of-cpus)
+    }
+    export -f test_one
+    compgen -A function | grep ^cpu | sort | parallel -j0 -k test_one
+    rm ~/.parallel/tmp/sshlogin/*/cpuspec 2>/dev/null
+}
 
 par_combineexec() {
     combineexec() {

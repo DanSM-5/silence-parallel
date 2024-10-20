@@ -672,6 +672,20 @@ par__test_cpu_detection_lscpu	1-8-8-8 Huawei P Smart Octa-core (4x2.36 GHz Corte
 par__test_cpu_detection_lscpu	2 8 8 8
 par__test_cpu_detection_lscpu	1-4-4-4 x96 quad-core Android TV-box
 par__test_cpu_detection_lscpu	1 1 1 1
+par__test_cpu_detection_lscpu_--all_--extended	1-2-2-2 AMD Neo N36L Dual-Core Processor
+par__test_cpu_detection_lscpu_--all_--extended	1 2 2 2
+par__test_cpu_detection_lscpu_--all_--extended	1-2-4-2 ThinkPad A475 AMD PRO A12-8830B R7 (64g)
+par__test_cpu_detection_lscpu_--all_--extended	1 2 4 2
+par__test_cpu_detection_lscpu_--all_--extended	2-12-24-12 Intel(R) Xeon(R) CPU E5-2620 v3 @ 2.40GHz (kreta)
+par__test_cpu_detection_lscpu_--all_--extended	2 12 24 12
+par__test_cpu_detection_lscpu_--all_--extended	1-16-24-16 12900K https://stackoverflow.com/a/71282744/363028
+par__test_cpu_detection_lscpu_--all_--extended	1 16 24 16
+par__test_cpu_detection_lscpu_--all_--extended	1-14-20-14 https://github.com/nodejs/node/issues/52233#issuecomment-2023768771
+par__test_cpu_detection_lscpu_--all_--extended	1 14 20 14
+par__test_cpu_detection_lscpu_--all_--extended	1-24-32-24 https://in.mathworks.com/matlabcentral/answers/2100291-matlab-parallel-computing-beyond-8-cores-causing-os-to-crash#comment_3113976
+par__test_cpu_detection_lscpu_--all_--extended	1 24 32 24
+par__test_cpu_detection_lscpu_--all_--extended	1-2-4-2 Core i5-2410M laptop firewall
+par__test_cpu_detection_lscpu_--all_--extended	1 2 4 2
 par__test_cpu_detection_topology	4-64-64-64 Dell R815 4 CPU 64-core
 par__test_cpu_detection_topology	4 8 8 8
 par__test_cpu_detection_topology	1-2-2-2 AMD Neo N36L Dual-Core Processor
