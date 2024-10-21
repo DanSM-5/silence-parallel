@@ -234,6 +234,18 @@ To quote special characters use %-encoding specified in
 http://tools.ietf.org/html/rfc3986#section-2.1 (E.g. a password
 containing '/' would contain '%2F').
 
+csv:///%2Ftmp%2Fparallel-bug-56096/mytable
+csv:////tmp/parallel-bug-56096/mytable
+mysql://me@/me/
+mysql:////
+
+sqlite3:///%2Frun%2Fshm%2Fparallel.db
+sqlite3:///%2Frun%2Fshm%2Fparallel.db/table
+sqlite:///%2Ftmp%2Ffile.sqlite?SELECT
+csv:///%2Ftmp%2Fparallel-CSV/OK
+csv:///%2Fmust%2Ffail/fail
+sqlite3:///%2Frun%2Fshm%2Fparallel.db
+
 Examples:
 
  mysql://scott:tiger@my.example.com/mydb
@@ -245,12 +257,23 @@ Examples:
  sql:sqlite2:////tmp/db.sqlite?SELECT * FROM foo;
  sqlite3:///../db.sqlite3?SELECT%20*%20FROM%20foo;
 
-Currently supported vendors: MySQL (mysql), MySQL with SSL (mysqls,
-mysqlssl), Oracle (oracle, ora), PostgreSQL (postgresql, pg, pgsql,
-postgres), PostgreSQL with SSL (postgresqlssl, pgs, pgsqlssl,
-postgresssl, pgssl, postgresqls, pgsqls, postgress), SQLite2 (sqlite,
-sqlite2), SQLite3 (sqlite3), InfluxDB 1.x (influx, influxdb), InfluxDB
-with SSL (influxdbssl, influxdbs, influxs, influxssl)
+Currently supported vendors:
+
+=over 2
+
+=item * MySQL (mysql) with SSL (mysqls, mysqlssl)
+
+=item * Oracle (oracle, ora)
+
+=item * PostgreSQL (postgresql, pg, pgsql, postgres) with SSL (postgresqlssl, pgs, pgsqlssl, postgresssl, pgssl, postgresqls, pgsqls, postgress)
+
+=item * SQLite2 (sqlite, sqlite2)
+
+=item * SQLite3 (sqlite3)
+
+=item * InfluxDB 1.x (influx, influxdb) with SSL (influxdbssl, influxdbs, influxs, influxssl)
+
+=back
 
 Aliases must start with ':' and are read from
 /etc/sql/aliases and ~/.sql/aliases. The user's own
@@ -1152,9 +1175,9 @@ sub parse_dburl {
     my %options = ();
     # sql:mysql://[[user][:password]@][host][:port]/[database[?sql query]]
 
-    if($url=~m!(?:sql:)? # You can prefix with 'sql:'
+    if($url=~m!^(?:sql:)? # You can prefix with 'sql:'
                ((?:oracle|ora|mysql|pg|postgres|postgresql|influx|influxdb)(?:s|ssl|)|
-                 (?:sqlite|sqlite2|sqlite3)):// # Databasedriver ($1)
+                 (?:sqlite|sqlite2|sqlite3|csv)):// # Databasedriver ($1)
                (?:
                 ([^:@/][^:@]*|) # Username ($2)
                 (?:
@@ -1168,21 +1191,21 @@ sub parse_dburl {
                )?
                (?:
                 /
-                ([^?/]*)? # Database ($6)
+                ([^?]*)? # Database ($6)
                )?
                (?:
                 /?
                 \?
                 (.*)? # Query ($7)
                )?
-              !x) {
-	$options{databasedriver} = undef_if_empty(uri_unescape($1));
+              $!ix) {
+	$options{databasedriver} = undef_if_empty(lc(uri_unescape($1)));
 	$options{user} = undef_if_empty(uri_unescape($2));
 	$options{password} = undef_if_empty(uri_unescape($3));
 	$options{host} = undef_if_empty(uri_unescape($4));
 	$options{port} = undef_if_empty(uri_unescape($5));
 	$options{database} = undef_if_empty(uri_unescape($6))
-	    || $options{user};
+	    || $options{user} || $ENV{'USER'};
 	$options{query} = undef_if_empty(uri_unescape($7));
 	debug("dburl $url\n");
 	debug("databasedriver ",$options{databasedriver}, " user ", $options{user},

@@ -2888,7 +2888,7 @@ sub check_invalid_option_combinations() {
 
 sub init_globals() {
     # Defaults:
-    $Global::version = 20241022;
+    $Global::version = 20241120;
     $Global::progname = 'parallel';
     $::name = "GNU Parallel";
     $Global::infinity = 2**31;
@@ -15159,12 +15159,18 @@ sub check_permissions($) {
 }
 
 sub parse_dburl($) {
+    sub undef_if_empty {
+	if(defined($_[0]) and $_[0] eq "") {
+	    return undef;
+	}
+	return $_[0];
+    }
     my $url = shift;
     my %options = ();
     # sql:mysql://[[user][:password]@][host][:port]/[database[/table][?query]]
 
     if($url=~m!^(?:sql:)? # You can prefix with 'sql:'
-	       ((?:oracle|ora|mysql|pg|postgres|postgresql)(?:s|ssl|)|
+	       ((?:oracle|ora|mysql|pg|postgres|postgresql|influx|influxdb)(?:s|ssl|)|
 		 (?:sqlite|sqlite2|sqlite3|csv)):// # Databasedriver ($1)
 	       (?:
 		([^:@/][^:@]*|) # Username ($2)
@@ -15179,25 +15185,27 @@ sub parse_dburl($) {
 	       )?
 	       (?:
 		/
-		([^/?]*)? # Database ($6)
+		([^?]*)? # Database ($6)
 	       )?
 	       (?:
 		/
-		([^?]*)? # Table ($7)
-	       )?
+		([^?/]*)? # Table ($7)
+	       )
 	       (?:
 		\?
 		(.*)? # Query ($8)
 	       )?
 	      $!ix) {
-	$options{databasedriver} = ::undef_if_empty(lc(uri_unescape($1)));
-	$options{user} = ::undef_if_empty(uri_unescape($2));
-	$options{password} = ::undef_if_empty(uri_unescape($3));
-	$options{host} = ::undef_if_empty(uri_unescape($4));
-	$options{port} = ::undef_if_empty(uri_unescape($5));
-	$options{database} = ::undef_if_empty(uri_unescape($6));
-	$options{table} = ::undef_if_empty(uri_unescape($7));
-	$options{query} = ::undef_if_empty(uri_unescape($8));
+	$options{databasedriver} = undef_if_empty(lc(uri_unescape($1)));
+	$options{user} = undef_if_empty(uri_unescape($2));
+	$options{password} = undef_if_empty(uri_unescape($3));
+	$options{host} = undef_if_empty(uri_unescape($4));
+	$options{port} = undef_if_empty(uri_unescape($5));
+	$options{database} = undef_if_empty(uri_unescape($6))
+	    || $options{user} || $ENV{'USER'};
+	$options{table} = undef_if_empty(uri_unescape($7))
+	    || $options{user} || $ENV{'USER'};
+	$options{query} = undef_if_empty(uri_unescape($8));
 	::debug("sql", "dburl $url\n");
 	::debug("sql", "databasedriver ", $options{databasedriver},
 		" user ", $options{user},

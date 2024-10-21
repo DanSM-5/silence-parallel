@@ -8,6 +8,11 @@
 # Each should be taking 1-3s and be possible to run in parallel
 # I.e.: No race conditions, no logins
 
+par_--pipe--block-2() {
+    echo '### --block -2'
+    yes `seq 100` | head -c 100M | parallel -j 5 --block -2 -k --pipe wc
+}
+
 par_keep_order_make_job_1_output_fast() {
     echo '# EXAMPLE: Keep order, but make job 1 output fast'
     doit() {

@@ -8,6 +8,88 @@
 # Each should be taking 30-100s and be possible to run in parallel
 # I.e.: No race conditions, no logins
 
+par__dburl_parsing() {
+    mkdir -p test
+    (
+	cd test
+	export me=$(whoami)
+	pwd=$(pwd)
+	pwdurl=$(pwd | perl -pe 's:/:%2F:g')
+	dburls=(
+	    # relative path - no dir
+	    # relative path - with dir
+	    # full path
+	    # default
+
+	    csv:///mydir/$me
+	    csv:///./mydir/$me
+	    csv:///.%2Fmydir/$me
+	    csv:///$pwd/$me
+	    csv:///$pwdurl/$me
+	    csv:///./$me
+	    csv:///./
+	    # this defaults to $me/$me = non-existent dir
+	    csv:///$me/$me
+	    csv:////$me
+	    csv:///$me/
+	    csv:////
+	    csv:///
+
+	    sqlite3:///$me/$me
+	    sqlite3://mydir/$me/$me
+	    sqlite3:///mydir/$me/$me
+	    sqlite3:///mydir%2F$me/$me
+	    sqlite3:///$pwd/$me/$me
+	    sqlite3:///$pwdurl/$me/$me
+	    sqlite3:///$me/
+	    sqlite3:///$me/$me
+	    sqlite3:////$me
+	    sqlite3:///$me/
+	    sqlite3:////
+	    sqlite3:///
+
+	    sqlite:///$me/$me
+	    sqlite://mydir/$me/$me
+	    sqlite:///mydir/$me/$me
+	    sqlite:///mydir%2F$me/$me
+	    sqlite:///$pwd/$me/$me
+	    sqlite:///$pwdurl/$me/$me
+	    sqlite:///$me/
+	    sqlite:///$me/$me
+	    sqlite:////$me
+	    sqlite:///$me/
+	    sqlite:////
+	    sqlite:///
+
+	    mysql://$me@/$me/$me
+	    mysql://$me@/$me/
+	    mysql://$me@//
+	    mysql:///$me/$me
+	    mysql:////$me
+	    mysql:///$me/
+	    mysql:////
+	    mysql:///
+	    
+ 	    pg://$me@/$me/$me
+	    pg://$me@/$me/
+	    pg://$me@//
+	    pg:///$me/$me
+	    pg:////$me
+	    pg:///$me/
+	    pg:////
+	    pg:///
+	)
+	test_dburl() {
+            mkdir mydir
+            parallel -k --sqlandworker $1 echo ::: {1..3}
+	    rm -rf "$me" mydir
+	}
+	export -f test_dburl
+	parallel -j1 --tag test_dburl ::: ${dburls[@]}
+    )
+    rmdir test
+}
+ 
 par_sshlogin_parsing() {
     echo '### Generate sshlogins to test parsing'
     sudo sshd -p 22222
@@ -564,7 +646,7 @@ par_memfree() {
 	grep -v TERM | grep -v ps/display.c
 }
 
-par_test_detected_shell() {
+par__test_detected_shell() {
     echo '### bug #42913: Dont use $SHELL but the shell currently running'
 
     shells="bash csh dash fish fizsh ksh ksh93 mksh posh rbash rush rzsh sash sh static-sh tcsh yash zsh"

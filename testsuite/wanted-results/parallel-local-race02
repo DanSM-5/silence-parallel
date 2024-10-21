@@ -51,10 +51,7 @@ par_continuous_output	1
 par_continuous_output	1
 par_continuous_output	1
 par_continuous_output	1
-par_hostgroup	### --hostgroup force ncpu
-par_hostgroup	parallel
-par_hostgroup	tange
-par_hostgroup	### --hostgroup two group arg
+par_hostgroup	### --hostgroup force ncpu - 2x parallel, 6x me
 par_hostgroup	parallel
 par_hostgroup	parallel
 par_hostgroup	tange
@@ -63,7 +60,16 @@ par_hostgroup	tange
 par_hostgroup	tange
 par_hostgroup	tange
 par_hostgroup	tange
-par_hostgroup	### --hostgroup one group arg
+par_hostgroup	### --hostgroup two group arg - 2x parallel, 6x me
+par_hostgroup	parallel
+par_hostgroup	parallel
+par_hostgroup	tange
+par_hostgroup	tange
+par_hostgroup	tange
+par_hostgroup	tange
+par_hostgroup	tange
+par_hostgroup	tange
+par_hostgroup	### --hostgroup one group arg - 8x me
 par_hostgroup	tange
 par_hostgroup	tange
 par_hostgroup	tange
@@ -72,7 +78,7 @@ par_hostgroup	tange
 par_hostgroup	tange
 par_hostgroup	tange
 par_hostgroup	tange
-par_hostgroup	### --hostgroup multiple group arg + unused group
+par_hostgroup	### --hostgroup multiple group arg + unused group - 2x parallel, 6x me, 0x tcsh
 par_hostgroup	parallel
 par_hostgroup	tange
 par_hostgroup	### --hostgroup two groups @
@@ -87,17 +93,17 @@ par_hostgroup	implicit_group
 par_hostgroup	### --hostgroup --sshlogin with @
 par_hostgroup	no_group
 par_hostgroup	implicit_group
-par_hostgroup	### --hostgroup -S @group
+par_hostgroup	### --hostgroup -S @group - bad if you get parallel@lo
 par_hostgroup	tange
 par_hostgroup	tcsh
-par_hostgroup	### --hostgroup -S @group1 -Sgrp2
+par_hostgroup	### --hostgroup -S @group1 -Sgrp2 - get all twice
 par_hostgroup	parallel
 par_hostgroup	parallel
 par_hostgroup	tange
 par_hostgroup	tange
 par_hostgroup	tcsh
 par_hostgroup	tcsh
-par_hostgroup	### --hostgroup -S @group1+grp2
+par_hostgroup	### --hostgroup -S @group1+grp2 - get all twice
 par_hostgroup	parallel
 par_hostgroup	parallel
 par_hostgroup	tange
