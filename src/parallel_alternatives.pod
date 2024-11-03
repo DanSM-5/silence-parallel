@@ -788,8 +788,10 @@ mixes. Combined with B<paexec_reorder> output order can be the same as
 input order. In certain situations B<paexec> will eat the last newline
 of standard output.
 
-There seems to be no way to make 4 jobs run on a remote server with 4
-cores and 16 jobs on a remote server with 16 cores.
+There seems to be no way to have the number og jobs depend on the
+number of CPU threads in a mixed server setup: E.g run 4 jobs on a
+remote server with 4 cores and 16 jobs on a remote server with 16
+cores.
 
 
 =head3 EXAMPLES FROM man paexec
@@ -893,7 +895,7 @@ B<parallel>.
         awk 'BEGIN {print toupper(ARGV[1])}' < tasks
 
   13$ paexec -Z240 -x -t ssh -n 'server1 badhostname server2' \
-        -c "awk 'BEGIN {print toupper(ARGV[1])}' " < tasks 
+        -c "awk 'BEGIN {print toupper(ARGV[1])}' " < tasks
 
   13$ parallel --filter-hosts -S 'server1,badhostname,server2' \
         "awk 'BEGIN {print toupper(ARGV[1])}' " < tasks
@@ -1025,7 +1027,7 @@ B<parallel>.
         time -p paexec -c ~/bin/calc -n +2 -xg | grep -v success
 
   20$ printf 'small1\nsmall2\nsmall3\nsmall4\nsmall5\nhuge\n' |
-        time -p parallel -j2 ~/bin/calc | grep -v success                                 
+        time -p parallel -j2 ~/bin/calc | grep -v success
 
   21$ printf 'small1\nsmall2\nsmall3\nsmall4\nweight: huge 6\n' |
         time -p paexec -c ~/bin/calc -n +2 -x -W1 | grep -v success
@@ -1504,8 +1506,65 @@ user uses Rust parallel it will overwrite this file.
 If /tmp/parallel runs full during the run, Rust parallel does not
 report this, but finishes with success - thereby risking data loss.
 
+
 https://github.com/mmstick/parallel
 (Last checked: 2016-08)
+
+
+=head2 DIFFERENCES BETWEEN parallelion AND GNU Parallel
+
+Summary (see legend above):
+
+=over
+
+=item - (I2) - I4 - - -
+
+=item M1 - M3 - - M6
+
+=item - O2 O3 - O5 (O6) - x x
+
+=item E1 - - (E4) E5 - - E8 ?
+
+=item - - - - - - - - -
+
+=item - -
+
+=back
+
+I2: I was unable to cannot get B<parallelion> to read from a file.
+
+O6: There is extra output if a job fails.
+
+E4: The default number of parallel jobs is the number of cpu threads.
+
+-- is needed to force args not be parsed as options:
+
+  parallelion 'echo {}' -- Runs without -v
+
+  parallelion 'echo {}' Runs with -v
+
+The commands are run through B<ion> shell.
+
+Ctrl-C does not stop processing.
+
+The B<--log> is similar to syslog - not a table.
+
+The progressbar is nice.
+
+B<parallelion> is fast: 0.1 ms/job. Similar to B<parallel-bash>.
+
+=head3 EXAMPLES FROM parallelion
+
+  1$ parallelion --progress 'echo {}' {1..1000}
+
+  1$ parallel --bar echo {} ::: {1..1000}
+
+  2$ parallelion --progress 'echo {}' $(seq 1 999)
+
+  2$ seq 1 999 | parallel --bar echo
+
+https://gitlab.redox-os.org/redox-os/parallel
+(Last checked: 2024-08)
 
 
 =head2 DIFFERENCES BETWEEN Rush AND GNU Parallel
@@ -1971,6 +2030,8 @@ https://github.com/gdm85/coshell
 
 
 =head2 DIFFERENCES BETWEEN spread AND GNU Parallel
+
+Summary (see legend above):
 
 =over
 
@@ -3591,7 +3652,7 @@ not, all the long jobs may end up in the same queue, so you may see:
       time parallel -P4 sleep {}
   (7 seconds)
   $ printf "%b\n" 1 1 1 4 1 1 1 4 1 1 1 4 |
-      time ./parallel-bash.bash -p 4 -c sleep {}
+      time parallel-bash -p 4 -c sleep {}
   (12 seconds)
 
 Because it uses bash lists, the total number of jobs is limited to

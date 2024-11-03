@@ -4,30 +4,6 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-par_ash_embed() {
-  myscript=$(cat <<'_EOF'
-    echo '--embed'
-    parallel --embed | tac | perl -pe '
-      /^parallel/ and not $seen++ and s{^}{
-echo \$b
-parset a,b,c echo ::: ParsetOK ParsetOK ParsetOK
-env_parallel echo ::: env_parallel_OK
-env_parallel --env myvar echo {} --env \\\$myvar ::: env_parallel
-myvar=OK
-parallel echo ::: parallel_OK
-PATH=/usr/sbin:/usr/bin:/sbin:/bin
-# Do not look for parallel in /usr/local/bin
-#. \`which env_parallel.ash\`
-}
-    ' | tac > parallel-embed
-    chmod +x parallel-embed
-    ./parallel-embed
-    rm parallel-embed
-_EOF
-  )
-  ssh ash@lo "$myscript"
-}
-
 par_bash_embed() {
   myscript=$(cat <<'_EOF'
     echo '--embed'
@@ -159,8 +135,8 @@ par_env_parallel_big_env() {
     env_parallel --session
     a=`rand | perl -pe 's/\0//g'| head -c 10000`
     env_parallel -Slo echo ::: OK 2>&1
-    a=`rand | perl -pe 's/\0//g'| head -c 20000`
-    env_parallel -Slo echo should ::: fail 2>/dev/null || echo OK
+    a=`rand | perl -pe 's/\0//g'| head -c 50000`
+    env_parallel -Slo echo THIS SHOULD ::: FAIL 2>/dev/null || echo OK
 }
 
 par_no_route_to_host() {

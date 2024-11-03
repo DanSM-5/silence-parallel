@@ -201,7 +201,7 @@ do_dburl() {
 	perl -pe 's/ +/ /g' |
 	# SQLITE par_empty       Error: near line 1: in prepare, no such table: TBL99999 (1)
 	# SQLITE par_empty       Parse error near line 1: no such table: TBL99999
-	perl -pe 's/Error: near line 1: in prepare, (.*) .../Parse error near line 1: /'
+	perl -pe 's/Error: near line 1: in prepare, (.*)/Parse error near line 1: $1/'
 }
 export -f do_dburl
 parallel -vk --tag do_dburl ::: CSV INFLUX MYSQL PG SQLITE

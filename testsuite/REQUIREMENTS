@@ -10,14 +10,21 @@ install_packages() {
     INSTALL=${INSTALL:-"sudo apt -y install"}
 
     # The testsuite depends on this:
-    test_pkgs="imagemagick expect autossh sshpass jq libpod-simple-perl"
-    test_pkgs="$test_pkgs pod2pdf gawk lua5.3 clisp php-cli nodejs"
-    test_pkgs="$test_pkgs mono-csharp-shell libevent-dev tcl libtext-csv-perl"
+    test_pkgs="imagemagick expect pv zenity"
+    test_pkgs="$test_pkgs autossh sshpass lsh-client lsh-utils jq"
+    test_pkgs="$test_pkgs libpod-simple-perl libtext-csv-perl"
+    test_pkgs="$test_pkgs libtest-nowarnings-perl pod2pdf"
+    test_pkgs="$test_pkgs xemacs21"
+    test_pkgs="$test_pkgs gawk lua5.3 clisp php-cli nodejs guile-3.0 fsharp"
+    test_pkgs="$test_pkgs mono-csharp-shell octave openjdk-11-jdk-headless tcl"
+    test_pkgs="$test_pkgs racket libevent-dev python-is-python3"
     test_pkgs="$test_pkgs xterm libc6-i386 libcrypt1:i386 virtualbox"
-    test_pkgs="$test_pkgs libtest-nowarnings-perl xemacs21 pv zenity"
-    test_pkgs="$test_pkgs lsh-client lsh-utils torsocks net-tools python-is-python3"
-    test_pkgs="$test_pkgs reiserfsprogs btrfs-progs exfatprogs f2fs-tools xfsprogs"
+    test_pkgs="$test_pkgs torsocks net-tools"
+    test_pkgs="$test_pkgs reiserfsprogs btrfs-progs exfatprogs f2fs-tools"
+    test_pkgs="$test_pkgs xfsprogs"
 
+    test_snap_pkgs="groovy julia"
+    
     # Debian package
     packaging_pkgs="dpkg-dev build-essential debhelper osc cvs automake"
     packaging_pkgs="$packaging_pkgs python3-m2crypto alien python3-pip"
@@ -30,14 +37,14 @@ install_packages() {
     sql_pkgs="$sql_pkgs libdbd-mysql-perl rlwrap"
 
     # Compression
-    compression_pkgs="zstd clzip liblz4-tool lzop pigz pixz gzip plzip pbzip2"
+    compression_pkgs="zstd clzip lz4 lzop pigz pixz gzip plzip pbzip2"
     compression_pkgs="$compression_pkgs lzma xz-utils lzip bzip2 lbzip2 lrzip"
     compression_pkgs_missing="pxz"
 
     # Shells
     # (csh = bsd-csh that is broken)
-    # (ksh93 gone)
-    shell_pkgs="ash dash fdclone fish fizsh ksh ksh93u+m mksh posh rc rush sash"
+    # (ash ksh93 gone)
+    shell_pkgs="dash fdclone fish fizsh ksh ksh93u+m mksh posh rc rush sash"
     shell_pkgs="$shell_pkgs tcsh yash zsh busybox-static"
 
     # Databases
@@ -57,6 +64,13 @@ install_packages() {
 	true
     else
 	echo Packages missing
+	return 1
+    fi
+    if sudo parallel -j1 snap install --classic ::: $test_snap_pkgs; then
+	# OK
+	true
+    else
+	echo Packages missing: $test_snap_pkgs
 	return 1
     fi
     if parallel -j1 --tag --halt now,success=1 $INSTALL ::: $alt_database ; then
@@ -85,7 +99,11 @@ install_sqlite2() {
     cd /tmp/sqlite2
     git clone https://github.com/sqlite/sqlite
     cd sqlite
-    git checkout a2cfd57491ca357eda2a206cbcd94c6e6c7d7d93
+    git checkout cc83b6e071ba69943f175a038d2625ae3d6abf47
+    # New GCC needs <stdlib.h>, so add that
+    perl -i -pe \
+	 's/echo (.#include <stdio.h>)(.)/printf $1\\n#include <stdlib.h>\\n$2/' \
+	 Makefile.in
     ./configure --prefix=/usr/local && make -j && sudo make install
 }
 
@@ -131,7 +149,7 @@ install_oracle_client() {
 	echo 'export ORACLE_SID=XE' >> ~/.bashrc
     fi
     # libaio
-    sudo apt install libaio1t64
+    sudo apt install libaio1 || sudo apt install libaio1t64
     sudo ln -s libaio.so.1t64 /usr/lib/x86_64-linux-gnu/libaio.so.1
     perl -MCPAN -e 'install DBD::Oracle'
     # TODO set up vagrant oracle server
@@ -139,6 +157,7 @@ install_oracle_client() {
     (
 	cd vagrant-projects/OracleDatabase/23.4.0-Free
 	echo export VM_ORACLE_PWD=`goodpasswd` >> ~/.passwords
+	echo export 'ORACLE_PWD=$VM_ORACLE_PWD' >> ~/.passwords
 	. ~/.passwords
 	vagrant up
     )
@@ -271,11 +290,11 @@ add_server_to_hosts() {
     insert_in_etc_hosts 127.1.2.3 server
     
     insert_in_etc_hosts 127.0.0.2 lo
-    parallel add_single_vagrant_to_etc_hosts {} parallel-server{#} ::: centos8 freebsd13 freebsd14 rhel8 centos3
+    parallel add_single_vagrant_to_etc_hosts {} parallel-server{#} ::: centos9 freebsd13 freebsd14 rhel8 centos3
 }
 
 vagrant_up() {
-    parallel -j0 --ll --tag 'cd {};vagrant up' ::: vagrant/*/*
+    parallel -j0 --ll --tag 'cd {//};vagrant up' ::: vagrant/*/*/Vagrantfile
     # After this you should be able to 'vagrant ssh'
 }
 
@@ -346,9 +365,9 @@ add_key_to_auth_key() {
     cat ~/.ssh/*pub >> ~/.ssh/authorized_keys
     parallel --tag --timeout 20 sshaddvagrant ::: $vagrant_names parallel-server{1..4}
     parallel --tag --timeout 20 sshaddlocal ::: $ips lo localhost 
-    parallel --tag --timeout 5 ssh vagrant@{} echo OK ::: $vagrant_names parallel-server{1..4}
+    parallel --tag --timeout 5 ssh vagrant@{} echo ssh vagrant@{} OK ::: $vagrant_names parallel-server{1..4}
     parallel ssh vagrant@{} 'echo "PATH=\$PATH:\$HOME/bin" >> .bashrc' ::: $vagrant_names
-    parallel --tag --timeout 5 ssh {} echo OK ::: $ips lo localhost 
+    parallel --tag --timeout 5 ssh {} echo ssh {} OK ::: $ips lo localhost 
 }
 
 install_rsync_on_vagrant() {
@@ -503,8 +522,9 @@ lsh_setup() {
 	mkdir -p .lsh
 	rm -f ".lsh/yarrow-seed-file"
 	lsh-make-seed -o ".lsh/yarrow-seed-file"
-	lsh -c aes256-ctr --sloppy-host-authentication \
-	    --capture-to ~/.lsh/host-acls -l $user server echo Added host-auth
+	# TODO need to enter 'y' here
+	lsh --sloppy-host-authentication \
+	    --capture-to ~/.lsh/host-acls -l $user $server echo Added host-auth
 	rm -f .lsh/identity .lsh/identity.pub
 	lsh-keygen | lsh-writekey -c none
 	export_key_to_local_users() {
@@ -655,6 +675,8 @@ rsync_versions() {
 	     autoreconf -fiv
 	     # strlcat strlcpy 
 	     perl -i -pe 's/void (strlc..)/void _$1/' util.c
+	     # Force FNM_CASEFOLD to be set
+	     export CFLAGS='-Wno-incompatible-pointer-types -D_GNU_SOURCE=1'
 	     configure_make_proto_install $1
 	 }
 	 build-v3.0.0() {
@@ -685,7 +707,7 @@ rsync_versions() {
 
 install_tangetools() {
     (
-	git clone https://codeberg.org/tange/tangetools
+	git clone https://git.data.coop/tange/tangetools
 	cd tangetools &&
 	    make &&
 	    sudo make install

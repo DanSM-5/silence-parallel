@@ -37,7 +37,7 @@ par_--ssh_autossh	    AUTOSSH_DEBUG       - turn logging to maximum verbosity an
 par_--ssh_autossh	                          stderr
 par_--ssh_autossh	
 par_--ssh_autossh	rsync: connection unexpectedly closed (0 bytes received so far) [Receiver]
-par_--ssh_autossh	rsync error: error in rsync protocol data stream (code 12) at io.c(231) [Receiver=3.2.7]
+par_--ssh_autossh	rsync error: error in rsync protocol data stream (code 12) at io.c(231) [Receiver=9.9.9]
 par_--ssh_autossh	foo_autossh
 par_--ssh_lsh	### --ssh lsh
 par_--ssh_lsh	OK

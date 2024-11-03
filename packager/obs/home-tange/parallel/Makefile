@@ -1,12 +1,19 @@
-all:
+all: update upload monitorbuild
+	true
+
+update:
 	# Update sha256sum
 	s=`sha256sum parallel-*.tar.bz2|field 1` perl -i -pe 's/(sha256sums=..)\w+(..)/$$1$$ENV{s}$$2/' PKGBUILD
 	# Update version
 	perl -i -pe 's/pkgver=.*/pkgver=$$ENV{YYYYMMDD}/' PKGBUILD
 	osc diff
+
+upload:
 	osc up
-	parallel osc add ::: *.spec *.dsc *.tar.gz *.tar.bz2 && echo Src added OK || true
+	parallel osc add ::: *.spec *.dsc *.tar.gz *.tar.bz2 *.sig && echo Src added OK || true
 	osc ci -m "New release"
+
+monitorbuild:
 	### Wait for "building" state to complete
 	echo '### Wait for "building" state'
 	sleep 3

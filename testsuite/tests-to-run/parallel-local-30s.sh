@@ -8,6 +8,43 @@
 # Each should be taking 30-100s and be possible to run in parallel
 # I.e.: No race conditions, no logins
 
+par_sshlogin_parsing() {
+    echo '### Generate sshlogins to test parsing'
+    sudo sshd -p 22222
+
+    gen_sshlogin() {
+	grp=grp1+grp2
+	ncpu=4
+	ssh=/usr/bin/ssh
+	user=parallel
+	userpass=withpassword
+	pass="$withpassword"
+	host=lo
+	port=22222
+	# no pass
+	parallel -k echo \
+		 {1}{2}{3}{4}{5}{=1'$_ = ($arg[4]||$arg[5]) ? "\@" : ""' =}$host{6} \
+		 ::: '' @$grp/ ::: '' $ncpu/ ::: '' $ssh' ' \
+		 ::: '' $user ::: '' ::: '' :$port
+	# pass
+	parallel -k echo \
+		 {1}{2}{3}{4}{5}{=1'$_ = ($arg[4]||$arg[5]) ? "\@" : ""' =}$host{6} \
+		 ::: '' @$grp/ ::: '' $ncpu/ ::: '' $ssh' ' \
+		 ::: '' $userpass ::: :"$pass" ::: '' :$port
+    }
+
+    doit() {
+	if parallel -S "$1" {} '$SSH_CLIENT|field 3;whoami' ::: echo ; then
+	    : echo OK
+	else
+	    echo Fail
+	fi
+    }
+    export -f doit
+    
+    gen_sshlogin | parallel --tag --timeout 20 -k doit
+}
+
 par__print_in_blocks() {
     echo '### bug #41565: Print happens in blocks - not after each job complete'
     median() { perl -e '@a=sort {$a<=>$b} <>;print $a[$#a/2]';}
@@ -290,7 +327,7 @@ par_exit_code() {
 	echo '# Ideally the command should return the same'
 	echo '#   with or without parallel'
 	# These give the same exit code prepended with 'true;' or not
-	OK="ash csh dash fish fizsh ksh2020 posh rc sash sh tcsh"
+	OK="csh dash fish fizsh ksh2020 posh rc sash sh tcsh"
 	# These do not give the same exit code prepended with 'true;' or not
 	BAD="bash ksh93 mksh static-sh yash zsh"
 	doit $OK $BAD
@@ -530,7 +567,7 @@ par_memfree() {
 par_test_detected_shell() {
     echo '### bug #42913: Dont use $SHELL but the shell currently running'
 
-    shells="ash bash csh dash fish fizsh ksh ksh93 mksh posh rbash rush rzsh sash sh static-sh tcsh yash zsh"
+    shells="bash csh dash fish fizsh ksh ksh93 mksh posh rbash rush rzsh sash sh static-sh tcsh yash zsh"
     test_unknown_shell() {
 	shell="$1"
 	tmp="/tmp/test_unknown_shell_$shell"

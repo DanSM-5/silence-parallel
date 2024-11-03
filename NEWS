@@ -1,3 +1,66 @@
+20241022
+
+New in this release:
+
+* No new features. This is a candidate for a stable release.
+
+* Bug fixes and man page updates.
+
+News about GNU Parallel:
+
+* Separate arguments with a custom separator in GNU Parallel
+  https://boxofcuriosities.co.uk/post/separate-arguments-with-a-custom-separator-in-gnu-parallel
+
+* GNU parallel is underrated
+  https://amontalenti.com/2021/11/10/parallel
+
+* Unlocking the Power of Supercomputers: My HPC Adventure with 2800
+  Cores and GNU Parallel
+  https://augalip.com/2024/03/10/unlocking-the-power-of-supercomputers-my-hpc-adventure-with-2800-cores-and-gnu-parallel/
+
+* Converting WebP Images to PNG Using parallel and dwebp
+  https://bytefreaks.net/gnulinux/bash/converting-webp-images-to-png-using-parallel-and-dwebp
+
+
+20240922
+
+New in this release:
+
+* --fast disables a lot of functionality to speed up running jobs.
+
+* Bug fixes and man page updates.
+
+News about GNU Parallel:
+
+* Job requiring GNU Parallel knowledge
+  https://www.capgemini.com/ca-en/jobs/Id6D4pEBZ6aB2WPS2aAJ/systems-engineer/
+
+
+20240822
+
+New in this release:
+
+* --match Match input source with regexp to set replacement fields.
+
+* {:%fmt} Use printf formatting of replacement strings.
+
+* Bug fixes and man page updates.
+
+News about GNU Parallel:
+
+* Powerful GNU parallel, more than a loop
+  https://www.linkedin.com/pulse/powerful-gnu-parallel-more-than-loop-zhenguo-zhang-18dxc
+
+* How To Increase File Transfer Speed Using Parallel Rsync?
+  https://contentbase.com/blog/increase-file-transfer-speed-parallel-rsync/
+
+* Converting WebP Images to PNG Using parallel and dwebp
+  https://bytefreaks.net/2024/07/27
+
+* Turbocharging the Box CLI with GNU Parallel
+  https://medium.com/box-developer-blog/turbocharging-the-box-cli-with-gnu-parallel-ee44c48811c0
+
+
 20240722
 
 New in this release:
@@ -32,9 +95,11 @@ New in this release:
 
 News about GNU Parallel:
 
-* Howto - Parallel: lanciare comandi in simultanea https://github.com/linuxhubit/linuxhub.it/blob/main/_posts/2024-06-14-howto-parallel-per-lanciare-comandi-in-simultanea.md
+* Howto - Parallel: lanciare comandi in simultanea
+  https://github.com/linuxhubit/linuxhub.it/blob/main/_posts/2024-06-14-howto-parallel-per-lanciare-comandi-in-simultanea.md
 
-* Implementing Concurrency in Shell Scripts https://dev.to/siddhantkcode/implementing-concurrency-in-shell-scripts-521o
+* Implementing Concurrency in Shell Scripts
+  https://dev.to/siddhantkcode/implementing-concurrency-in-shell-scripts-521o
 
 
 20240522

@@ -97,7 +97,8 @@ sub pre3 {
     # If =for not already there, insert:
     #   =for pod2rst next-code-block: bash
     $all = <STDIN>;
-    @codepar = split/(?<=\n  .{0,25}\S.{0,200}\n{2,10})(?=[0-9a-zA-Z=])/, $all;
+    # Split after code block (where indented lines => no indent)
+    @codepar = split/(?<=\n  .{0,25}\S.{0,200}\n{2,10})(?=^[0-9a-zA-Z=])/m, $all;
     for(@codepar) {
 	/=for pod2rst next-code-block:/ and next;
 	s/((\n  +\S))/\n=for pod2rst next-code-block: bash\n$1/;

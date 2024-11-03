@@ -123,7 +123,7 @@ stop=(stdout ping -w 1 -c 1 {} && \
   (cd vagrant/*/{} && vagrant suspend) ) | \
   grep -Ev "${ignore}"
 
-namedservers=centos8 freebsd13 freebsd14 rhel8 centos3
+namedservers=centos9 freebsd13 freebsd14 rhel8 centos3
 servers=parallel-server1 parallel-server2 parallel-server3 parallel-server4 ${namedservers}
 
 startvm:

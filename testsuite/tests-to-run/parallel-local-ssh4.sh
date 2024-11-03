@@ -75,22 +75,6 @@ par_--nonall_results() {
     rm -r "$tmp"    
 }
 
-par_env_underscore() {
-    echo '### --env _'
-    echo ignored_var >> ~/.parallel/ignored_vars
-    unset $(compgen -A function | grep par_)
-    ignored_var="should not be copied"
-    export ignored_var
-    fUbAr="OK FUBAR" parallel -S parallel@lo --env _ echo '$fUbAr $ignored_var' ::: test
-    echo 'In csh this may fail with ignored_var: Undefined variable.'
-    fUbAr="OK FUBAR" parallel -S csh@lo --env _ echo '$fUbAr $ignored_var' ::: test 2>&1
-
-    echo '### --env _ with explicit mentioning of normally ignored var $ignored_var'
-    ignored_var="should be copied"
-    fUbAr="OK FUBAR" parallel -S parallel@lo --env ignored_var,_ echo '$fUbAr $ignored_var' ::: test
-    fUbAr="OK FUBAR" parallel -S csh@lo --env ignored_var,_ echo '$fUbAr $ignored_var' ::: test 2>&1
-}    
-
 par_warn_when_exporting_func() {
     echo 'bug #40137: SHELL not bash: Warning when exporting funcs'
     myrun() {
@@ -100,7 +84,7 @@ par_warn_when_exporting_func() {
 	PARALLEL_SHELL=$1 parallel --env myfunc -S lo myfunc ::: OK
     }
     export -f myrun
-    parallel -k --tag myrun ::: /bin/{sh,bash} /usr/bin/{ash,csh,dash,ksh,tcsh,zsh}
+    parallel -k --tag myrun ::: /bin/{sh,bash} /usr/bin/{csh,dash,ksh,tcsh,zsh}
 }
 
 par_exporting_in_zsh() {
@@ -237,5 +221,5 @@ par_z_multiple_hosts_repeat_arg() {
 
 export -f $(compgen -A function | grep par_)
 compgen -A function | G par_ "$@" | LC_ALL=C sort |
-    parallel --timeout 250 -j6 --tag -k --joblog /tmp/jl-`basename $0` '{} 2>&1' |
+    parallel --timeout 250 -j75% --tag -k --joblog /tmp/jl-`basename $0` '{} 2>&1' |
     perl -pe 's:/usr/bin:/bin:g;'

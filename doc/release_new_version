@@ -195,6 +195,7 @@ git branch premaster
 
 Add tar.bz2 [Start upload] and [Publish].
 
+
 == Update documentation ==
 
 Update version number + 1
@@ -217,6 +218,7 @@ Modified => alpha
 
 make testurls
 
+
 == Check REUSE ==
 
 make reuse
@@ -226,7 +228,7 @@ https://api.reuse.software/status/git.savannah.gnu.org/git/parallel
 
 == Update Savannah ==
 
-file:///home/tange/privat/parallel/doc/release_new_version
+perl -ne '/^Subject:/..0 and print' < doc/release_new_version | clipboard
 
 Content from release mail:
 
@@ -236,10 +238,6 @@ Test URLs.
 
 https://savannah.gnu.org/news/approve.php?group=parallel
 
-== Update Freshmeat ==
-
-// FreeCode is dying
-http://freshmeat.net/projects/parallel/releases/new
 
 == Update Mastodon Twitter ==
 
@@ -251,6 +249,7 @@ See the intro videos pi.dk/1
 10 secs installation: pi.dk/3
 
 GNU Parallel - for people who live life in the parallel lane.
+
 
 == Send announce ==
 
@@ -268,16 +267,14 @@ from:tange@gnu.org
 to:parallel@gnu.org, bug-parallel@gnu.org
 stable-bcc: Jesse Alama <jessealama@fastmail.fm>
 
-Subject: GNU Parallel 20240722 ('Assange') released [stable]
+Subject: GNU Parallel 20241022 ('Sinwar Nasrallah') released
 
-GNU Parallel 20240722 ('Assange') has been released. It is available for download at: lbry://@GnuParallel:4
+GNU Parallel 20241022 ('Sinwar Nasrallah') has been released. It is available for download at: lbry://@GnuParallel:4
 
 Quote of the month:
 
-  parallel is frickin great for launching jobs on multiple
-  machines. Ansible and Jenkins and others may be good too but I was
-  able to jump right in with parallel.
-    -- dwhite21787@reddit
+  GNU Parallel is one of the most helpful tools I've been using recently, and it's just something like: parallel -j4 'gzip {}' ::: folder/*.csv
+     -- Milton Pividori @miltondp@twitter
   
 New in this release:
 
@@ -287,15 +284,13 @@ New in this release:
 
 News about GNU Parallel:
 
-* Scientific Workflows at Scale using GNU Parallel https://web.cvent.com/event/f318e73c-2230-432a-a044-b75625020543/websitePage:afd80266-008e-414b-9f94-2fd9b4dd1924?session=fe79a785-ec60-414c-8d2b-c29208f53d4c&shareLink=true
+* Separate arguments with a custom separator in GNU Parallel https://boxofcuriosities.co.uk/post/separate-arguments-with-a-custom-separator-in-gnu-parallel
 
-* Use GNU Parallel to render blender movies distributed by a bunch of nodes https://github.com/tfmoraes/blender_gnu_parallel_render
+* GNU parallel is underrated https://amontalenti.com/2021/11/10/parallel
 
-* Lessons Learned from Scaling to Multi-Terabyte Datasets https://v2thegreat.com/2024/06/19/lessons-learned-from-scaling-to-multi-terabyte-datasets/
+* Unlocking the Power of Supercomputers: My HPC Adventure with 2800 Cores and GNU Parallel https://augalip.com/2024/03/10/unlocking-the-power-of-supercomputers-my-hpc-adventure-with-2800-cores-and-gnu-parallel/
 
-* Efisiensi Maksimal: Cara Paralelisasi Perintah di CLI Linux https://medium.com/@nfrozi/efisiensi-maksimal-cara-paralelisasi-perintah-di-cli-linux-f4fda3afe2a0
-
-* Introduction to GNU parallel https://datascience.101workbook.org/06-hpc/06-parallel/01-intro-to-gnu-parallel/#gsc.tab=0
+* Converting WebP Images to PNG Using parallel and dwebp https://bytefreaks.net/gnulinux/bash/converting-webp-images-to-png-using-parallel-and-dwebp
 
 
 GNU Parallel - For people who live life in the parallel lane.

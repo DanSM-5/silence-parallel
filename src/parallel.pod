@@ -134,7 +134,7 @@ B<Bash, Csh, or Tcsh aliases>: Use B<env_parallel>.
 
 B<Zsh, Fish, Ksh, and Pdksh functions and aliases>: Use B<env_parallel>.
 
-=item B<{}>
+=item B<{}> (beta testing)
 
 Input line.
 
@@ -155,7 +155,7 @@ See also: B<--plus> B<{.}> B<{/}> B<{//}> B<{/.}> B<{#}> B<{%}>
 B<{>I<n>B<}> B<{=>I<perl expression>B<=}>
 
 
-=item B<{.}>
+=item B<{.}> (beta testing)
 
 Input line without extension.
 
@@ -173,7 +173,7 @@ The replacement string B<{.}> can be changed with B<--extensionreplace>
 See also: B<{}> B<--extensionreplace>
 
 
-=item B<{/}>
+=item B<{/}> (beta testing)
 
 Basename of input line.
 
@@ -183,7 +183,7 @@ directory part removed.
 See also: B<{}> B<--basenamereplace>
 
 
-=item B<{//}>
+=item B<{//}> (beta testing)
 
 Dirname of input line.
 
@@ -193,7 +193,7 @@ line. See B<dirname>(1).
 See also: B<{}> B<--dirnamereplace>
 
 
-=item B<{/.}>
+=item B<{/.}> (beta testing)
 
 Basename of input line without extension.
 
@@ -204,7 +204,7 @@ B<{/}> and B<{.}>.
 See also: B<{}> B<--basenameextensionreplace>
 
 
-=item B<{#}>
+=item B<{#}> (beta testing)
 
 Sequence number of the job to run.
 
@@ -214,7 +214,7 @@ job being run. It contains the same number as $PARALLEL_SEQ.
 See also: B<{}> B<--seqreplace>
 
 
-=item B<{%}>
+=item B<{%}> (beta testing)
 
 Job slot number.
 
@@ -249,7 +249,7 @@ Notice how {%} and $PARALLEL_JOBSLOT differ in the retry run of C and D.
 See also: B<{}> B<--jobs> B<--slotreplace>
 
 
-=item B<{>I<n>B<}>
+=item B<{>I<n>B<}> (beta testing)
 
 Argument from input source I<n> or the I<n>'th argument.
 
@@ -263,7 +263,7 @@ See also: B<{}> B<{>I<n>.B<}> B<{>I<n>/B<}> B<{>I<n>//B<}>
 B<{>I<n>/.B<}> B<--colsep>
 
 
-=item B<{>I<n>.B<}>
+=item B<{>I<n>.B<}> (beta testing)
 
 Argument from input source I<n> or the I<n>'th argument without
 extension.
@@ -278,7 +278,7 @@ extension removed.
 See also: B<{>I<n>B<}> B<{.}>
 
 
-=item B<{>I<n>/B<}>
+=item B<{>I<n>/B<}> (beta testing)
 
 Basename of argument from input source I<n> or the I<n>'th argument.
 
@@ -292,7 +292,7 @@ directory (if any) removed.
 See also: B<{>I<n>B<}> B<{/}>
 
 
-=item B<{>I<n>//B<}>
+=item B<{>I<n>//B<}> (beta testing)
 
 Dirname of argument from input source I<n> or the I<n>'th argument.
 
@@ -305,7 +305,7 @@ the I<n>'th argument (when used with B<-N>). See B<dirname>(1).
 See also: B<{>I<n>B<}> B<{//}>
 
 
-=item B<{>I<n>/.B<}>
+=item B<{>I<n>/.B<}> (beta testing)
 
 Basename of argument from input source I<n> or the I<n>'th argument
 without extension.
@@ -321,7 +321,7 @@ directory (if any) and extension removed.
 See also: B<{>I<n>B<}> B<{/.}>
 
 
-=item B<{=>I<perl expression>B<=}>
+=item B<{=>I<perl expression>B<=}> (beta testing)
 
 Replace with calculated I<perl expression>.
 
@@ -438,13 +438,34 @@ See also: B<--rpl> B<--parens> B<{}> B<{=>I<n> I<perl expression>B<=}>
 B<--filter>
 
 
-=item B<{=>I<n> I<perl expression>B<=}>
+=item B<{=>I<n> I<perl expression>B<=}> (beta testing)
 
 Positional equivalent to B<{=>I<perl expression>B<=}>.
 
 To understand positional replacement strings see B<{>I<n>B<}>.
 
 See also: B<{=>I<perl expression>B<=}> B<{>I<n>B<}>
+
+
+=item B<{>I<rpl>:I<format>B<}> (beta testing)
+
+Format replacement string.
+
+Use I<format> to format I<rpl>. I<format> is a format string used in
+B<printf>. I<rpl> is a replacement string.
+
+Examples:
+
+  {#:%04d} - Job number ({#}) with 4 digits prepended with 0
+  {%:%02d} - Job slot ({%}) with 2 digits prepended with 0
+  {:%6s} - Input line ({}) right aligned 6 chars wide
+  {/:%12s} - Basename ({/}) right aligned 12 chars wide
+  {2:%8.2f} - Second input source ({2}) 8 chars wide, 2 decimals
+
+Format strings also works on replacement strings defined via B<--rpl>
+that start with '{'.
+
+See also: B<{}> B<{>I<n>B<}> B<--rpl>
 
 
 =item B<:::> I<arguments>
@@ -840,7 +861,7 @@ B<--trim n>.
 I<regexp> is a Perl Regular Expression:
 https://perldoc.perl.org/perlre.html
 
-See also: B<--csv> B<{>I<n>B<}> B<--trim> B<--link>
+See also: B<--csv> B<{>I<n>B<}> B<--trim> B<--link> B<--match>
 
 
 =item B<--combineexec> I<name>
@@ -921,7 +942,7 @@ See also: B<--compress>
 
 Treat input as CSV-format.
 
-B<--colsep> sets the field delimiter. It works very much like
+B<--colsep> sets the field delimiter. B<--csv> works very much like
 B<--colsep> except it deals correctly with quoting. Compare:
 
    echo '"1 big, 2 small","2""x4"" plank",12.34' |
@@ -936,9 +957,9 @@ Even quoted newlines are parsed correctly:
     echo 'Line 2 in field 1";value 2') |
      parallel --csv --colsep ';' echo Field 1: {1} Field 2: {2}
 
-When used with B<--pipe> only pass full CSV-records.
+When used with B<--pipe> it will only pass full CSV-records.
 
-See also: B<--pipe> B<--link> B<{>I<n>B<}> B<--colsep> B<--header>
+See also: B<--pipe> B<--link> B<{>I<n>B<}> B<--colsep> B<--header> B<--match>
 
 
 =item B<--ctag> (obsolete: use B<--color> B<--tag>)
@@ -979,10 +1000,10 @@ See also: TIME POSTFIXES B<--retries> B<--ssh-delay>
 
 =item B<-d> I<delim>
 
-Input items are terminated by I<delim>.
+Input records are terminated by I<delim>.
 
 The specified delimiter may be characters, C-style character escapes
-such as \n, or octal or hexadecimal escape codes.  Octal and
+such as \n, or octal (\012) or hexadecimal (\x0A) escape codes.  Octal and
 hexadecimal escape codes are understood as for the printf command.
 
 See also: B<--colsep>
@@ -1081,6 +1102,27 @@ estimate will only be shown when the first job has finished.
 Implies B<--progress>.
 
 See also: B<--bar> B<--progress> B<--total-jobs>
+
+
+=item B<--fast> (alpha testing)
+
+Run jobs fast.
+
+This disables a lot of functionality of GNU B<parallel> to make jobs
+run as fast as possible: Think of it as the nitro racing car compared
+to the Volvo.
+
+Useful for benchmarking and if you have 1000's of tiny jobs.
+
+Compare:
+
+    time parallel echo ::: {1..10} ::: {1..10} ::: {1..10}
+    time parallel --fast echo ::: {1..10} ::: {1..10} ::: {1..10}
+    time parallel --fast echo ::: {1..100} ::: {1..100} ::: {1..100}
+
+Supported options: B<--group> B<--keep-order>
+
+If you need more options: File a bug.
 
 
 =item B<--fg>
@@ -1773,6 +1815,38 @@ Support for B<-m> with B<--sshlogin> is limited and may fail.
 If in doubt use B<-X> as that will most likely do what is needed.
 
 See also: B<-X> B<--xargs>
+
+
+=item B<--match> I<regexp> (beta testing)
+
+Match input source with regexp to set replacement fields.
+
+With B<--match> you can often avoid pre-processing your input with
+B<awk> or similar to extract the relevant fields.
+
+You can access each capture group i.e. the parenthesis in regexp
+'(...)' with a replacement field. The replacement fields are named
+B<{m.n}> where m is the input source and n is the capture group
+number:
+
+  parallel --match '(.*),(.*)_(.*)' echo {1.2} {1.3} {1.1} \
+    ::: Gold,Heart_of
+  parallel --match '(.*),' --match '([a-z]+)' echo {1.1}{2.1} \
+    ::: Milli,bar ::: 10ways
+
+To reuse a B<--match> simply use B<+n> where n is the input
+source. E.g. B<+2> for the second:
+
+  parallel --match +2 --match '([A-Za-z]+)' echo {1.1} {2.1} \
+    ::: /Improbability/ ::: 10drive
+
+To only set B<--match> for input source 2, make a dummy B<--match> for
+input source 1:
+
+  parallel --match '' --match '([a-z]+)' echo {1} {2.1} \
+    ::: Telephone ::: 10sanitizer
+
+See also: B<{>I<n>B<}> B<--colsep>
 
 
 =item B<--memfree> I<size>
@@ -2738,10 +2812,10 @@ the replacement string and adding a regular expression between the
 parenthesis. The matching string will be inserted as $$1:
 
   parallel --rpl '{%(.*?)} s/$$1//' echo {%.tar.gz} ::: my.tar.gz
-  parallel --rpl '{:%(.+?)} s:$$1(\.[^/]+)*$::' \
-    echo {:%_file} ::: my_file.tar.gz
-  parallel -n3 --rpl '{/:%(.*?)} s:.*/(.*)$$1(\.[^/]+)*$:$1:' \
-    echo job {#}: {2} {2.} {3/:%_1} ::: a/b.c c/d.e f/g_1.h.i
+  parallel --rpl '{:+(.+?)} s:$$1(\.[^/]+)*$::' \
+    echo {:+_file} ::: my_file.tar.gz
+  parallel -n3 --rpl '{/:+(.*?)} s:.*/(.*)$$1(\.[^/]+)*$:$1:' \
+    echo job {#}: {2} {2.} {3/:+_1} ::: a/b.c c/d.e f/g_1.h.i
 
 You can even use multiple matches:
 
@@ -3116,11 +3190,11 @@ See also: TIME POSTFIXES B<--sshlogin> B<--delay>
 
 =item B<--sshlogin> I<[@hostgroups/][ncpus/][[user][:[password]]@]host[:port][,...]>
 
-=item B<--sshlogin> I<@hostgroup>
+=item B<--sshlogin> I<@hostgroup>/
 
 =item B<-S> I<[@hostgroups/][ncpus/][ssh command][[user][:[password]]@]host[:port][,...]>
 
-=item B<-S> I<@hostgroup>
+=item B<-S> I<@hostgroup>/
 
 Distribute jobs to remote computers.
 

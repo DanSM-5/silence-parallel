@@ -179,6 +179,11 @@ each file should be named the first letter of the file name.
 
   parallel 'mkdir -p {=s/(.).*/$1/=}; mv {} {=s/(.).*/$1/=}' ::: *
 
+In practice you would probably not use a perl replacement string but
+instead B<--match>:
+
+  parallel --match '(.)' 'mkdir -p {1.1} && mv {} {1.1}' ::: *
+
 
 =head2 EXAMPLE: Composed command with multiple input sources
 
@@ -187,6 +192,97 @@ You have a dir with files named as 24 hours in 5 minute intervals:
 
   parallel [ -f {1}:{2} ] "||" echo {1}:{2} does not exist \
     ::: {00..23} ::: {00..55..5}
+
+
+=head2 EXAMPLE: Match parts of input source
+
+Match first initial and last name:
+
+  parallel --match '(.).* (.*)' echo {1.1}. {1.2} \
+    ::: "Arthur Dent" "Ford Prefect" "Tricia McMillan" "Zaphod Beeblebrox"
+
+Re-arrange (stupid) US date format into (nice) ISO-8601:
+
+  parallel --match '(.*)/(.*)/(.*)' echo {1.3}-{1.1:%02d}-{1.2:%02d} \
+    ::: 12/31/1969 1/19/2038 6/1/2002
+
+Match url into domain and path:
+
+  parallel --match 'https://(.*?)/(.*)' echo Domain: {1.1} Path: {1.2} \
+    ::: https://example.com/dir/page https://gnu.org/s/parallel
+
+Get URLs into dirs named by 2nd level domain name,
+e.g. https://www.gnu.org/s/parallel will be put into the dir gnu.org.
+
+  cat urls | parallel --match '//[^/]*?([^/.]+\.[^/.]+)/' \
+    'mkdir -p {1.1} && cd {1.1} && wget {}'
+
+Match host.domain:port from a log file:
+
+  cat log |
+    parallel --match '\b([a-z0-9.]+):(\d+)\b' echo host:{1.1} port:{1.2}
+
+Reorder comma-separated values:
+
+  parallel --match '(.*),(.*)' echo Second: {1.2}, First: {1.1} \
+    ::: "Arthur,Babel fish" "Adams,Betelgeuse" "Arcturan,Bistro"
+
+Capitalize word:
+
+  parallel --match '([a-z])([a-z]*) ([a-z])([a-z]*)' \
+    echo '{=1.1 $_=uc($_) =}{1.2} {=1.3 $_=uc($_) =}{1.4}' \
+    ::: "pan galactic" "gargle blaster"
+
+Make an international dialing prefix table:
+
+  dial=(
+    "DK(Denmark) 00,45"
+    "US(United States) 011,1"
+    "JP(Japan) 010,81"
+    "AU(Australia) 0011,61"
+    "CA(Canada) 011,1"
+    "RU(Russia) 810,7"
+    "TH(Thailand) 001,66"
+    "TW(Taiwan) 002,886"
+  )
+  parallel --match '(.*)\((.*)\) (.*),(.*)' --match +1 \
+    echo From {1.1}/{1.2} to {2.1}/{2.2} dial {1.3}-{2.4} \
+    ::: "${dial[@]}" ::: "${dial[@]}"
+
+Note how input source 2 reuses the B<--match> from input source 1.
+
+
+=head2 EXAMPLE: Replacement fields from CSV file with headers
+
+This is an advanced example. You have:
+
+  Date;Name;Location
+  3/8/1978;"Beeblebrox; Zaphod";"Betelgeuse V"
+  10/12/1979;"Dent; Arthur";Earth
+  1/5/1981;Slartibartfast;Magrathea
+
+You want:
+
+  Z. Beeblebrox: 1978-03-08/BET
+  A. Dent: 1979-10-12/EAR
+  Slartibartfast: 1981-01-05/MAG
+
+Run:
+
+  parallel --csv --colsep ';' --header : --match "(\d+)/(\d+)/(\d+)" \
+    --match "^([^;]+)(; (.))?" --match "(...)"   \
+    echo '{=Name.3 s/(.)/$1. /;=}'{Name.1}: \
+      {Date.3}-{Date.1:%02d}-{Date.2:%02d}/'{=Location.1 $_=uc =}' \
+    :::: people.csv
+
+B<--csv> parses the input as CSV with B<--colsep ;> as the separator -
+dealing correctly with quoted strings. The input is split into 3
+columns.  B<--header :> makes the columns available as
+B<{>I<columnname>B<}>.  Each column has their corresponding B<--match>
+so each field can be accessed as
+B<{>I<columnname>.I<#>B<}>. B<s/(.)/$1. /> is a perl expression that
+appends ". " if the name has an initial. B<:%02d> formats single
+digits as two digits. B<uc> upper cases the argument.
 
 
 =head2 EXAMPLE: Calling Bash functions
@@ -319,6 +415,10 @@ If the barcode does not contain '_R1', you can do:
 
     parallel --plus myprocess {} {/_R1/_R2} ::: *_R1.fq.gz
 
+Or you can use B<--match>:
+
+    parallel --match '(.*)_R1(.*)' myprocess {} {1.1}_R2{1.2} ::: *_R1.fq.gz
+
 
 =head2 EXAMPLE: Removing strings from the argument
 
@@ -340,6 +440,10 @@ To remove a string anywhere you can use regular expressions with
 {/regexp/replacement} and leave the replacement empty:
 
   parallel --plus echo {/demo_/} ::: demo_mycode remove_demo_here
+
+You can often also use B<--match>:
+
+  parallel --match '(.*)demo_(.*)' echo {1.1}{1.2} ::: demo_mycode remove_demo_here
 
 
 =head2 EXAMPLE: Download 24 images for each of the past 30 days
@@ -430,6 +534,7 @@ downloads 10 videos in parallel.
 B<{=> and B<=}> mark a perl expression. B<pQ> perl-quotes the
 string. B<date +%FT%T> is the date in ISO8601 with time.
 
+
 =head2 EXAMPLE: Save output in ISO8601 dirs
 
 Save output from B<ps aux> every second into dirs named
@@ -446,7 +551,7 @@ and the rest a ' ' a perl expression is used to look at the 3rd input
 source. If the value modulo 2 is 1: Use ":" otherwise use " ":
 
   parallel -k echo {1}'{=3 $_=$_%2?":":" "=}'{2}{3} \
-    ::: {0..12} ::: {0..5} ::: {0..9}
+    ::: {0..23} ::: {0..5} ::: {0..9}
 
 
 =head2 EXAMPLE: Aggregating content of files

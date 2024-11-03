@@ -2,8 +2,8 @@ Source: parallel
 Section: utils
 Priority: extra
 Maintainer: Ole Tange <ole@tange.dk>
-Build-Depends: debhelper (>= 5)
-Standards-Version: 3.8.3
+Build-Depends: debhelper (>= 12)
+Standards-Version: 4.6.0
 Homepage: https://www.gnu.org/software/parallel/
 
 Package: parallel

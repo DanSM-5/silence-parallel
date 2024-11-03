@@ -46,7 +46,8 @@ par_--ssh_autossh() {
 	stdout parallel -S csh@lo --trc {}.out touch {}.out ::: foo_autossh
 	ls foo_autossh*
 	rm foo_autossh*
-    ) | grep -Ev 'Warning: remote port forwarding failed for listen'
+    ) | grep -Ev 'Warning: remote port forwarding failed for listen' |
+	perl -pe 's/Receiver=[0-9.]+/Receiver=9.9.9/g'
 }
 
 par_fish_exit() {

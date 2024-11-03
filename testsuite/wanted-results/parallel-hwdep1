@@ -1,21 +1,3 @@
-par__environment_too_big_ash	bug #5XXXX: env_parallel should warn if the environment is too big
-par__environment_too_big_ash	OK_bigvar
-par__environment_too_big_ash	OK_bigvar_remote
-par__environment_too_big_ash	OK_bigvar_quote
-par__environment_too_big_ash	OK_bigvar_quote_remote
-par__environment_too_big_ash	OK_bigfunc
-par__environment_too_big_ash	OK_bigfunc_remote
-par__environment_too_big_ash	OK_bigfunc_quote
-par__environment_too_big_ash	OK_bigfunc_quote_remote
-par__environment_too_big_ash	Rest should fail - functions not supported in ash
-par__environment_too_big_ash	parallel: Error: Command line too long (7XXXX >= 6XXXX) at input 0: fail_bigvar
-par__environment_too_big_ash	parallel: Error: Command line too long (7XXXX >= 6XXXX) at input 0: fail_bigvar_remote
-par__environment_too_big_ash	parallel: Error: Command line too long (8XXXX >= 6XXXX) at input 0: fail_bigvar_quote
-par__environment_too_big_ash	parallel: Error: Command line too long (8XXXX >= 6XXXX) at input 0: fail_bigvar_quote_remote
-par__environment_too_big_ash	fail_bigfunc-not-supported
-par__environment_too_big_ash	fail_bigfunc_remote-not-supported
-par__environment_too_big_ash	fail_bigfunc_quote-not-supported
-par__environment_too_big_ash	fail_bigfunc_quote_remote-not-supported
 par__environment_too_big_dash	bug #5XXXX: env_parallel should warn if the environment is too big
 par__environment_too_big_dash	OK_bigvar
 par__environment_too_big_dash	OK_bigvar_remote
@@ -44,19 +26,19 @@ par__environment_too_big_zsh	OK_bigfunc_remote
 par__environment_too_big_zsh	OK_bigfunc_quote
 par__environment_too_big_zsh	OK_bigfunc_quote_remote
 par__environment_too_big_zsh	Rest should fail
-par__environment_too_big_zsh	parallel: Error: Command line too long (6XXXX >= 5XXXX) at input 0: fail_bigvar
-par__environment_too_big_zsh	parallel: Error: Command line too long (5XXXX >= 5XXXX) at input 0: fail_bigvar_remote
-par__environment_too_big_zsh	parallel: Error: Command line too long (6XXXX >= 5XXXX) at input 0: fail_bigvar_quote
-par__environment_too_big_zsh	parallel: Error: Command line too long (6XXXX >= 5XXXX) at input 0: fail_bigvar_quote_remote
-par__environment_too_big_zsh	parallel: Error: Command line too long (6XXXX >= 5XXXX) at input 0: fail_bigfunc
-par__environment_too_big_zsh	parallel: Error: Command line too long (7XXXX >= 5XXXX) at input 0: fail_bigfunc_remote
-par__environment_too_big_zsh	parallel: Error: Command line too long (6XXXX >= 5XXXX) at input 0: fail_bigfunc_quote
-par__environment_too_big_zsh	parallel: Error: Command line too long (6XXXX >= 5XXXX) at input 0: fail_bigfunc_quote_remote
+par__environment_too_big_zsh	parallel: Error: Command line too long (6XXXX >= 6XXXX) at input 0: fail_bigvar
+par__environment_too_big_zsh	parallel: Error: Command line too long (7XXXX >= 6XXXX) at input 0: fail_bigvar_remote
+par__environment_too_big_zsh	parallel: Error: Command line too long (6XXXX >= 6XXXX) at input 0: fail_bigvar_quote
+par__environment_too_big_zsh	parallel: Error: Command line too long (6XXXX >= 6XXXX) at input 0: fail_bigvar_quote_remote
+par__environment_too_big_zsh	parallel: Error: Command line too long (6XXXX >= 6XXXX) at input 0: fail_bigfunc
+par__environment_too_big_zsh	parallel: Error: Command line too long (7XXXX >= 6XXXX) at input 0: fail_bigfunc_remote
+par__environment_too_big_zsh	parallel: Error: Command line too long (6XXXX >= 6XXXX) at input 0: fail_bigfunc_quote
+par__environment_too_big_zsh	parallel: Error: Command line too long (6XXXX >= 6XXXX) at input 0: fail_bigfunc_quote_remote
 par__sockets_cores_threads	### Test --number-of-sockets/cores/threads
 par__sockets_cores_threads	1
-par__sockets_cores_threads	2
 par__sockets_cores_threads	4
-par__sockets_cores_threads	2
+par__sockets_cores_threads	8
+par__sockets_cores_threads	4
 par__sockets_cores_threads	### Test --use-sockets-instead-of-threads
 par__sockets_cores_threads	threads done
 par__sockets_cores_threads	sockets done
@@ -69,13 +51,13 @@ par_progress	Computer:jobs running/jobs completed/%of started jobs/Average secon
 par_progress	local:0/3/100%/9.9s [K
 par_progress	
 par_progress	Computers / CPU cores / Max jobs to run
-par_progress	1:local / 2 / 2
+par_progress	1:local / 4 / 4
 par_progress	
 par_progress	Computer:jobs running/jobs completed/%of started jobs/Average seconds to complete
 par_progress	local:0/3/100%/9.9s [K
 par_progress	
 par_progress	Computers / CPU threads / Max jobs to run
-par_progress	1:local / 4 / 4
+par_progress	1:local / 8 / 8
 par_progress	
 par_progress	Computer:jobs running/jobs completed/%of started jobs/Average seconds to complete
 par_progress	local:0/3/100%/9.9s [K

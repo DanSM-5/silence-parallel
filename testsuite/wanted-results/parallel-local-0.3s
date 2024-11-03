@@ -1,3 +1,5 @@
+par_--rpl_group_bug	Bug in --rpl group: $$1_
+par_--rpl_group_bug	Good
 par_-q_perl_program	### test08 -q and perl
 par_-q_perl_program	b
 par_-q_perl_program	d
@@ -982,10 +984,10 @@ par_sem_quote	### sem --quote should not add empty argument
 par_sem_quote	echo
 par_sem_quote	
 par_shellcompletion	### --shellcompletion
-par_shellcompletion	1952015cc0c85c44d82d13e2673f4b28  -
-par_shellcompletion	1952015cc0c85c44d82d13e2673f4b28  -
-par_shellcompletion	c23b2094e510526c322ea3af89b4c682  -
-par_shellcompletion	c23b2094e510526c322ea3af89b4c682  -
+par_shellcompletion	1eba455fe1456f03376f19255aed28d3  -
+par_shellcompletion	1eba455fe1456f03376f19255aed28d3  -
+par_shellcompletion	1ea63315f24ede14c1e8d93c1b64150a  -
+par_shellcompletion	1ea63315f24ede14c1e8d93c1b64150a  -
 par_slow_pipe_regexp	### bug #53718: --pipe --regexp -N blocks
 par_slow_pipe_regexp	This should take a few ms, but took more than 2 hours
 par_slow_pipe_regexp	      0       1       1

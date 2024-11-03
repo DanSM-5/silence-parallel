@@ -65,7 +65,11 @@ sub set_input_source_header($$) {
 			@opt::filter) {
 			# Skip if undefined
 			$_ or next;
-		      s:\{$s(|/|//|\.|/\.)\}:\{$id$1\}:g;
+			s<\{$s(
+				(\.\d+)? # Sub position = {3.2}
+				(|/|//|\.|/\.) # Known replacement strings
+				(:%.*?)? # Formatting
+			  )\}><\{$id$1\}>gx;
 			# {=header1 ... =}  =>  {=1 ... =}
 		      s:$left $s (.*?) $right:$l$id$1$r:gx;
 		    }
@@ -149,6 +153,91 @@ sub halt() {
 	    wait_and_exit(min(undef_as_zero($Global::exitstatus),101));
 	}
     }
+}
+
+
+sub __FAST_MODE__() {}
+
+
+sub fast() {
+    my $jobslots = $Global::host{':'}->user_requested_processes($opt::jobs);
+    my $i;
+    my $jobs_per_chunk;
+    my $buffer_len = 100;
+    my $splitstring = ("\n#\0\n");
+    # n = jobslots
+    # Read 100 jobs
+    # Split into n chunks
+    # Read 3*100 jobs
+    # Split into n chunks
+    # Read 3*3*100 jobs (up to at most 300K jobs)
+    # Split into n chunks
+    # Receiver: parallel --block 1k --pipe -N1 --recend '\n#\0\n' dash
+    # TODO --group? --halt? --tag? $PARALLEL_JOBSLOT
+    # _PARALLEL_TAG="foo"
+    # | tagger
+    # _PARALLEL_EXIT
+    # maybe_exit
+    my $executer_fh;
+    if($opt::D eq "fast") {
+	open($executer_fh, "|-", "cat") || die;
+    } else {
+	open($executer_fh, "|-", "parallel --plain -j $jobslots  --block 1k --pipe -N1 --recend '\\n#\\0\\n' $Global::shell") || die;
+    }
+    # Do some testing of a stuck job - dns = 5 sec
+    my $block_start = q{
+	error() {
+	    _exit=$((_exit+1))
+ 	    # --halt-on-error stuff
+	    if [ $_exit -gt 40 ]; then
+	        echo "ERROR: More than 40"
+	        exit 1
+	    fi
+        }
+        
+        _tagger() {
+          {
+            rm -f "$1"
+            # This will fail for either /1 or /2
+            rmdir "$2" 2>/dev/null
+	    # TODO use awk (see fasttag)
+            perl -pe 's{^}{$ENV{PARALLEL_TAGSTRING}}'
+          } < "$1"
+        }
+        
+        _taggerwrap() {
+            _dir=`mktemp -d`
+            mkfifo "$_dir"/1 "$_dir"/2
+            _tagger "$_dir"/1 "$_dir" >&1 &
+            _tagger "$_dir"/2 "$_dir" >&2 &
+            # ( ... ) is needed to deal correctly with 'exit 1'
+            ( eval $@ ; ) >"$_dir"/1 2>"$_dir"/2 || error
+            wait
+        }
+	PARALLEL_TAGSTRING=dummy
+	export PARALLEL_TAGSTRING
+    };
+    my $block_end = "\n# Define get exit value\necho EXIT=\$_exit\n".$splitstring."\n";
+    do {
+	$i = 0;
+	my @jobbuffer;
+	while(my $job = $Global::JobQueue->get()) {
+	    push (@jobbuffer, "PARALLEL_TAGSTRING=".Q($job->tag()).
+	    	 "\n_taggerwrap ". Q($job->replaced()));
+	    ($i++ < $buffer_len) or last;
+	}
+	my $jobs_per_chunk = 1 + ($i / $jobslots);
+	my $j = 0;
+	print $executer_fh $block_start;
+	for(@jobbuffer) {
+	    print $executer_fh $_,"\n";
+	    (++$j % $jobs_per_chunk) or print $executer_fh $block_end,$block_start;
+	}
+	print $executer_fh $block_end;
+	if($buffer_len < 100000) { $buffer_len *= 3; }
+    } while ($i);
+    close $executer_fh;
+    exit(0);
 }
 
 
@@ -2036,6 +2125,7 @@ sub options_completion_hash() {
 	  "[Use at most max-args arguments per command line]:max-args"
 	  => \$opt::max_replace_args),
 	 "col-sep|colsep|C=s[Column separator]:regexp" => \$opt::colsep,
+	 "match=s[Matching regexp]:regexp" => \@opt::match,
 	 "csv[Treat input as CSV-format]"=> \$opt::csv,
 	 ("help|h[Print a summary of the options to GNU parallel and exit]"
 	  => \$opt::help),
@@ -2076,7 +2166,7 @@ sub options_completion_hash() {
 	  "first line of a script. The content of the file will be treated ".
 	  "as inputsource]"
 	  => \$opt::shebang),
-	 ("_pipe-means-argfiles[internal]"
+	 ("_pipe-means-argfiles[Internal: Called by --shebang-wrap]"
 	  => \$opt::_pipe_means_argfiles),
 	 "Y" => \$opt::retired,
 	 ("skip-first-line|skipfirstline".
@@ -2133,7 +2223,8 @@ sub options_completion_hash() {
 	 "[Embed GNU parallel in a shell script]" => \$opt::combineexec,
 	 ("filter=s[Only run jobs where filter is true]:filter"
 	  => \@opt::filter),
-	 "_parset=s[Generate shell code for parset]" => \$opt::_parset,
+	 "fast[Run commands fast]" => \$opt::fast,
+	 "_parset=s[Internal: Generate shell code for parset]" => \$opt::_parset,
 	 ("shell-completion|shellcompletion=s".
 	  "[Generate shell code for shell completion]:shell:(bash zsh)"
 	  => \$opt::shellcompletion),
@@ -2233,8 +2324,12 @@ sub parse_options(@) {
     #
     ## Shell
     #
-    $Global::shell = $ENV{'PARALLEL_SHELL'} || parent_shell($$)
-	|| $ENV{'SHELL'} || "/bin/sh";
+    if($opt::fast) {
+	$Global::shell = $ENV{'PARALLEL_SHELL'} || which("dash") || "/bin/sh";
+    } else {
+	$Global::shell = $ENV{'PARALLEL_SHELL'} || parent_shell($$)
+	    || $ENV{'SHELL'} || "/bin/sh";
+    }
     if(not -x $Global::shell and not which($Global::shell)) {
 	::error("Shell '$Global::shell' not found.");
 	wait_and_exit(255);
@@ -2771,7 +2866,7 @@ sub check_invalid_option_combinations() {
 
 sub init_globals() {
     # Defaults:
-    $Global::version = 20240722;
+    $Global::version = 20241022;
     $Global::progname = 'parallel';
     $::name = "GNU Parallel";
     $Global::infinity = 2**31;
@@ -3779,7 +3874,7 @@ sub pQ($) {
 }
 
 sub unquote_printf() {
-    # Convert \t \n \r \000 \0
+    # Convert \t \n \r \xFF \000 \0
     # Inputs:
     #	$string = string with \t \n \r \num \0
     # Returns:
@@ -3788,7 +3883,11 @@ sub unquote_printf() {
     s/\\t/\t/g;
     s/\\n/\n/g;
     s/\\r/\r/g;
+    # Hex: \xFF
+    s/\\x([0-9a-fA-F]+)/eval 'sprintf "\\x'.$1.'"'/ge;
+    # Octal: \007
     s/\\(\d\d\d)/eval 'sprintf "\\'.$1.'"'/ge;
+    # Single digit octal: \7
     s/\\(\d)/eval 'sprintf "\\'.$1.'"'/ge;
     return $_;
 }
@@ -5825,8 +5924,8 @@ sub usage() {
 	 "If you use programs that use GNU Parallel to process data for an article in a",
 	 "scientific publication, please cite:",
 	 "",
-	 "  Tange, O. (2024, July 22). GNU Parallel 20240722 ('Assange').",
-	 "  Zenodo. https://doi.org/10.5281/zenodo.12789352",
+	 "  Tange, O. (2024, October 22). GNU Parallel 20241022 ('Sinwar Nasrallah').",
+	 "  Zenodo. https://doi.org/10.5281/zenodo.13957646",
 	 "",
 
 	 # Before changing these lines, please read
@@ -7119,26 +7218,90 @@ sub new($$) {
     my $local;
     my $string;
     # SSHLogins can have these formats:
-    #	@grp+grp/ncpu//usr/bin/ssh user@server
-    #	ncpu//usr/bin/ssh user@server
-    #	/usr/bin/ssh user@server
-    #	user@server
-    #	ncpu/user@server
-    #	@grp+grp/user@server
-    #	above with: user:password@server
-    #	above with: user@server:port
-    # So:
-    #	[@grp+grp][ncpu/][ssh command ][[user][:password]@][server[:port]]
+    #   @grp1+grp2/ => use only servers in @grp1+grp2
+    #	[@grp+grp/][ncpu/][ssh command ][[user][:password]@][host[:port]]
+    #
+    #   Here most combinations are generated:
+    #     grp=grp1+grp2
+    #     ncpu=4
+    #     ssh=/usr/bin/ssh
+    #     user=user
+    #     pass=pass
+    #     host=host
+    #     port=port
+    #     parallel -k echo {1}{2}{3}{4}{5}{=1'$_ = ($arg[4]||$arg[5]) ? "\@" : ""' =}$host{6} ::: '' @$grp/ ::: '' $ncpu/ ::: '' $ssh' ' ::: '' $user ::: '' :$pass ::: '' :$port
+    #   host
+    #   host:port
+    #   :pass@host
+    #   :pass@host:port
+    #   user@host
+    #   user@host:port
+    #   user:pass@host
+    #   user:pass@host:port
+    #   /usr/bin/ssh host
+    #   /usr/bin/ssh host:port
+    #   /usr/bin/ssh :pass@host
+    #   /usr/bin/ssh :pass@host:port
+    #   /usr/bin/ssh user@host
+    #   /usr/bin/ssh user@host:port
+    #   /usr/bin/ssh user:pass@host
+    #   /usr/bin/ssh user:pass@host:port
+    #   ncpu/host
+    #   ncpu/host:port
+    #   ncpu/:pass@host
+    #   ncpu/:pass@host:port
+    #   ncpu/user@host
+    #   ncpu/user@host:port
+    #   ncpu/user:pass@host
+    #   ncpu/user:pass@host:port
+    #   ncpu//usr/bin/ssh host
+    #   ncpu//usr/bin/ssh host:port
+    #   ncpu//usr/bin/ssh :pass@host
+    #   ncpu//usr/bin/ssh :pass@host:port
+    #   ncpu//usr/bin/ssh user@host
+    #   ncpu//usr/bin/ssh user@host:port
+    #   ncpu//usr/bin/ssh user:pass@host
+    #   ncpu//usr/bin/ssh user:pass@host:port
+    #   @grp1+grp2/host
+    #   @grp1+grp2/host:port
+    #   @grp1+grp2/:pass@host
+    #   @grp1+grp2/:pass@host:port
+    #   @grp1+grp2/user@host
+    #   @grp1+grp2/user@host:port
+    #   @grp1+grp2/user:pass@host
+    #   @grp1+grp2/user:pass@host:port
+    #   @grp1+grp2//usr/bin/ssh host
+    #   @grp1+grp2//usr/bin/ssh host:port
+    #   @grp1+grp2//usr/bin/ssh :pass@host
+    #   @grp1+grp2//usr/bin/ssh :pass@host:port
+    #   @grp1+grp2//usr/bin/ssh user@host
+    #   @grp1+grp2//usr/bin/ssh user@host:port
+    #   @grp1+grp2//usr/bin/ssh user:pass@host
+    #   @grp1+grp2//usr/bin/ssh user:pass@host:port
+    #   @grp1+grp2/ncpu/host
+    #   @grp1+grp2/ncpu/host:port
+    #   @grp1+grp2/ncpu/:pass@host
+    #   @grp1+grp2/ncpu/:pass@host:port
+    #   @grp1+grp2/ncpu/user@host
+    #   @grp1+grp2/ncpu/user@host:port
+    #   @grp1+grp2/ncpu/user:pass@host
+    #   @grp1+grp2/ncpu/user:pass@host:port
+    #   @grp1+grp2/ncpu//usr/bin/ssh host
+    #   @grp1+grp2/ncpu//usr/bin/ssh host:port
+    #   @grp1+grp2/ncpu//usr/bin/ssh :pass@host
+    #   @grp1+grp2/ncpu//usr/bin/ssh :pass@host:port
+    #   @grp1+grp2/ncpu//usr/bin/ssh user@host
+    #   @grp1+grp2/ncpu//usr/bin/ssh user@host:port
+    #   @grp1+grp2/ncpu//usr/bin/ssh user:pass@host
+    #   @grp1+grp2/ncpu//usr/bin/ssh user:pass@host:port
 
-    #	[@grp+grp]/ncpu//usr/bin/ssh user:pass@server:port
-    if($s =~ s:^\@([^/]+)/?::) {
+    #	[@grp+grp/][ncpu/][ssh command ][[user][:password]@][host[:port]]
+    if($s =~ s:^\@([^/]+)/::) {
 	# Look for SSHLogin hostgroups
 	%hostgroups = map { $_ => 1 } split(/\+|,/, $1);
     }
-    # An SSHLogin is always in the hostgroup of its "numcpu/host"
-    $hostgroups{$s} = 1;
 
-    #	[ncpu/]/usr/bin/ssh user:pass@server:port
+    #	[ncpu/][ssh command ][[user][:password]@][host[:port]]
     if ($s =~ s:^(\d+)/::) { $ncpus = $1; }
 
     # Why disallow space in password?
@@ -7150,11 +7313,13 @@ sub new($$) {
     #   cmd 'C:/bin/ssh' user 'user' with password 'C:/bin/ssh'
     # This is impossible to determine.
     # With space forbidden in password it uniquely parses as the 2nd.
-    #	[/usr/bin/ssh ]user:pass@server:port
+    #	[ssh command ][[user][:password]@][host[:port]]
     if($s =~ s/^(.*) //) { $sshcommand = $1; }
 
-    #	[user:pass@]server:port
-    if($s =~ s/^(.+)@//) {
+    #	[[user][:password]@][host[:port]]
+    # An SSHLogin is always in the hostgroup of its "user:pass@host:port"
+    $hostgroups{$s} = 1;
+    if($s =~ s/^(.*)@//) {
 	my $userpw = $1;
 	# user[:pass]
 	if($userpw =~ s/:(.*)//) {
@@ -7165,9 +7330,25 @@ sub new($$) {
 		::wait_and_exit(255);
 	    }
 	}
+	# This might be empty - that is OK
 	$user = $userpw;
     }
-    #	[server]:port
+    #	[host[:port]]
+    # host can have these formats:
+    #   hostname (: as local is dealt with later)
+    #   IPv4 i.p.n.o
+    #   with port
+    #   * :22
+    #   * :ssh
+    #   IPv6:
+    #   * \[b11010000011101]
+    #   * \[o64072/14]
+    #   * \[xd074/14]
+    #   * \[208.116.0.0/14]
+    #   with port
+    #   * .22
+    #   * p22
+    #   * #22
     if(not $s =~ /:.*:/
        and
        $s =~ s/^([-a-z0-9._]+)//i) {
@@ -7189,7 +7370,6 @@ sub new($$) {
 	#   2001:db8::1 port 80 - not supported
 	$host = $1;
     }
-
     #	[:port]
     if($s =~ s/^:(\w+)//i) {
 	$port = $1;
@@ -7211,10 +7391,11 @@ sub new($$) {
 	($user && $user."@").
 	($host && $host).
 	($port && ":$port");
+    my $userpassword = ($user && $user).($password && ":".$password);
     my $pwstring =
 	# Only include the sshcommand in $string if it is set by user
 	($sshcommand && $sshcommand." ").
-	($user && $user. ($password && ":".$password)."@").
+	($userpassword && $userpassword."@").
 	($host && $host).
 	($port && ":$port");
     if($host eq ':') {
@@ -8614,10 +8795,20 @@ sub sct_gnu_linux($) {
 	my $threads_per_core;
 	my $cores_per_socket;
 	for(@lscpu) {
+	    # lscpu
 	    /^CPU.s.:\s*(\d+)/ and $cpu->{'threads'} = $1;
 	    /^Thread.s. per core:\s*(\d+)/ and $threads_per_core = $1;
 	    /^Core.s. per socket:\s*(\d+)/ and $cores_per_socket = $1;
 	    /^(CPU )?Socket.s.:\s*(\d+)/i and $cpu->{'sockets'} = $2;
+	    # lscpu --all --extended
+	    #    3       0     0       1       1:1:1:0          yes 2900.0000 800.0000 1995.6210
+	    #    1       0     0       1       1:1:1            yes 1300.0000 800.0000  800.0000
+	    /^\s+(\d+)\s+\d+\s+(\d+)\s+(\d+)\s+\d+:\d+:\S+\s/ and do {
+		# Really only the last line matters
+		$cpu->{'threads'} = $1+1;
+		$cpu->{'sockets'} = $2+1;
+		$cpu->{'cores'} = $3+1;
+	    };
 	}
 	if($cores_per_socket and $cpu->{'sockets'}) {
 	    $cpu->{'cores'} = $cores_per_socket * $cpu->{'sockets'};
@@ -8639,7 +8830,7 @@ sub sct_gnu_linux($) {
 	read_cpuinfo(split/(?<=\n)/,$ENV{'PARALLEL_CPUINFO'});
     } elsif($ENV{'PARALLEL_LSCPU'}) {
 	# Use LSCPU from environment - used for testing only
-	read_lscpu(split/(?<=\n)/,$ENV{'PARALLEL_LSCPU'});
+	read_lscpu(split/\n/,$ENV{'PARALLEL_LSCPU'});
     } elsif(-r "$ENV{'PARALLEL_CPUPREFIX'}/cpu0/topology/thread_siblings") {
 	# Use CPUPREFIX from environment - used for testing only
 	read_topology($ENV{'PARALLEL_CPUPREFIX'});
@@ -8649,7 +8840,7 @@ sub sct_gnu_linux($) {
 	# Not debugging: Look at this computer
 	if(!($cpu->{'sockets'} and $cpu->{'cores'} and $cpu->{'threads'})
 	   and
-	   open(my $in_fh, "-|", "lscpu")) {
+	   open(my $in_fh, "-|", "lscpu --all --extended")) {
 	    # Parse output from lscpu
 	    read_lscpu(<$in_fh>);
 	    close $in_fh;
@@ -13124,6 +13315,289 @@ sub skip($) {
 package CommandLineQueue;
 
 sub new($) {
+    sub merge_rpl_parts(@) {
+	# '{=' 'perlexpr' '=}'  => '{= perlexpr =}'
+	# Input:
+	#	@in = the @command as given by the user
+	# Uses:
+	#	$Global::parensleft
+	#	$Global::parensright
+	# Returns:
+	#	@command with parts merged to keep {= and =} as one
+	my @in = @_;
+	my @out;
+	my $l = quotemeta($Global::parensleft);
+	my $r = quotemeta($Global::parensright);
+
+	while(@in) {
+	    my $s = shift @in;
+	    $_ = $s;
+	    # Remove matching (right most) parens
+	    while(s/(.*)$l.*?$r/$1/os) {}
+	    if(/$l/o) {
+		# Missing right parens
+		while(@in) {
+		    $s .= " ".shift @in;
+		    $_ = $s;
+		    while(s/(.*)$l.*?$r/$1/os) {}
+		    if(not /$l/o) {
+			last;
+		    }
+		}
+	    }
+	    push @out, $s;
+	}
+	return @out;
+    }
+
+    sub escape_177($) {
+	# Escape \177 => \177\176
+	my $s = shift;
+	$Global::escape_string_present += $s =~ s/\177/\177\176/g;
+	return $s;
+    }
+
+    sub replace_parens($) {
+    	# Needs to match rightmost left parens (Perl defaults to leftmost)
+	# to deal with: {={==} and {={==}=}
+	# Replace {= -> \177<  and  =} -> \177>
+	#
+	# Complex way to do:
+	#   s/{=(.*)=}/\177<$1\177>/g
+	# which would not work
+	my $s = shift;
+	$s =~ s[\Q$Global::parensleft\E # Match {=
+	  # Match . unless the next string is {= or =}
+	  #   needed to force matching the shortest {= =}
+	  ((?:(?! \Q$Global::parensleft\E|\Q$Global::parensright\E ).)*?)
+	  \Q$Global::parensright\E ] # Match =}
+	{\177<$1\177>}gxs;
+	# Now {= perlexpr =} => \177< perlexpr \177>
+	return $s;
+    }
+
+    sub replace_rpl_def($) {
+	my $s = shift;
+	# Replace rpl-definitions with the corresponding perl code
+	for my $rpl (sort { length $b <=> length $a } keys %Global::rpl) {
+	    # Replace long --rpl's before short ones, as a short may be a
+	    # substring of a long:
+	    #	--rpl '% s/a/b/' --rpl '%% s/b/a/'
+	    #
+	    # Replace the shorthand string (--rpl)
+	    # with the {= perl expr =}
+	    #
+	    # Avoid searching for shorthand strings inside existing {= perl expr =}
+	    #
+	    # Replace $$1 in {= perl expr =} with groupings in shorthand string
+	    #
+	    #   parallel --rpl '{/(\.\S+)/(\.\S+)} s/$$1/$$2_REPLACE/g;' \
+	    #     echo {/.gz/.lz} ::: UU.tar.gz
+	    #
+	    # {/.gz/.lz} =>
+	    #   \177<
+	    #         $_pAr_gRp1 = ".gz";
+	    #         $_pAr_gRp2 = ".lz";
+	    #         s/${_pAr_gRp1}/${_pAr_gRp2}_REPLACE/g;
+	    #   \177>
+	    # {/.gz/.lz:%8.2s} =>
+	    #   \177<
+	    #         $_pAr_gRp1 = ".gz";
+	    #         $_pAr_gRp2 = ".lz";
+	    #         s/${_pAr_gRp1}/${_pAr_gRp2}_REPLACE/g;;
+	    #         $_ = sprintf("%8.2f",$_);
+	    #   \177>
+	    #
+	    sub replacer_rpl {
+		my $rpl = shift;
+		my $rv = $Global::rpl{$rpl};
+		return replacer($rv,@_);
+	    }
+	    sub replacer {
+		my $rv = shift;
+		my $unchanged = shift;
+		my $position = shift;
+		my $grp_regexp = shift;
+		my $grp_string = shift;
+		my $formatstring = shift;
+		$grp_string =~ /^${grp_regexp}$/ or
+		::die_bug("Match failed: '$grp_regexp' on $grp_string");
+		# Dummy entry to start $grp[n] at 1.
+		my @grp = (1);
+		if($] >= 5.010) {
+		    @grp = (1, @{^CAPTURE});
+		} else {
+		    for(my $i = 1; defined $grp[$#grp]; $i++) {
+			push @grp, eval '$'.$i;
+		    }
+		}
+		# replace $$1 with ${_pAr_gRp1}, $$2 with ${_pAr_gRp2}
+		# in the code to be executed
+		$rv =~ s/\$\$ (\d+)/\$\{_pAr_gRp$1\}/gx;
+		# prepend with $_pAr_gRp1 = perlquote($1),
+		my $set_args = "";
+		for(my $i = 1;defined $grp[$i]; $i++) {
+		    $set_args .= "\$_pAr_gRp$i = \"" .
+			::perl_quote_scalar($grp[$i]) . "\";";
+		}
+		# :%8.2f => %8.2f
+		$formatstring =~ s/^://;
+		my $formatcode = "";
+		if(length $formatstring > 0) {
+		    $formatcode = ";\$_ = sprintf('$formatstring',\$_);";
+		}
+		if($position =~ s/\.(\d+)//) {
+		    # {2.3} => There must be a corresponding --match
+		    my $field = $1;
+		    my $re = $opt::match[$position-1];
+		    if($re=~/^\+(\d+)/) {
+			# multiple --match: Reuse --match $1
+			$re = $opt::match[$1-1];
+		    }
+		    if(not defined $re) {
+			::error("{$position.$field} requires ".
+				"corresponding --match");
+			::wait_and_exit(255);
+		    }
+		    if($re =~ /\001/) {
+			::error("\\001 is not supported in --match");
+			::wait_and_exit(255);
+		    }
+		    $rv = "m\001$re\001 or ".
+			"::warning(\"'\$_' did not match '$re'\"); ".
+			"\$_ = \$$field; $rv";
+		}
+		::debug("rpl","match: $rv ¤ $unchanged ¤ $position ¤ ".
+			"$set_args ¤ $rv ¤ $grp_regexp ¤ $formatstring\n");
+		return($unchanged . "\177<" . $position . $set_args .
+		       $rv . $formatcode. "\177>");
+	    }
+	    if($rpl =~ /^\{/) {
+		my ($prefix,$grp_regexp,$postfix) =
+		    # Ignore { and }
+		    $rpl =~ /^ \{ 	       # {
+	 		       ( [^(]* )       # Prefix (no '{' ) - e.g. %%
+			       ( \(.*\) )?     # Group capture regexp - e.g (.*)
+			       ( [^)]* )       # Postfix (no '}' ) - e.g. end
+			       \} $	       # }
+			       /xs;
+		my $format_regexp = ":%.*?";
+		q{
+		    # Regexp using named captures - kept for documentation
+		    # It is easier to understand than the backward compatible version
+		    # Look for: { position prefix group format postfix }
+		    while($s =~
+		    	  s{(?<unchanged> (?: ^|\177> ) (?: [^\177]*|[\177][^<>] )*?)
+  			    \{
+ 			    (?<position> -?\d+(?:\.\d+)? \s*)?
+ 			    \Q$prefix\E
+ 			    (?<grp>$grp_regexp)
+ 			    \Q$postfix\E
+ 			    (?<format> $format_regexp)
+ 			    \}
+			   }
+			  {
+				replacer_rpl($rpl, $+{unchanged},
+ 					     $+{position}, $grp_regexp,
+ 					     $+{grp}, $+{format});
+ 			  }gsex){};
+		    # Look for: { position prefix group postfix }
+		    while($s =~
+			  s{(?<unchanged> (?: ^|\177> ) (?: [^\177]*|[\177][^<>] )*?)
+  			    \{
+ 			    (?<position> -?\d+(?:\.\d+)? \s*)?
+ 			    \Q$prefix\E
+ 			    (?<grp>$grp_regexp)
+ 			    \Q$postfix\E
+ 			    \}
+			   }
+			  {
+				replacer_rpl($rpl, $+{unchanged},
+ 					     $+{position}, $grp_regexp,
+ 					     $+{grp});
+ 			  }gsex){}
+		};
+		{
+		    # This a rewrite of the above to perl 5.8
+		    # (does not use $+{...} which was introduced in 5.010
+		    # Look for: { position prefix group format postfix }
+		    while($s =~
+			  s{( (?: ^|\177> ) (?: [^\177]*|[\177][^<>] )*?)
+  			    \{
+ 			    (-?\d+(?:\.\d+)? \s*)?
+ 			    \Q$prefix\E
+ 			    ($grp_regexp)
+ 			    \Q$postfix\E
+ 			    ($format_regexp)
+ 			    \}
+			   }
+			   {
+				replacer_rpl($rpl, $1, $2, $grp_regexp, $3, $+);
+ 			   }gsex){}
+		    # Look for: { position prefix group postfix }
+		    # (Same above - except "format")
+		    while($s =~
+			  s{( (?: ^|\177> ) (?: [^\177]*|[\177][^<>] )*?)
+  			    \{
+ 			    (-?\d+(?:\.\d+)? \s*)?
+ 			    \Q$prefix\E
+ 			    ($grp_regexp)
+ 			    \Q$postfix\E
+ 			    \}
+  			   }
+			   {
+				replacer_rpl($rpl, $1, $2, $grp_regexp, $3);
+ 			   }gsex){}
+		}
+	    } else {
+		my ($prefix,$grp_regexp,$postfix) =
+		    $rpl =~ /^( [^(]*  )	# Prefix - e.g. {%%
+			    ( \(.*\) )?		# Group capture regexp - e.g (.*)
+			    ( [^)]*  )$		# Postfix - e.g }
+			    /xs;
+		q {
+		    # Regexp using named captures - kept for documentation
+		    # Look for: prefix group postfix
+		    while($s =~
+			  s{(?<unchanged> (?: ^|\177> ) (?: [^\177]*|[\177][^<>] )*?)
+  			    (?<position>)
+ 			    \Q$prefix\E \s*
+ 			    (?<grp>$grp_regexp)
+ 			    \Q$postfix\E
+			   }
+			   {
+				replacer_rpl($rpl, $+{unchanged}, $+{position},
+ 					     $grp_regexp, $+{grp});
+ 			   }gsex){};
+		};
+		{
+		    # This a rewrite of the above to perl 5.8
+		    # (does not use $+{...} which was introduced in 5.010
+		    # Look for: prefix group postfix
+		    while($s =~
+			  s{( (?: ^|\177> ) (?: [^\177]*|[\177][^<>] )*?)
+  			    ()
+ 			    \Q$prefix\E \s*
+ 			    ($grp_regexp)
+ 			    \Q$postfix\E
+ 			   }
+			  {
+				replacer_rpl($rpl, $1, $2, $grp_regexp, $3);
+ 			  }gsex){};
+		}
+	    }
+	}
+	# Perl positional replacement fields {=1.2 perlexpr =}
+	while($s =~
+	      s{ \177<                   # {=
+ 		 (-?\d+(?:\.\d+)\s*)	 # position
+		 (([^\177]+|\177\177)*)  # perl expr
+		 \177>			 # =}
+ 		 }
+	      { replacer($2, '', $1,''); }gsex){};
+	return $s;
+    }
+    
     my $class = shift;
     my $commandref = shift;
     my $read_from = shift;
@@ -13138,6 +13612,7 @@ sub new($) {
     my ($replacecount_ref, $len_ref);
     my @command = @$commandref;
     my $seq = 1;
+
     # Replace replacement strings with {= perl expr =}
     # '{=' 'perlexpr' '=}'  => '{= perlexpr =}'
     @command = merge_rpl_parts(@command);
@@ -13154,104 +13629,13 @@ sub new($) {
 	# Skip if undefined
 	defined($_) or next;
 	# Escape \177 => \177\176
-	$Global::escape_string_present += s/\177/\177\176/g;
-	# Needs to match rightmost left parens (Perl defaults to leftmost)
-	# to deal with: {={==} and {={==}=}
-	# Replace {= -> \177<  and  =} -> \177>
-	#
-	# Complex way to do:
-	#   s/{=(.*)=}/\177<$1\177>/g
-	# which would not work
-	s[\Q$Global::parensleft\E # Match {=
-	  # Match . unless the next string is {= or =}
-	  #   needed to force matching the shortest {= =}
-	  ((?:(?! \Q$Global::parensleft\E|\Q$Global::parensright\E ).)*?)
-	  \Q$Global::parensright\E ] # Match =}
-	{\177<$1\177>}gxs;
-	for my $rpl (sort { length $b <=> length $a } keys %Global::rpl) {
-	    # Replace long --rpl's before short ones, as a short may be a
-	    # substring of a long:
-	    #	--rpl '% s/a/b/' --rpl '%% s/b/a/'
-	    #
-	    # Replace the shorthand string (--rpl)
-	    # with the {= perl expr =}
-	    #
-	    # Avoid searching for shorthand strings inside existing {= perl expr =}
-	    #
-	    # Replace $$1 in {= perl expr =} with groupings in shorthand string
-	    #
-	    #	--rpl '{/(\.\S+)/(\.\S+)} s/$$1/$$2/g;'
-	    #	  echo {/.tar/.gz} ::: UU.tar.gz
-	    my ($prefix,$grp_regexp,$postfix) =
-		$rpl =~ /^( [^(]*  )	# Prefix - e.g. {%%
-			  ( \(.*\) )?	# Group capture regexp - e.g (.*)
-			  ( [^)]*  )$	# Postfix - e.g }
-			/xs;
-	    $grp_regexp ||= '';
-	    my $rplval = $Global::rpl{$rpl};
-	    while(s{( (?: ^|\177> ) (?: [^\177]*|[\177][^<>] )*? )
-		      # Don't replace after \177 unless \177>
-		    \Q$prefix\E $grp_regexp \Q$postfix\E}
-		  {
-		      # The start remains the same
-		      my $unchanged = $1;
-		      # Dummy entry to start at 1.
-		      my @grp = (1);
-		      # $2 = first ()-group in $grp_regexp
-		      # Put $2 in $grp[1], Put $3 in $grp[2]
-		      # so first ()-group in $grp_regexp is $grp[1];
-		      for(my $i = 2; defined $grp[$#grp]; $i++) {
-			  push @grp, eval '$'.$i;
-		      }
-		      my $rv = $rplval;
-		      # replace $$1 with $_pAr_gRp1, $$2 with $_pAr_gRp2
-		      # in the code to be executed
-		      $rv =~ s/\$\$ (\d+)/\$_pAr_gRp$1/gx;
-		      # prepend with $_pAr_gRp1 = perlquote($1),
-		      my $set_args = "";
-		      for(my $i = 1;defined $grp[$i]; $i++) {
-			  $set_args .= "\$_pAr_gRp$i = \"" .
-			      ::perl_quote_scalar($grp[$i]) . "\";";
-		      }
-		      $unchanged . "\177<" . $set_args . $rv . "\177>"
-		  }gxes) {
-	    }
-	    # Do the same for the positional replacement strings
-	    $posrpl = $rpl;
-	    if($posrpl =~ s/^\{//) {
-		# Only do this if the shorthand start with {
-		$prefix=~s/^\{//;
-		# Don't replace after \177 unless \177>
-		while(s{( (?: ^|\177> ) (?: [^\177]*|[\177][^<>] )*? )
-		  \{(-?\d+) \s* \Q$prefix\E $grp_regexp \Q$postfix\E}
-		      {
-		      # The start remains the same
-		      my $unchanged = $1;
-		      my $position = $2;
-		      # Dummy entry to start at 1.
-		      my @grp = (1);
-		      # $3 = first ()-group in $grp_regexp
-		      # Put $3 in $grp[1], Put $4 in $grp[2]
-		      # so first ()-group in $grp_regexp is $grp[1];
-		      for(my $i = 3; defined $grp[$#grp]; $i++) {
-			  push @grp, eval '$'.$i;
-		      }
-		      my $rv = $rplval;
-		      # replace $$1 with $_pAr_gRp1, $$2 with $_pAr_gRp2
-		      # in the code to be executed
-		      $rv =~ s/\$\$ (\d+)/\$_pAr_gRp$1/gx;
-		      # prepend with $_pAr_gRp1 = perlquote($1),
-		      my $set_args = "";
-		      for(my $i = 1;defined $grp[$i]; $i++) {
-			  $set_args .= "\$_pAr_gRp$i = \"" .
-			      ::perl_quote_scalar($grp[$i]) . "\";";
-		      }
-		      $unchanged . "\177<" . $position . $set_args . $rv . "\177>"
-		  }gxes) {
-		}
-	    }
-	}
+	$_ = escape_177($_);
+	# {= perl expr =} => \177< perl expr \177>
+	$_ = replace_parens($_);
+	# Replace rpl-definitions with the corresponding perl code
+	$_ = replace_rpl_def($_);
     }
+    
     # Add {} if no replacement strings in @command
     ($replacecount_ref, $len_ref, @command) =
 	replacement_counts_and_lengths($transfer_files, $return_files,
@@ -13287,40 +13671,7 @@ sub new($) {
     }, ref($class) || $class;
 }
 
-sub merge_rpl_parts($) {
-    # '{=' 'perlexpr' '=}'  => '{= perlexpr =}'
-    # Input:
-    #	@in = the @command as given by the user
-    # Uses:
-    #	$Global::parensleft
-    #	$Global::parensright
-    # Returns:
-    #	@command with parts merged to keep {= and =} as one
-    my @in = @_;
-    my @out;
-    my $l = quotemeta($Global::parensleft);
-    my $r = quotemeta($Global::parensright);
 
-    while(@in) {
-	my $s = shift @in;
-	$_ = $s;
-	# Remove matching (right most) parens
-	while(s/(.*)$l.*?$r/$1/os) {}
-	if(/$l/o) {
-	    # Missing right parens
-	    while(@in) {
-		$s .= " ".shift @in;
-		$_ = $s;
-		while(s/(.*)$l.*?$r/$1/os) {}
-		if(not /$l/o) {
-		    last;
-		}
-	    }
-	}
-	push @out, $s;
-    }
-    return @out;
-}
 
 sub replacement_counts_and_lengths($$@) {
     # Count the number of different replacement strings.
@@ -15373,6 +15724,8 @@ sub main() {
 	# Fill all jobslots
 	while(start_more_jobs()) {}
 	spreadstdin();
+    } elsif($opt::fast) {
+	fast();
     } else {
 	# Reap the finished jobs and start more
 	while(reapers() + start_more_jobs()) {}

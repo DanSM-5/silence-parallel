@@ -156,8 +156,8 @@ am__define_uniq_tagged_files = \
     if test -f "$$i"; then echo $$i; else echo $(srcdir)/$$i; fi; \
   done | $(am__uniquify_input)`
 DIST_SUBDIRS = $(SUBDIRS)
-am__DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/config.h.in COPYING \
-	NEWS README TODO install-sh missing
+am__DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/config.h.in NEWS \
+	README TODO install-sh missing
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 distdir = $(PACKAGE)-$(VERSION)
 top_distdir = $(distdir)
@@ -787,7 +787,7 @@ torresults:
 	torsocks rsync -Hazv --progress tortest:privat/parallel/testsuite/actual-results/ testsuite/actual-results/
 
 torsync:
-	torsocks rsync -Hazv --exclude='*.{pdf,gz,bz2,html,deb}' --exclude authorized_keys --exclude .vagrant/ --exclude actual-results --delete ./ tortest:privat/parallel/
+	torsocks rsync -Hazv --exclude='*.{pdf,gz,bz2,html,deb}' --exclude authorized_keys --exclude .vagrant/ --exclude actual-results --exclude '*hwdep*' --delete ./ tortest:privat/parallel/
 	make tortest
 
 web:
@@ -795,7 +795,7 @@ web:
 	cp -r src/*.pdf src/sphinx/build/html/* ../parallel-web/parallel
 	cp ../parallel-web/parallel/parallel.html  ../parallel-web/parallel/man.html
 
-upload:
+sig:
 	eval `gpg-agent --daemon`
 # make sure $YYYYMMDD is set
 	echo $(YYYYMMDD) | grep 20
@@ -820,6 +820,7 @@ upload:
 	 echo; \
 	 gpg -ab -o - parallel-$(YYYYMMDD).tar.bz2; \
 	) > parallel-$(YYYYMMDD).tar.bz2.sig
+	chmod +x parallel-$(YYYYMMDD).tar.bz2.sig
 
 	(echo '#!/bin/bash'; \
 	 echo; \
@@ -833,9 +834,16 @@ upload:
 	 echo; \
 	 gpg -ab -o - parallel-$(YYYYMMDD).tar.bz2; \
 	) > parallel-latest.tar.bz2.sig
+	chmod +x parallel-latest.tar.bz2.sig
+	make checksig
 
-	gpg --auto-key-locate keyserver --keyserver-options auto-key-retrieve parallel-latest.tar.bz2.sig
-	gpg --auto-key-locate keyserver --keyserver-options auto-key-retrieve parallel-$(YYYYMMDD).tar.bz2.sig
+checksig:
+# gpg --auto-key-locate keyserver --keyserver-options auto-key-retrieve parallel-latest.tar.bz2.sig
+# gpg --auto-key-locate keyserver --keyserver-options auto-key-retrieve parallel-$(YYYYMMDD).tar.bz2.sig
+	./parallel-latest.tar.bz2.sig
+	./parallel-$(YYYYMMDD).tar.bz2.sig
+
+upload: sig
 	lftp --version
 	p=`echo parallel-latest.tar.bz2*{,.sig,.asc}`; lftp -e "put $$p; bye" ftp://anonymous:ole=tange.dk@ftp-upload.gnu.org/incoming/ftp/ || true
 	p=`echo parallel-$(YYYYMMDD).tar.bz2*{,.sig,.asc}`; lftp -e "put $$p; bye" ftp://anonymous:ole=tange.dk@ftp-upload.gnu.org/incoming/ftp/ || true
