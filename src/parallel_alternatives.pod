@@ -173,11 +173,13 @@ The following features are in some of the comparable tools:
 
 =back
 
-As every new version of the programs are not tested the table may be
-outdated. Please file a bug report if you find errors (See REPORTING
+Since each new version of the programs is not tested, the table may be
+outdated.  Please file a bug report if you find errors (See REPORTING
 BUGS).
 
-parallel:
+=head2 GNU Parallel
+
+Summary (see legend above):
 
 =over
 

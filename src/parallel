@@ -1165,6 +1165,8 @@ sub spreadstdin() {
     my $blocksize = int($Global::blocksize);
     my $in = *STDIN;
     my $timeout = $Global::blocktimeout;
+    my @parts;
+    my $everything_read;
 
     if($opt::skip_first_line) {
 	my $newline;
@@ -1178,12 +1180,14 @@ sub spreadstdin() {
     my $eof;
     my $garbage_read;
 
-    sub read_block() {
-	# Read a --blocksize from STDIN
+    sub read_with_alarm($) {
+	my ($readsize) = @_;
+	my ($nread,$alarm,$read_everything);
+	if($readsize < 0) {
+	    $readsize = -$readsize;
+	    $read_everything = 1;
+	}
 	# possibly interrupted by --blocktimeout
-	# Add up to the next full block
-	my $readsize = $blocksize - (length $buf) % $blocksize;
-	my ($nread,$alarm);
 	eval {
 	    local $SIG{ALRM} = sub { die "alarm\n" }; # NB: \n required
 	    # --blocktimeout (or 0 if not set)
@@ -1191,13 +1195,13 @@ sub spreadstdin() {
 	    if($] >= 5.026) {
 		do {
 		    $nread = sysread $in, $buf, $readsize, length $buf;
-		    $readsize -= $nread;
+		    if(not $read_everything) { $readsize -= $nread; }
 		} while($readsize and $nread);
 	    } else {
 		# Less efficient reading, but 32-bit sysread compatible
 		do {
 		    $nread = sysread($in,substr($buf,length $buf,0),$readsize,0);
-		    $readsize -= $nread;
+		    if(not $read_everything) { $readsize -= $nread; }
 		} while($readsize and $nread);
 	    }
 	    alarm 0;
@@ -1208,7 +1212,60 @@ sub spreadstdin() {
 	} else {
 	    $alarm = 0;
 	}
-	$eof = not ($nread or $alarm);
+	# Is this EOF?
+	return not ($nread or $alarm);
+    }
+    
+    sub read_block_per_jobslot() {
+	if(not $everything_read) {
+	    # Read everything in readsize of 2^17
+	    # 21 = 20s
+	    # 20 = 16s
+	    # 19 = 16s,15s
+	    # 18 = 15s
+	    # 17 = 14s
+	    # 16 = 14s
+	    # 15 = 14s
+	    $eof = read_with_alarm(-2**17);
+	    if($eof) {
+		$everything_read = 1;
+		# Trick the rest of the code to think we are not done reading blocks yet.
+		$eof = 0;
+		# Chop into parts
+		my $total_size = length($buf);
+		my $jobslots = 	$Global::max_jobs_running;
+		my $parts = -$Global::blocksize * $jobslots;
+		my $part_size = int($total_size / $parts);
+		for my $i (0 .. $parts - 1) {
+		    my $start = $i * $part_size;
+		    my $end = ($i == $parts - 1) ? $total_size : $start + $part_size;
+		    # Extract the chunk from buffer
+		    push @parts, substr($buf, $start, $end - $start);
+		}
+		$buf="";
+	    } else {
+		# What do we do here? Caused by alarm.
+		::die_bug("Read block from pipe failed");
+	    }
+	}
+	if(@parts) {
+	    # pop part and return that
+	    $buf .= shift @parts;
+	} else {
+	    # All parts are done: Let the rest of the code know we are EOF
+	    $eof = 1;
+	}
+    }
+
+    sub read_block() {
+	# Read a --blocksize from STDIN
+	if($Global::blocksize < 0) {
+	    read_block_per_jobslot();
+	} else {
+	    # Add up to the next full block
+	    my $readsize = $blocksize - (length $buf) % $blocksize;
+	    $eof = read_with_alarm($readsize);
+	}
     }
 
     sub pass_n_line_records() {

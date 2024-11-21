@@ -740,19 +740,25 @@ length of one record. For performance reasons I<size> should be bigger
 than a two records. GNU B<parallel> will warn you and automatically
 increase the size if you choose a I<size> that is too small.
 
-If you use B<-N>, B<--block> should be bigger than N+1 records.
-
 I<size> defaults to 1M.
 
-When using B<--pipe-part> a negative block size is not interpreted as a
-blocksize but as the number of blocks each jobslot should have. So
-this will run 10*5 = 50 jobs in total:
+A negative block size is not interpreted as a blocksize but as the
+number of blocks each jobslot should have. So B<--block -3> will make
+3 jobs for each jobslot. In other words: this will run 3*5 = 15 jobs
+in total:
 
-  parallel --pipe-part -a myfile --block -10 -j5 wc
+  parallel --pipe-part -a myfile --block -3 -j5 wc
+  cat myfile | parallel --pipe --block -3 -j5 wc
 
-This is an efficient alternative to B<--round-robin> because data is
-never read by GNU B<parallel>, but you can still have very few
-jobslots process large amounts of data.
+B<--pipe-part --block> is an efficient alternative to B<--round-robin>
+because data is never read by GNU B<parallel>, but you can still have
+very few jobslots process huge amounts of data.
+
+On the other hand, B<--pipe --block> is quite I<inefficient>: It reads
+the whole file into memory before splitting it. Thus input must be
+able to fit in memory.
+
+If you use B<--block> -I<size>, input should be bigger than I<size>+1 records.
 
 See also: UNIT PREFIX B<-N> B<--pipe> B<--pipe-part> B<--round-robin>
 B<--block-timeout>
