@@ -34,6 +34,12 @@ make short
 
 == Update version ==
 
+https://savannah.gnu.org/news/submit.php?group=parallel
+
+Draft:
+perl -ne '/It\sis\savailable/..0 and print' doc/release_new_version | clipboard
+
+
 https://zenodo.org/deposit/new
 
 Do you already have a DOI for this upload? No
@@ -266,24 +272,39 @@ from:tange@gnu.org
 to:parallel@gnu.org, bug-parallel@gnu.org
 stable-bcc: Jesse Alama <jessealama@fastmail.fm>
 
-Subject: GNU Parallel 20241122 ('#AhooDaryaei /Regn i valencia/us pres/Unite the kingdom/Tommy Robinson/Alex/Southport2/Georgien') released
+Subject: GNU Parallel 20241122 ('Ahoo Daryaei') released
 
-GNU Parallel 20241122 ('<<>>') has been released. It is available for download at: lbry://@GnuParallel:4
+GNU Parallel 20241122 ('Ahoo Daryaei') has been released. It is available for download at: lbry://@GnuParallel:4
 
 Quote of the month:
 
-  <<>>
+  GNU parallel is so satisfying
+    -- James Coman @jcoman.bsky.social
   
 New in this release:
 
-* No new features. This is a candidate for a stable release.
+* --pipe --block works similar to --pipepart --block if --block size is negative.
+
+* DBURLs can be written with / instead of %2F for sqlite and CSV.
 
 * Bug fixes and man page updates.
 
 News about GNU Parallel:
 
-https://www.redhat.com/en/blog/gnu-parallel
-https://erolrecep.github.io/posts/gnuparallel_for_your_terminal_tasks/
+* Embarrassingly GNU parallel
+  https://dengin.xyz/blog/2024/10/24/embarrassingly-gnu-parallel/
+
+* GNU Parallel for Your Terminal Tasks
+  https://erolrecep.github.io/posts/gnuparallel_for_your_terminal_tasks/
+
+* How to leverage GNU parallel to utilize multiple cores while running AUGUSTUS
+  https://lifescienceshub.wixsite.com/lifesciencehub/post/how-to-leverage-gnu-parallel-to-utilize-multiple-cores-while-running-augustus
+
+* GNU Parallel: The Good Parts
+  https://diekmeier.de/posts/2024-11-17-gnu-parallel/
+
+* Put your CPU to work with GNU Parallel
+  https://www.redhat.com/en/blog/gnu-parallel
 
 
 GNU Parallel - For people who live life in the parallel lane.

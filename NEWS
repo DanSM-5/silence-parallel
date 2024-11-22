@@ -2,13 +2,28 @@
 
 New in this release:
 
-* <<No new features. This is a candidate for a stable release.>>
+* --pipe --block works similar to --pipepart --block if --block size is negative.
+
+* DBURLs can be written with / instead of %2F for sqlite and CSV.
 
 * Bug fixes and man page updates.
 
 News about GNU Parallel:
 
-<<>>
+* Embarrassingly GNU parallel
+  https://dengin.xyz/blog/2024/10/24/embarrassingly-gnu-parallel/
+
+* GNU Parallel for Your Terminal Tasks
+  https://erolrecep.github.io/posts/gnuparallel_for_your_terminal_tasks/
+
+* How to leverage GNU parallel to utilize multiple cores while running AUGUSTUS
+  https://lifescienceshub.wixsite.com/lifesciencehub/post/how-to-leverage-gnu-parallel-to-utilize-multiple-cores-while-running-augustus
+
+* GNU Parallel: The Good Parts
+  https://diekmeier.de/posts/2024-11-17-gnu-parallel/
+
+* Put your CPU to work with GNU Parallel
+  https://www.redhat.com/en/blog/gnu-parallel
 
 
 20241022

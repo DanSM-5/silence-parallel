@@ -4918,6 +4918,8 @@ https://github.com/simonjwright/parallelize
 
 =head2 Todo
 
+https://github.com/rustunit/parallelrun?tab=readme-ov-file
+
 https://github.com/justanhduc/task-spooler
 
 https://manpages.ubuntu.com/manpages/xenial/man1/tsp.1.html

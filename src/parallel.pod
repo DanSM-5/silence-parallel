@@ -134,7 +134,7 @@ B<Bash, Csh, or Tcsh aliases>: Use B<env_parallel>.
 
 B<Zsh, Fish, Ksh, and Pdksh functions and aliases>: Use B<env_parallel>.
 
-=item B<{}> (beta testing)
+=item B<{}>
 
 Input line.
 
@@ -155,7 +155,7 @@ See also: B<--plus> B<{.}> B<{/}> B<{//}> B<{/.}> B<{#}> B<{%}>
 B<{>I<n>B<}> B<{=>I<perl expression>B<=}>
 
 
-=item B<{.}> (beta testing)
+=item B<{.}>
 
 Input line without extension.
 
@@ -173,7 +173,7 @@ The replacement string B<{.}> can be changed with B<--extensionreplace>
 See also: B<{}> B<--extensionreplace>
 
 
-=item B<{/}> (beta testing)
+=item B<{/}>
 
 Basename of input line.
 
@@ -183,7 +183,7 @@ directory part removed.
 See also: B<{}> B<--basenamereplace>
 
 
-=item B<{//}> (beta testing)
+=item B<{//}>
 
 Dirname of input line.
 
@@ -193,7 +193,7 @@ line. See B<dirname>(1).
 See also: B<{}> B<--dirnamereplace>
 
 
-=item B<{/.}> (beta testing)
+=item B<{/.}>
 
 Basename of input line without extension.
 
@@ -204,7 +204,7 @@ B<{/}> and B<{.}>.
 See also: B<{}> B<--basenameextensionreplace>
 
 
-=item B<{#}> (beta testing)
+=item B<{#}>
 
 Sequence number of the job to run.
 
@@ -214,7 +214,7 @@ job being run. It contains the same number as $PARALLEL_SEQ.
 See also: B<{}> B<--seqreplace>
 
 
-=item B<{%}> (beta testing)
+=item B<{%}>
 
 Job slot number.
 
@@ -249,7 +249,7 @@ Notice how {%} and $PARALLEL_JOBSLOT differ in the retry run of C and D.
 See also: B<{}> B<--jobs> B<--slotreplace>
 
 
-=item B<{>I<n>B<}> (beta testing)
+=item B<{>I<n>B<}>
 
 Argument from input source I<n> or the I<n>'th argument.
 
@@ -263,7 +263,7 @@ See also: B<{}> B<{>I<n>.B<}> B<{>I<n>/B<}> B<{>I<n>//B<}>
 B<{>I<n>/.B<}> B<--colsep>
 
 
-=item B<{>I<n>.B<}> (beta testing)
+=item B<{>I<n>.B<}>
 
 Argument from input source I<n> or the I<n>'th argument without
 extension.
@@ -278,7 +278,7 @@ extension removed.
 See also: B<{>I<n>B<}> B<{.}>
 
 
-=item B<{>I<n>/B<}> (beta testing)
+=item B<{>I<n>/B<}>
 
 Basename of argument from input source I<n> or the I<n>'th argument.
 
@@ -292,7 +292,7 @@ directory (if any) removed.
 See also: B<{>I<n>B<}> B<{/}>
 
 
-=item B<{>I<n>//B<}> (beta testing)
+=item B<{>I<n>//B<}>
 
 Dirname of argument from input source I<n> or the I<n>'th argument.
 
@@ -305,7 +305,7 @@ the I<n>'th argument (when used with B<-N>). See B<dirname>(1).
 See also: B<{>I<n>B<}> B<{//}>
 
 
-=item B<{>I<n>/.B<}> (beta testing)
+=item B<{>I<n>/.B<}>
 
 Basename of argument from input source I<n> or the I<n>'th argument
 without extension.
@@ -321,7 +321,7 @@ directory (if any) and extension removed.
 See also: B<{>I<n>B<}> B<{/.}>
 
 
-=item B<{=>I<perl expression>B<=}> (beta testing)
+=item B<{=>I<perl expression>B<=}>
 
 Replace with calculated I<perl expression>.
 
@@ -438,7 +438,7 @@ See also: B<--rpl> B<--parens> B<{}> B<{=>I<n> I<perl expression>B<=}>
 B<--filter>
 
 
-=item B<{=>I<n> I<perl expression>B<=}> (beta testing)
+=item B<{=>I<n> I<perl expression>B<=}>
 
 Positional equivalent to B<{=>I<perl expression>B<=}>.
 
@@ -447,7 +447,7 @@ To understand positional replacement strings see B<{>I<n>B<}>.
 See also: B<{=>I<perl expression>B<=}> B<{>I<n>B<}>
 
 
-=item B<{>I<rpl>:I<format>B<}> (beta testing)
+=item B<{>I<rpl>:I<format>B<}>
 
 Format replacement string.
 
@@ -1823,7 +1823,7 @@ If in doubt use B<-X> as that will most likely do what is needed.
 See also: B<-X> B<--xargs>
 
 
-=item B<--match> I<regexp> (beta testing)
+=item B<--match> I<regexp>
 
 Match input source with regexp to set replacement fields.
 

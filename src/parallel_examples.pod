@@ -25,17 +25,6 @@ FUBAR in all files in this dir and subdirs:
 Note B<-q> is needed because of the space in 'FOO BAR'.
 
 
-=head2 EXAMPLE: Simple network scanner
-
-B<prips> can generate IP-addresses from CIDR notation. With GNU
-B<parallel> you can build a simple network scanner to see which
-addresses respond to B<ping>:
-
-  prips 130.229.16.0/20 | \
-    parallel --timeout 2 -j0 \
-      'ping -c 1 {} >/dev/null && echo {}' 2>/dev/null
-
-
 =head2 EXAMPLE: Reading arguments from command line
 
 GNU B<parallel> can take the arguments from command line instead of
@@ -47,6 +36,20 @@ using B<gzip> run:
 To convert *.wav to *.mp3 using LAME running one process per CPU run:
 
   parallel lame {} -o {.}.mp3 ::: *.wav
+
+
+=head2 EXAMPLE: Running full commands in parallel
+
+If there is no command given to GNU B<parallel>, then the arguments
+are treated as a command line.
+
+To run B<gzip foo> and B<bzip2 bar> in parallel run:
+
+  parallel ::: "gzip foo" "bzip2 bar"
+
+or:
+
+  (echo "gzip foo"; echo "bzip2 bar") | parallel
 
 
 =head2 EXAMPLE: Inserting multiple arguments
@@ -375,6 +378,17 @@ the log:
 
   seq 9 -1 1 | parallel -j1 mv log.{} log.'{= $_++ =}'
   mv log log.1
+
+
+=head2 EXAMPLE: Simple network scanner
+
+B<prips> can generate IP-addresses from CIDR notation. With GNU
+B<parallel> you can build a simple network scanner to see which
+addresses respond to B<ping>:
+
+  prips 130.229.16.0/20 | \
+    parallel --timeout 2 -j0 \
+      'ping -c 1 {} >/dev/null && echo {}' 2>/dev/null
 
 
 =head2 EXAMPLE: Removing file extension when processing files
