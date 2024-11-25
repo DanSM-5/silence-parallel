@@ -73,7 +73,7 @@ par_exit() {
     export -f test_signal
     ulimit -c 0
     stdout parallel -j15 -k --timeout 20 --tag test_signal ::: {0..64} |
-	perl -pe 's/line 1: (\d+)/line 1: PID/'
+	perl -pe 's/line 1: *(\d+)/line 1: PID/'
 }
 
 

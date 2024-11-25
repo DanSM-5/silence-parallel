@@ -134,7 +134,7 @@ B<Bash, Csh, or Tcsh aliases>: Use B<env_parallel>.
 
 B<Zsh, Fish, Ksh, and Pdksh functions and aliases>: Use B<env_parallel>.
 
-=item B<{}> (beta testing)
+=item B<{}>
 
 Input line.
 
@@ -155,7 +155,7 @@ See also: B<--plus> B<{.}> B<{/}> B<{//}> B<{/.}> B<{#}> B<{%}>
 B<{>I<n>B<}> B<{=>I<perl expression>B<=}>
 
 
-=item B<{.}> (beta testing)
+=item B<{.}>
 
 Input line without extension.
 
@@ -173,7 +173,7 @@ The replacement string B<{.}> can be changed with B<--extensionreplace>
 See also: B<{}> B<--extensionreplace>
 
 
-=item B<{/}> (beta testing)
+=item B<{/}>
 
 Basename of input line.
 
@@ -183,7 +183,7 @@ directory part removed.
 See also: B<{}> B<--basenamereplace>
 
 
-=item B<{//}> (beta testing)
+=item B<{//}>
 
 Dirname of input line.
 
@@ -193,7 +193,7 @@ line. See B<dirname>(1).
 See also: B<{}> B<--dirnamereplace>
 
 
-=item B<{/.}> (beta testing)
+=item B<{/.}>
 
 Basename of input line without extension.
 
@@ -204,7 +204,7 @@ B<{/}> and B<{.}>.
 See also: B<{}> B<--basenameextensionreplace>
 
 
-=item B<{#}> (beta testing)
+=item B<{#}>
 
 Sequence number of the job to run.
 
@@ -214,7 +214,7 @@ job being run. It contains the same number as $PARALLEL_SEQ.
 See also: B<{}> B<--seqreplace>
 
 
-=item B<{%}> (beta testing)
+=item B<{%}>
 
 Job slot number.
 
@@ -249,7 +249,7 @@ Notice how {%} and $PARALLEL_JOBSLOT differ in the retry run of C and D.
 See also: B<{}> B<--jobs> B<--slotreplace>
 
 
-=item B<{>I<n>B<}> (beta testing)
+=item B<{>I<n>B<}>
 
 Argument from input source I<n> or the I<n>'th argument.
 
@@ -263,7 +263,7 @@ See also: B<{}> B<{>I<n>.B<}> B<{>I<n>/B<}> B<{>I<n>//B<}>
 B<{>I<n>/.B<}> B<--colsep>
 
 
-=item B<{>I<n>.B<}> (beta testing)
+=item B<{>I<n>.B<}>
 
 Argument from input source I<n> or the I<n>'th argument without
 extension.
@@ -278,7 +278,7 @@ extension removed.
 See also: B<{>I<n>B<}> B<{.}>
 
 
-=item B<{>I<n>/B<}> (beta testing)
+=item B<{>I<n>/B<}>
 
 Basename of argument from input source I<n> or the I<n>'th argument.
 
@@ -292,7 +292,7 @@ directory (if any) removed.
 See also: B<{>I<n>B<}> B<{/}>
 
 
-=item B<{>I<n>//B<}> (beta testing)
+=item B<{>I<n>//B<}>
 
 Dirname of argument from input source I<n> or the I<n>'th argument.
 
@@ -305,7 +305,7 @@ the I<n>'th argument (when used with B<-N>). See B<dirname>(1).
 See also: B<{>I<n>B<}> B<{//}>
 
 
-=item B<{>I<n>/.B<}> (beta testing)
+=item B<{>I<n>/.B<}>
 
 Basename of argument from input source I<n> or the I<n>'th argument
 without extension.
@@ -321,7 +321,7 @@ directory (if any) and extension removed.
 See also: B<{>I<n>B<}> B<{/.}>
 
 
-=item B<{=>I<perl expression>B<=}> (beta testing)
+=item B<{=>I<perl expression>B<=}>
 
 Replace with calculated I<perl expression>.
 
@@ -438,7 +438,7 @@ See also: B<--rpl> B<--parens> B<{}> B<{=>I<n> I<perl expression>B<=}>
 B<--filter>
 
 
-=item B<{=>I<n> I<perl expression>B<=}> (beta testing)
+=item B<{=>I<n> I<perl expression>B<=}>
 
 Positional equivalent to B<{=>I<perl expression>B<=}>.
 
@@ -447,7 +447,7 @@ To understand positional replacement strings see B<{>I<n>B<}>.
 See also: B<{=>I<perl expression>B<=}> B<{>I<n>B<}>
 
 
-=item B<{>I<rpl>:I<format>B<}> (beta testing)
+=item B<{>I<rpl>:I<format>B<}>
 
 Format replacement string.
 
@@ -740,19 +740,25 @@ length of one record. For performance reasons I<size> should be bigger
 than a two records. GNU B<parallel> will warn you and automatically
 increase the size if you choose a I<size> that is too small.
 
-If you use B<-N>, B<--block> should be bigger than N+1 records.
-
 I<size> defaults to 1M.
 
-When using B<--pipe-part> a negative block size is not interpreted as a
-blocksize but as the number of blocks each jobslot should have. So
-this will run 10*5 = 50 jobs in total:
+A negative block size is not interpreted as a blocksize but as the
+number of blocks each jobslot should have. So B<--block -3> will make
+3 jobs for each jobslot. In other words: this will run 3*5 = 15 jobs
+in total:
 
-  parallel --pipe-part -a myfile --block -10 -j5 wc
+  parallel --pipe-part -a myfile --block -3 -j5 wc
+  cat myfile | parallel --pipe --block -3 -j5 wc
 
-This is an efficient alternative to B<--round-robin> because data is
-never read by GNU B<parallel>, but you can still have very few
-jobslots process large amounts of data.
+B<--pipe-part --block> is an efficient alternative to B<--round-robin>
+because data is never read by GNU B<parallel>, but you can still have
+very few jobslots process huge amounts of data.
+
+On the other hand, B<--pipe --block> is quite I<inefficient>: It reads
+the whole file into memory before splitting it. Thus input must be
+able to fit in memory.
+
+If you use B<--block> -I<size>, input should be bigger than I<size>+1 records.
 
 See also: UNIT PREFIX B<-N> B<--pipe> B<--pipe-part> B<--round-robin>
 B<--block-timeout>
@@ -1817,7 +1823,7 @@ If in doubt use B<-X> as that will most likely do what is needed.
 See also: B<-X> B<--xargs>
 
 
-=item B<--match> I<regexp> (beta testing)
+=item B<--match> I<regexp>
 
 Match input source with regexp to set replacement fields.
 
@@ -3124,7 +3130,7 @@ complete.
 
 The format of a DBURL is:
 
-  [sql:]vendor://[[user][:pwd]@][host][:port]/[db]/table
+  [sql:]vendor://[[user][:pwd]@][host][:port]/[db]/[table]
 
 E.g.
 
@@ -3134,10 +3140,15 @@ E.g.
   postgresql://scott:tiger@pg.example.com/pgdb/parjob
   pg:///parjob
   sqlite3:///%2Ftmp%2Fpardb.sqlite/parjob
+  sqlite:///file_in_current_dir.sqlite/my_table
   csv:///%2Ftmp%2Fpardb/parjob
+  csv:///./file_in_current_dir
+  pg:////
 
-Notice how / in the path of sqlite and CVS must be encoded as
+Notice how / in the path of sqlite and CSV must be encoded as
 %2F. Except the last / in CSV which must be a /.
+
+I<db> and I<table> defaults to $USER: pg://// = pg:///$USER/$USER
 
 It can also be an alias from ~/.sql/aliases:
 

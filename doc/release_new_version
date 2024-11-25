@@ -34,6 +34,12 @@ make short
 
 == Update version ==
 
+https://savannah.gnu.org/news/submit.php?group=parallel
+
+Draft:
+perl -ne '/It\sis\savailable/..0 and print' doc/release_new_version | clipboard
+
+
 https://zenodo.org/deposit/new
 
 Do you already have a DOI for this upload? No
@@ -112,8 +118,7 @@ lbry://@GnuParallel#4/parallel-20210322.tar.bz2
 
 . .last-doitag.txt
 file_path="`pwd`/parallel-$YYYYMMDD.tar.bz2"
-title="GNU Parallel $YYYYMMDD ('$SPCTAG') [stable]"
-
+#title="GNU Parallel $YYYYMMDD ('$SPCTAG') [stable]"
 title="GNU Parallel $YYYYMMDD ('$SPCTAG')"
 name="GNU-Parallel-$YYYYMMDD-$TAG"
 author="Ole Tange"
@@ -121,6 +126,7 @@ license="GNU GPLv3 or later"
 thumbnail_url=https://www.gnu.org/software/parallel/logo-gray+black10000.png
 channel_name="@GnuParallel"
 tags_opt='--tag gnu --tag parallel --tag free --tag software'
+release_time=$(date -d "$YYYYMMDD" +%s)
 
 description="An easy way to support GNU Parallel is to tip on LBRY.
 
@@ -141,8 +147,7 @@ lbrynet publish \
   --license="$license" \
   --thumbnail_url="$thumbnail_url" \
   --channel_name="$channel_name" \
-
-#  --release_time="$release_time" \
+  --release_time="$release_time" \
 
 == Update website ==
 
@@ -267,30 +272,39 @@ from:tange@gnu.org
 to:parallel@gnu.org, bug-parallel@gnu.org
 stable-bcc: Jesse Alama <jessealama@fastmail.fm>
 
-Subject: GNU Parallel 20241022 ('Sinwar Nasrallah') released
+Subject: GNU Parallel 20241122 ('Ahoo Daryaei') released
 
-GNU Parallel 20241022 ('Sinwar Nasrallah') has been released. It is available for download at: lbry://@GnuParallel:4
+GNU Parallel 20241122 ('Ahoo Daryaei') has been released. It is available for download at: lbry://@GnuParallel:4
 
 Quote of the month:
 
-  GNU Parallel is one of the most helpful tools I've been using recently, and it's just something like: parallel -j4 'gzip {}' ::: folder/*.csv
-     -- Milton Pividori @miltondp@twitter
+  GNU parallel is so satisfying
+    -- James Coman @jcoman.bsky.social
   
 New in this release:
 
-* No new features. This is a candidate for a stable release.
+* --pipe --block works similar to --pipepart --block if --block size is negative.
+
+* DBURLs can be written with / instead of %2F for sqlite and CSV.
 
 * Bug fixes and man page updates.
 
 News about GNU Parallel:
 
-* Separate arguments with a custom separator in GNU Parallel https://boxofcuriosities.co.uk/post/separate-arguments-with-a-custom-separator-in-gnu-parallel
+* Embarrassingly GNU parallel
+  https://dengin.xyz/blog/2024/10/24/embarrassingly-gnu-parallel/
 
-* GNU parallel is underrated https://amontalenti.com/2021/11/10/parallel
+* GNU Parallel for Your Terminal Tasks
+  https://erolrecep.github.io/posts/gnuparallel_for_your_terminal_tasks/
 
-* Unlocking the Power of Supercomputers: My HPC Adventure with 2800 Cores and GNU Parallel https://augalip.com/2024/03/10/unlocking-the-power-of-supercomputers-my-hpc-adventure-with-2800-cores-and-gnu-parallel/
+* How to leverage GNU parallel to utilize multiple cores while running AUGUSTUS
+  https://lifescienceshub.wixsite.com/lifesciencehub/post/how-to-leverage-gnu-parallel-to-utilize-multiple-cores-while-running-augustus
 
-* Converting WebP Images to PNG Using parallel and dwebp https://bytefreaks.net/gnulinux/bash/converting-webp-images-to-png-using-parallel-and-dwebp
+* GNU Parallel: The Good Parts
+  https://diekmeier.de/posts/2024-11-17-gnu-parallel/
+
+* Put your CPU to work with GNU Parallel
+  https://www.redhat.com/en/blog/gnu-parallel
 
 
 GNU Parallel - For people who live life in the parallel lane.

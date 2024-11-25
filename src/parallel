@@ -1165,6 +1165,8 @@ sub spreadstdin() {
     my $blocksize = int($Global::blocksize);
     my $in = *STDIN;
     my $timeout = $Global::blocktimeout;
+    my @parts;
+    my $everything_read;
 
     if($opt::skip_first_line) {
 	my $newline;
@@ -1178,12 +1180,14 @@ sub spreadstdin() {
     my $eof;
     my $garbage_read;
 
-    sub read_block() {
-	# Read a --blocksize from STDIN
+    sub read_with_alarm($) {
+	my ($readsize) = @_;
+	my ($nread,$alarm,$read_everything);
+	if($readsize < 0) {
+	    $readsize = -$readsize;
+	    $read_everything = 1;
+	}
 	# possibly interrupted by --blocktimeout
-	# Add up to the next full block
-	my $readsize = $blocksize - (length $buf) % $blocksize;
-	my ($nread,$alarm);
 	eval {
 	    local $SIG{ALRM} = sub { die "alarm\n" }; # NB: \n required
 	    # --blocktimeout (or 0 if not set)
@@ -1191,13 +1195,13 @@ sub spreadstdin() {
 	    if($] >= 5.026) {
 		do {
 		    $nread = sysread $in, $buf, $readsize, length $buf;
-		    $readsize -= $nread;
+		    if(not $read_everything) { $readsize -= $nread; }
 		} while($readsize and $nread);
 	    } else {
 		# Less efficient reading, but 32-bit sysread compatible
 		do {
 		    $nread = sysread($in,substr($buf,length $buf,0),$readsize,0);
-		    $readsize -= $nread;
+		    if(not $read_everything) { $readsize -= $nread; }
 		} while($readsize and $nread);
 	    }
 	    alarm 0;
@@ -1208,7 +1212,60 @@ sub spreadstdin() {
 	} else {
 	    $alarm = 0;
 	}
-	$eof = not ($nread or $alarm);
+	# Is this EOF?
+	return not ($nread or $alarm);
+    }
+    
+    sub read_block_per_jobslot() {
+	if(not $everything_read) {
+	    # Read everything in readsize of 2^17
+	    # 21 = 20s
+	    # 20 = 16s
+	    # 19 = 16s,15s
+	    # 18 = 15s
+	    # 17 = 14s
+	    # 16 = 14s
+	    # 15 = 14s
+	    $eof = read_with_alarm(-2**17);
+	    if($eof) {
+		$everything_read = 1;
+		# Trick the rest of the code to think we are not done reading blocks yet.
+		$eof = 0;
+		# Chop into parts
+		my $total_size = length($buf);
+		my $jobslots = 	$Global::max_jobs_running;
+		my $parts = -$Global::blocksize * $jobslots;
+		my $part_size = int($total_size / $parts);
+		for my $i (0 .. $parts - 1) {
+		    my $start = $i * $part_size;
+		    my $end = ($i == $parts - 1) ? $total_size : $start + $part_size;
+		    # Extract the chunk from buffer
+		    push @parts, substr($buf, $start, $end - $start);
+		}
+		$buf="";
+	    } else {
+		# What do we do here? Caused by alarm.
+		::die_bug("Read block from pipe failed");
+	    }
+	}
+	if(@parts) {
+	    # pop part and return that
+	    $buf .= shift @parts;
+	} else {
+	    # All parts are done: Let the rest of the code know we are EOF
+	    $eof = 1;
+	}
+    }
+
+    sub read_block() {
+	# Read a --blocksize from STDIN
+	if($Global::blocksize < 0) {
+	    read_block_per_jobslot();
+	} else {
+	    # Add up to the next full block
+	    my $readsize = $blocksize - (length $buf) % $blocksize;
+	    $eof = read_with_alarm($readsize);
+	}
     }
 
     sub pass_n_line_records() {
@@ -2866,7 +2923,7 @@ sub check_invalid_option_combinations() {
 
 sub init_globals() {
     # Defaults:
-    $Global::version = 20241022;
+    $Global::version = 20241122;
     $Global::progname = 'parallel';
     $::name = "GNU Parallel";
     $Global::infinity = 2**31;
@@ -5924,8 +5981,8 @@ sub usage() {
 	 "If you use programs that use GNU Parallel to process data for an article in a",
 	 "scientific publication, please cite:",
 	 "",
-	 "  Tange, O. (2024, October 22). GNU Parallel 20241022 ('Sinwar Nasrallah').",
-	 "  Zenodo. https://doi.org/10.5281/zenodo.13957646",
+	 "  Tange, O. (2024, November 22). GNU Parallel 20241122 ('Ahoo Daryaei').",
+	 "  Zenodo. https://doi.org/10.5281/zenodo.14207479",
 	 "",
 
 	 # Before changing these lines, please read
@@ -15001,12 +15058,18 @@ sub check_permissions($) {
 }
 
 sub parse_dburl($) {
+    sub undef_if_empty {
+	if(defined($_[0]) and $_[0] eq "") {
+	    return undef;
+	}
+	return $_[0];
+    }
     my $url = shift;
     my %options = ();
     # sql:mysql://[[user][:password]@][host][:port]/[database[/table][?query]]
 
     if($url=~m!^(?:sql:)? # You can prefix with 'sql:'
-	       ((?:oracle|ora|mysql|pg|postgres|postgresql)(?:s|ssl|)|
+	       ((?:oracle|ora|mysql|pg|postgres|postgresql|influx|influxdb)(?:s|ssl|)|
 		 (?:sqlite|sqlite2|sqlite3|csv)):// # Databasedriver ($1)
 	       (?:
 		([^:@/][^:@]*|) # Username ($2)
@@ -15021,25 +15084,27 @@ sub parse_dburl($) {
 	       )?
 	       (?:
 		/
-		([^/?]*)? # Database ($6)
+		([^?]*)? # Database ($6)
 	       )?
 	       (?:
 		/
-		([^?]*)? # Table ($7)
-	       )?
+		([^?/]*)? # Table ($7)
+	       )
 	       (?:
 		\?
 		(.*)? # Query ($8)
 	       )?
 	      $!ix) {
-	$options{databasedriver} = ::undef_if_empty(lc(uri_unescape($1)));
-	$options{user} = ::undef_if_empty(uri_unescape($2));
-	$options{password} = ::undef_if_empty(uri_unescape($3));
-	$options{host} = ::undef_if_empty(uri_unescape($4));
-	$options{port} = ::undef_if_empty(uri_unescape($5));
-	$options{database} = ::undef_if_empty(uri_unescape($6));
-	$options{table} = ::undef_if_empty(uri_unescape($7));
-	$options{query} = ::undef_if_empty(uri_unescape($8));
+	$options{databasedriver} = undef_if_empty(lc(uri_unescape($1)));
+	$options{user} = undef_if_empty(uri_unescape($2));
+	$options{password} = undef_if_empty(uri_unescape($3));
+	$options{host} = undef_if_empty(uri_unescape($4));
+	$options{port} = undef_if_empty(uri_unescape($5));
+	$options{database} = undef_if_empty(uri_unescape($6))
+	    || $options{user} || $ENV{'USER'};
+	$options{table} = undef_if_empty(uri_unescape($7))
+	    || $options{user} || $ENV{'USER'};
+	$options{query} = undef_if_empty(uri_unescape($8));
 	::debug("sql", "dburl $url\n");
 	::debug("sql", "databasedriver ", $options{databasedriver},
 		" user ", $options{user},
