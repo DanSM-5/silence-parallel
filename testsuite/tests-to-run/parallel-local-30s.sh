@@ -86,6 +86,7 @@ par__dburl_parsing() {
 	}
 	export -f test_dburl
 	parallel -j1 --tag test_dburl ::: ${dburls[@]}
+	parallel -j1 --tag test_dburl {}/ ::: ${dburls[@]}
     )
     rmdir test
 }
@@ -142,7 +143,7 @@ par__print_in_blocks() {
     perl -e 'for(1..30){print("$_\n");`sleep .3`}' |
 	parallel -j3 --delay 0.3 echo |
 	timestamp -d -d |
-	perl -pe 's/(.....).*/int($1*10+0.2)/e' |
+	perl -pe 's/(.....).*/int($1*10+0.1)/e' |
 	median
 }
 
@@ -174,18 +175,6 @@ par__keeporder_roundrobin() {
 	echo 'Broken: a <> b'
 	printf "$a\n$b\n$c\n"
     fi
-}
-
-par_retries_lb_jl() {
-    echo Broken in 20240522
-    tmp=$(mktemp)
-    export tmp
-    parallel-20240522 --lb --jl /dev/null --timeout 0.3 --retries 5 'echo should be 5 lines >> "$tmp";sleep {}' ::: 20
-    cat "$tmp"
-    > "$tmp"
-    parallel --lb --jl /dev/null --timeout 0.3 --retries 5 'echo 5 lines >> "$tmp";sleep {}' ::: 20
-    cat "$tmp"
-    rm "$tmp"
 }
 
 par_reload_slf_every_second() {
@@ -677,7 +666,7 @@ par__test_detected_shell() {
     }
     export -f test_known_shell_pipe
 
-    stdout parallel -j2 --tag -k \
+    stdout nice parallel -j2 --tag -k \
 	   ::: test_unknown_shell test_known_shell_c test_known_shell_pipe \
 	   ::: $shells |
 	grep -Ev 'parallel: Warning: (Starting .* processes took|Consider adjusting)'
@@ -728,101 +717,102 @@ par_max_length_len_128k() {
 
 par__plus_dyn_repl() {
     echo "Dynamic replacement strings defined by --plus"
-
+    pp="nice parallel --plus"
+    
     unset myvar
     echo ${myvar:-myval}
     parallel --rpl '{:-(.+)} $_ ||= $$1' echo {:-myval} ::: "$myvar"
-    parallel --plus echo {:-myval} ::: "$myvar"
-    parallel --plus echo {2:-myval} ::: "wrong" ::: "$myvar" ::: "wrong"
-    parallel --plus echo {-2:-myval} ::: "wrong" ::: "$myvar" ::: "wrong"
+    $pp echo {:-myval} ::: "$myvar"
+    $pp echo {2:-myval} ::: "wrong" ::: "$myvar" ::: "wrong"
+    $pp echo {-2:-myval} ::: "wrong" ::: "$myvar" ::: "wrong"
 
     myvar=abcAaBdefCdefDdef
     echo ${myvar:2}
     parallel --rpl '{:(\d+)} substr($_,0,$$1) = ""' echo {:2} ::: "$myvar"
-    parallel --plus echo {:2} ::: "$myvar"
-    parallel --plus echo {2:2} ::: "wrong" ::: "$myvar" ::: "wrong"
-    parallel --plus echo {-2:2} ::: "wrong" ::: "$myvar" ::: "wrong"
+    $pp echo {:2} ::: "$myvar"
+    $pp echo {2:2} ::: "wrong" ::: "$myvar" ::: "wrong"
+    $pp echo {-2:2} ::: "wrong" ::: "$myvar" ::: "wrong"
 
     echo ${myvar:2:3}
     parallel --rpl '{:(\d+?):(\d+?)} $_ = substr($_,$$1,$$2);' echo {:2:3} ::: "$myvar"
-    parallel --plus echo {:2:3} ::: "$myvar"
-    parallel --plus echo {2:2:3} ::: "wrong" ::: "$myvar" ::: "wrong"
-    parallel --plus echo {-2:2:3} ::: "wrong" ::: "$myvar" ::: "wrong"
+    $pp echo {:2:3} ::: "$myvar"
+    $pp echo {2:2:3} ::: "wrong" ::: "$myvar" ::: "wrong"
+    $pp echo {-2:2:3} ::: "wrong" ::: "$myvar" ::: "wrong"
 
     echo ${#myvar}
     parallel --rpl '{#} $_ = length $_;' echo {#} ::: "$myvar"
     # {#} used for job number
-    parallel --plus echo {#} ::: "$myvar"
+    $pp echo {#} ::: "$myvar"
 
     echo ${myvar#bc}
     parallel --rpl '{#(.+?)} s/^$$1//;' echo {#bc} ::: "$myvar"
-    parallel --plus echo {#bc} ::: "$myvar"
-    parallel --plus echo {2#bc} ::: "wrong" ::: "$myvar" ::: "wrong"
-    parallel --plus echo {-2#bc} ::: "wrong" ::: "$myvar" ::: "wrong"
+    $pp echo {#bc} ::: "$myvar"
+    $pp echo {2#bc} ::: "wrong" ::: "$myvar" ::: "wrong"
+    $pp echo {-2#bc} ::: "wrong" ::: "$myvar" ::: "wrong"
     echo ${myvar#abc}
     parallel --rpl '{#(.+?)} s/^$$1//;' echo {#abc} ::: "$myvar"
-    parallel --plus echo {#abc} ::: "$myvar"
-    parallel --plus echo {2#abc} ::: "wrong" ::: "$myvar" ::: "wrong"
-    parallel --plus echo {-2#abc} ::: "wrong" ::: "$myvar" ::: "wrong"
+    $pp echo {#abc} ::: "$myvar"
+    $pp echo {2#abc} ::: "wrong" ::: "$myvar" ::: "wrong"
+    $pp echo {-2#abc} ::: "wrong" ::: "$myvar" ::: "wrong"
 
     echo ${myvar%de}
     parallel --rpl '{%(.+?)} s/$$1$//;' echo {%de} ::: "$myvar"
-    parallel --plus echo {%de} ::: "$myvar"
-    parallel --plus echo {2%de} ::: "wrong" ::: "$myvar" ::: "wrong"
-    parallel --plus echo {-2%de} ::: "wrong" ::: "$myvar" ::: "wrong"
+    $pp echo {%de} ::: "$myvar"
+    $pp echo {2%de} ::: "wrong" ::: "$myvar" ::: "wrong"
+    $pp echo {-2%de} ::: "wrong" ::: "$myvar" ::: "wrong"
     echo ${myvar%def}
     parallel --rpl '{%(.+?)} s/$$1$//;' echo {%def} ::: "$myvar"
-    parallel --plus echo {%def} ::: "$myvar"
-    parallel --plus echo {2%def} ::: "wrong" ::: "$myvar" ::: "wrong"
-    parallel --plus echo {-2%def} ::: "wrong" ::: "$myvar" ::: "wrong"
+    $pp echo {%def} ::: "$myvar"
+    $pp echo {2%def} ::: "wrong" ::: "$myvar" ::: "wrong"
+    $pp echo {-2%def} ::: "wrong" ::: "$myvar" ::: "wrong"
 
     echo ${myvar/def/ghi}
     parallel --rpl '{/(.+?)/(.+?)} s/$$1/$$2/;' echo {/def/ghi} ::: "$myvar"
-    parallel --plus echo {/def/ghi} ::: "$myvar"
-    parallel --plus echo {2/def/ghi} ::: "wrong" ::: "$myvar" ::: "wrong"
-    parallel --plus echo {-2/def/ghi} ::: "wrong" ::: "$myvar" ::: "wrong"
+    $pp echo {/def/ghi} ::: "$myvar"
+    $pp echo {2/def/ghi} ::: "wrong" ::: "$myvar" ::: "wrong"
+    $pp echo {-2/def/ghi} ::: "wrong" ::: "$myvar" ::: "wrong"
 
     echo ${myvar//def/ghi}
     parallel --rpl '{//(.+?)/(.+?)} s/$$1/$$2/g;' echo {//def/ghi} ::: "$myvar"
-    parallel --plus echo {//def/ghi} ::: "$myvar"
-    parallel --plus echo {2//def/ghi} ::: "wrong" ::: "$myvar" ::: "wrong"
-    parallel --plus echo {-2//def/ghi} ::: "wrong" ::: "$myvar" ::: "wrong"
+    $pp echo {//def/ghi} ::: "$myvar"
+    $pp echo {2//def/ghi} ::: "wrong" ::: "$myvar" ::: "wrong"
+    $pp echo {-2//def/ghi} ::: "wrong" ::: "$myvar" ::: "wrong"
 
     echo ${myvar^a}
     parallel --rpl '{^(.+?)} s/^($$1)/uc($1)/e;' echo {^a} ::: "$myvar"
-    parallel --plus echo {^a} ::: "$myvar"
-    parallel --plus echo {2^a} ::: "wrong" ::: "$myvar" ::: "wrong"
-    parallel --plus echo {-2^a} ::: "wrong" ::: "$myvar" ::: "wrong"
+    $pp echo {^a} ::: "$myvar"
+    $pp echo {2^a} ::: "wrong" ::: "$myvar" ::: "wrong"
+    $pp echo {-2^a} ::: "wrong" ::: "$myvar" ::: "wrong"
     echo ${myvar^^a}
     parallel --rpl '{^^(.+?)} s/($$1)/uc($1)/eg;' echo {^^a} ::: "$myvar"
-    parallel --plus echo {^^a} ::: "$myvar"
-    parallel --plus echo {2^^a} ::: "wrong" ::: "$myvar" ::: "wrong"
-    parallel --plus echo {-2^^a} ::: "wrong" ::: "$myvar" ::: "wrong"
+    $pp echo {^^a} ::: "$myvar"
+    $pp echo {2^^a} ::: "wrong" ::: "$myvar" ::: "wrong"
+    $pp echo {-2^^a} ::: "wrong" ::: "$myvar" ::: "wrong"
 
     myvar=AbcAaAdef
     echo ${myvar,A}
     parallel --rpl '{,(.+?)} s/^($$1)/lc($1)/e;' echo '{,A}' ::: "$myvar"
-    parallel --plus echo '{,A}' ::: "$myvar"
-    parallel --plus echo '{2,A}' ::: "wrong" ::: "$myvar" ::: "wrong"
-    parallel --plus echo '{-2,A}' ::: "wrong" ::: "$myvar" ::: "wrong"
+    $pp echo '{,A}' ::: "$myvar"
+    $pp echo '{2,A}' ::: "wrong" ::: "$myvar" ::: "wrong"
+    $pp echo '{-2,A}' ::: "wrong" ::: "$myvar" ::: "wrong"
     echo ${myvar,,A}
     parallel --rpl '{,,(.+?)} s/($$1)/lc($1)/eg;' echo '{,,A}' ::: "$myvar"
-    parallel --plus echo '{,,A}' ::: "$myvar"
-    parallel --plus echo '{2,,A}' ::: "wrong" ::: "$myvar" ::: "wrong"
-    parallel --plus echo '{-2,,A}' ::: "wrong" ::: "$myvar" ::: "wrong"
+    $pp echo '{,,A}' ::: "$myvar"
+    $pp echo '{2,,A}' ::: "wrong" ::: "$myvar" ::: "wrong"
+    $pp echo '{-2,,A}' ::: "wrong" ::: "$myvar" ::: "wrong"
 
     myvar=abcabcdefdef
     echo $myvar ${myvar/#abc/ABC}
-    echo $myvar | parallel --plus echo {} {/#abc/ABC}
+    echo $myvar | $pp echo {} {/#abc/ABC}
     echo $myvar ${myvar/%def/DEF}
-    echo $myvar | parallel --plus echo {} {/%def/DEF}
+    echo $myvar | $pp echo {} {/%def/DEF}
     echo $myvar ${myvar/#abc/}
-    echo $myvar | parallel --plus echo {} {/#abc/}
+    echo $myvar | $pp echo {} {/#abc/}
     echo $myvar ${myvar/%def/}
-    echo $myvar | parallel --plus echo {} {/%def/}
+    echo $myvar | $pp echo {} {/%def/}
 }
 
-par_test_ipv6_format() {
+par__test_ipv6_format() {
     # If not MaxStartups 100:30:1000 then this will fail
     ipv4() {
 	ifconfig | perl -nE '/inet (\S+) / and say $1'
@@ -831,7 +821,7 @@ par_test_ipv6_format() {
 	ifconfig | perl -nE '/inet6 ([0-9a-f:]+) .*(host|global)/ and say $1'
     }
     (ipv4; ipv6) |
-	parallel ssh -oStrictHostKeyChecking=accept-new {} true 2>/dev/null
+	nice parallel ssh -oStrictHostKeyChecking=accept-new {} true 2>/dev/null
     echo '### Host as IPv6 address'
     (
 	ipv6 |
@@ -848,7 +838,7 @@ par_test_ipv6_format() {
             # 9.9.9.9q22 => 9.9.9.9
             perl -pe 's/q.*//;'
     ) |
-	parallel -j200% --argsep , parallel -S {} true ::: 1 ||
+	nice parallel -j200% --argsep , parallel -S {} true ::: 1 ||
 	echo Failed
 }
 

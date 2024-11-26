@@ -2945,7 +2945,7 @@ sub check_invalid_option_combinations() {
 
 sub init_globals() {
     # Defaults:
-    $Global::version = 20241122;
+    $Global::version = 20241201;
     $Global::progname = 'parallel';
     $::name = "GNU Parallel";
     $Global::infinity = 2**31;
@@ -15122,6 +15122,10 @@ sub new($) {
     $dbh->{'HandleError'} = sub {};
     if(not defined $options{'table'}) {
 	::error("The DBURL ($dburl) must contain a table.");
+	::wait_and_exit(255);
+    }
+    if($options{'table'} =~ m:/:) {
+	::error("The table name ($options{'table'}) cannot contain /");
 	::wait_and_exit(255);
     }
 

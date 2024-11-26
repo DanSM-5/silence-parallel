@@ -4,17 +4,27 @@
  
 Quote of the month:
 
+
+  "Do this with gnu parallel" is the Copilot hack of the day
+    -- Chase Clark @chasingmicrobes.bsky.social
+
+  GNU Parallel too. It is my map/reduce tool with built in support to retry failed jobs.
+    -- Dhruva @mechanicker.bsky.social
+
+  gnu parallel is my new favorite toy
+    -- Eytan Adar @eytan.adar.prof
+
+  ainda não inventaram palavras capazes de expressar minha gratidão aos desenvolvedores do GNU Parallel
+    -- @nueidris.kawaii.social
+
   GNU parallel is awesome. Use it more often in your scripts!
     -- Wade @WadeGrimshire@twitter
 
   i rly love gnu parallel over xargs, it's basically the same but has lots of useful and well documented options. sry if u know already
     -- d@nny "disc@" mc² @hipsterelectron@circumstances.run
 
-  ainda não inventaram palavras capazes de expressar minha gratidão aos desenvolvedores do GNU Parallel
-    -- nueidris ‪@nueidris.kawaii.social‬
-
   Und die Tage jetzt hab ich GNU parallel für mich entdeckt, auch ne nette Geschichte, gerade wenn's irgendwelche remote APIs sind.
-    -- Vince ‪@dd1des.bsky.social‬
+    -- Vince @dd1des.bsky.social
 
   gnu parallelすごい！！！
     -- たらたら@nosennyuu@twitter

@@ -170,11 +170,12 @@ par_sql_joblog() {
 
 par_no_table() {
     echo 'bug #50018: --dburl without table dies'
+    echo should default to table USERNAME
+    parallel --sqlandworker $SERVERURL echo ::: OK
+    echo $?
+    parallel --sqlmaster $SERVERURL echo ::: OK
+    echo $?
     parallel --sqlworker $SERVERURL
-    echo $?
-    parallel --sqlandworker $SERVERURL echo ::: no_output
-    echo $?
-    parallel --sqlmaster $SERVERURL echo ::: no_output
     echo $?
     # For p_wrapper to remove table
     parallel --sqlandworker $DBURL true ::: dummy ::: dummy

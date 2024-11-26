@@ -8,6 +8,18 @@
 # Each should be taking 10-30s and be possible to run in parallel
 # I.e.: No race conditions, no logins
 
+par_retries_lb_jl() {
+    echo Broken in 20240522
+    tmp=$(mktemp)
+    export tmp
+    parallel-20240522 --lb --jl /dev/null --timeout 0.3 --retries 5 'echo should be 5 lines >> "$tmp";sleep {}' ::: 20
+    cat "$tmp"
+    > "$tmp"
+    parallel --lb --jl /dev/null --timeout 0.3 --retries 5 'echo 5 lines >> "$tmp";sleep {}' ::: 20
+    cat "$tmp"
+    rm "$tmp"
+}
+
 par_--match() {
     export PARALLEL=-k
     echo Basic match
@@ -222,22 +234,6 @@ par_load_blocks() {
 par__round_robin_blocks() {
     echo "bug #49664: --round-robin does not complete"
     seq 20000000 | parallel -j8 --block 10M --round-robin --pipe wc -c | wc -l
-}
-
-par_compress_prg_fails() {
-    echo "### bug #41609: --compress fails"
-    seq 12 | parallel --compress --compress-program gzip -k seq {} 10000 | md5sum
-    seq 12 | parallel --compress -k seq {} 10000 | md5sum
-
-    echo '### bug #44546: If --compress-program fails: fail'
-    doit() {
-	(parallel $* --compress-program false \
-		  echo \; sleep 1\; ls ::: /no-existing
-	echo $?) | tail -n1
-    }
-    export -f doit
-    stdout parallel --tag -k doit ::: '' --line-buffer ::: '' --tag ::: '' --files |
-	grep -v -- -dc
 }
 
 par_dryrun_timeout_ungroup() {

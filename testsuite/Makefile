@@ -129,16 +129,16 @@ servers=parallel-server1 parallel-server2 parallel-server3 parallel-server4 ${na
 startvm:
 	sort -u ~/.ssh/*.pub vagrant/authorized_keys > vagrant/authorized_keys.
 	mv vagrant/authorized_keys. vagrant/authorized_keys
-	parallel -j0 --tag -k '${start}' ::: ${servers} &
+	parallel -j0 --tag -k --timeout 60 '${start}' ::: ${servers} &
 stopvm:
 	parallel -j0 --tag -k '${stop}' ::: ${namedservers} || true
 
 startdb:
 	sql oracle://SYSTEM:$$VM_ORACLE_PWD@/FREE "select 'Oracle is running' from dual;" || \
-	  (cd vagrant-projects/OracleDatabase/23.4.0-Free && vagrant up && \
+	  (cd vagrant-projects/OracleDatabase/23.3.0-Free && vagrant up && \
 	   sql oracle://SYSTEM:$$VM_ORACLE_PWD@/FREE "select 'Oracle is running' from dual;")
 stopdb:
-	cd vagrant-projects/OracleDatabase/23.4.0-Free; vagrant suspend
+	cd vagrant-projects/OracleDatabase/23.3.0-Free; vagrant suspend
 
 ### Distribution
 installparallel: ../src/parallel

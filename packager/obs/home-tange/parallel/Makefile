@@ -3,7 +3,9 @@ all: update upload monitorbuild
 
 update:
 	# Update sha256sum
-	s=`sha256sum parallel-*.tar.bz2|field 1` perl -i -pe 's/(sha256sums=..)\w+(..)/$$1$$ENV{s}$$2/' PKGBUILD
+	s1=`sha256sum parallel-*.tar.bz2|field 1` \
+	s2=`sha256sum parallel-*.tar.bz2.sig|field 1` \
+        perl -i -pe 's/(sha256sums=..)\w+(...)\w+(..)/$$1$$ENV{s1}$$2$$ENV{s2}$$3/' PKGBUILD
 	# Update version
 	perl -i -pe 's/pkgver=.*/pkgver=$$ENV{YYYYMMDD}/' PKGBUILD
 	osc diff

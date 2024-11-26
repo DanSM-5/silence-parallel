@@ -14,7 +14,7 @@ install_packages() {
     test_pkgs="$test_pkgs autossh sshpass lsh-client lsh-utils jq"
     test_pkgs="$test_pkgs libpod-simple-perl libtext-csv-perl"
     test_pkgs="$test_pkgs libtest-nowarnings-perl pod2pdf"
-    test_pkgs="$test_pkgs xemacs21"
+    test_pkgs="$test_pkgs xemacs21 csvkit"
     test_pkgs="$test_pkgs gawk lua5.3 clisp php-cli nodejs guile-3.0 fsharp"
     test_pkgs="$test_pkgs mono-csharp-shell octave openjdk-11-jdk-headless tcl"
     test_pkgs="$test_pkgs racket libevent-dev python-is-python3"

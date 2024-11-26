@@ -3244,7 +3244,7 @@ Examples: B<4/>, B<12/>
 
 The I<ssh command> to use. The I<ssh command> must be followed by a space.
 
-Example: B</usr/bin/lsh -z >, B<autossh -C >
+Example: B</usr/bin/lsh -z> , B<autossh -C> 
 
 
 =item Z<> I<user>
