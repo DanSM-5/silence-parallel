@@ -5,9 +5,6 @@
 Quote of the month:
 
 
-  "Do this with gnu parallel" is the Copilot hack of the day
-    -- Chase Clark @chasingmicrobes.bsky.social
-
   GNU Parallel too. It is my map/reduce tool with built in support to retry failed jobs.
     -- Dhruva @mechanicker.bsky.social
 
@@ -248,6 +245,9 @@ https://negfeedback.blogspot.com/2020/05/indispensable-command-line-tools.html
     -- @alinajaf@twitter
 
 === Used ===
+
+  "Do this with gnu parallel" is the Copilot hack of the day
+    -- Chase Clark @chasingmicrobes.bsky.social
 
   GNU parallel is so satisfying
     -- ‪James Coman‬ ‪@jcoman.bsky.social‬
