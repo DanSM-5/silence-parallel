@@ -1,4 +1,4 @@
-#!/usr/bin/env ksh
+#!/usr/bin/env mksh
 
 # This file must be sourced in sh/ash/dash/bash/ksh/mksh/zsh:
 #
@@ -13,7 +13,7 @@
 # after which 'env_parallel' works
 #
 #
-# Copyright (C) 2016-2024 Ole Tange, http://ole.tange.dk and Free
+# Copyright (C) 2016-2025 Ole Tange, http://ole.tange.dk and Free
 # Software Foundation, Inc.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -31,7 +31,7 @@
 # or write to the Free Software Foundation, Inc., 51 Franklin St,
 # Fifth Floor, Boston, MA 02110-1301 USA
 #
-# SPDX-FileCopyrightText: 2021-2024 Ole Tange, http://ole.tange.dk and Free Software and Foundation, Inc.
+# SPDX-FileCopyrightText: 2016-2025 Ole Tange, http://ole.tange.dk and Free Software and Foundation, Inc.
 # SPDX-License-Identifier: GPL-3.0-or-later
 # shellcheck disable=SC2006
 
@@ -53,7 +53,7 @@ env_parallel() {
 	_prefix_PARALLEL_ENV=false
     else
 	# Dash/ash - can these be detected better?
-	_shell_DIALECT=sh
+	_shell_DIALECT="sh"
 	_eval_needed=false
 	_prefix_PARALLEL_ENV=false
     fi
@@ -72,12 +72,14 @@ env_parallel() {
     }
     _names_of_ALIASES_bash() {
 	# No aliases will return false. This error should be ignored.
+	# shellcheck disable=SC3044
 	compgen -a || true
     }
     _names_of_ALIASES_ksh() {
 	alias | perl -pe 's/=.*//'
     }
     _names_of_ALIASES_zsh() {
+	# shellcheck disable=SC2086,SC2296
 	print -l ${(k)aliases}
     }
     _bodies_of_ALIASES() {
@@ -93,10 +95,11 @@ env_parallel() {
 	done
     }
     _bodies_of_ALIASES_bash() {
+	# shellcheck disable=SC3043
 	local _i
 	for _i in "$@"; do
 	    # shellcheck disable=SC2046
-	    if [ $(alias "$_i" | wc -l) == 1 ] ; then
+	    if [ $(alias "$_i" | wc -l) = 1 ] ; then
 		true Alias is a single line. Good.
 	    else
 		_warning_PAR "Alias '$_i' contains newline."
@@ -117,15 +120,17 @@ env_parallel() {
 
     }
     _bodies_of_ALIASES_zsh() {
+	# shellcheck disable=SC3043
 	local _i
 	for _i in "$@"; do
-		echo 'alias '"$(alias $_i)"
+		echo 'alias '"$(alias "$_i")"
 	done
     }
     _names_of_FUNCTIONS() {
 	_names_of_FUNCTIONS_$_shell_DIALECT
     }
     _names_of_FUNCTIONS_bash() {
+	# shellcheck disable=SC3044
 	compgen -A function
     }
     _names_of_maybe_FUNCTIONS() {
@@ -138,11 +143,11 @@ env_parallel() {
 	    perl -ne '/^(\S+) is a function$/ and not $seen{$1}++ and print "$1\n"'
     }
     _names_of_FUNCTIONS_ksh() {
-	# mksh = typeset +f
-	# ksh = typeset +p -f | perl -pe 's/\(\).*//'
+	# shellcheck disable=SC3044
 	typeset +f | perl -pe 's/\(\).*//; s/ .*//;'
     }
     _names_of_FUNCTIONS_zsh() {
+	# shellcheck disable=SC2086,SC2296
 	print -l ${(k)functions}
     }
     _bodies_of_FUNCTIONS() {
@@ -152,12 +157,14 @@ env_parallel() {
 	LANG=C type "$@" | perl -ne '/^(\S+) is a function$/ or print'
     }
     _bodies_of_FUNCTIONS_bash() {
+	# shellcheck disable=SC3044
 	typeset -f "$@"
     }
     _bodies_of_FUNCTIONS_ksh() {
 	functions "$@"
     }
     _bodies_of_FUNCTIONS_zsh() {
+	# shellcheck disable=SC3044
 	typeset -f "$@"
     }
     _names_of_VARIABLES() {
@@ -168,6 +175,7 @@ env_parallel() {
 	set | perl -ne 's/^(\S+?)=.*/$1/ and print;'
     }
     _names_of_VARIABLES_bash() {
+	# shellcheck disable=SC3044
 	compgen -A variable
     }
     _names_of_VARIABLES_ksh() {
@@ -175,11 +183,13 @@ env_parallel() {
 	#    perl -pe 's/^(type)?set( [-+][a-zA-Z0-9]*)* //; s/(\[\d+\])?=.*//' |
 	#    uniq
 	# ksh: typeset +p | perl -pe 's/^typeset .. //'
+	# shellcheck disable=SC3044
 	typeset +p |
 	    perl -pe 's/^(type)?set( [-+][a-zA-Z0-9]*)* //; s/(\[\d+\])?=.*//' |
 	    uniq
     }
     _names_of_VARIABLES_zsh() {
+	# shellcheck disable=SC2086,SC2296
 	print -l ${(k)parameters}
     }
     _bodies_of_VARIABLES() {
@@ -196,12 +206,15 @@ env_parallel() {
 	done
     }
     _bodies_of_VARIABLES_bash() {
+	# shellcheck disable=SC3044
 	typeset -p "$@"
     }
     _bodies_of_VARIABLES_ksh() {
+	# shellcheck disable=SC3044
 	typeset -p "$@"
     }
     _bodies_of_VARIABLES_zsh() {
+	# shellcheck disable=SC3044
 	typeset -p "$@"
     }
     _ignore_HARDCODED() {
@@ -254,6 +267,7 @@ env_parallel() {
 	readonly | _parse_READONLY
     }
     _ignore_READONLY_zsh() {
+	# shellcheck disable=SC3044
 	typeset -pr | _parse_READONLY
     }
     _remove_bad_NAMES() {
@@ -290,7 +304,7 @@ env_parallel() {
 		     _names_of_maybe_FUNCTIONS|
 		     _parallel_exit_CODE|
 		     _prefix_PARALLEL_ENV|
-		     _prefix_PARALLEL_ENV|
+		     _prefix_PARALLEL_ENV_bash|
 		     _remove_bad_NAMES|
 		     _remove_readonly|
 		     _variable_NAMES|
@@ -305,6 +319,7 @@ env_parallel() {
             print;'
     }
     _prefix_PARALLEL_ENV_bash() {
+	# shellcheck disable=SC3044
         shopt 2>/dev/null |
         perl -pe 's:\s+off:;: and s/^/shopt -u /;
                   s:\s+on:;: and s/^/shopt -s /;
@@ -398,7 +413,7 @@ env_parallel() {
     unset _get_ignored_VARS
 
     # --record-env
-    if perl -e 'exit grep { /^--record-env$/ } @ARGV' -- "$@"; then
+    if perl -e 'exit grep { /^--record-?env$/ } @ARGV' -- "$@"; then
 	true skip
     else
 	(_names_of_ALIASES;
@@ -475,9 +490,10 @@ env_parallel() {
     fi
     unset _variable_NAMES
 
-    if $eval_needed ; then
+    if $_eval_needed ; then
 	# shellcheck disable=SC2006
 	PARALLEL_ENV="`
+	eval $_prefix_PARALLEL_ENV;
         eval $_list_alias_BODIES;
  	eval $_list_function_BODIES;
         eval $_list_variable_VALUES;
@@ -497,8 +513,27 @@ env_parallel() {
     unset _bodies_of_ALIASES _bodies_of_VARIABLES _bodies_of_FUNCTIONS
     unset _names_of_ALIASES _names_of_VARIABLES _names_of_FUNCTIONS
     unset _ignore_HARDCODED _ignore_READONLY _ignore_UNDERSCORE
-    unset _remove_bad_NAMES _grep_REGEXP
+    unset _remove_bad_NAMES _grep_REGEXP _parse_READONLY
     unset _prefix_PARALLEL_ENV
+    unset _ignore_READONLY_sh _ignore_READONLY_bash
+    unset _ignore_READONLY_ksh _ignore_READONLY_zsh
+    unset _ignore_HARDCODED_sh _ignore_HARDCODED_bash
+    unset _ignore_HARDCODED_ksh _ignore_HARDCODED_zsh
+    unset _bodies_of_ALIASES_ksh _bodies_of_ALIASES_sh
+    unset _bodies_of_ALIASES_zsh _bodies_of_FUNCTIONS_bash
+    unset _bodies_of_FUNCTIONS_ksh _bodies_of_FUNCTIONS_sh
+    unset _bodies_of_FUNCTIONS_zsh _bodies_of_VARIABLES_bash
+    unset _bodies_of_VARIABLES_ksh _bodies_of_VARIABLES_sh
+    unset _bodies_of_VARIABLES_zsh
+    unset _names_of_ALIASES _names_of_ALIASES_bash
+    unset _names_of_ALIASES_ksh _names_of_ALIASES_sh
+    unset _names_of_ALIASES_zsh _names_of_FUNCTIONS
+    unset _names_of_FUNCTIONS_bash _names_of_FUNCTIONS_ksh
+    unset _names_of_FUNCTIONS_sh _names_of_FUNCTIONS_zsh
+    unset _names_of_VARIABLES _names_of_VARIABLES_bash
+    unset _names_of_VARIABLES_ksh _names_of_VARIABLES_sh
+    unset _names_of_VARIABLES_zsh _names_of_maybe_FUNCTIONS
+
     # Test if environment is too big by running 'true'
     # shellcheck disable=SC2006,SC2092
     if `_which_PAR true` >/dev/null 2>/dev/null ; then
@@ -570,8 +605,8 @@ _parset_main() {
     fi
     if [ "$_parset_NAME" = "--version" ] ; then
 	# shellcheck disable=SC2006
-	echo "parset 20241222 (GNU parallel `parallel --minversion 1`)"
-	echo "Copyright (C) 2007-2024 Ole Tange, http://ole.tange.dk and Free Software"
+	echo "parset 20241223 (GNU parallel `parallel --minversion 1`)"
+	echo "Copyright (C) 2007-2025 Ole Tange, http://ole.tange.dk and Free Software"
 	echo "Foundation, Inc."
 	echo "License GPLv3+: GNU GPL version 3 or later <https://gnu.org/licenses/gpl.html>"
 	echo "This is free software: you are free to change and redistribute it."
@@ -589,7 +624,7 @@ _parset_main() {
     # Bash: declare -A myassoc=( )
     # Zsh: typeset -A myassoc=( )
     # Ksh: typeset -A myassoc=( )
-    # shellcheck disable=SC2039,SC2169
+    # shellcheck disable=SC2039,SC2169,SC3044
     if (typeset -p "$_parset_NAME" 2>/dev/null; echo) |
 	    perl -ne 'exit not (/^declare[^=]+-A|^typeset[^=]+-A/)' ; then
 	# This is an associative array

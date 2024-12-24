@@ -14,7 +14,7 @@
 
 @SET_MAKE@
 
-# SPDX-FileCopyrightText: 2002-2022 Ole Tange, http://ole.tange.dk and Free Software and Foundation, Inc.
+# SPDX-FileCopyrightText: 2002-2025 Ole Tange, http://ole.tange.dk and Free Software and Foundation, Inc.
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 VPATH = @srcdir@
@@ -776,18 +776,28 @@ uninstall-am:
 test:
 	cd testsuite; make 1
 
+torall:
+	make torsync
+	make tortest
+	make torresults
+
 tortest:
 	torsocks ssh -t tortest 'export SSH_AUTH_SOCK=`cat ~/.ssh/SSH_AUTH_SOCK`;\
                                  export SSH_AGENT_PID=`cat ~/.ssh/SSH_AGENT_PID`;\
                                  cd privat/parallel/testsuite/ &&\
                                    make short && make long && make mem'
-	make torresults
 
 torresults:
 	torsocks rsync -Hazv --progress tortest:privat/parallel/testsuite/actual-results/ testsuite/actual-results/
 
+torpush:
+	torsocks git push tortest:privat/parallel
+
+torpull:
+	torsocks git pull tortest:privat/parallel
+
 torsync:
-	torsocks rsync -Hazv --exclude='*.{pdf,gz,bz2,html,deb}' --exclude authorized_keys --exclude .vagrant/ --exclude actual-results --exclude '*hwdep*' --delete ./ tortest:privat/parallel/
+	torsocks rsync -Hazv --exclude='*.{pdf,gz,bz2,html,deb}' --exclude authorized_keys --exclude .vagrant/ --exclude oracle*box --exclude oracle-database-*.rpm --exclude actual-results --exclude '*hwdep*' --delete ./ tortest:privat/parallel/
 	make tortest
 
 web:

@@ -1,6 +1,6 @@
 #!/bin/bash -x
 
-# SPDX-FileCopyrightText: 2021-2024 Ole Tange, http://ole.tange.dk and Free Software and Foundation, Inc.
+# SPDX-FileCopyrightText: 2021-2025 Ole Tange, http://ole.tange.dk and Free Software and Foundation, Inc.
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -64,15 +64,8 @@ run_test() {
 # OK
 #    fancychars="$(perl -e 'print "\n\`/tmp/trip\`>/tmp/tripwire;\n".
 #                         (pack "c*",2..10,34,39)."\@<?[]|~\\"')"
-# OK
-#    fancychars="$(perl -e 'print "\n\`touch  /tmp/tripwire\`>/tmp/tripwire;\n".
-#                         (pack "c*",34,39)."\@<?[]|~\\"')"
-
-# OK									      
-#    fancychars="$(perl -e 'print "\n\`touch  /tmp/tripwire\`>/tmp/tripwire;\n".
-#                         ""')"
     export TMPDIR=/tmp/"$base-tmp"/"$fancychars"/tmp
-    export PARALLEL="--_unsafe";
+    export PARALLEL="--unsafe";
     rm -rf "$TMPDIR"
     mkdir -p "$TMPDIR"
     # Clean before. May be owned by other users

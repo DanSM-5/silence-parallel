@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# SPDX-FileCopyrightText: 2021-2024 Ole Tange, http://ole.tange.dk and Free Software and Foundation, Inc.
+# SPDX-FileCopyrightText: 2021-2025 Ole Tange, http://ole.tange.dk and Free Software and Foundation, Inc.
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -28,7 +28,8 @@ echo perl |
 
 par_make_deb_package() {
     echo '### Test make .deb package'; 
-    cd ~/privat/parallel/packager/debian; 
+    cd ~/privat/parallel/packager/debian
+    # If the final line is there: It is OK
     stdout make | grep 'To install the GNU Parallel Debian package, run:'
 }
 

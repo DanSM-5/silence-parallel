@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# SPDX-FileCopyrightText: 2021-2024 Ole Tange, http://ole.tange.dk and Free Software and Foundation, Inc.
+# SPDX-FileCopyrightText: 2021-2025 Ole Tange, http://ole.tange.dk and Free Software and Foundation, Inc.
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -1369,6 +1369,7 @@ par__test_cpu_detection_lscpu() {
     compgen -A function | grep ^cpu | sort | parallel -j0 -k test_one
     rm ~/.parallel/tmp/sshlogin/*/cpuspec 2>/dev/null
 }
+
 par__test_cpu_detection_lscpu_--all_--extended() {
     pack() { zstd -19 | mmencode; }
     unpack() { mmencode -u | zstd -d; }
@@ -1383,7 +1384,20 @@ par__test_cpu_detection_lscpu_--all_--extended() {
 	kGvVfEIAircDrMryswQmQCOci78EmFUDeEAyiFCTmkD1
 	' | unpack
     }
-
+    cpu12() {
+	echo '4-64-64-64 Dell R815 4 CPU 64-core'
+	echo '
+	KLUv/QRovQ0AliFKGXBL0ga8SB+QgJF+fDp2PC2t7E07NFT964lNAD8APgCvS1mUtu3p9KIk
+	FuUd+/l8cDrMfL9oFpFcPhSO3ffCUloSAMIhgixekCxIgAEDgoTBAZ24JP7QxBua4EDCQQAX
+	BgoCDhQ4IHBgQAaEgEQvWlIL827oQx/TYWa66eUWkXuhC33Exi69dGmllZ5eFGXRQu7u5jcf
+	x+OonVX6MR/zOo5WlUq326c0Tl2/AmNszHLLa2ipoSGRi3yGIjMeV165DCsyndLlxbAQF3O+
+	668f5nXYbKMffZmjZTJZb/2Y1rFtcqoXsyoiLdEDAGc+//xhrKXMOvzhl7FwUWRnvvljPBlk
+	s3v55YtxUFGNyCe/MJoMXXn88UexRMiq9u1XkaQgqhsXX/wpjieAk6gRwNUJZ6TT3gHQpTEx
+	HIEREEKQgBhQBFzwYtzEWKxTSE4SAy9D3JtTYGTBkBxgYSnib5yCEQvGSEaAEmbB+JvTYGSB
+	8ZCBFLKB9fTF32AMRhBQ24MBFQXU9rEYQRCoIS2WXrGcJS+7FWAy1UwK2hiFGADGza6OHm0S
+	R0PqCK1W7ue1A5c5OwZZBaP3dtg=
+	' | unpack
+    }
     cpu13() {
 	echo '1-2-2-2 AMD Neo N36L Dual-Core Processor'
 	echo '
@@ -1816,7 +1830,8 @@ EOF
     }
     export -f run gp oct pl py r rb sh
     
-    parallel --tag -k run  ::: gp oct pl py rb sh
+    stdout parallel --tag -k run  ::: gp oct pl py rb sh |
+	grep -v 'QSocketNotifier: Can only be used with threads started with QThread'
     # R fails if TMPDIR contains space
     TMPDIR=/tmp
     parallel --tag -k run  ::: r
@@ -1895,7 +1910,7 @@ par_show_limits() {
 
 par_test_delimiter() {
     echo "### Test : as delimiter. This can be confusing for uptime ie. --load";
-    export PARALLEL="--load 300%"
+    export PARALLEL="$PARALLEL --load 300%"
     parallel -k --load 300% -d : echo ::: a:b:c
 }
 

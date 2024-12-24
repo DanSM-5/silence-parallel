@@ -1,9 +1,53 @@
-# SPDX-FileCopyrightText: 2021-2024 Ole Tange, http://ole.tange.dk and Free Software and Foundation, Inc.
+# SPDX-FileCopyrightText: 2021-2025 Ole Tange, http://ole.tange.dk and Free Software and Foundation, Inc.
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 # Jobs that depend on the hardware
 # (e.g number of CPU threads, terminal type)
+
+par_colour_failed() {
+    echo '--colour-failed --colour'
+    parallel --colour-failed -kv 'seq {1};exit {2}' ::: 1 2 ::: 0 1 2
+    parallel --colour --colour-failed -kv 'seq {1};exit {2}' ::: 1 2 ::: 0 1 2
+}
+
+par_ctagstring() {
+    echo '### --ctag --ctagstring should be different from --tag --tagstring'
+    echo tag/ctag 8 37
+    parallel --tag echo ::: 1 ::: a| wc -c
+    parallel --ctag echo ::: 1 ::: a | wc -c
+    echo tagstring/ctagstring 10 39
+    parallel --tagstring 'I{1}\tB{2}' echo ::: 1 ::: a | wc -c
+    parallel --ctagstring 'I{1}\tB{2}' echo ::: 1 ::: a | wc -c
+}
+
+par_ll_color_long_line() {
+    echo '### --latest-line --color with lines longer than terminal width'
+    COLUMNS=30 parallel --delay 0.3 --color --tagstring '{=$_.="x"x$_=}' \
+	   --ll 'echo {}00000 | sed -e "s/$/' {1..100} /'"' ::: {01..30} |
+	perl -ne 's/.\[A//g;
+		  /.\[K .{4}\[m/ and next;
+                  /\S/ && print'| sort -u
+}
+
+par_ll_long_line() {
+    echo '### --latest-line with lines longer than terminal width'
+    COLUMNS=30 parallel --delay 0.3 --tagstring '{=$_.="x"x$_=}' \
+	   --ll 'echo {}00000 | sed -e "s/$/' {1..100} /'"' ::: {01..30} |
+	perl -ne 's/.\[A//g;
+		  /.\[K .{4}\[m/ and next;
+		  /x\s*$/ and next;
+                  /\S/ && print'| sort -u
+}
+
+par_ll_no_newline() {
+    echo 'bug #64030: parallel --ll echo -n ::: foo'
+    parallel --ll echo -n ::: two lines | sort
+    parallel --ll echo -n '>&2' ::: two lines | sort
+    parallel --linebuffer 'echo -n last {}' ::: line
+    stdout parallel --linebuffer 'echo -n last {} >&2' ::: line
+    echo
+}
 
 par__environment_too_big_dash() {
   myscript=$(cat <<'_EOF'

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# SPDX-FileCopyrightText: 2021-2024 Ole Tange, http://ole.tange.dk and Free Software and Foundation, Inc.
+# SPDX-FileCopyrightText: 2021-2025 Ole Tange, http://ole.tange.dk and Free Software and Foundation, Inc.
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -10,18 +10,20 @@
 
 par_retries_lb_jl() {
     echo Broken in 20240522
+    # Ignore --unsafe
+    unset PARALLEL
     tmp=$(mktemp)
     export tmp
-    parallel-20240522 --lb --jl /dev/null --timeout 0.3 --retries 5 'echo should be 5 lines >> "$tmp";sleep {}' ::: 20
+    parallel-20240522 --_unsafe --lb --jl /dev/null --timeout 0.3 --retries 5 'echo should be 5 lines >> "$tmp";sleep {}' ::: 20
     cat "$tmp"
     > "$tmp"
-    parallel --lb --jl /dev/null --timeout 0.3 --retries 5 'echo 5 lines >> "$tmp";sleep {}' ::: 20
+    parallel --unsafe --lb --jl /dev/null --timeout 0.3 --retries 5 'echo 5 lines >> "$tmp";sleep {}' ::: 20
     cat "$tmp"
     rm "$tmp"
 }
 
 par_--match() {
-    export PARALLEL=-k
+    export PARALLEL="$PARALLEL -k"
     echo Basic match
     parallel --match '(.*)/([a-zA-Z]+)' echo {1.2} {1.1} \
 	     ::: works/This "works, too"/This
@@ -118,7 +120,7 @@ par_seqreplace_long_line() {
 
 par__load_from_PARALLEL() {
     echo "### Test reading load from PARALLEL"
-    export PARALLEL="--load 300%"
+    export PARALLEL="$PARALLEL --load 300%"
     # Ignore stderr due to 'Starting processes took > 2 sec'
     seq 1 1000000 |
 	parallel -kj200 --recend "\n" --spreadstdin gzip -1 2>/dev/null |
@@ -200,28 +202,9 @@ par_totaljobs() {
     perl -E 'say ((2+shift) < (shift) ? "Error: --total should be faster" : "OK")' ${mytime[0]} ${mytime[1]}
 }
 
-par_ll_long_line() {
-    echo '### --latest-line with lines longer than terminal width'
-    COLUMNS=30 parallel --delay 0.3 --tagstring '{=$_.="x"x$_=}' \
-	   --ll 'echo {}00000 | sed -e "s/$/' {1..100} /'"' ::: {01..30} |
-	perl -ne 's/.\[A//g;
-		  /.\[K .{4}\[m/ and next;
-		  /x\s*$/ and next;
-                  /\S/ && print'| sort -u
-}
-
-par_ll_color_long_line() {
-    echo '### --latest-line --color with lines longer than terminal width'
-    COLUMNS=30 parallel --delay 0.3 --color --tagstring '{=$_.="x"x$_=}' \
-	   --ll 'echo {}00000 | sed -e "s/$/' {1..100} /'"' ::: {01..30} |
-	perl -ne 's/.\[A//g;
-		  /.\[K .{4}\[m/ and next;
-                  /\S/ && print'| sort -u
-}
-
 par_load_blocks() {
     echo "### Test if --load blocks. Bug.";
-    export PARALLEL="--load 300%"
+    export PARALLEL="$PARALLEL --load 300%"
     (seq 1 1000 |
 	 parallel -kj2 --load 300% --recend "\n" --spreadstdin gzip -1 |
 	 zcat | sort -n | md5sum
@@ -507,7 +490,7 @@ par_pipe_line_buffer() {
 	grep -v '^parallel: Warning: (Starting|Consider)'
     }
 
-    export PARALLEL="-N10 -L1 --pipe  -j20 --tagstring {#}"
+    export PARALLEL="$PARALLEL -N10 -L1 --pipe  -j20 --tagstring {#}"
     seq 200| parallel --line-buffer pv -qL 10 > "$tmp1" 2> >(nowarn)
     seq 200| parallel               pv -qL 10 > "$tmp2" 2> >(nowarn)
     cat "$tmp1" | wc

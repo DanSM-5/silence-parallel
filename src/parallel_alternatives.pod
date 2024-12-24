@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# SPDX-FileCopyrightText: 2021-2024 Ole Tange, http://ole.tange.dk and Free Software and Foundation, Inc.
+# SPDX-FileCopyrightText: 2021-2025 Ole Tange, http://ole.tange.dk and Free Software and Foundation, Inc.
 # SPDX-License-Identifier: GFDL-1.3-or-later
 # SPDX-License-Identifier: CC-BY-SA-4.0
 
@@ -4916,6 +4916,98 @@ https://github.com/simonjwright/parallelize
 (Last checked: 2024-04)
 
 
+=head2 DIFFERENCES BETWEEN pararun/paramap AND GNU Parallel
+
+
+Summary (see legend above):
+
+=over
+
+=item I1 -  -  -  -  -  I7
+
+=item M1 - M3 M4 - M6
+
+=item - O2 O3 (O4) O5 O6 - - x -
+
+=item E1 -  (E3) E4 (E5) - - E8 E9
+
+=item -  -  -  -  -  -  -  -  - 
+
+=item - -
+
+=back
+
+B<pararun> gets tricky when you need to quote more than 2 levels:
+
+  $ echo "$bmps" | parallel -q perl -e 'print @ARGV,"\n"' {}
+
+  $ echo "$bmps" | pararun 'perl -e '"'"'print @ARGV,"\n"'"'"' "$1"'
+
+B<paramap> tries to keep order of output, and works for short lines
+on stdout:
+
+  $ printf '%s\n' 2 1 4 3 | paramap -j4 'sleep $1; echo -n $1; sleep $1; echo $1'
+  22
+  11
+  44
+  33
+
+But adds newlines if there is no newline:
+
+  $ printf '%s\n' 2 1 4 3 | paramap -j4 'echo -n $1'
+  2
+  1
+  4
+  3
+
+  $ printf '%s\n' 2 1 4 3 | parallel -j4 'echo -n {}'
+  2143
+
+B<paramap> does not deal with stderr:
+
+  $ printf '%s\n' 2 1 4 3 |
+      paramap -j4 'sleep $1; echo -n $1 >&2; sleep $1; echo $1 >&2'
+  121
+  342
+  3
+  4
+
+B<paramap> only prints, when all jobs are done. GNU B<parallel> prints
+as soon as possible.
+
+Fails B<paramap> to run (due to final ;):
+
+  $ echo a | paramap 'echo $1;' 
+
+Long lines mix:
+
+  printf '%s\n' 2 1 4 3 |
+    paramap -j4 'perl -e "print \"$1\"x3000_000,\" \""' |
+    tr -s 1-4
+
+And really long lines fail:
+
+  $ printf '%s\n' 1 2 3 4 |
+      paramap -j2 'perl -e "map { print \"$1\"x5000_000 } 1..1000,\" \""' | wc
+      4       8 2840130828
+
+  $ printf '%s\n' 1 2 3 4 |
+      parallel -j2 'perl -e "map { print \"{}\"x5000_000 } 1..1000,\" \""' | wc
+      0       1 20020000000
+
+=head3 EXAMPLES
+
+  1$ bmps=$(find dir/ -type f -name '*.bmp')
+  1$ echo "$bmps" | pararun 'magick "$1" "${1%.*}".png'
+
+If you like bash's parameter expansion, use --plus to get familar {1%.*}:
+
+  1$ echo "$bmps" | parallel --plus magick {1} {1%.*}.png
+
+https://git.sr.ht/~q3cpma/scripts/
+(Last checked: 2025-01)
+
+
 =head2 Todo
 
 https://github.com/rustunit/parallelrun?tab=readme-ov-file
@@ -5210,7 +5302,7 @@ Copyright (C) 2007-10-18 Ole Tange, http://ole.tange.dk
 
 Copyright (C) 2008-2010 Ole Tange, http://ole.tange.dk
 
-Copyright (C) 2010-2024 Ole Tange, http://ole.tange.dk and Free
+Copyright (C) 2010-2025 Ole Tange, http://ole.tange.dk and Free
 Software Foundation, Inc.
 
 Parts of the manual concerning B<xargs> compatibility is inspired by

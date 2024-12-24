@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# SPDX-FileCopyrightText: 2021-2024 Ole Tange, http://ole.tange.dk and Free Software and Foundation, Inc.
+# SPDX-FileCopyrightText: 2021-2025 Ole Tange, http://ole.tange.dk and Free Software and Foundation, Inc.
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -16,7 +16,7 @@ SSHLOGIN2=$SSHUSER2@$SERVER2
 #SSHLOGIN1=parallel@$SERVER1
 #SSHLOGIN2=parallel@$SERVER2
 
-export PARALLEL=-j0
+export PARALLEL="$PARALLEL -j0"
 #export PARALLEL="--sshdelay 0.3"
 # Make sure sort order is the same
 export LC_ALL=C

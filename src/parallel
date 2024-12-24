@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 
-# Copyright (C) 2007-2024 Ole Tange, http://ole.tange.dk and Free
+# Copyright (C) 2007-2025 Ole Tange, http://ole.tange.dk and Free
 # Software Foundation, Inc.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -18,7 +18,7 @@
 # or write to the Free Software Foundation, Inc., 51 Franklin St,
 # Fifth Floor, Boston, MA 02110-1301 USA
 #
-# SPDX-FileCopyrightText: 2007-2024 Ole Tange, http://ole.tange.dk and Free Software and Foundation, Inc.
+# SPDX-FileCopyrightText: 2007-2025 Ole Tange, http://ole.tange.dk and Free Software and Foundation, Inc.
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 # open3 used in Job::start
@@ -2232,8 +2232,8 @@ sub options_completion_hash() {
 	 ("skip-first-line|skipfirstline".
 	  "[Do not use the first line of input]"
 	  => \$opt::skip_first_line),
+	 ("unsafe[Enable unsafe operations]" => \$opt::unsafe),
 	 "_bug" => \$opt::_bug,
-	 "_unsafe" => \$opt::_unsafe,
 	 # --pipe
 	 ("pipe|spreadstdin".
 	  "[Spread input to jobs on stdin (standard input)]" => \$opt::pipe),
@@ -2908,23 +2908,21 @@ sub check_invalid_option_combinations() {
 	    ::wait_and_exit(255);
 	}
     }
-    sub unsafe_warn {
-	# use --_unsafe to only generate a warning
-	if($opt::_unsafe) { ::warning(@_); } else { ::error(@_); exit(255); }
+    sub unsafe {
+	# use --unsafe to ignore unsafe args
+	if($opt::unsafe or grep /--unsafe/, @ARGV, $ENV{'PARALLEL'}) {
+	    # skip
+	} else {
+	    ::error(@_,"Use '--unsafe' to ignore this.");
+	    exit(255);
+	}
     }
     if(defined $opt::results) {
 	if($opt::nonall or $opt::onall) {
-	    unsafe_warn("--(n)onall + --results not supported (yet).");
+	    unsafe("--(n)onall + --results not supported (yet).");
 	}
     }
-    sub test_safe_chars {
-	my $var = shift;
-	if($ENV{$var} =~ m{^[-a-z0-9_+,.%:/= ]*$}is) {
-	    # OK
-	} else {
-	    unsafe_warn("\$$var can only contain [-a-z0-9_+,.%:/= ].");
-	}
-    }
+
     if($ENV{'TMPDIR'} =~ /\n/) {
 	if(defined $opt::files) {
 	    ::warning("Use --files0 when \$TMPDIR contains newline.");
@@ -2935,17 +2933,31 @@ sub check_invalid_option_combinations() {
 		      "if \$TMPDIR contains newline.");
 	}
     } elsif($ENV{'TMPDIR'} =~ /\177/) {
-	unsafe_warn("\$TMPDIR with \\177 (\177) is not supported.");
-    } else{
-	test_safe_chars('TMPDIR');
+	unsafe("\$TMPDIR with \\177 (\177) is not supported.");
     }
-    map { test_safe_chars($_); } qw(PARALLEL_HOME XDG_CONFIG_DIRS
-				    PARALLEL_REMOTE_TMPDIR XDG_CACHE_HOME);
+}
+
+sub test_safe_env_vars {
+    sub test_safe_chars {
+	my $var = shift;
+	if($ENV{$var} =~ s{\r$}{}) {
+	    ::warning("Removed ^M (<CR>) from end of $var");
+	}
+	if($ENV{$var} =~ m{^[-a-z0-9_+,.%\@:/= ]*$}is) {
+	    # OK
+	} else {
+	    unsafe("\$$var can only contain [-a-z0-9_+,.%\@:/= ].");
+	}
+    }
+    for(qw(TMPDIR PARALLEL_HOME XDG_CONFIG_DIRS PARALLEL_REMOTE_TMPDIR
+	   XDG_CACHE_HOME PWD OLDPWD)) {
+	test_safe_chars($_);
+    }
 }
 
 sub init_globals() {
     # Defaults:
-    $Global::version = 20241222;
+    $Global::version = 20241223;
     $Global::progname = 'parallel';
     $::name = "GNU Parallel";
     $Global::infinity = 2**31;
@@ -3070,6 +3082,7 @@ sub init_globals() {
     $ENV{'PARALLEL_REMOTE_TMPDIR'} ||= "/tmp";
     # bug #55398: set $OLDPWD when using --wd
     $ENV{'OLDPWD'} = $ENV{'PWD'};
+    test_safe_env_vars();
     if(not $ENV{HOME}) {
 	# $ENV{HOME} is sometimes not set if called from PHP
 	::warning("\$HOME not set. Using /tmp.");
@@ -6003,7 +6016,7 @@ sub usage() {
 	 "If you use programs that use GNU Parallel to process data for an article in a",
 	 "scientific publication, please cite:",
 	 "",
-	 "  Tange, O. (2024, December 22). GNU Parallel 20241222 ('Bashar').",
+	 "  Tange, O. (2025, December 22). GNU Parallel 20251222 ('Bashar').",
 	 "  Zenodo. https://doi.org/10.5281/zenodo.14550073",
 	 "",
 	 # Before changing these lines,  please read
@@ -6036,7 +6049,7 @@ sub citation_notice() {
 	     "If you use programs that use GNU Parallel to process data for an article in a",
 	     "scientific publication, please cite:",
 	     "",
-	     "  Tange, O. (2024, December 22). GNU Parallel 20241222 ('Bashar').",
+	     "  Tange, O. (2025, December 22). GNU Parallel 20241222 ('Bashar').",
 	     "  Zenodo. https://doi.org/10.5281/zenodo.14550073",
 	     "",
 	     # Before changing these line,   please read
@@ -6135,7 +6148,7 @@ sub version() {
     print join
 	("\n",
 	 "GNU $Global::progname $Global::version",
-	 "Copyright (C) 2007-2024 Ole Tange, http://ole.tange.dk and Free Software",
+	 "Copyright (C) 2007-2025 Ole Tange, http://ole.tange.dk and Free Software",
 	 "Foundation, Inc.",
 	 "License GPLv3+: GNU GPL version 3 or later <https://gnu.org/licenses/gpl.html>",
 	 "This is free software: you are free to change and redistribute it.",
@@ -6167,7 +6180,7 @@ sub citation() {
 	"      author       = {Tange, Ole},",
 	"      title        = {GNU Parallel 20241222 ('Bashar')},",
 	"      month        = Dec,",
-	"      year         = 2024,",
+	"      year         = 2025,",
 	"      note         = {{GNU Parallel is a general parallelizer to run",
 	"                       multiple serial command line programs in parallel",
 	"                       without changing them.}},",
@@ -6270,7 +6283,7 @@ sub embed() {
     }
     print "#!$Global::shell
 
-# Copyright (C) 2007-2024 $user, Ole Tange, http://ole.tange.dk
+# Copyright (C) 2007-2025 $user, Ole Tange, http://ole.tange.dk
 # and Free Software Foundation, Inc.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -14126,7 +14139,7 @@ sub find_max($) {
     do {
 	if($len > $upper) { return $len };
 	$lower = $len;
-	$len *= 4;
+	$len *= 16;
 	::debug("init", "Maxlen: $lower<$len<$upper(".($upper-$lower)."): ");
     } while (is_acceptable_command_line_length($len,$string));
     # Then search for the actual max length between

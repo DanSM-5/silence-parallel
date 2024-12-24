@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# SPDX-FileCopyrightText: 2021-2024 Ole Tange, http://ole.tange.dk and Free Software and Foundation, Inc.
+# SPDX-FileCopyrightText: 2021-2025 Ole Tange, http://ole.tange.dk and Free Software and Foundation, Inc.
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -15,6 +15,21 @@ export -f stdsort
 
 # Test amount of parallelization
 # parallel --shuf --jl /tmp/myjl -j1 'export JOBS={1};'bash tests-to-run/parallel-local-0.3s.sh ::: {1..16} ::: {1..5}
+
+par_cr_end_of_env_var() {
+    echo 'bug #66646: Wish: Ignore \r at end of string in environment variables'
+    cr=$(printf "\r")
+    dir=/tmp/cr-test
+    # Simulate \r added by mistake
+    dir_with_cr="$dir$cr"
+    export TMPDIR="$dir_with_cr"
+    export PARALLEL_HOME="$dir_with_cr"
+    export XDG_CONFIG_DIRS="$dir_with_cr"
+    export PARALLEL_REMOTE_TMPDIR="$dir_with_cr"
+    export XDG_CACHE_HOME="$dir_with_cr"
+    mkdir -p "$dir"
+    parallel echo Warnings are ::: OK
+}
 
 par_parcat_args_stdin() {
     echo 'bug #51690: parcat: read args from stdin'
@@ -107,15 +122,6 @@ par_empty_string_command_line() {
     parallel -k -r echo ::: foo '' ole bar
 }
 
-par_ll_no_newline() {
-    echo 'bug #64030: parallel --ll echo -n ::: foo'
-    parallel --ll echo -n ::: two lines | sort
-    parallel --ll echo -n '>&2' ::: two lines | sort
-    parallel --linebuffer 'echo -n last {}' ::: line
-    stdout parallel --linebuffer 'echo -n last {} >&2' ::: line
-    echo
-}
-
 par_ll_long_followed_by_short() {
     parallel --ll 'echo A very long line;sleep 0.2;echo' ::: OK | puniq
 }
@@ -128,12 +134,6 @@ par_PARALLEL_HOME_not_exist() {
     rm -r "$tmp1"
     echo Should warn:
     PARALLEL_HOME=/does-not-exist parallel -k echo ::: should warn
-}
-
-par_colour_failed() {
-    echo '--colour-failed --colour'
-    parallel --colour-failed -kv 'seq {1};exit {2}' ::: 1 2 ::: 0 1 2
-    parallel --colour --colour-failed -kv 'seq {1};exit {2}' ::: 1 2 ::: 0 1 2
 }
 
 par_pipepart_triple_colon() {
@@ -158,16 +158,6 @@ par_shellcompletion() {
     parallel --shellcompletion zsh | md5sum
     zsh -c 'parallel --shellcompletion auto;true' | md5sum
 }    
-
-par_ctagstring() {
-    echo '### --ctag --ctagstring should be different from --tag --tagstring'
-    echo tag/ctag 8 37
-    parallel --tag echo ::: 1 ::: a| wc -c
-    parallel --ctag echo ::: 1 ::: a | wc -c
-    echo tagstring/ctagstring 10 39
-    parallel --tagstring 'I{1}\tB{2}' echo ::: 1 ::: a | wc -c
-    parallel --ctagstring 'I{1}\tB{2}' echo ::: 1 ::: a | wc -c
-}
 
 par_env_parallel_pipefail() {
     cat <<'EOF' | bash
@@ -761,14 +751,14 @@ par_retries_replacement_string() {
 }
 
 par_tee() {
-    export PARALLEL='-k --tee --pipe --tag'
+    export PARALLEL="$PARALLEL "'-k --tee --pipe --tag'
     seq 1000000 | parallel 'echo {%};LC_ALL=C wc' ::: {1..5} ::: {a..b}
     seq 300000 | parallel 'grep {1} | LC_ALL=C wc {2}' ::: {1..5} ::: -l -c
 }
 
 par_parset_tee() {
     . env_parallel.bash
-    export PARALLEL='-k --tee --pipe --tag'
+    export PARALLEL="$PARALLEL -k --tee --pipe --tag"
     parset a,b 'grep {}|wc' ::: 1 5 < <(seq 10000)
     echo $a
     echo $b
@@ -1015,7 +1005,7 @@ par_empty_input_on_stdin() {
 
 par_space_envvar() {
     echo "### bug: --gnu was ignored if env var started with space: PARALLEL=' --gnu'"
-    export PARALLEL=" -v" && parallel echo ::: 'space in envvar OK'
+    export PARALLEL=" -v  $PARALLEL" && parallel echo ::: 'space in envvar OK'
 }
 
 par_pipe_N1_regexp() {
@@ -1105,8 +1095,9 @@ par_cr_newline_header() {
 
 par_PARALLEL_HOME_with_+() {
     echo 'bug #59453: PARALLEL_HOME with plus sign causes error: config not readable'
+    TMPDIR=/tmp
     tmp=$(mktemp -d)
-    export PARALLEL_HOME="$tmp/  space  /a+b"
+    export PARALLEL_HOME="$tmp/a+b"
     mkdir -p "$PARALLEL_HOME"
     parallel echo ::: Parallel_home_with+
     rm -rf "$tmp"

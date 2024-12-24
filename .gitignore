@@ -19,3 +19,4 @@ src/*.1
 src/*.7
 src/sphinx/source/*.rst
 src/sphinx/build/*
+**/.vagrant/

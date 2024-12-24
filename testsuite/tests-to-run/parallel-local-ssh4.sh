@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# SPDX-FileCopyrightText: 2021-2024 Ole Tange, http://ole.tange.dk and Free Software and Foundation, Inc.
+# SPDX-FileCopyrightText: 2021-2025 Ole Tange, http://ole.tange.dk and Free Software and Foundation, Inc.
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -61,7 +61,7 @@ par_--nonall_results() {
     parallel --results "$tmp"/rpl1slash/{1}/ --onall -Scsh@lo,sh@lo ::: id pwd
     parallel --results "$tmp"/rpl1noslash/{1} --onall -Scsh@lo,sh@lo ::: id pwd
     find "$tmp" -print0 | replace_tmpdir | sort
-    rm -r "$tmp"    
+    rm -r "$tmp"
     echo '### --results --nonall'
     tmp="$TMPDIR"/nonall
     mkdir -p "$tmp"
@@ -72,7 +72,7 @@ par_--nonall_results() {
     parallel --results "$tmp"/rpl1slash/{1}/ --nonall -Scsh@lo,sh@lo pwd
     parallel --results "$tmp"/rpl1noslash/{1} --nonall -Scsh@lo,sh@lo pwd
     find "$tmp" -print0 | replace_tmpdir | sort
-    rm -r "$tmp"    
+    rm -r "$tmp"
 }
 
 par_warn_when_exporting_func() {

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# SPDX-FileCopyrightText: 2021-2024 Ole Tange, http://ole.tange.dk and Free Software and Foundation, Inc.
+# SPDX-FileCopyrightText: 2021-2025 Ole Tange, http://ole.tange.dk and Free Software and Foundation, Inc.
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -18,11 +18,11 @@ SSHLOGIN3=$SSHUSER3@$SERVER3
 #SERVER2=parallel-server2
 
 echo '### Test $PARALLEL - single line'
-seq 300000 | PARALLEL='--pipe -k' parallel wc
-(echo 1; echo 1) | PARALLEL="-S$SSHLOGIN1 -Sssh\ -l\ $SSHUSER2\ $SERVER2 -j1" parallel -kv hostname\; echo | sort
+seq 300000 | PARALLEL="$PARALLEL --pipe -k" parallel wc
+(echo 1; echo 1) | PARALLEL="$PARALLEL -S$SSHLOGIN1 -Sssh\ -l\ $SSHUSER2\ $SERVER2 -j1" parallel -kv hostname\; echo | sort
 
 echo '### Test $PARALLEL - multi line'
-(echo 1; echo 1) | PARALLEL="-S$SSHLOGIN1
+(echo 1; echo 1) | PARALLEL="$PARALLEL -S$SSHLOGIN1
 -Sssh\ -l\ $SSHUSER2\ $SERVER2
 -j1" parallel -kv hostname\; echo | sort
 

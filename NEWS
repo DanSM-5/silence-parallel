@@ -1,3 +1,17 @@
+20250122
+
+New in this release:
+
+* No new features. This is a candidate for a stable release.
+
+* Bug fixes and man page updates.
+
+News about GNU Parallel:
+
+* How to Implement Parallelism and Concurrency Control (Queue) in Shell
+  https://www.alibabacloud.com/blog/how-to-implement-parallelism-and-concurrency-control-queue-in-shell_601908?spm=a2c65.11461433.0.0.4ee35355IOL2MZ
+
+
 20241222
 
 New in this release:

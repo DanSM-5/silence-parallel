@@ -13,7 +13,7 @@
 # after which 'env_parallel' works
 #
 #
-# Copyright (C) 2016-2024 Ole Tange, http://ole.tange.dk and Free
+# Copyright (C) 2016-2025 Ole Tange, http://ole.tange.dk and Free
 # Software Foundation, Inc.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -31,7 +31,7 @@
 # or write to the Free Software Foundation, Inc., 51 Franklin St,
 # Fifth Floor, Boston, MA 02110-1301 USA
 #
-# SPDX-FileCopyrightText: 2021-2024 Ole Tange, http://ole.tange.dk and Free Software and Foundation, Inc.
+# SPDX-FileCopyrightText: 2016-2025 Ole Tange, http://ole.tange.dk and Free Software and Foundation, Inc.
 # SPDX-License-Identifier: GPL-3.0-or-later
 # shellcheck disable=SC2006
 
@@ -179,6 +179,10 @@ env_parallel() {
 	compgen -A variable
     }
     _names_of_VARIABLES_ksh() {
+	# mksh: typeset +p |
+	#    perl -pe 's/^(type)?set( [-+][a-zA-Z0-9]*)* //; s/(\[\d+\])?=.*//' |
+	#    uniq
+	# ksh: typeset +p | perl -pe 's/^typeset .. //'
 	# shellcheck disable=SC3044
 	typeset +p |
 	    perl -pe 's/^(type)?set( [-+][a-zA-Z0-9]*)* //; s/(\[\d+\])?=.*//' |
@@ -409,7 +413,7 @@ env_parallel() {
     unset _get_ignored_VARS
 
     # --record-env
-    if perl -e 'exit grep { /^--record-env$/ } @ARGV' -- "$@"; then
+    if perl -e 'exit grep { /^--record-?env$/ } @ARGV' -- "$@"; then
 	true skip
     else
 	(_names_of_ALIASES;
@@ -601,8 +605,8 @@ _parset_main() {
     fi
     if [ "$_parset_NAME" = "--version" ] ; then
 	# shellcheck disable=SC2006
-	echo "parset 20241222 (GNU parallel `parallel --minversion 1`)"
-	echo "Copyright (C) 2007-2024 Ole Tange, http://ole.tange.dk and Free Software"
+	echo "parset 20241223 (GNU parallel `parallel --minversion 1`)"
+	echo "Copyright (C) 2007-2025 Ole Tange, http://ole.tange.dk and Free Software"
 	echo "Foundation, Inc."
 	echo "License GPLv3+: GNU GPL version 3 or later <https://gnu.org/licenses/gpl.html>"
 	echo "This is free software: you are free to change and redistribute it."
