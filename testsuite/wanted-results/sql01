@@ -13,8 +13,8 @@ par__noheaders	def 3
 par__noheaders	abc 1
 par__noheaders	def 3
 par__tablesize	### Test --table-size --tablesize
-par__tablesize	94
-par__tablesize	94
+par__tablesize	96
+par__tablesize	96
 par_dburl_user_password_host_port	### Test dburl with username password host port
 par_dburl_user_password_host_port	Test dburl with username password host port
 par_dburl_user_password_host_port	OK

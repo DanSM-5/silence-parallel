@@ -132,6 +132,9 @@ description="An easy way to support GNU Parallel is to tip on LBRY.
 
 $(perl -ne '/About\sGNU\sParallel/ and exit;/It\sis\savailable/..0 and print' doc/release_new_version)
 "
+echo
+echo "Title: $title"
+echo
 echo "$description" | grep '<<.*>>' && echo STOP STOP STOP ||
 echo "$description"
 
@@ -272,39 +275,20 @@ from:tange@gnu.org
 to:parallel@gnu.org, bug-parallel@gnu.org
 stable-bcc: Jesse Alama <jessealama@fastmail.fm>
 
-Subject: GNU Parallel 20241122 ('Ahoo Daryaei') released
+Subject: GNU Parallel 20241222 ('Bashar') released [stable]
 
-GNU Parallel 20241122 ('Ahoo Daryaei') has been released. It is available for download at: lbry://@GnuParallel:4
+GNU Parallel 20241222 ('Bashar') has been released. It is available for download at: lbry://@GnuParallel:4
 
 Quote of the month:
 
-  GNU parallel is so satisfying
-    -- James Coman @jcoman.bsky.social
+  "Do this with gnu parallel" is the Copilot hack of the day
+    -- Chase Clark @chasingmicrobes.bsky.social
   
 New in this release:
 
-* --pipe --block works similar to --pipepart --block if --block size is negative.
-
-* DBURLs can be written with / instead of %2F for sqlite and CSV.
+* No new features. This is a candidate for a stable release.
 
 * Bug fixes and man page updates.
-
-News about GNU Parallel:
-
-* Embarrassingly GNU parallel
-  https://dengin.xyz/blog/2024/10/24/embarrassingly-gnu-parallel/
-
-* GNU Parallel for Your Terminal Tasks
-  https://erolrecep.github.io/posts/gnuparallel_for_your_terminal_tasks/
-
-* How to leverage GNU parallel to utilize multiple cores while running AUGUSTUS
-  https://lifescienceshub.wixsite.com/lifesciencehub/post/how-to-leverage-gnu-parallel-to-utilize-multiple-cores-while-running-augustus
-
-* GNU Parallel: The Good Parts
-  https://diekmeier.de/posts/2024-11-17-gnu-parallel/
-
-* Put your CPU to work with GNU Parallel
-  https://www.redhat.com/en/blog/gnu-parallel
 
 
 GNU Parallel - For people who live life in the parallel lane.

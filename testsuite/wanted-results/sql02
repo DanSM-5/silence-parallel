@@ -3,7 +3,7 @@ par_influx	empty input
 par_influx	empty input
 par_influx	empty input
 par_influx	dbsize is not implemented for influx
-par_influx	Field separator not implemented for influx at /usr/local/bin/sql line 892.
+par_influx	Field separator not implemented for influx at /usr/local/bin/sql line 944.
 par_influx	name: databases
 par_influx	name
 par_influx	----

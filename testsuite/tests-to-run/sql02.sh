@@ -52,7 +52,8 @@ par_influx() {
 	sql -s . influx:///parallel 'SELECT * FROM cpu;'
 	sql --html influx:///parallel 'SELECT * FROM cpu;'
 	sql influx:///parallel 'drop database parallel'
-    ) | perl -pe 's/\d/0/g;'
+    ) | perl -pe 's/\d/0/g; s/sql line (\d+)./sql line 000./
+'
 }
 
 

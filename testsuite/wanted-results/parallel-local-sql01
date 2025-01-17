@@ -2,41 +2,24 @@ CSV	do_dburl CSV
 CSV	par_append	p_wrapper par_append $CSV
 CSV	par_append	Exit=0
 CSV	par_append	Exit=0
-CSV	par_append	sql: Error: csv:///%2Frun%2Fshm is not a valid DBURL
-CSV	par_append	
-CSV	par_append	Usage:
-CSV	par_append	sql [-hnr] [--table-size] [--db-size] [-p pass-through] [-s string] dburl [sqlcommand]
-CSV	par_append	sql [-hnr] [--table-size] [--db-size] [-p pass-through] [-s string] dburl < sql_command_file
-CSV	par_append	
-CSV	par_append	See 'man sql' for the options
+CSV	par_append	IsADirectoryError: [Errno 21] Is a directory: '/run/shm'
 CSV	par_empty	p_wrapper par_empty $CSV
 CSV	par_empty	Do nothing: TBL99999 does not exist because it is not created
 CSV	par_empty	Exit=0
 CSV	par_empty	Exit=0
-CSV	par_empty	sql: Error: csv:///%2Frun%2Fshm is not a valid DBURL
-CSV	par_empty	
-CSV	par_empty	Usage:
-CSV	par_empty	sql [-hnr] [--table-size] [--db-size] [-p pass-through] [-s string] dburl [sqlcommand]
-CSV	par_empty	sql [-hnr] [--table-size] [--db-size] [-p pass-through] [-s string] dburl < sql_command_file
-CSV	par_empty	
-CSV	par_empty	See 'man sql' for the options
+CSV	par_empty	IsADirectoryError: [Errno 21] Is a directory: '/run/shm'
 CSV	par_no_table	p_wrapper par_no_table $CSV
 CSV	par_no_table	bug #50018: --dburl without table dies
+CSV	par_no_table	should default to table USERNAME
 CSV	par_no_table	255
 CSV	par_no_table	255
 CSV	par_no_table	255
 CSV	par_no_table	Exit=0
 CSV	par_no_table	Exit=0
-CSV	par_no_table	sql: Error: csv:///%2Frun%2Fshm is not a valid DBURL
-CSV	par_no_table	
-CSV	par_no_table	Usage:
-CSV	par_no_table	sql [-hnr] [--table-size] [--db-size] [-p pass-through] [-s string] dburl [sqlcommand]
-CSV	par_no_table	sql [-hnr] [--table-size] [--db-size] [-p pass-through] [-s string] dburl < sql_command_file
-CSV	par_no_table	
-CSV	par_no_table	See 'man sql' for the options
-CSV	par_no_table	parallel: Error: The DBURL (csv:///%2Frun%2Fshm) must contain a table.
-CSV	par_no_table	parallel: Error: The DBURL (csv:///%2Frun%2Fshm) must contain a table.
-CSV	par_no_table	parallel: Error: The DBURL (csv:///%2Frun%2Fshm) must contain a table.
+CSV	par_no_table	parallel: Error: tange is not a directory.
+CSV	par_no_table	parallel: Error: tange is not a directory.
+CSV	par_no_table	parallel: Error: tange is not a directory.
+CSV	par_no_table	IsADirectoryError: [Errno 21] Is a directory: '/run/shm'
 CSV	par_shuf	p_wrapper par_shuf $CSV
 CSV	par_shuf	1 a
 CSV	par_shuf	1 b
@@ -65,13 +48,9 @@ CSV	par_shuf	5 d
 CSV	par_shuf	5 e
 CSV	par_shuf	Exit=0
 CSV	par_shuf	Exit=0
-CSV	par_shuf	sql: Error: csv:///%2Frun%2Fshm is not a valid DBURL
-CSV	par_shuf	
-CSV	par_shuf	Usage:
-CSV	par_shuf	sql [-hnr] [--table-size] [--db-size] [-p pass-through] [-s string] dburl [sqlcommand]
-CSV	par_shuf	sql [-hnr] [--table-size] [--db-size] [-p pass-through] [-s string] dburl < sql_command_file
-CSV	par_shuf	
-CSV	par_shuf	See 'man sql' for the options
+CSV	par_shuf	IsADirectoryError: [Errno 21] Is a directory: '/run/shm'
+CSV	par_shuf	IsADirectoryError: [Errno 21] Is a directory: '/run/shm'
+CSV	par_shuf	IsADirectoryError: [Errno 21] Is a directory: '/run/shm'
 CSV	par_sql_joblog	p_wrapper par_sql_joblog $CSV
 CSV	par_sql_joblog	### should only give a single --joblog heading
 CSV	par_sql_joblog	### --sqlmaster/--sqlworker
@@ -180,111 +159,51 @@ CSV	par_sql_joblog	24	:	999.999	 999.999	0	0	0	0	sleep .3;echo 5 d
 CSV	par_sql_joblog	25	:	999.999	 999.999	0	0	0	0	sleep .3;echo 5 e
 CSV	par_sql_joblog	Exit=0
 CSV	par_sql_joblog	Exit=0
-CSV	par_sql_joblog	sql: Error: csv:///%2Frun%2Fshm is not a valid DBURL
-CSV	par_sql_joblog	
-CSV	par_sql_joblog	Usage:
-CSV	par_sql_joblog	sql [-hnr] [--table-size] [--db-size] [-p pass-through] [-s string] dburl [sqlcommand]
-CSV	par_sql_joblog	sql [-hnr] [--table-size] [--db-size] [-p pass-through] [-s string] dburl < sql_command_file
-CSV	par_sql_joblog	
-CSV	par_sql_joblog	See 'man sql' for the options
+CSV	par_sql_joblog	IsADirectoryError: [Errno 21] Is a directory: '/run/shm'
 CSV	par_sqlandworker	p_wrapper par_sqlandworker $CSV
 CSV	par_sqlandworker	Exit=0
 CSV	par_sqlandworker	Exit=0
-CSV	par_sqlandworker	sql: Error: csv:///%2Frun%2Fshm is not a valid DBURL
-CSV	par_sqlandworker	
-CSV	par_sqlandworker	Usage:
-CSV	par_sqlandworker	sql [-hnr] [--table-size] [--db-size] [-p pass-through] [-s string] dburl [sqlcommand]
-CSV	par_sqlandworker	sql [-hnr] [--table-size] [--db-size] [-p pass-through] [-s string] dburl < sql_command_file
-CSV	par_sqlandworker	
-CSV	par_sqlandworker	See 'man sql' for the options
+CSV	par_sqlandworker	IsADirectoryError: [Errno 21] Is a directory: '/run/shm'
 CSV	par_sqlandworker_compress_linebuffer_tag	p_wrapper par_sqlandworker_compress_linebuffer_tag $CSV
 CSV	par_sqlandworker_compress_linebuffer_tag	Exit=0
 CSV	par_sqlandworker_compress_linebuffer_tag	Exit=0
-CSV	par_sqlandworker_compress_linebuffer_tag	sql: Error: csv:///%2Frun%2Fshm is not a valid DBURL
-CSV	par_sqlandworker_compress_linebuffer_tag	
-CSV	par_sqlandworker_compress_linebuffer_tag	Usage:
-CSV	par_sqlandworker_compress_linebuffer_tag	sql [-hnr] [--table-size] [--db-size] [-p pass-through] [-s string] dburl [sqlcommand]
-CSV	par_sqlandworker_compress_linebuffer_tag	sql [-hnr] [--table-size] [--db-size] [-p pass-through] [-s string] dburl < sql_command_file
-CSV	par_sqlandworker_compress_linebuffer_tag	
-CSV	par_sqlandworker_compress_linebuffer_tag	See 'man sql' for the options
+CSV	par_sqlandworker_compress_linebuffer_tag	IsADirectoryError: [Errno 21] Is a directory: '/run/shm'
 CSV	par_sqlandworker_linebuffer	p_wrapper par_sqlandworker_linebuffer $CSV
 CSV	par_sqlandworker_linebuffer	Exit=0
 CSV	par_sqlandworker_linebuffer	Exit=0
-CSV	par_sqlandworker_linebuffer	sql: Error: csv:///%2Frun%2Fshm is not a valid DBURL
-CSV	par_sqlandworker_linebuffer	
-CSV	par_sqlandworker_linebuffer	Usage:
-CSV	par_sqlandworker_linebuffer	sql [-hnr] [--table-size] [--db-size] [-p pass-through] [-s string] dburl [sqlcommand]
-CSV	par_sqlandworker_linebuffer	sql [-hnr] [--table-size] [--db-size] [-p pass-through] [-s string] dburl < sql_command_file
-CSV	par_sqlandworker_linebuffer	
-CSV	par_sqlandworker_linebuffer	See 'man sql' for the options
+CSV	par_sqlandworker_linebuffer	IsADirectoryError: [Errno 21] Is a directory: '/run/shm'
 CSV	par_sqlandworker_linebuffer_tag	p_wrapper par_sqlandworker_linebuffer_tag $CSV
 CSV	par_sqlandworker_linebuffer_tag	Exit=0
 CSV	par_sqlandworker_linebuffer_tag	Exit=0
-CSV	par_sqlandworker_linebuffer_tag	sql: Error: csv:///%2Frun%2Fshm is not a valid DBURL
-CSV	par_sqlandworker_linebuffer_tag	
-CSV	par_sqlandworker_linebuffer_tag	Usage:
-CSV	par_sqlandworker_linebuffer_tag	sql [-hnr] [--table-size] [--db-size] [-p pass-through] [-s string] dburl [sqlcommand]
-CSV	par_sqlandworker_linebuffer_tag	sql [-hnr] [--table-size] [--db-size] [-p pass-through] [-s string] dburl < sql_command_file
-CSV	par_sqlandworker_linebuffer_tag	
-CSV	par_sqlandworker_linebuffer_tag	See 'man sql' for the options
+CSV	par_sqlandworker_linebuffer_tag	IsADirectoryError: [Errno 21] Is a directory: '/run/shm'
 CSV	par_sqlandworker_lo	p_wrapper par_sqlandworker_lo $CSV
 CSV	par_sqlandworker_lo	Exit=0
 CSV	par_sqlandworker_lo	Exit=0
-CSV	par_sqlandworker_lo	sql: Error: csv:///%2Frun%2Fshm is not a valid DBURL
-CSV	par_sqlandworker_lo	
-CSV	par_sqlandworker_lo	Usage:
-CSV	par_sqlandworker_lo	sql [-hnr] [--table-size] [--db-size] [-p pass-through] [-s string] dburl [sqlcommand]
-CSV	par_sqlandworker_lo	sql [-hnr] [--table-size] [--db-size] [-p pass-through] [-s string] dburl < sql_command_file
-CSV	par_sqlandworker_lo	
-CSV	par_sqlandworker_lo	See 'man sql' for the options
+CSV	par_sqlandworker_lo	IsADirectoryError: [Errno 21] Is a directory: '/run/shm'
 CSV	par_sqlandworker_results	p_wrapper par_sqlandworker_results $CSV
 CSV	par_sqlandworker_results	Exit=0
 CSV	par_sqlandworker_results	Exit=0
-CSV	par_sqlandworker_results	sql: Error: csv:///%2Frun%2Fshm is not a valid DBURL
-CSV	par_sqlandworker_results	
-CSV	par_sqlandworker_results	Usage:
-CSV	par_sqlandworker_results	sql [-hnr] [--table-size] [--db-size] [-p pass-through] [-s string] dburl [sqlcommand]
-CSV	par_sqlandworker_results	sql [-hnr] [--table-size] [--db-size] [-p pass-through] [-s string] dburl < sql_command_file
-CSV	par_sqlandworker_results	
-CSV	par_sqlandworker_results	See 'man sql' for the options
+CSV	par_sqlandworker_results	IsADirectoryError: [Errno 21] Is a directory: '/run/shm'
 CSV	par_sqlandworker_tag	p_wrapper par_sqlandworker_tag $CSV
 CSV	par_sqlandworker_tag	Exit=0
 CSV	par_sqlandworker_tag	Exit=0
-CSV	par_sqlandworker_tag	sql: Error: csv:///%2Frun%2Fshm is not a valid DBURL
-CSV	par_sqlandworker_tag	
-CSV	par_sqlandworker_tag	Usage:
-CSV	par_sqlandworker_tag	sql [-hnr] [--table-size] [--db-size] [-p pass-through] [-s string] dburl [sqlcommand]
-CSV	par_sqlandworker_tag	sql [-hnr] [--table-size] [--db-size] [-p pass-through] [-s string] dburl < sql_command_file
-CSV	par_sqlandworker_tag	
-CSV	par_sqlandworker_tag	See 'man sql' for the options
+CSV	par_sqlandworker_tag	IsADirectoryError: [Errno 21] Is a directory: '/run/shm'
 CSV	par_sqlandworker_total_jobs	p_wrapper par_sqlandworker_total_jobs $CSV
 CSV	par_sqlandworker_total_jobs	Exit=0
 CSV	par_sqlandworker_total_jobs	Exit=0
-CSV	par_sqlandworker_total_jobs	sql: Error: csv:///%2Frun%2Fshm is not a valid DBURL
-CSV	par_sqlandworker_total_jobs	
-CSV	par_sqlandworker_total_jobs	Usage:
-CSV	par_sqlandworker_total_jobs	sql [-hnr] [--table-size] [--db-size] [-p pass-through] [-s string] dburl [sqlcommand]
-CSV	par_sqlandworker_total_jobs	sql [-hnr] [--table-size] [--db-size] [-p pass-through] [-s string] dburl < sql_command_file
-CSV	par_sqlandworker_total_jobs	
-CSV	par_sqlandworker_total_jobs	See 'man sql' for the options
+CSV	par_sqlandworker_total_jobs	IsADirectoryError: [Errno 21] Is a directory: '/run/shm'
 CSV	par_sqlandworker_unbuffer	p_wrapper par_sqlandworker_unbuffer $CSV
 CSV	par_sqlandworker_unbuffer	Exit=0
 CSV	par_sqlandworker_unbuffer	Exit=0
-CSV	par_sqlandworker_unbuffer	sql: Error: csv:///%2Frun%2Fshm is not a valid DBURL
-CSV	par_sqlandworker_unbuffer	
-CSV	par_sqlandworker_unbuffer	Usage:
-CSV	par_sqlandworker_unbuffer	sql [-hnr] [--table-size] [--db-size] [-p pass-through] [-s string] dburl [sqlcommand]
-CSV	par_sqlandworker_unbuffer	sql [-hnr] [--table-size] [--db-size] [-p pass-through] [-s string] dburl < sql_command_file
-CSV	par_sqlandworker_unbuffer	
-CSV	par_sqlandworker_unbuffer	See 'man sql' for the options
+CSV	par_sqlandworker_unbuffer	IsADirectoryError: [Errno 21] Is a directory: '/run/shm'
 INFLUX	do_dburl INFLUX
 INFLUX	par_append	p_wrapper par_append $INFLUX
 INFLUX	par_append	Exit=255
 INFLUX	par_append	Exit=0
 INFLUX	par_append	ERR: error parsing query: only ORDER BY time supported at this time
-INFLUX	par_append	parallel: Error: influx:///parallel/TBL99999 is not a valid DBURL
-INFLUX	par_append	parallel: Error: influx:///parallel/TBL99999 is not a valid DBURL
-INFLUX	par_append	parallel: Error: influx:///parallel/TBL99999 is not a valid DBURL
+INFLUX	par_append	parallel: Error: influx not supported. Are you missing a perl DBD::influx module?
+INFLUX	par_append	parallel: Error: influx not supported. Are you missing a perl DBD::influx module?
+INFLUX	par_append	parallel: Error: influx not supported. Are you missing a perl DBD::influx module?
 INFLUX	par_append	error parsing query: only ORDER BY time supported at this time
 INFLUX	par_empty	p_wrapper par_empty $INFLUX
 INFLUX	par_empty	Do nothing: TBL99999 does not exist because it is not created
@@ -294,33 +213,34 @@ INFLUX	par_empty	ERR: error parsing query: only ORDER BY time supported at this 
 INFLUX	par_empty	error parsing query: only ORDER BY time supported at this time
 INFLUX	par_no_table	p_wrapper par_no_table $INFLUX
 INFLUX	par_no_table	bug #50018: --dburl without table dies
+INFLUX	par_no_table	should default to table USERNAME
 INFLUX	par_no_table	255
 INFLUX	par_no_table	255
 INFLUX	par_no_table	255
 INFLUX	par_no_table	Exit=255
 INFLUX	par_no_table	Exit=0
 INFLUX	par_no_table	ERR: error parsing query: only ORDER BY time supported at this time
-INFLUX	par_no_table	parallel: Error: influx:///parallel is not a valid DBURL
-INFLUX	par_no_table	parallel: Error: influx:///parallel is not a valid DBURL
-INFLUX	par_no_table	parallel: Error: influx:///parallel is not a valid DBURL
-INFLUX	par_no_table	parallel: Error: influx:///parallel/TBL99999 is not a valid DBURL
+INFLUX	par_no_table	parallel: Error: influx not supported. Are you missing a perl DBD::influx module?
+INFLUX	par_no_table	parallel: Error: influx not supported. Are you missing a perl DBD::influx module?
+INFLUX	par_no_table	parallel: Error: influx not supported. Are you missing a perl DBD::influx module?
+INFLUX	par_no_table	parallel: Error: influx not supported. Are you missing a perl DBD::influx module?
 INFLUX	par_no_table	error parsing query: only ORDER BY time supported at this time
 INFLUX	par_shuf	p_wrapper par_shuf $INFLUX
 INFLUX	par_shuf	Exit=0
 INFLUX	par_shuf	Exit=0
 INFLUX	par_shuf	ERR: error parsing query: only ORDER BY time supported at this time
-INFLUX	par_shuf	parallel: Error: influx:///parallel/TBL99999 is not a valid DBURL
-INFLUX	par_shuf	parallel: Error: influx:///parallel/TBL99999 is not a valid DBURL
-INFLUX	par_shuf	parallel: Error: influx:///parallel/TBL99999 is not a valid DBURL
-INFLUX	par_shuf	parallel: Error: influx:///parallel/TBL99999 is not a valid DBURL
-INFLUX	par_shuf	parallel: Error: influx:///parallel/TBL99999 is not a valid DBURL
+INFLUX	par_shuf	parallel: Error: influx not supported. Are you missing a perl DBD::influx module?
+INFLUX	par_shuf	parallel: Error: influx not supported. Are you missing a perl DBD::influx module?
+INFLUX	par_shuf	parallel: Error: influx not supported. Are you missing a perl DBD::influx module?
+INFLUX	par_shuf	parallel: Error: influx not supported. Are you missing a perl DBD::influx module?
+INFLUX	par_shuf	parallel: Error: influx not supported. Are you missing a perl DBD::influx module?
 INFLUX	par_shuf	cat: '/tmp/parallel-bug49791-25d/1/*/*/*/stdout': No such file or directory
 INFLUX	par_shuf	error parsing query: only ORDER BY time supported at this time
-INFLUX	par_shuf	parallel: Error: influx:///parallel/TBL99999 is not a valid DBURL
-INFLUX	par_shuf	parallel: Error: influx:///parallel/TBL99999 is not a valid DBURL
-INFLUX	par_shuf	parallel: Error: influx:///parallel/TBL99999 is not a valid DBURL
-INFLUX	par_shuf	parallel: Error: influx:///parallel/TBL99999 is not a valid DBURL
-INFLUX	par_shuf	parallel: Error: influx:///parallel/TBL99999 is not a valid DBURL
+INFLUX	par_shuf	parallel: Error: influx not supported. Are you missing a perl DBD::influx module?
+INFLUX	par_shuf	parallel: Error: influx not supported. Are you missing a perl DBD::influx module?
+INFLUX	par_shuf	parallel: Error: influx not supported. Are you missing a perl DBD::influx module?
+INFLUX	par_shuf	parallel: Error: influx not supported. Are you missing a perl DBD::influx module?
+INFLUX	par_shuf	parallel: Error: influx not supported. Are you missing a perl DBD::influx module?
 INFLUX	par_shuf	error parsing query: only ORDER BY time supported at this time
 INFLUX	par_shuf	error parsing query: only ORDER BY time supported at this time
 INFLUX	par_sql_joblog	p_wrapper par_sql_joblog $INFLUX
@@ -332,72 +252,72 @@ INFLUX	par_sql_joblog	Seq	Host	Starttime	JobRuntime	Send	Receive	Exitval	Signal	
 INFLUX	par_sql_joblog	Exit=0
 INFLUX	par_sql_joblog	Exit=0
 INFLUX	par_sql_joblog	ERR: error parsing query: only ORDER BY time supported at this time
-INFLUX	par_sql_joblog	parallel: Error: influx:///parallel/TBL99999 is not a valid DBURL
-INFLUX	par_sql_joblog	parallel: Error: influx:///parallel/TBL99999 is not a valid DBURL
-INFLUX	par_sql_joblog	parallel: Error: influx:///parallel/TBL99999 is not a valid DBURL
+INFLUX	par_sql_joblog	parallel: Error: influx not supported. Are you missing a perl DBD::influx module?
+INFLUX	par_sql_joblog	parallel: Error: influx not supported. Are you missing a perl DBD::influx module?
+INFLUX	par_sql_joblog	parallel: Error: influx not supported. Are you missing a perl DBD::influx module?
 INFLUX	par_sql_joblog	error parsing query: only ORDER BY time supported at this time
 INFLUX	par_sqlandworker	p_wrapper par_sqlandworker $INFLUX
 INFLUX	par_sqlandworker	Exit=255
 INFLUX	par_sqlandworker	Exit=0
 INFLUX	par_sqlandworker	ERR: error parsing query: only ORDER BY time supported at this time
-INFLUX	par_sqlandworker	parallel: Error: influx:///parallel/TBL99999 is not a valid DBURL
-INFLUX	par_sqlandworker	parallel: Error: influx:///parallel/TBL99999 is not a valid DBURL
+INFLUX	par_sqlandworker	parallel: Error: influx not supported. Are you missing a perl DBD::influx module?
+INFLUX	par_sqlandworker	parallel: Error: influx not supported. Are you missing a perl DBD::influx module?
 INFLUX	par_sqlandworker	error parsing query: only ORDER BY time supported at this time
 INFLUX	par_sqlandworker_compress_linebuffer_tag	p_wrapper par_sqlandworker_compress_linebuffer_tag $INFLUX
 INFLUX	par_sqlandworker_compress_linebuffer_tag	Exit=255
 INFLUX	par_sqlandworker_compress_linebuffer_tag	Exit=0
 INFLUX	par_sqlandworker_compress_linebuffer_tag	ERR: error parsing query: only ORDER BY time supported at this time
-INFLUX	par_sqlandworker_compress_linebuffer_tag	parallel: Error: influx:///parallel/TBL99999 is not a valid DBURL
-INFLUX	par_sqlandworker_compress_linebuffer_tag	parallel: Error: influx:///parallel/TBL99999 is not a valid DBURL
+INFLUX	par_sqlandworker_compress_linebuffer_tag	parallel: Error: influx not supported. Are you missing a perl DBD::influx module?
+INFLUX	par_sqlandworker_compress_linebuffer_tag	parallel: Error: influx not supported. Are you missing a perl DBD::influx module?
 INFLUX	par_sqlandworker_compress_linebuffer_tag	error parsing query: only ORDER BY time supported at this time
 INFLUX	par_sqlandworker_linebuffer	p_wrapper par_sqlandworker_linebuffer $INFLUX
 INFLUX	par_sqlandworker_linebuffer	Exit=255
 INFLUX	par_sqlandworker_linebuffer	Exit=0
 INFLUX	par_sqlandworker_linebuffer	ERR: error parsing query: only ORDER BY time supported at this time
-INFLUX	par_sqlandworker_linebuffer	parallel: Error: influx:///parallel/TBL99999 is not a valid DBURL
-INFLUX	par_sqlandworker_linebuffer	parallel: Error: influx:///parallel/TBL99999 is not a valid DBURL
+INFLUX	par_sqlandworker_linebuffer	parallel: Error: influx not supported. Are you missing a perl DBD::influx module?
+INFLUX	par_sqlandworker_linebuffer	parallel: Error: influx not supported. Are you missing a perl DBD::influx module?
 INFLUX	par_sqlandworker_linebuffer	error parsing query: only ORDER BY time supported at this time
 INFLUX	par_sqlandworker_linebuffer_tag	p_wrapper par_sqlandworker_linebuffer_tag $INFLUX
 INFLUX	par_sqlandworker_linebuffer_tag	Exit=255
 INFLUX	par_sqlandworker_linebuffer_tag	Exit=0
 INFLUX	par_sqlandworker_linebuffer_tag	ERR: error parsing query: only ORDER BY time supported at this time
-INFLUX	par_sqlandworker_linebuffer_tag	parallel: Error: influx:///parallel/TBL99999 is not a valid DBURL
-INFLUX	par_sqlandworker_linebuffer_tag	parallel: Error: influx:///parallel/TBL99999 is not a valid DBURL
+INFLUX	par_sqlandworker_linebuffer_tag	parallel: Error: influx not supported. Are you missing a perl DBD::influx module?
+INFLUX	par_sqlandworker_linebuffer_tag	parallel: Error: influx not supported. Are you missing a perl DBD::influx module?
 INFLUX	par_sqlandworker_linebuffer_tag	error parsing query: only ORDER BY time supported at this time
 INFLUX	par_sqlandworker_lo	p_wrapper par_sqlandworker_lo $INFLUX
 INFLUX	par_sqlandworker_lo	Exit=255
 INFLUX	par_sqlandworker_lo	Exit=0
 INFLUX	par_sqlandworker_lo	ERR: error parsing query: only ORDER BY time supported at this time
-INFLUX	par_sqlandworker_lo	parallel: Error: influx:///parallel/TBL99999 is not a valid DBURL
-INFLUX	par_sqlandworker_lo	parallel: Error: influx:///parallel/TBL99999 is not a valid DBURL
+INFLUX	par_sqlandworker_lo	parallel: Error: influx not supported. Are you missing a perl DBD::influx module?
+INFLUX	par_sqlandworker_lo	parallel: Error: influx not supported. Are you missing a perl DBD::influx module?
 INFLUX	par_sqlandworker_lo	error parsing query: only ORDER BY time supported at this time
 INFLUX	par_sqlandworker_results	p_wrapper par_sqlandworker_results $INFLUX
 INFLUX	par_sqlandworker_results	Exit=255
 INFLUX	par_sqlandworker_results	Exit=0
 INFLUX	par_sqlandworker_results	ERR: error parsing query: only ORDER BY time supported at this time
-INFLUX	par_sqlandworker_results	parallel: Error: influx:///parallel/TBL99999 is not a valid DBURL
-INFLUX	par_sqlandworker_results	parallel: Error: influx:///parallel/TBL99999 is not a valid DBURL
+INFLUX	par_sqlandworker_results	parallel: Error: influx not supported. Are you missing a perl DBD::influx module?
+INFLUX	par_sqlandworker_results	parallel: Error: influx not supported. Are you missing a perl DBD::influx module?
 INFLUX	par_sqlandworker_results	error parsing query: only ORDER BY time supported at this time
 INFLUX	par_sqlandworker_tag	p_wrapper par_sqlandworker_tag $INFLUX
 INFLUX	par_sqlandworker_tag	Exit=255
 INFLUX	par_sqlandworker_tag	Exit=0
 INFLUX	par_sqlandworker_tag	ERR: error parsing query: only ORDER BY time supported at this time
-INFLUX	par_sqlandworker_tag	parallel: Error: influx:///parallel/TBL99999 is not a valid DBURL
-INFLUX	par_sqlandworker_tag	parallel: Error: influx:///parallel/TBL99999 is not a valid DBURL
+INFLUX	par_sqlandworker_tag	parallel: Error: influx not supported. Are you missing a perl DBD::influx module?
+INFLUX	par_sqlandworker_tag	parallel: Error: influx not supported. Are you missing a perl DBD::influx module?
 INFLUX	par_sqlandworker_tag	error parsing query: only ORDER BY time supported at this time
 INFLUX	par_sqlandworker_total_jobs	p_wrapper par_sqlandworker_total_jobs $INFLUX
 INFLUX	par_sqlandworker_total_jobs	Exit=255
 INFLUX	par_sqlandworker_total_jobs	Exit=0
 INFLUX	par_sqlandworker_total_jobs	ERR: error parsing query: only ORDER BY time supported at this time
-INFLUX	par_sqlandworker_total_jobs	parallel: Error: influx:///parallel/TBL99999 is not a valid DBURL
-INFLUX	par_sqlandworker_total_jobs	parallel: Error: influx:///parallel/TBL99999 is not a valid DBURL
+INFLUX	par_sqlandworker_total_jobs	parallel: Error: influx not supported. Are you missing a perl DBD::influx module?
+INFLUX	par_sqlandworker_total_jobs	parallel: Error: influx not supported. Are you missing a perl DBD::influx module?
 INFLUX	par_sqlandworker_total_jobs	error parsing query: only ORDER BY time supported at this time
 INFLUX	par_sqlandworker_unbuffer	p_wrapper par_sqlandworker_unbuffer $INFLUX
 INFLUX	par_sqlandworker_unbuffer	Exit=255
 INFLUX	par_sqlandworker_unbuffer	Exit=0
 INFLUX	par_sqlandworker_unbuffer	ERR: error parsing query: only ORDER BY time supported at this time
-INFLUX	par_sqlandworker_unbuffer	parallel: Error: influx:///parallel/TBL99999 is not a valid DBURL
-INFLUX	par_sqlandworker_unbuffer	parallel: Error: influx:///parallel/TBL99999 is not a valid DBURL
+INFLUX	par_sqlandworker_unbuffer	parallel: Error: influx not supported. Are you missing a perl DBD::influx module?
+INFLUX	par_sqlandworker_unbuffer	parallel: Error: influx not supported. Are you missing a perl DBD::influx module?
 INFLUX	par_sqlandworker_unbuffer	error parsing query: only ORDER BY time supported at this time
 MYSQL	do_dburl MYSQL
 MYSQL	par_append	p_wrapper par_append $MYSQL
@@ -461,16 +381,16 @@ MYSQL	par_empty	Exit=0
 MYSQL	par_empty	ERROR 1146 (42S02) at line 1: Table 'tange.TBL99999' doesn't exist
 MYSQL	par_no_table	p_wrapper par_no_table $MYSQL
 MYSQL	par_no_table	bug #50018: --dburl without table dies
-MYSQL	par_no_table	255
-MYSQL	par_no_table	255
-MYSQL	par_no_table	255
+MYSQL	par_no_table	should default to table USERNAME
+MYSQL	par_no_table	OK
+MYSQL	par_no_table	0
+MYSQL	par_no_table	0
+MYSQL	par_no_table	OK
+MYSQL	par_no_table	0
 MYSQL	par_no_table	Exit=0
 MYSQL	par_no_table	Exit=0
 MYSQL	par_no_table	Host	Command	V1	V2	Stdout	Stderr
 MYSQL	par_no_table	hostname	true dummy dummy	dummy	dummy		
-MYSQL	par_no_table	parallel: Error: The DBURL (mysql://tange:tange@localhost/tange) must contain a table.
-MYSQL	par_no_table	parallel: Error: The DBURL (mysql://tange:tange@localhost/tange) must contain a table.
-MYSQL	par_no_table	parallel: Error: The DBURL (mysql://tange:tange@localhost/tange) must contain a table.
 MYSQL	par_shuf	p_wrapper par_shuf $MYSQL
 MYSQL	par_shuf	1 a
 MYSQL	par_shuf	1 b
@@ -1037,18 +957,18 @@ PG	par_empty	LINE 1: select Host,Command,V1,V2,Stdout,Stderr from TBL99999 order
 PG	par_empty	 ^
 PG	par_no_table	p_wrapper par_no_table $PG
 PG	par_no_table	bug #50018: --dburl without table dies
-PG	par_no_table	255
-PG	par_no_table	255
-PG	par_no_table	255
+PG	par_no_table	should default to table USERNAME
+PG	par_no_table	OK
+PG	par_no_table	0
+PG	par_no_table	0
+PG	par_no_table	OK
+PG	par_no_table	0
 PG	par_no_table	Exit=0
 PG	par_no_table	Exit=0
 PG	par_no_table	host| command | v1 | v2 | stdout | stderr 
 PG	par_no_table	hostname| true dummy dummy | dummy | dummy | | 
 PG	par_no_table	(1 row)
 PG	par_no_table	
-PG	par_no_table	parallel: Error: The DBURL (pg://tange:tange@localhost/tange) must contain a table.
-PG	par_no_table	parallel: Error: The DBURL (pg://tange:tange@localhost/tange) must contain a table.
-PG	par_no_table	parallel: Error: The DBURL (pg://tange:tange@localhost/tange) must contain a table.
 PG	par_shuf	p_wrapper par_shuf $PG
 PG	par_shuf	1 a
 PG	par_shuf	1 b
@@ -1858,6 +1778,7 @@ SQLITE	par_empty	Exit=0
 SQLITE	par_empty	Parse error near line 1: no such table: TBL99999
 SQLITE	par_no_table	p_wrapper par_no_table $SQLITE
 SQLITE	par_no_table	bug #50018: --dburl without table dies
+SQLITE	par_no_table	should default to table USERNAME
 SQLITE	par_no_table	255
 SQLITE	par_no_table	255
 SQLITE	par_no_table	255
@@ -1865,9 +1786,9 @@ SQLITE	par_no_table	Exit=0
 SQLITE	par_no_table	Exit=0
 SQLITE	par_no_table	Host|Command|V1|V2|Stdout|Stderr
 SQLITE	par_no_table	hostname|true dummy dummy|dummy|dummy||
-SQLITE	par_no_table	parallel: Error: The DBURL (sqlite3:///%2Frun%2Fshm%2Fparallel.db) must contain a table.
-SQLITE	par_no_table	parallel: Error: The DBURL (sqlite3:///%2Frun%2Fshm%2Fparallel.db) must contain a table.
-SQLITE	par_no_table	parallel: Error: The DBURL (sqlite3:///%2Frun%2Fshm%2Fparallel.db) must contain a table.
+SQLITE	par_no_table	parallel: Error: The table name (/run/shm/parallel.db) cannot contain /
+SQLITE	par_no_table	parallel: Error: The table name (/run/shm/parallel.db) cannot contain /
+SQLITE	par_no_table	parallel: Error: The table name (/run/shm/parallel.db) cannot contain /
 SQLITE	par_shuf	p_wrapper par_shuf $SQLITE
 SQLITE	par_shuf	1 a
 SQLITE	par_shuf	1 b

@@ -109,10 +109,35 @@ par_showdatabases() {
 
 par_listproc() {
     echo "### Test --listproc"
-    sql --listproc :oraunittest |
+    shortest-output() {
+	# Initialize variables to store the shortest output and its length
+	shortest_output=""
+	shortest_length=9999999  # Start with a large number
+	runs=$1
+	shift
+	# Run the command more times
+	for i in {1..$runs}; do
+	    # Run the command and capture the output
+	    output=$("$@")
+	    
+	    # Get the length of the current output
+	    output_length=${#output}
+	    
+	    # Check if the current output is shorter than the shortest found so far
+	    if [[ $output_length -lt $shortest_length ]]; then
+		shortest_output="$output"
+		shortest_length=$output_length
+	    fi
+	done
+
+	# Print the shortest output
+	echo "$shortest_output"
+    }
+    # Try 10 times: Other jobs may be running in parallel
+    shortest-output 10 nice sql --listproc :oraunittest |
 	perl -ne '/select 1 from dual|user_objects|user_tablespaces|connect_by_filtering/ and next;
                   s/[21 ]\.\d{4,5}/1.99999/;
-                  s/ +/ /g;
+                  s/\s+/ /g;
                   print'
     sql --listproc $MYSQL_TEST_DBURL |
 	perl -pe 's/^\d+/XXX/'

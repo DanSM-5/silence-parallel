@@ -597,6 +597,11 @@ if($database_driver eq "mysql" or
 	$database_driver eq "influxssl") {
     ($batch_command,$interactive_command) =
 	influx_commands($database_driver,%dburl);
+} elsif($database_driver eq "csv") {
+    ($batch_command,$interactive_command) =
+	csv_commands($database_driver,%dburl);
+} else {
+    die("Unsupported driver: $database_driver");
 }
 
 my $err;
@@ -634,8 +639,6 @@ if($dburl{'query'}) {
     my $qfile = shell_quote($queryfile);
     $batch_command = "(cat $qfile;rm $qfile; cat) | $batch_command";
 }
-
-
 
 do {
     if(@ARGV) {
@@ -693,7 +696,7 @@ $Global::Initfile && unlink $Global::Initfile;
 exit ($err);
 
 sub parse_options {
-    $Global::version = 20241122;
+    $Global::version = 20241222;
     $Global::progname = 'sql';
 
     # This must be done first as this may exec myself
@@ -746,36 +749,38 @@ sub parse_options {
 
 sub database_driver_alias {
     my $driver = shift;
-    my %database_driver_alias = ("mysql" => "mysql",
-				 "mysqls" => "mysqlssl",
-				 "mysqlssl" => "mysqlssl",
-				 "oracle" => "oracle",
-				 "ora" => "oracle",
-				 "oracles" => "oraclessl",
-				 "oras" => "oraclessl",
-				 "oraclessl" => "oraclessl",
-				 "orassl" => "oraclessl",
-				 "postgresql" => "postgresql",
-				 "pgsql" => "postgresql",
-				 "postgres" => "postgresql",
-				 "pg" => "postgresql",
-				 "postgresqlssl" => "postgresqlssl",
-				 "pgsqlssl" => "postgresqlssl",
-				 "postgresssl" => "postgresqlssl",
-				 "pgssl" => "postgresqlssl",
-				 "postgresqls" => "postgresqlssl",
-				 "pgsqls" => "postgresqlssl",
-				 "postgress" => "postgresqlssl",
-				 "pgs" => "postgresqlssl",
-				 "sqlite" => "sqlite",
-				 "sqlite2" => "sqlite",
-				 "sqlite3" => "sqlite3",
-                                 "influx" => "influx",
-                                 "influxdb" => "influx",
-                                 "influxssl" => "influxssl",
-                                 "influxdbssl" => "influxssl",
-                                 "influxs" => "influxssl",
-                                 "influxdbs" => "influxssl",
+    my %database_driver_alias = (
+	"csv" => "csv",
+	"influx" => "influx",
+	"influxdb" => "influx",
+	"influxdbs" => "influxssl",
+	"influxdbssl" => "influxssl",
+	"influxs" => "influxssl",
+	"influxssl" => "influxssl",
+	"mysql" => "mysql",
+	"mysqls" => "mysqlssl",
+	"mysqlssl" => "mysqlssl",
+	"ora" => "oracle",
+	"oracle" => "oracle",
+	"oracles" => "oraclessl",
+	"oraclessl" => "oraclessl",
+	"oras" => "oraclessl",
+	"orassl" => "oraclessl",
+	"pg" => "postgresql",
+	"pgs" => "postgresqlssl",
+	"pgsql" => "postgresql",
+	"pgsqls" => "postgresqlssl",
+	"pgsqlssl" => "postgresqlssl",
+	"pgssl" => "postgresqlssl",
+	"postgres" => "postgresql",
+	"postgresql" => "postgresql",
+	"postgresqls" => "postgresqlssl",
+	"postgresqlssl" => "postgresqlssl",
+	"postgress" => "postgresqlssl",
+	"postgresssl" => "postgresqlssl",
+	"sqlite" => "sqlite",
+	"sqlite2" => "sqlite",
+	"sqlite3" => "sqlite3",
 	);
     return $database_driver_alias{$driver};
 }
@@ -903,6 +908,30 @@ sub sqlite_commands {
     $batch_command =
 	"$database_driver $pass_through_options $sep ".
 	"$no_headers $html $database";
+    $interactive_command = $batch_command;
+    return($batch_command,$interactive_command);
+}
+
+sub csv_commands {
+    my ($database_driver,%opt) = (@_);
+    my $csvsql = find_command_in_path("csvsql") ||
+	die ("csvsql not in path");
+    my $sep = defined($::opt_s) ? "-d '$::opt_s'" : "";
+    my $database = defined($opt{'database'}) ?
+	"$opt{'database'}" : "$ENV{'USER'}";
+
+    my $format = defined($::opt_json) ? "-format json" :
+                 defined($::opt_pretty) ? "-format json -pretty" :
+                 defined($::opt_csv) ? "-format csv" : "";
+    my $precision = defined($::opt_precision) ?
+	"-precision $::opt_precision" : "";
+
+    my $no_headers = defined($::opt_n) ? "--skip-column-names" : "";
+    my $ssl = "";
+
+    $batch_command =
+        "$csvsql $pass_through_options $no_headers $format ".
+	"$precision $database ".'--query "`cat`"';
     $interactive_command = $batch_command;
     return($batch_command,$interactive_command);
 }
@@ -1191,7 +1220,7 @@ sub parse_dburl {
                )?
                (?:
                 /
-                ([^?]*)? # Database ($6)
+                ([^?]*?)? # Database ($6)
                )?
                (?:
                 /?

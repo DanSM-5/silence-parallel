@@ -13,8 +13,7 @@ env_parallel - export environment to GNU parallel
 
 =head1 SYNOPSIS
 
-B<env_parallel> [--record-env|--session|--end-session]
-  [options for GNU Parallel]
+B<env_parallel> [--record-env|--session|--end-session] [options for GNU Parallel]
 
 
 =head1 DESCRIPTION

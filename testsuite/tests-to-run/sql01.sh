@@ -60,7 +60,7 @@ INSERT INTO unittest VALUES (1,'abc');
 INSERT INTO unittest VALUES (3,'def');
 SELECT 'Yes it does' as 'Test reading SQL from file works';
 EOF
-    sql $MYSQL_TEST_DBURL/sqlunittest <"$unittest"
+    sql $MYSQL_TEST_DBURL <"$unittest"
 }
 
 testtable() {

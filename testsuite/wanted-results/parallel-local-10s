@@ -549,38 +549,6 @@ par_colsep	echo ac
 par_colsep	ac
 par_colsep	echo ac
 par_colsep	ac
-par_compress_prg_fails	### bug #41609: --compress fails
-par_compress_prg_fails	f1a751b1283e99e7dda40f63f1225f74  -
-par_compress_prg_fails	f1a751b1283e99e7dda40f63f1225f74  -
-par_compress_prg_fails	### bug #44546: If --compress-program fails: fail
-par_compress_prg_fails	  	1
-par_compress_prg_fails	  	parallel: Error: false failed.
-par_compress_prg_fails	  	parallel: Error: false failed.
-par_compress_prg_fails	  --files	1
-par_compress_prg_fails	  --files	parallel: Warning: Use --files0 when $TMPDIR contains newline.
-par_compress_prg_fails	  --files	parallel: Error: false failed.
-par_compress_prg_fails	  --files	parallel: Error: false failed.
-par_compress_prg_fails	 --tag 	1
-par_compress_prg_fails	 --tag 	parallel: Error: false failed.
-par_compress_prg_fails	 --tag 	parallel: Error: false failed.
-par_compress_prg_fails	 --tag --files	1
-par_compress_prg_fails	 --tag --files	parallel: Warning: Use --files0 when $TMPDIR contains newline.
-par_compress_prg_fails	 --tag --files	parallel: Error: false failed.
-par_compress_prg_fails	 --tag --files	parallel: Error: false failed.
-par_compress_prg_fails	--line-buffer  	1
-par_compress_prg_fails	--line-buffer  	parallel: Error: false failed.
-par_compress_prg_fails	--line-buffer  	parallel: Error: false failed.
-par_compress_prg_fails	--line-buffer  --files	1
-par_compress_prg_fails	--line-buffer  --files	parallel: Warning: Use --files0 when $TMPDIR contains newline.
-par_compress_prg_fails	--line-buffer  --files	parallel: Error: false failed.
-par_compress_prg_fails	--line-buffer  --files	parallel: Error: false failed.
-par_compress_prg_fails	--line-buffer --tag 	1
-par_compress_prg_fails	--line-buffer --tag 	parallel: Error: false failed.
-par_compress_prg_fails	--line-buffer --tag 	parallel: Error: false failed.
-par_compress_prg_fails	--line-buffer --tag --files	1
-par_compress_prg_fails	--line-buffer --tag --files	parallel: Warning: Use --files0 when $TMPDIR contains newline.
-par_compress_prg_fails	--line-buffer --tag --files	parallel: Error: false failed.
-par_compress_prg_fails	--line-buffer --tag --files	parallel: Error: false failed.
 par_dryrun_timeout_ungroup	bug #51039: --dry-run --timeout 1.4m -u breaks
 par_dryrun_timeout_ungroup	   1000    2000    8893
 par_failing_compressor	Compress with failing (de)compressor
@@ -1367,6 +1335,25 @@ par_retries_all_fail	5
 par_retries_all_fail	6
 par_retries_all_fail	7
 par_retries_all_fail	8
+par_retries_lb_jl	Broken in 20240522
+par_retries_lb_jl	parallel: Warning: This job was killed because it timed out:
+par_retries_lb_jl	parallel: Warning: echo should be 5 lines >> "$tmp";sleep 20
+par_retries_lb_jl	should be 5 lines
+par_retries_lb_jl	parallel: Warning: This job was killed because it timed out:
+par_retries_lb_jl	parallel: Warning: echo 5 lines >> "$tmp";sleep 20
+par_retries_lb_jl	parallel: Warning: This job was killed because it timed out:
+par_retries_lb_jl	parallel: Warning: echo 5 lines >> "$tmp";sleep 20
+par_retries_lb_jl	parallel: Warning: This job was killed because it timed out:
+par_retries_lb_jl	parallel: Warning: echo 5 lines >> "$tmp";sleep 20
+par_retries_lb_jl	parallel: Warning: This job was killed because it timed out:
+par_retries_lb_jl	parallel: Warning: echo 5 lines >> "$tmp";sleep 20
+par_retries_lb_jl	parallel: Warning: This job was killed because it timed out:
+par_retries_lb_jl	parallel: Warning: echo 5 lines >> "$tmp";sleep 20
+par_retries_lb_jl	5 lines
+par_retries_lb_jl	5 lines
+par_retries_lb_jl	5 lines
+par_retries_lb_jl	5 lines
+par_retries_lb_jl	5 lines
 par_seqreplace_long_line	### Test --seqreplace and line too long
 par_seqreplace_long_line	      9       1       1     101
 par_seqreplace_long_line	     90       1       1     201

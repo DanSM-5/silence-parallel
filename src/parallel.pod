@@ -3108,7 +3108,7 @@ when called with B<--shebang>).
 Use B<--sql-master> instead.
 
 
-=item B<--sql-master> I<DBURL>
+=item B<--sql-master> I<DBURL> (alpha testing)
 
 Submit jobs via SQL server. I<DBURL> must point to a table, which will
 contain the same information as B<--joblog>, the values from the input
@@ -3157,14 +3157,14 @@ It can also be an alias from ~/.sql/aliases:
 See also: B<--sql-and-worker> B<--sql-worker> B<--joblog>
 
 
-=item B<--sql-and-worker> I<DBURL>
+=item B<--sql-and-worker> I<DBURL> (alpha testing)
 
 Shorthand for: B<--sql-master> I<DBURL> B<--sql-worker> I<DBURL>.
 
 See also: B<--sql-master> B<--sql-worker>
 
 
-=item B<--sql-worker> I<DBURL>
+=item B<--sql-worker> I<DBURL> (alpha testing)
 
 Execute jobs via SQL server. Read the input sources variables from the
 table pointed to by I<DBURL>. The I<command> on the command line
@@ -3244,7 +3244,7 @@ Examples: B<4/>, B<12/>
 
 The I<ssh command> to use. The I<ssh command> must be followed by a space.
 
-Example: B</usr/bin/lsh -z >, B<autossh -C >
+Example: B</usr/bin/lsh -z> , B<autossh -C> 
 
 
 =item Z<> I<user>
