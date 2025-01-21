@@ -5,9 +5,6 @@
 Quote of the month:
 
 
-  GNU Parallel too. It is my map/reduce tool with built in support to retry failed jobs.
-    -- Dhruva @mechanicker.bsky.social
-
   gnu parallel is my new favorite toy
     -- Eytan Adar @eytan.adar.prof
 
@@ -245,6 +242,9 @@ https://negfeedback.blogspot.com/2020/05/indispensable-command-line-tools.html
     -- @alinajaf@twitter
 
 === Used ===
+
+  GNU Parallel too. It is my map/reduce tool with built in support to retry failed jobs.
+    -- Dhruva @mechanicker.bsky.social
 
   "Do this with gnu parallel" is the Copilot hack of the day
     -- Chase Clark @chasingmicrobes.bsky.social
