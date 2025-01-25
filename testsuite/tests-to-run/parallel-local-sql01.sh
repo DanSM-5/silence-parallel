@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# SPDX-FileCopyrightText: 2021-2024 Ole Tange, http://ole.tange.dk and Free Software and Foundation, Inc.
+# SPDX-FileCopyrightText: 2021-2025 Ole Tange, http://ole.tange.dk and Free Software and Foundation, Inc.
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -115,7 +115,8 @@ par_shuf() {
     MD5=$(echo $SERVERURL | md5sum | perl -pe 's/(...).*/$1/')
     T=/tmp/parallel-bug49791-$MD5
     [ -e $T ] && rm -rf $T
-    export PARALLEL="--shuf --result $T"
+    parallel_orig=$PARALLEL
+    export PARALLEL="$parallel_orig --shuf --result $T"
     parallel --sqlandworker $DBURL sleep .3\;echo \
 	     ::: {1..5} ::: {a..e} >"$T2";
     parallel --sqlworker    $DBURL sleep .3\;echo >"$T2" &
@@ -128,7 +129,7 @@ par_shuf() {
     cat $T/1/*/*/*/stdout
     # Did it shuffle (Compare job table to non-shuffled)
     SHUF=$(sql $SERVERURL "select Host,Command,V1,V2,Stdout,Stderr from $TABLE order by seq;")
-    export PARALLEL="--result $T"
+    export PARALLEL="$parallel_orig --result $T"
     parallel --sqlandworker $DBURL sleep .3\;echo \
 	     ::: {1..5} ::: {a..e} >"$T2";
     parallel --sqlworker    $DBURL sleep .3\;echo >"$T2" &

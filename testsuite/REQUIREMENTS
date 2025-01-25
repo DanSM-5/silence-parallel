@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# SPDX-FileCopyrightText: 2002-2024 Ole Tange, http://ole.tange.dk and Free Software and Foundation, Inc.
+# SPDX-FileCopyrightText: 2002-2025 Ole Tange, http://ole.tange.dk and Free Software and Foundation, Inc.
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -152,15 +152,18 @@ install_oracle_client() {
     sudo apt install libaio1 || sudo apt install libaio1t64
     sudo ln -s libaio.so.1t64 /usr/lib/x86_64-linux-gnu/libaio.so.1
     perl -MCPAN -e 'install DBD::Oracle'
-    # TODO set up vagrant oracle server
+}
+
+install_oracle_server() {   
+    # set up vagrant oracle server
     git clone https://github.com/oracle/vagrant-projects.git
-    (
-	cd vagrant-projects/OracleDatabase/23.4.0-Free
-	echo export VM_ORACLE_PWD=`goodpasswd` >> ~/.passwords
-	echo export 'ORACLE_PWD=$VM_ORACLE_PWD' >> ~/.passwords
-	. ~/.passwords
-	vagrant up
-    )
+    cd vagrant-projects/OracleDatabase/23.4.0-Free
+    echo export VM_ORACLE_PWD=`goodpasswd` >> ~/.passwords
+    echo export 'ORACLE_PWD=$VM_ORACLE_PWD' >> ~/.passwords
+    . ~/.passwords
+    vagrant up
+    # Pack as box
+    nice vagrant package --output oracledb-23.4.box &
     # test it works:
     sql --showtables oracle://SYSTEM:$VM_ORACLE_PWD@/FREE
 }
@@ -749,8 +752,8 @@ run() {
     install_packages &&
 	install_tangetools &&
 	install_sqlite2 &&
-	(install_oracle_client; # 20240622 broken
-	 true)  &&
+	install_oracle_client &&
+	install_oracle_server &&
 	setup_databases &&
 	setup_virtual_box_network &&
 	add_server_to_hosts &&

@@ -1,10 +1,4 @@
 par_--nonall_results	### --results --onall
-par_--nonall_results	parallel: Warning: --(n)onall + --results not supported (yet).
-par_--nonall_results	parallel: Warning: --(n)onall + --results not supported (yet).
-par_--nonall_results	parallel: Warning: --(n)onall + --results not supported (yet).
-par_--nonall_results	parallel: Warning: --(n)onall + --results not supported (yet).
-par_--nonall_results	parallel: Warning: --(n)onall + --results not supported (yet).
-par_--nonall_results	parallel: Warning: --(n)onall + --results not supported (yet).
 par_--nonall_results	/TMP/onall
 par_--nonall_results	/TMP/onall/noslashcsh@lo
 par_--nonall_results	/TMP/onall/noslashcsh@lo/1
@@ -104,12 +98,6 @@ par_--nonall_results	/TMP/onall/slash/sh@lo/1/pwd/seq
 par_--nonall_results	/TMP/onall/slash/sh@lo/1/pwd/stderr
 par_--nonall_results	/TMP/onall/slash/sh@lo/1/pwd/stdout
 par_--nonall_results	### --results --nonall
-par_--nonall_results	parallel: Warning: --(n)onall + --results not supported (yet).
-par_--nonall_results	parallel: Warning: --(n)onall + --results not supported (yet).
-par_--nonall_results	parallel: Warning: --(n)onall + --results not supported (yet).
-par_--nonall_results	parallel: Warning: --(n)onall + --results not supported (yet).
-par_--nonall_results	parallel: Warning: --(n)onall + --results not supported (yet).
-par_--nonall_results	parallel: Warning: --(n)onall + --results not supported (yet).
 par_--nonall_results	/TMP/nonall
 par_--nonall_results	/TMP/nonall/noslashcsh@lo
 par_--nonall_results	/TMP/nonall/noslashcsh@lo/1

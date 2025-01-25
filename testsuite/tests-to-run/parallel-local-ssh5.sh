@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# SPDX-FileCopyrightText: 2021-2024 Ole Tange, http://ole.tange.dk and Free Software and Foundation, Inc.
+# SPDX-FileCopyrightText: 2021-2025 Ole Tange, http://ole.tange.dk and Free Software and Foundation, Inc.
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -47,7 +47,7 @@ par_--ssh_autossh() {
 	ls foo_autossh*
 	rm foo_autossh*
     ) | grep -Ev 'Warning: remote port forwarding failed for listen' |
-	perl -pe 's/Receiver=[0-9.]+/Receiver=9.9.9/g'
+	perl -pe 's/\d\d\d/999/; s/Receiver=[0-9.]+/Receiver=9.9.9/g'
 }
 
 par_fish_exit() {

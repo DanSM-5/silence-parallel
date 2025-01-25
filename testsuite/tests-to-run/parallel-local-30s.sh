@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# SPDX-FileCopyrightText: 2021-2024 Ole Tange, http://ole.tange.dk and Free Software and Foundation, Inc.
+# SPDX-FileCopyrightText: 2021-2025 Ole Tange, http://ole.tange.dk and Free Software and Foundation, Inc.
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -85,8 +85,10 @@ par__dburl_parsing() {
 	    rm -rf "$me" mydir
 	}
 	export -f test_dburl
-	parallel -j1 --tag test_dburl ::: ${dburls[@]}
-	parallel -j1 --tag test_dburl {}/ ::: ${dburls[@]}
+	(
+	    stdout parallel -j1 --tag test_dburl ::: ${dburls[@]}
+	    stdout parallel -j1 --tag test_dburl {}/ ::: ${dburls[@]}
+	) | perl -pe 's/parallel (line|at) \d+./parallel $1 99999./;'
     )
     rmdir test
 }
@@ -447,7 +449,10 @@ par_internal_quote_char() {
     TMPDIR=$(mktemp -d)
     cd "$TMPDIR"
     echo "Compare old quote char csv"
-    parallel-20231222 --sqlmaster csv:///./oldformat.csv echo "$(printf "\257\257 \177\177")" ::: 1 2 3
+    (
+	PARALLEL="--_unsafe"
+	parallel-20231222 --sqlmaster csv:///./oldformat.csv echo "$(printf "\257\257 \177\177")" ::: 1 2 3
+    )
     stdout parallel -k --sqlworker csv:///./oldformat.csv echo "$(printf "\257\257 \177\177")" ::: 1 2 3 |
 	od -t x1z > old.out
     echo "with new quote char csv (must be the same)"

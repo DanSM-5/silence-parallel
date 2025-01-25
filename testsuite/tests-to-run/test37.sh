@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# SPDX-FileCopyrightText: 2021-2024 Ole Tange, http://ole.tange.dk and Free Software and Foundation, Inc.
+# SPDX-FileCopyrightText: 2021-2025 Ole Tange, http://ole.tange.dk and Free Software and Foundation, Inc.
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -12,30 +12,31 @@ SSHLOGIN1=$SSHUSER1@$SERVER1
 SSHLOGIN2=$SSHUSER2@$SERVER2
 
 echo '### Test $PARALLEL'
-PARALLEL="-k
+parallel_orig=$PARALLEL
+PARALLEL="$parallel_orig -k
 -j1
 echo" parallel ::: a b c
 
-PARALLEL="-k
+PARALLEL="$parallel_orig -k
 --jobs
 1
 echo" parallel ::: a b c
 
-PARALLEL="-k
+PARALLEL="$parallel_orig -k
 --jobs 1
 echo" parallel ::: a b c
 
-PARALLEL="-k
+PARALLEL="$parallel_orig -k
 --jobs
 1
 echo 1" parallel -v echo 2 ::: a b c
 
-PARALLEL="-k --jobs 1 echo" parallel ::: a b c
-PARALLEL="-k --jobs 1 echo 1" parallel -v echo 2 ::: a b c
+PARALLEL="$parallel_orig -k --jobs 1 echo" parallel ::: a b c
+PARALLEL="$parallel_orig -k --jobs 1 echo 1" parallel -v echo 2 ::: a b c
 
 echo '### Test ugly quoting from $PARALLEL'
-PARALLEL="-k --jobs 1 perl -pe \'\$a=1; print\$a\'" parallel -v ::: <(echo a) <(echo b)
-PARALLEL='-k --jobs 1 -S '$SSHLOGIN1' perl -pe \"\\$a=1; print\\$a\"' parallel -v '<(echo {})' ::: foo
+PARALLEL="$parallel_orig -k --jobs 1 perl -pe \'\$a=1; print\$a\'" parallel -v ::: <(echo a) <(echo b)
+PARALLEL="$parallel_orig -k --jobs 1 -S $SSHLOGIN1"' perl -pe \"\\$a=1; print\\$a\"' parallel -v '<(echo {})' ::: foo
 
 echo '### Test ugly quoting from profile file'
 cat <<EOF >~/.parallel/test_profile
@@ -47,8 +48,8 @@ parallel -v -J test_profile ::: <(echo a) <(echo b)
 echo '### Test ugly quoting from profile file --plain'
 parallel -v -J test_profile --plain echo ::: <(echo a) <(echo b)
 
-PARALLEL='-k --jobs 1 echo' parallel -S ssh\ $SSHLOGIN1 -v ::: foo
-PARALLEL='-k --jobs 1 perl -pe \"\\$a=1; print \\$a\"' parallel -S ssh\ $SSHLOGIN1 -v '<(echo {})' ::: foo
+PARALLEL="$parallel_orig -k --jobs 1 echo" parallel -S ssh\ $SSHLOGIN1 -v ::: foo
+PARALLEL="$parallel_orig "'-k --jobs 1 perl -pe \"\\$a=1; print \\$a\"' parallel -S ssh\ $SSHLOGIN1 -v '<(echo {})' ::: foo
 
 echo '### Test quoting of $ in command from profile file'
 cat <<EOF >~/.parallel/test_profile
@@ -60,10 +61,10 @@ echo '### Test quoting of $ in command from profile file --plain'
 parallel -v -J test_profile --plain -S ssh\ $SSHLOGIN1 'cat <(echo {})' ::: foo
 
 echo '### Test quoting of $ in command from $PARALLEL'
-PARALLEL='-k --jobs 1 perl -pe \"\\$a=1; print \\$a\" ' parallel -S ssh\ $SSHLOGIN1 -v '<(echo {})' ::: foo
+PARALLEL="$parallel_orig "'-k --jobs 1 perl -pe \"\\$a=1; print \\$a\" ' parallel -S ssh\ $SSHLOGIN1 -v '<(echo {})' ::: foo
 
 echo '### Test quoting of $ in command from $PARALLEL --plain'
-PARALLEL='-k --jobs 1 perl -pe \"\\$a=1; print \\$a\" ' parallel --plain -S ssh\ $SSHLOGIN1 -v 'cat <(echo {})' ::: foo
+PARALLEL="$parallel_orig "'-k --jobs 1 perl -pe \"\\$a=1; print \\$a\" ' parallel --plain -S ssh\ $SSHLOGIN1 -v 'cat <(echo {})' ::: foo
 
 echo '### Test quoting of space in arguments (-S) from profile file'
 cat <<EOF >~/.parallel/test_profile
@@ -75,7 +76,7 @@ echo '### Test quoting of space in arguments (-S) from profile file --plain'
 parallel -v -J test_profile --plain 'cat <(echo {})' ::: foo
 
 echo '### Test quoting of space in arguments (-S) from $PARALLEL'
-PARALLEL='-k --jobs 1 -S ssh\ '$SSHLOGIN1' perl -pe \"\\$a=1; print \\$a\" ' parallel -v '<(echo {})' ::: foo
+PARALLEL="$parallel_orig "'-k --jobs 1 -S ssh\ '$SSHLOGIN1' perl -pe \"\\$a=1; print \\$a\" ' parallel -v '<(echo {})' ::: foo
 
 echo '### Test quoting of space in long arguments (--sshlogin) from profile file'
 cat <<EOF >~/.parallel/test_profile
@@ -85,7 +86,7 @@ EOF
 parallel -v -J test_profile '<(echo {})' ::: foo
 
 echo '### Test quoting of space in arguments (-S) from $PARALLEL'
-PARALLEL='-k --jobs 1 --sshlogin ssh\ '$SSHLOGIN1' perl -pe \"\\$a=1; print \\$a\" ' parallel -v '<(echo {})' ::: foo
+PARALLEL="$parallel_orig "'-k --jobs 1 --sshlogin ssh\ '$SSHLOGIN1' perl -pe \"\\$a=1; print \\$a\" ' parallel -v '<(echo {})' ::: foo
 
 echo '### Test merging of profiles - sort needed because -k only works on the single machine'
 echo --tag > ~/.parallel/test_tag

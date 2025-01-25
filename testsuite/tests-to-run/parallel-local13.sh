@@ -1,6 +1,6 @@
 #!/bin/bash -x
 
-# SPDX-FileCopyrightText: 2021-2024 Ole Tange, http://ole.tange.dk and Free Software and Foundation, Inc.
+# SPDX-FileCopyrightText: 2021-2025 Ole Tange, http://ole.tange.dk and Free Software and Foundation, Inc.
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -13,7 +13,7 @@ testsuitedir=${testsuitedir:-$pwd}
 rsync -Ha --delete "$testsuitedir"/input-files/xargs-inputs/ tmp/
 cd tmp
 
-PARALLEL=-j8
+PARALLEL="-j8 $PARALLEL"
 export PARALLEL
 
 stdsort() {
