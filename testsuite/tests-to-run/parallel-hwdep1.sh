@@ -7,8 +7,12 @@
 
 par_colour_failed() {
     echo '--colour-failed --colour'
-    parallel --colour-failed -kv 'seq {1};exit {2}' ::: 1 2 ::: 0 1 2
-    parallel --colour --colour-failed -kv 'seq {1};exit {2}' ::: 1 2 ::: 0 1 2
+    (
+	parallel --colour-failed -kv 'seq {1};exit {2}' ::: 1 2 ::: 0 1 2
+	parallel --colour --colour-failed -kv 'seq {1};exit {2}' ::: 1 2 ::: 0 1 2
+    ) |
+	# Ignore ^O
+	perl -pe 's/\017$//'
 }
 
 par_ctagstring() {
@@ -25,7 +29,8 @@ par_ll_color_long_line() {
     echo '### --latest-line --color with lines longer than terminal width'
     COLUMNS=30 parallel --delay 0.3 --color --tagstring '{=$_.="x"x$_=}' \
 	   --ll 'echo {}00000 | sed -e "s/$/' {1..100} /'"' ::: {01..30} |
-	perl -ne 's/.\[A//g;
+	perl -ne 's/\017$//;
+	     	  s/.\[A//g;
 		  /.\[K .{4}\[m/ and next;
                   /\S/ && print'| sort -u
 }

@@ -165,6 +165,8 @@ http://www.gnu.org/software/parallel/parsort.html
 http://www.gnu.org/software/parallel/niceload.html
 
 make web
+cp -r src/*.pdf src/sphinx/build/html/* ../parallel-web/parallel
+cp ../parallel-web/parallel/parallel.html  ../parallel-web/parallel/man.html
 
 pushd ../parallel-web/parallel
 # Bug at Savannah makes this take 30 seconds
@@ -273,24 +275,25 @@ from:tange@gnu.org
 to:parallel@gnu.org, bug-parallel@gnu.org
 stable-bcc: Jesse Alama <jessealama@fastmail.fm>
 
-Subject: GNU Parallel 20250122 ('4K-AZ65') released [stable]
+Subject: GNU Parallel 2025xx22 ('Grete Tange/Salwan Momika/DeepSeek/<<>>') released <<[stable]>>
 
-GNU Parallel 20250122 ('4K-AZ65') has been released. It is available for download at: lbry://@GnuParallel:4
+GNU Parallel 202xxx22 ('<<>>') has been released. It is available for download at: lbry://@GnuParallel:4
 
 Quote of the month:
 
-  GNU Parallel too. It is my map/reduce tool with built in support to retry failed jobs.
-    -- Dhruva @mechanicker.bsky.social
+  <<>>
   
 New in this release:
 
-* No new features. This is a candidate for a stable release.
+<<>>
+
+<<* No new features. This is a candidate for a stable release.>>
 
 * Bug fixes and man page updates.
 
 News about GNU Parallel:
 
-* How to Implement Parallelism and Concurrency Control (Queue) in Shell https://www.alibabacloud.com/blog/how-to-implement-parallelism-and-concurrency-control-queue-in-shell_601908?spm=a2c65.11461433.0.0.4ee35355IOL2MZ
+<<>>
 
 
 GNU Parallel - For people who live life in the parallel lane.

@@ -74,11 +74,11 @@ par_compress_stdout_stderr	OK
 par_compress_stdout_stderr	### Test compress - stderr
 par_compress_stdout_stderr	ls: cannot access '/OK-if-missing-file': No such file or directory
 par_cr_end_of_env_var	bug #66646: Wish: Ignore \r at end of string in environment variables
-par_cr_end_of_env_var	parallel: Warning: Removed ^M (<CR>) from end of TMPDIR
-par_cr_end_of_env_var	parallel: Warning: Removed ^M (<CR>) from end of PARALLEL_HOME
-par_cr_end_of_env_var	parallel: Warning: Removed ^M (<CR>) from end of XDG_CONFIG_DIRS
-par_cr_end_of_env_var	parallel: Warning: Removed ^M (<CR>) from end of PARALLEL_REMOTE_TMPDIR
-par_cr_end_of_env_var	parallel: Warning: Removed ^M (<CR>) from end of XDG_CACHE_HOME
+par_cr_end_of_env_var	parallel: Warning: Removed ^M (\r / <CR>) from end of TMPDIR
+par_cr_end_of_env_var	parallel: Warning: Removed ^M (\r / <CR>) from end of PARALLEL_HOME
+par_cr_end_of_env_var	parallel: Warning: Removed ^M (\r / <CR>) from end of XDG_CONFIG_DIRS
+par_cr_end_of_env_var	parallel: Warning: Removed ^M (\r / <CR>) from end of PARALLEL_REMOTE_TMPDIR
+par_cr_end_of_env_var	parallel: Warning: Removed ^M (\r / <CR>) from end of XDG_CACHE_HOME
 par_cr_end_of_env_var	Warnings are OK
 par_cr_newline_header	### --header : should set named replacement string if input line ends in \r\n
 par_cr_newline_header	bar

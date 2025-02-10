@@ -1110,6 +1110,16 @@ Implies B<--progress>.
 See also: B<--bar> B<--progress> B<--total-jobs>
 
 
+=item B<--extensionreplace> I<replace-str>
+
+=item B<--er> I<replace-str>
+
+Use the replacement string I<replace-str> instead of B<{.}> for input
+line without extension.
+
+See also: B<{.}>
+
+
 =item B<--fast> (alpha testing)
 
 Run jobs fast.
@@ -3745,14 +3755,18 @@ Can be reversed with B<--group>.
 See also: B<--line-buffer> B<--group>
 
 
-=item B<--extensionreplace> I<replace-str>
+=item B<--unsafe>
 
-=item B<--er> I<replace-str>
+GNU B<parallel> tries to be conservative to avoid surprising
+results. B<--unsafe> will allow GNU B<parallel> to run in environments
+and on input that are untested and thus may cause surprising results
+and even security issues, where an evil attacker can influence the
+results. Think attacks similar to Shellshock:
+https://en.wikipedia.org/wiki/Shellshock_(software_bug)
 
-Use the replacement string I<replace-str> instead of B<{.}> for input
-line without extension.
-
-See also: B<{.}>
+If you are forced to use B<--unsafe> all the time for something that
+is safe, it is time to file a bug report and have a discussion how to
+make your situation well tested.
 
 
 =item B<--use-sockets-instead-of-threads>

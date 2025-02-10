@@ -1,6 +1,8 @@
 par_10000_m_X	### Test -m with 10000 args
-par_10000_m_X	      3   29994  186685
-par_10000_m_X	268eed4478df6062b69e01f880b2ed65  -
+par_10000_m_X	41d9771dc93842c92897c9b21c458321  -
+par_10000_m_X	63046
+par_10000_m_X	63042
+par_10000_m_X	60594
 par_X_I_meta	### Test -X -I with shell meta chars
 par_X_I_meta	3
 par_X_I_meta	3
@@ -689,15 +691,15 @@ par__test_cpu_detection_lscpu_--all_--extended	1 24 32 24
 par__test_cpu_detection_lscpu_--all_--extended	1-2-4-2 Core i5-2410M laptop firewall
 par__test_cpu_detection_lscpu_--all_--extended	1 2 4 2
 par__test_cpu_detection_topology	4-64-64-64 Dell R815 4 CPU 64-core
-par__test_cpu_detection_topology	4 4 4 4
+par__test_cpu_detection_topology	4 8 8 8
 par__test_cpu_detection_topology	1-2-2-2 AMD Neo N36L Dual-Core Processor
 par__test_cpu_detection_topology	1 2 2 2
 par__test_cpu_detection_topology	1-4-8-4 Lenovo E540 i7-4712MQ (PROSA stud organizer)
-par__test_cpu_detection_topology	1 4 4 4
+par__test_cpu_detection_topology	1 4 8 4
 par__test_cpu_detection_topology	1-2-4-2 ThinkPad A475 AMD PRO A12-8830B R7 (64g)
 par__test_cpu_detection_topology	1 2 4 2
 par__test_cpu_detection_topology	1-16-24-16 8*2 thr + 8*1 thr Intel Core i7-13700HX (user submit - detected wrong)
-par__test_cpu_detection_topology	1 2 4 2
+par__test_cpu_detection_topology	1 4 8 4
 par_children_receive_sig	### Do children receive --termseq signals
 par_children_receive_sig	parallel: Warning: This job was killed because it timed out:
 par_children_receive_sig	parallel: Warning: show_signals ''
@@ -818,6 +820,14 @@ par_format_string	{dyn__postfix} + format
 par_format_string	00012.44 == 00012.44
 par_format_string	dyn without {}
 par_format_string	12.444567 98.765444 == 12.444567 98.765444
+par_format_string	bug #66503: %format bugs
+par_format_string	00143 == 00143
+par_format_string	__143 ==   143
+par_format_string	__143 ==   143
+par_format_string	__143 ==   143
+par_format_string	d001.jpeg == d001.jpeg
+par_format_string	d001.jpeg == d001.jpeg
+par_format_string	d001.jpeg == d001.jpeg
 par_jobslot_repl	bug #46232: {%} with --bar/--eta/--shuf or --halt xx% broken
 par_jobslot_repl	1
 par_jobslot_repl	2

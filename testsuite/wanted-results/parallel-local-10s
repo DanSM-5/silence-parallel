@@ -427,7 +427,7 @@ par__xargs_compat	a_b c
 par__xargs_compat	d
 par__xargs_compat	e
 par__xargs_compat	### test too long args
-par__xargs_compat	parallel: Error: Command line too long (1000005 >= 63543) at input 0: zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz...
+par__xargs_compat	parallel: Error: Command line too long (1000005 >= 63057) at input 0: zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz...
 par__xargs_compat	xargs: argument line too long
 par__xargs_compat	parallel: Error: Command line too long (1000007 >= 10) at input 0: zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz...
 par__xargs_compat	1 2
@@ -994,11 +994,11 @@ par_long_line_remote	### Deal with long command lines on remote servers
 par_long_line_remote	      1       6   30006
 par_long_line_remote	      6      50  250050
 par_maxlinelen_X_I	### Test max line length -X -I
-par_maxlinelen_X_I	859ed2964e82dba118e92b1bedd2f84a  -
+par_maxlinelen_X_I	61a6ad8d13fcbb6e3d48338184bad8e6  -
 par_maxlinelen_X_I	Chars per line (817788/13): 62906
 par_maxlinelen_m_I	### Test max line length -m -I
-par_maxlinelen_m_I	183794839f45c8f7e38fe7c677c49958  -
-par_maxlinelen_m_I	Chars per line (697810/11): 63437
+par_maxlinelen_m_I	ef0e6e2faf1abd4217c3db9068bc97ef  -
+par_maxlinelen_m_I	Chars per line (697812/12): 58151
 par_opt_arg_eaten	bug #31716: Options with optional arguments may eat next argument
 par_opt_arg_eaten	### Test https://savannah.gnu.org/bugs/index.php?31716
 par_opt_arg_eaten	1 OK
