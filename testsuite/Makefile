@@ -22,6 +22,7 @@ all: mem short long polar
 # Mem
 mem: ../src/parallel tests-to-run/*mem* wanted-results/*mem*
 	make stopvm || true
+	make stopdb || true
 	time bash Start.sh mem NONE || true
 	touch ~/.parallel/will-cite
 	make stopvm

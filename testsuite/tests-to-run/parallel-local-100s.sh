@@ -35,7 +35,7 @@ par_--shellquote_command_len() {
 }
 
 par_squared() {
-    export PARALLEL="--load 300%"
+    export PARALLEL="--load 300% --unsafe"
     squared() {
 	i=$1
 	i2=$[i*i]

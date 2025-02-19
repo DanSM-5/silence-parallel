@@ -1715,12 +1715,17 @@ See also: B<--memfree> B<--load>
 
 =item B<--ll>
 
-Print the lastest line. Each job gets a single line that is updated
-with the lastest output from the job.
+Print the latest line. Each job gets a single line on the screen that
+is updated with the latest output from the job.
 
-Example:
+The screen keeps the oldest running job in view, so younger jobs may
+no be visible. They will, however, be shown when the oldest job
+finishes.
+
+Running this example makes it easer to understand:
 
   slow_seq() {
+    # Run seq with 33 characters per second
     seq "$@" |
       perl -ne '$|=1; for(split//){ print; select($a,$a,$a,0.03);}'
   }

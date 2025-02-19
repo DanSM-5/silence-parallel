@@ -293,11 +293,15 @@ add_server_to_hosts() {
     insert_in_etc_hosts 127.1.2.3 server
     
     insert_in_etc_hosts 127.0.0.2 lo
-    parallel add_single_vagrant_to_etc_hosts {} parallel-server{#} ::: centos9 freebsd13 freebsd14 rhel8 centos3
+    parallel add_single_vagrant_to_etc_hosts {} parallel-server{#} ::: centos9 freebsd13 freebsd14 rhel8 centos3 openindiana
 }
 
 vagrant_up() {
-    parallel -j0 --ll --tag 'cd {//};vagrant up' ::: vagrant/*/*/Vagrantfile
+    # Download and adding .box has to be done manually
+    # This is due to changes on https://vagrantcloud.com incompatible
+    # with vagrant 2.3.7
+    parallel -j0 --ll --tag 'cd {//} && ./setup.sh' ::: vagrant/*/*/setup.sh
+    parallel -j0 --ll --tag 'cd {//} && vagrant up' ::: vagrant/*/*/Vagrantfile
     # After this you should be able to 'vagrant ssh'
 }
 

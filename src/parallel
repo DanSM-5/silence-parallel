@@ -6604,24 +6604,25 @@ sub qqx(@) {
 	# open(STDERR, ">", "/dev/null");
 	open(local *CHILD_STDIN,  '<', '/dev/null') or die $!;
 	open(local *CHILD_STDERR, '>', '/dev/null') or die $!;
-	my $out;
+	my($out,$pid);
 	# eval is needed if open3 fails (e.g. command line too long)
 	eval {
-	    my $pid = open3(
+	    $pid = open3(
 		'<&CHILD_STDIN',
 		$out,
 		'>&CHILD_STDERR',
 		# && true is to force spawning a shell and not just exec'ing
 		"@_ && true");
-	    my @arr = <$out>;
-	    close $out;
-	    # Make sure $? is set
-	    waitpid($pid, 0);
-	    return wantarray ? @arr : join "",@arr;
 	} or do {
 	    # If eval fails, force $?=false
 	    `false`;
+	    return;
 	};
+	my @arr = <$out>;
+	close $out;
+	# Make sure $? is set
+	waitpid($pid, 0);
+	return wantarray ? @arr : join "",@arr;
     }
 }
 
