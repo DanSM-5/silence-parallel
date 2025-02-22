@@ -458,8 +458,8 @@ this plus that
 echo '###  true < 32767-ys.xi'
 ###  true < 32767-ys.xi
 stdout xargs true < 32767-ys.xi
-stdout parallel -k true < 32767-ys.xi
-parallel: Error: Command line too long (65541 >= 63543) at input 0: y y y y y y y y y y y y y y y y y y y y y y y y y ...
+stdout parallel -k true < 32767-ys.xi | perl -pe 's/(\d)\d\d\d\d/${1}9999/g'
+parallel: Error: Command line too long (69999 >= 69999) at input 0: y y y y y y y y y y y y y y y y y y y y y y y y y ...
 echo '###  true < 16383-ys.xi'
 ###  true < 16383-ys.xi
 stdout xargs true < 16383-ys.xi

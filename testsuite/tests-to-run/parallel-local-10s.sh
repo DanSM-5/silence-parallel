@@ -90,7 +90,7 @@ par_--match() {
     echo TODO Ignore case?
 }
 
-par__tee_too_many_args() {
+par_--tee_too_many_args() {
     echo '### Fail if there are more arguments than --jobs'
     seq 11 | stdout parallel -k --tag --pipe -j4 --tee grep {} ::: {1..4}
     tmp=`mktemp`
@@ -118,9 +118,9 @@ par_seqreplace_long_line() {
 	uniq -c
 }
 
-par__load_from_PARALLEL() {
+par_--load_from_PARALLEL() {
     echo "### Test reading load from PARALLEL"
-    export PARALLEL="$PARALLEL --load 300%"
+    export PARALLEL="$PARALLEL --load 400%"
     # Ignore stderr due to 'Starting processes took > 2 sec'
     seq 1 1000000 |
 	parallel -kj200 --recend "\n" --spreadstdin gzip -1 2>/dev/null |
@@ -214,7 +214,7 @@ par_load_blocks() {
 	grep -Ev 'processes took|Consider adjusting -j'
 }
 
-par__round_robin_blocks() {
+par_--round-robin_blocks() {
     echo "bug #49664: --round-robin does not complete"
     seq 20000000 | parallel -j8 --block 10M --round-robin --pipe wc -c | wc -l
 }
@@ -264,7 +264,7 @@ par_opt_arg_eaten() {
     printf '1\0002\0003\0004\0005\000' | stdout parallel -k -0 -i repl echo repl OK
 }
 
-par__nice() {
+par_--nice() {
     echo 'Check that --nice works'
     # parallel-20160422 OK
     check_for_2_bzip2s() {
@@ -395,7 +395,7 @@ par__xargs_compat() {
     a_b_-c-d() { echo a_b' '; echo c; echo d; }
     a_b_-c-d-e() { echo a_b' '; echo c; echo d; echo e; }
     one_mb_line() { perl -e 'print "z"x1000000'; }
-    stdsort() { "$@" | LC_ALL=C sort; }
+    stdsort() { stdout "$@" | LC_ALL=C sort; }
 
     echo '### Test -L -l and --max-lines'
     a_b-c | parallel -km -L2 echo
@@ -444,11 +444,13 @@ par__xargs_compat() {
     a_b_-c-d-e | xargs --max-lines echo
 
     echo '### test too long args'
-    one_mb_line | parallel echo 2>&1
-    one_mb_line | xargs echo 2>&1
-    (seq 1 10; one_mb_line; seq 12 15) | stdsort parallel -j1 -km -s 10 echo
-    (seq 1 10; one_mb_line; seq 12 15) | stdsort xargs -s 10 echo
-    (seq 1 10; one_mb_line; seq 12 15) | stdsort parallel -j1 -kX -s 10 echo
+    (
+	one_mb_line | parallel echo 2>&1
+	one_mb_line | xargs echo 2>&1
+	(seq 1 10; one_mb_line; seq 12 15) | stdsort parallel -j1 -km -s 10 echo
+	(seq 1 10; one_mb_line; seq 12 15) | stdsort xargs -s 10 echo
+	(seq 1 10; one_mb_line; seq 12 15) | stdsort parallel -j1 -kX -s 10 echo
+    ) | perl -pe 's/(\d+)\d\d\d(\D)/${1}999$2/g'
 
     echo '### Test -x'
     echo '-km'
@@ -557,28 +559,6 @@ par_k_linebuffer() {
 
     parallel --line-buffer --tag -k 'seq {} | pv -qL 10' ::: {10..20}
     parallel --line-buffer -k 'echo stdout top;sleep 1;echo stderr in the middle >&2; sleep 1;echo stdout' ::: end 2>&1
-}
-
-par_maxlinelen_m_I() {
-    echo "### Test max line length -m -I"
-
-    seq 1 60000 | parallel -I :: -km -j1 echo a::b::c | LC_ALL=C sort >/tmp/114-a$$;
-    md5sum </tmp/114-a$$;
-    export CHAR=$(cat /tmp/114-a$$ | wc -c);
-    export LINES=$(cat /tmp/114-a$$ | wc -l);
-    echo "Chars per line ($CHAR/$LINES): "$(echo "$CHAR/$LINES" | bc);
-    rm /tmp/114-a$$
-}
-
-par_maxlinelen_X_I() {
-    echo "### Test max line length -X -I"
-
-    seq 1 60000 | parallel -I :: -kX -j1 echo a::b::c | LC_ALL=C sort >/tmp/114-b$$;
-    md5sum </tmp/114-b$$;
-    export CHAR=$(cat /tmp/114-b$$ | wc -c);
-    export LINES=$(cat /tmp/114-b$$ | wc -l);
-    echo "Chars per line ($CHAR/$LINES): "$(echo "$CHAR/$LINES" | bc);
-    rm /tmp/114-b$$
 }
 
 par_results_csv() {

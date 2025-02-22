@@ -76,6 +76,39 @@ start_centos3
     ssh $SSHLOGIN1 'ssh -o StrictHostKeyChecking=no localhost true; ssh -o StrictHostKeyChecking=no '$SSHLOGIN2' true;'
 ) &
 
+par_--ssh_lsh() {
+    echo '### --ssh lsh'
+    # lsh: Protocol error: No common key exchange method.
+    #
+    # $ lsh --list-algorithms
+    # Supported hostkey algorithms: ssh-dss, spki, none
+    #
+    # $ nmap --script ssh2-enum-algos -sV -p 22 lo
+    # |   server_host_key_algorithms: (4)
+    # |       rsa-sha2-512
+    # |       rsa-sha2-256
+    # |       ecdsa-sha2-nistp256
+    # |       ssh-ed25519
+    # |
+    #
+    server=centos3
+    user=vagrant
+    sshlogin=$user@$server
+    parallel --ssh lsh -S $sshlogin echo ::: OK
+    echo OK | parallel --ssh lsh --pipe -S $sshlogin cat
+    parallel --ssh lsh -S $sshlogin echo ::: OK
+    echo OK | parallel --ssh lsh --pipe -S $sshlogin cat
+    # Todo:
+    # * rsync/--trc
+    # * csh@lo
+}
+
+export -f $(compgen -A function | grep par_)
+compgen -A function | G par_ "$@" | sort |
+    parallel --timeout 100 -j75% --joblog /tmp/jl-`basename $0` -j3 --tag -k --delay 0.1 --retries 3 '{} 2>&1'
+
+unset $(compgen -A function | grep par_)
+
 . env_parallel.bash
 env_parallel --session
 

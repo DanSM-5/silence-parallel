@@ -87,32 +87,6 @@ par_--controlmaster_eats() {
     seq 2 | parallel -k --controlmaster --sshlogin lo echo OK{}
 }
 
-par_--ssh_lsh() {
-    echo '### --ssh lsh'
-    # lsh: Protocol error: No common key exchange method.
-    #
-    # $ lsh --list-algorithms
-    # Supported hostkey algorithms: ssh-dss, spki, none
-    #
-    # $ nmap --script ssh2-enum-algos -sV -p 22 lo
-    # |   server_host_key_algorithms: (4)
-    # |       rsa-sha2-512
-    # |       rsa-sha2-256
-    # |       ecdsa-sha2-nistp256
-    # |       ssh-ed25519
-    # |
-    #
-    server=centos3
-    user=vagrant
-    sshlogin=$user@$server
-    parallel --ssh lsh -S $sshlogin echo ::: OK
-    echo OK | parallel --ssh lsh --pipe -S $sshlogin cat
-    parallel --ssh lsh -S $sshlogin echo ::: OK
-    echo OK | parallel --ssh lsh --pipe -S $sshlogin cat
-    # Todo:
-    # * rsync/--trc
-    # * csh@lo
-}
 
 par_pipe_retries() {
     echo '### bug #45025: --pipe --retries does not reschedule on other host'

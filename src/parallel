@@ -5635,6 +5635,8 @@ sub onall($@) {
 			   "on the command line, ".
 			   "making it visible to local users via `ps`.");
 	}
+	# Quote any , as ,,
+	$qsshloginpw =~ s/,/,,/g;
 	my $joblog = tmp_joblog($opt::joblog);
 	if($joblog) {
 	    push @joblogs, $joblog;

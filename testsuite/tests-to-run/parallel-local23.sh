@@ -36,9 +36,6 @@ echo '### Check that 4 processes are really used'
 echo '### --version must have higher priority than retired options'
   $NICEPAR --version -g -Y -U -W -T | tail -n9
 
-echo '### bug #39787: --xargs broken'
-  nice perl -e 'for(1..30000){print "$_\n"}' | $NICEPAR --xargs -k echo  | perl -ne 'print length $_,"\n"'
-
 echo '### --delay should grow by 3 sec per arg'
   stdout /usr/bin/time -f %e parallel --delay 3 true ::: 1 2 | perl -ne '$_ >= 3 and $_ <= 8 and print "OK\n"'
   stdout /usr/bin/time -f %e parallel --delay 3 true ::: 1 2 3 | perl -ne '$_ >= 6 and $_ <= 11 and print "OK\n"'

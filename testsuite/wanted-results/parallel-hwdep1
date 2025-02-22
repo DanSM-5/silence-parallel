@@ -46,34 +46,34 @@ par__sockets_cores_threads	Threads should complete first on machines with less t
 par_colour_failed	--colour-failed --colour
 par_colour_failed	seq 1;exit 0
 par_colour_failed	1
-par_colour_failed	[48;5;196;38;5;231m[Kseq 1;exit 1(B[m
-par_colour_failed	[48;5;196;38;5;231m[K1(B[m
-par_colour_failed	[48;5;196;38;5;231m[Kseq 1;exit 2(B[m
-par_colour_failed	[48;5;196;38;5;231m[K1(B[m
+par_colour_failed	[48;5;196;38;5;231m[Kseq 1;exit 1[m
+par_colour_failed	[48;5;196;38;5;231m[K1[m
+par_colour_failed	[48;5;196;38;5;231m[Kseq 1;exit 2[m
+par_colour_failed	[48;5;196;38;5;231m[K1[m
 par_colour_failed	seq 2;exit 0
 par_colour_failed	1
 par_colour_failed	2
-par_colour_failed	[48;5;196;38;5;231m[Kseq 2;exit 1(B[m
-par_colour_failed	[48;5;196;38;5;231m[K1(B[m
-par_colour_failed	[48;5;196;38;5;231m[K2(B[m
-par_colour_failed	[48;5;196;38;5;231m[Kseq 2;exit 2(B[m
-par_colour_failed	[48;5;196;38;5;231m[K1(B[m
-par_colour_failed	[48;5;196;38;5;231m[K2(B[m
-par_colour_failed	[48;5;178;38;5;000m[Kseq 1;exit 0(B[m
-par_colour_failed	[48;5;178;38;5;000m[K1(B[m
-par_colour_failed	[48;5;196;38;5;231m[Kseq 1;exit 1(B[m
-par_colour_failed	[48;5;196;38;5;231m[K1(B[m
-par_colour_failed	[48;5;196;38;5;231m[Kseq 1;exit 2(B[m
-par_colour_failed	[48;5;196;38;5;231m[K1(B[m
-par_colour_failed	[48;5;203;38;5;000m[Kseq 2;exit 0(B[m
-par_colour_failed	[48;5;203;38;5;000m[K1(B[m
-par_colour_failed	[48;5;203;38;5;000m[K2(B[m
-par_colour_failed	[48;5;196;38;5;231m[Kseq 2;exit 1(B[m
-par_colour_failed	[48;5;196;38;5;231m[K1(B[m
-par_colour_failed	[48;5;196;38;5;231m[K2(B[m
-par_colour_failed	[48;5;196;38;5;231m[Kseq 2;exit 2(B[m
-par_colour_failed	[48;5;196;38;5;231m[K1(B[m
-par_colour_failed	[48;5;196;38;5;231m[K2(B[m
+par_colour_failed	[48;5;196;38;5;231m[Kseq 2;exit 1[m
+par_colour_failed	[48;5;196;38;5;231m[K1[m
+par_colour_failed	[48;5;196;38;5;231m[K2[m
+par_colour_failed	[48;5;196;38;5;231m[Kseq 2;exit 2[m
+par_colour_failed	[48;5;196;38;5;231m[K1[m
+par_colour_failed	[48;5;196;38;5;231m[K2[m
+par_colour_failed	[48;5;178;38;5;000m[Kseq 1;exit 0[m
+par_colour_failed	[48;5;178;38;5;000m[K1[m
+par_colour_failed	[48;5;196;38;5;231m[Kseq 1;exit 1[m
+par_colour_failed	[48;5;196;38;5;231m[K1[m
+par_colour_failed	[48;5;196;38;5;231m[Kseq 1;exit 2[m
+par_colour_failed	[48;5;196;38;5;231m[K1[m
+par_colour_failed	[48;5;203;38;5;000m[Kseq 2;exit 0[m
+par_colour_failed	[48;5;203;38;5;000m[K1[m
+par_colour_failed	[48;5;203;38;5;000m[K2[m
+par_colour_failed	[48;5;196;38;5;231m[Kseq 2;exit 1[m
+par_colour_failed	[48;5;196;38;5;231m[K1[m
+par_colour_failed	[48;5;196;38;5;231m[K2[m
+par_colour_failed	[48;5;196;38;5;231m[Kseq 2;exit 2[m
+par_colour_failed	[48;5;196;38;5;231m[K1[m
+par_colour_failed	[48;5;196;38;5;231m[K2[m
 par_ctagstring	### --ctag --ctagstring should be different from --tag --tagstring
 par_ctagstring	tag/ctag 8 37
 par_ctagstring	8
@@ -81,37 +81,47 @@ par_ctagstring	37
 par_ctagstring	tagstring/ctagstring 10 39
 par_ctagstring	10
 par_ctagstring	39
+par_lines_over_130k	### Test of xargs -m command lines > 130k
+par_lines_over_130k	a3c892de2524f32f78550b47336eadd0  -
+par_lines_over_130k	Chars per line: 63437
+par_lines_over_130k	     11  119989  697810
+par_lines_over_130k	### Test of xargs -X command lines > 130k
+par_lines_over_130k	a98747678a5d18c4470a073812437ab2  -
+par_lines_over_130k	Chars per line: 62906
+par_lines_over_130k	     13   60000  817788
+par_lines_over_130k	### Test of xargs -m command lines > 130k
+par_lines_over_130k	ba869d577103ef0cc6b6045c2a618c43  -
 par_ll_color_long_line	### --latest-line --color with lines longer than terminal width
-par_ll_color_long_line	par_ll_color_long_line	[K01x     [48;5;178;38;5;000m[K0100000 1 2 3 4 5 6 7>(B[m
-par_ll_color_long_line	par_ll_color_long_line	[K02xx    [48;5;039;38;5;231m[K0200000 1 2 3 4 5 6 7>(B[m
-par_ll_color_long_line	par_ll_color_long_line	[K03xxx   [48;5;162;38;5;231m[K0300000 1 2 3 4 5 6 7>(B[m
-par_ll_color_long_line	par_ll_color_long_line	[K04xxxx  [48;5;203;38;5;000m[K0400000 1 2 3 4 5 6 7>(B[m
-par_ll_color_long_line	par_ll_color_long_line	[K05xxxxx [48;5;068;38;5;231m[K0500000 1 2 3 4 5 6 7>(B[m
-par_ll_color_long_line	par_ll_color_long_line	[K06xxxxxx        [48;5;050;38;5;000m[K0600000 1 2 3>(B[m
-par_ll_color_long_line	par_ll_color_long_line	[K07xxxxxxx       [48;5;198;38;5;231m[K0700000 1 2 3>(B[m
-par_ll_color_long_line	par_ll_color_long_line	[K08xxxxxxxx      [48;5;226;38;5;000m[K0800000 1 2 3>(B[m
-par_ll_color_long_line	par_ll_color_long_line	[K09xxxxxxxxx     [48;5;097;38;5;231m[K0900000 1 2 3>(B[m
-par_ll_color_long_line	par_ll_color_long_line	[K10xxxxxxxxxx    [48;5;121;38;5;000m[K1000000 1 2 3>(B[m
-par_ll_color_long_line	par_ll_color_long_line	[K11xxxxxxxxxxx   [48;5;128;38;5;231m[K1100000 1 2 3>(B[m
-par_ll_color_long_line	par_ll_color_long_line	[K12xxxxxxxxxxxx  [48;5;177;38;5;000m[K1200000 1 2 3>(B[m
-par_ll_color_long_line	par_ll_color_long_line	[K13xxxxxxxxxxxxx [48;5;038;38;5;231m[K1300000 1 2 3>(B[m
-par_ll_color_long_line	par_ll_color_long_line	[K14xxxxxxxxxxxxxx        [48;5;161;38;5;231m[K14000>(B[m
-par_ll_color_long_line	par_ll_color_long_line	[K15xxxxxxxxxxxxxxx       [48;5;202;38;5;000m[K15000>(B[m
-par_ll_color_long_line	par_ll_color_long_line	[K16xxxxxxxxxxxxxxxx      [48;5;067;38;5;231m[K16000>(B[m
-par_ll_color_long_line	par_ll_color_long_line	[K17xxxxxxxxxxxxxxxxx     [48;5;049;38;5;000m[K17000>(B[m
-par_ll_color_long_line	par_ll_color_long_line	[K18xxxxxxxxxxxxxxxxxx    [48;5;197;38;5;231m[K18000>(B[m
-par_ll_color_long_line	par_ll_color_long_line	[K19xxxxxxxxxxxxxxxxxxx   [48;5;225;38;5;000m[K19000>(B[m
-par_ll_color_long_line	par_ll_color_long_line	[K20xxxxxxxxxxxxxxxxxxxx  [48;5;096;38;5;231m[K20000>(B[m
-par_ll_color_long_line	par_ll_color_long_line	[K21xxxxxxxxxxxxxxxxxxxxx [48;5;120;38;5;000m[K21000>(B[m
-par_ll_color_long_line	par_ll_color_long_line	[K22xxxxxxxxxxxxxxxxxxxxxx     >[48;5;237;38;5;231m[K(B[m
-par_ll_color_long_line	par_ll_color_long_line	[K23xxxxxxxxxxxxxxxxxxxxxxx    >[48;5;013;38;5;231m[K(B[m
-par_ll_color_long_line	par_ll_color_long_line	[K24xxxxxxxxxxxxxxxxxxxxxxxx   >[48;5;037;38;5;231m[K(B[m
-par_ll_color_long_line	par_ll_color_long_line	[K25xxxxxxxxxxxxxxxxxxxxxxxxx  >[48;5;160;38;5;231m[K(B[m
-par_ll_color_long_line	par_ll_color_long_line	[K26xxxxxxxxxxxxxxxxxxxxxxxxxx >[48;5;201;38;5;000m[K(B[m
-par_ll_color_long_line	par_ll_color_long_line	[K27xxxxxxxxxxxxxxxxxxxxxxxxxxx>[48;5;066;38;5;231m[K(B[m
-par_ll_color_long_line	par_ll_color_long_line	[K28xxxxxxxxxxxxxxxxxxxxxxxxxxx>[48;5;048;38;5;000m[K(B[m
-par_ll_color_long_line	par_ll_color_long_line	[K29xxxxxxxxxxxxxxxxxxxxxxxxxxx>[48;5;196;38;5;231m[K(B[m
-par_ll_color_long_line	par_ll_color_long_line	[K30xxxxxxxxxxxxxxxxxxxxxxxxxxx>[48;5;224;38;5;000m[K(B[m
+par_ll_color_long_line	par_ll_color_long_line	[K01x     [48;5;178;38;5;000m[K0100000 1 2 3 4 5 6 7>[m
+par_ll_color_long_line	par_ll_color_long_line	[K02xx    [48;5;039;38;5;231m[K0200000 1 2 3 4 5 6 7>[m
+par_ll_color_long_line	par_ll_color_long_line	[K03xxx   [48;5;162;38;5;231m[K0300000 1 2 3 4 5 6 7>[m
+par_ll_color_long_line	par_ll_color_long_line	[K04xxxx  [48;5;203;38;5;000m[K0400000 1 2 3 4 5 6 7>[m
+par_ll_color_long_line	par_ll_color_long_line	[K05xxxxx [48;5;068;38;5;231m[K0500000 1 2 3 4 5 6 7>[m
+par_ll_color_long_line	par_ll_color_long_line	[K06xxxxxx        [48;5;050;38;5;000m[K0600000 1 2 3>[m
+par_ll_color_long_line	par_ll_color_long_line	[K07xxxxxxx       [48;5;198;38;5;231m[K0700000 1 2 3>[m
+par_ll_color_long_line	par_ll_color_long_line	[K08xxxxxxxx      [48;5;226;38;5;000m[K0800000 1 2 3>[m
+par_ll_color_long_line	par_ll_color_long_line	[K09xxxxxxxxx     [48;5;097;38;5;231m[K0900000 1 2 3>[m
+par_ll_color_long_line	par_ll_color_long_line	[K10xxxxxxxxxx    [48;5;121;38;5;000m[K1000000 1 2 3>[m
+par_ll_color_long_line	par_ll_color_long_line	[K11xxxxxxxxxxx   [48;5;128;38;5;231m[K1100000 1 2 3>[m
+par_ll_color_long_line	par_ll_color_long_line	[K12xxxxxxxxxxxx  [48;5;177;38;5;000m[K1200000 1 2 3>[m
+par_ll_color_long_line	par_ll_color_long_line	[K13xxxxxxxxxxxxx [48;5;038;38;5;231m[K1300000 1 2 3>[m
+par_ll_color_long_line	par_ll_color_long_line	[K14xxxxxxxxxxxxxx        [48;5;161;38;5;231m[K14000>[m
+par_ll_color_long_line	par_ll_color_long_line	[K15xxxxxxxxxxxxxxx       [48;5;202;38;5;000m[K15000>[m
+par_ll_color_long_line	par_ll_color_long_line	[K16xxxxxxxxxxxxxxxx      [48;5;067;38;5;231m[K16000>[m
+par_ll_color_long_line	par_ll_color_long_line	[K17xxxxxxxxxxxxxxxxx     [48;5;049;38;5;000m[K17000>[m
+par_ll_color_long_line	par_ll_color_long_line	[K18xxxxxxxxxxxxxxxxxx    [48;5;197;38;5;231m[K18000>[m
+par_ll_color_long_line	par_ll_color_long_line	[K19xxxxxxxxxxxxxxxxxxx   [48;5;225;38;5;000m[K19000>[m
+par_ll_color_long_line	par_ll_color_long_line	[K20xxxxxxxxxxxxxxxxxxxx  [48;5;096;38;5;231m[K20000>[m
+par_ll_color_long_line	par_ll_color_long_line	[K21xxxxxxxxxxxxxxxxxxxxx [48;5;120;38;5;000m[K21000>[m
+par_ll_color_long_line	par_ll_color_long_line	[K22xxxxxxxxxxxxxxxxxxxxxx     >[48;5;237;38;5;231m[K[m
+par_ll_color_long_line	par_ll_color_long_line	[K23xxxxxxxxxxxxxxxxxxxxxxx    >[48;5;013;38;5;231m[K[m
+par_ll_color_long_line	par_ll_color_long_line	[K24xxxxxxxxxxxxxxxxxxxxxxxx   >[48;5;037;38;5;231m[K[m
+par_ll_color_long_line	par_ll_color_long_line	[K25xxxxxxxxxxxxxxxxxxxxxxxxx  >[48;5;160;38;5;231m[K[m
+par_ll_color_long_line	par_ll_color_long_line	[K26xxxxxxxxxxxxxxxxxxxxxxxxxx >[48;5;201;38;5;000m[K[m
+par_ll_color_long_line	par_ll_color_long_line	[K27xxxxxxxxxxxxxxxxxxxxxxxxxxx>[48;5;066;38;5;231m[K[m
+par_ll_color_long_line	par_ll_color_long_line	[K28xxxxxxxxxxxxxxxxxxxxxxxxxxx>[48;5;048;38;5;000m[K[m
+par_ll_color_long_line	par_ll_color_long_line	[K29xxxxxxxxxxxxxxxxxxxxxxxxxxx>[48;5;196;38;5;231m[K[m
+par_ll_color_long_line	par_ll_color_long_line	[K30xxxxxxxxxxxxxxxxxxxxxxxxxxx>[48;5;224;38;5;000m[K[m
 par_ll_long_line	### --latest-line with lines longer than terminal width
 par_ll_long_line	par_ll_long_line	[K01x     0100000 1 2 3 4 5 6 7>
 par_ll_long_line	par_ll_long_line	[K02xx    0200000 1 2 3 4 5 6 7>
@@ -149,6 +159,12 @@ par_ll_no_newline	par_ll_no_newline	[Ktwo
 par_ll_no_newline	par_ll_no_newline	[Klines   
 par_ll_no_newline	par_ll_no_newline	[Ktwo     
 par_ll_no_newline	last linelast line
+par_maxlinelen_X_I	### Test max line length -X -I
+par_maxlinelen_X_I	a98747678a5d18c4470a073812437ab2  -
+par_maxlinelen_X_I	Chars per line (817788/13): 62906
+par_maxlinelen_m_I	### Test max line length -m -I
+par_maxlinelen_m_I	a3c892de2524f32f78550b47336eadd0  -
+par_maxlinelen_m_I	Chars per line (697810/11): 63437
 par_progress	
 par_progress	Computers / CPU sockets / Max jobs to run
 par_progress	1:local / 1 / 1
@@ -167,3 +183,7 @@ par_progress	1:local / 8 / 8
 par_progress	
 par_progress	Computer:jobs running/jobs completed/%of started jobs/Average seconds to complete
 par_progress	local:0/3/100%/9.9s [K
+par_xargs_bug_39787	### bug #39787: --xargs broken
+par_xargs_bug_39787	63654
+par_xargs_bug_39787	63654
+par_xargs_bug_39787	41586

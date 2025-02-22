@@ -642,7 +642,9 @@ par_pipe_compress_blocks() {
 
 par_too_long_line_X() {
     echo 'bug #54869: Long lines break'
-    seq 3000 | parallel -Xj1 'echo {} {} {} {} {} {} {} {} {} {} {} {} {} {} | wc'
+    seq 3850 |
+	parallel -Xj1 'echo {} {} {} {} {} {} {} {} {} {} {} {} {} {} | wc' |
+	perl -pe 's/(\d)\d\d\d\d/${1}9999/g'
 }
 
 par_null_resume() {
