@@ -4,9 +4,6 @@
  
 Quote of the month:
 
-  Use GNU Parallel and thank me later ￼
-    -- pratikbin | NodeOps @pratikbin
-
   Man, GNU Parallel is very cool.
     -- jeeger @jeeger@mastodon.social
 
@@ -250,6 +247,9 @@ https://negfeedback.blogspot.com/2020/05/indispensable-command-line-tools.html
     -- @alinajaf@twitter
 
 === Used ===
+
+  Use GNU Parallel and thank me later ￼
+    -- pratikbin | NodeOps @pratikbin
 
   GNU Parallel too. It is my map/reduce tool with built in support to retry failed jobs.
     -- Dhruva @mechanicker.bsky.social

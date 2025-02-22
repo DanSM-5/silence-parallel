@@ -1,3 +1,23 @@
+20250222
+
+New in this release:
+
+* No new features. This is a candidate for a stable release.
+
+* Bug fixes and man page updates.
+
+News about GNU Parallel:
+
+* Execute programs in parallel
+  https://fekir.info/post/execute-programs-in-parallel/
+
+* GNU Parallel を触れてみる
+  https://blog.yamano.dev/posts/3fa121b4c7a971aacf564509a1077fb7/
+
+* GNU Parallel is a Time Saver
+  https://ramanenka.dev/gnu-parallel/
+
+
 20250122
 
 New in this release:
