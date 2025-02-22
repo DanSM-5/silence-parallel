@@ -1716,13 +1716,14 @@ See also: B<--memfree> B<--load>
 =item B<--ll>
 
 Print the latest line. Each job gets a single line on the screen that
-is updated with the latest output from the job.
+is updated with the last full line from currently running jobs.
 
 The screen keeps the oldest running job in view, so younger jobs may
-no be visible. They will, however, be shown when the oldest job
+no be visible. These will, however, be shown when the oldest job
 finishes.
 
-Running this example makes it easer to understand:
+Running this example makes it easer to understand. Note how the screen
+scrolls when the job at the top of the screen finishes:
 
   slow_seq() {
     # Run seq with 33 characters per second
@@ -1907,6 +1908,54 @@ way to suspend remote jobs.
 I<size> can be postfixed with K, M, G, T, P, k, m, g, t, or p.
 
 See also: UNIT PREFIX B<--memfree>
+
+
+=item B<--milestone> I<str> (alpha testing)
+
+Set milestones where all previous jobs must have finished.
+
+Example:
+
+  doit() {
+      start=$(date +%H:%M:%S)
+      # Sleep up to 5 sec
+      sleep $((RANDOM % 5000))e-3
+      end=$(date +%H:%M:%S)
+      echo Start: $start End: $end
+  }
+  export -f doit
+  parallel --tag --milestone // doit ::: a b c // 1 2 // A B // I II II
+
+This will run (a, b, c), (1, 2), (A, B), (I, II, III). The jobs in a
+batch will be run in parallel, but the batches will be run in serial.
+
+Note how the start time for each batch is later than the end time of
+the previous batch.
+
+Cartesian product example:
+
+  parallel --tag --milestone // doit ::: Frist_run // Second_run ::: file{1..10}
+
+This will complete First_run with all files before starting Second_run
+on all files.
+
+Advanced cartesian example (buggy):
+
+  parallel --tag --milestone // doit ::: a b // 1 2 3 ::: A B C // I II
+
+This runs: [a] x [A B C], [a] x [I II], [b] x [A B C], [b] x [I II],
+[1] x [A B C], [1] x [I II], [2] x [A B C], [2] x [I II], [3] x [A B
+C], [3] x [I II] = (a A, a B, a C), (a I, a II), (b A, b B, b C), (b
+I, b II), (1 A, 1 B, 1 C), (1 I, 1 II), (2 A, 2 B, 2 C), (2 I, 2 II),
+(3 A, 3 B, 3 C), (3 I, 3 II).
+
+The jobs in a batch will be run in parallel, but the batches will be
+run in serial.
+
+When the bug is fixed, it will run: [a b] x [A B C], [a b] x [I II],
+[1 2 3] x [A B C], [1 2 3] x [I II] = (a A, a B, a C, b A, b B, b C),
+(a I, a II, b I, b II), (1 A, 1 B, 1 C, 2 A, 2 B, 2 C, 3 A, 3 B, 3 C),
+(1 I, 1 II, 2 I, 2 II, 3 I, 3 II).
 
 
 =item B<--minversion> I<version>

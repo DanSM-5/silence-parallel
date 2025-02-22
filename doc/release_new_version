@@ -275,28 +275,25 @@ from:tange@gnu.org
 to:parallel@gnu.org, bug-parallel@gnu.org
 stable-bcc: Jesse Alama <jessealama@fastmail.fm>
 
-Subject: GNU Parallel 20250222 ('Grete Tange') released [stable]
+Subject: GNU Parallel 2025xx22 ('<<>>') released <<[stable]>>
 
-GNU Parallel 20250222 ('Grete Tange') has been released. It is available for download at: lbry://@GnuParallel:4
+GNU Parallel 202xxx22 ('<<>>') has been released. It is available for download at: lbry://@GnuParallel:4
 
 Quote of the month:
 
-  Use GNU Parallel and thank me later ￼
-    -- pratikbin | NodeOps @pratikbin
+  <<>>
   
 New in this release:
 
-* No new features. This is a candidate for a stable release.
+<<>>
+
+<<* No new features. This is a candidate for a stable release.>>
 
 * Bug fixes and man page updates.
 
 News about GNU Parallel:
 
-* Execute programs in parallel https://fekir.info/post/execute-programs-in-parallel/
-
-* GNU Parallel を触れてみる https://blog.yamano.dev/posts/3fa121b4c7a971aacf564509a1077fb7/
-
-* GNU Parallel is a Time Saver https://ramanenka.dev/gnu-parallel/
+<<>>
 
 
 GNU Parallel - For people who live life in the parallel lane.

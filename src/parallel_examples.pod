@@ -588,6 +588,61 @@ So you end up with x1z1 .. x5z5 each containing the content of all
 values of y.
 
 
+=head2 EXAMPLE: Breadth first parallel dir crawler
+
+To process all files in dirs and subdirs you would normally run:
+
+  find . -print | parallel do_stuff
+
+But sometimes you want to parallelize each dir. Maybe doing a dir scan
+is slow?
+
+Then you can use a breadth first directory scan.
+
+  process() {
+      process_file() {
+          echo "Do your processing of file here $1"
+      }
+
+      queue="$1"
+      shift
+      if  [ -d "$1" ] ; then
+          echo "queueing $1"
+          find "$1" -mindepth 1 -maxdepth 1 > "$queue"
+          if [ ! -s "$queue" ] ; then
+              # Ignore empty dirs
+              rm "$queue"
+          fi
+      else
+          process_file "$1"
+      fi
+  }
+  export -f process
+  
+  # Queue lists
+  queue=$(mktemp)
+  queuenew=$(mktemp -d)
+  
+  # Start dir
+  echo . > "$queue"
+  
+  while [ -s "$queue" ] ; do
+      # Run one round for every directory level
+      # (Breadth first)
+      cat "$queue" |
+          parallel process "$queuenew"/{#} {}
+      # Each job may create a list in "$queuenew"/job_no
+      cat "$queuenew"/* > "$queue" 2>/dev/null
+      rm -f "$queuenew"/*
+  done
+  rmdir "$queuenew"
+  rm "$queue"
+  
+
+This is not a perfect replacement (e.g. B<--halt> is not respected,
+and B<$?> is not set correctly).
+
+
 =head2 EXAMPLE: Breadth first parallel web crawler/mirrorer
 
 This script below will crawl and mirror a URL in parallel.  It

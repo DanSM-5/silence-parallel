@@ -4,6 +4,9 @@
  
 Quote of the month:
 
+  64コアで、64並列でsimlationを回してtopコマンドで状況を見るのは心地よい。簡単に並列処理を実現できるGNU parallelコマンドは素晴らしい。
+    -- Daisuke Iizuka @diizuka@twitter
+
   Man, GNU Parallel is very cool.
     -- jeeger @jeeger@mastodon.social
 

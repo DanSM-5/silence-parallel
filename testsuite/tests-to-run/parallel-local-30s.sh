@@ -8,6 +8,35 @@
 # Each should be taking 30-100s and be possible to run in parallel
 # I.e.: No race conditions, no logins
 
+par_milestone() {
+    echo '### Test --milestone'
+    echo '# 1..5 cannot mix with a..f'
+    parallel  --tag  --delay 0.1 --milestone /// \
+	      'echo {#}; sleep {=1 $_=1+(seq()%4)=};' \
+	      ::: {1..5} /// {a..f}
+    # Ideally this should run:
+    #   [a b] x [A B C]
+    #   [a b] x [I II]
+    #   [1 2 3] x [A B C]
+    #   [1 2 3] x [I II]
+    # However, due to a bug it runs:
+    #   [a] x [A B C]
+    #   [a] x [I II]
+    #   [b] x [A B C]
+    #   [b] x [I II]
+    #   [1] x [A B C]
+    #   [1] x [I II]
+    #   [2] x [A B C]
+    #   [2] x [I II]
+    #   [3] x [A B C]
+    #   [3] x [I II]
+    parallel  --tag  --delay 0.1 --milestone /// \
+	      'echo {#}; sleep {=1 $_=1+(seq()%4)=};' \
+	      ::: a b /// 1 2 3 ::: A B C /// I II 
+    # For debugging
+    # parallel  --tag  --delay 0.01 --milestone /// 'echo {#} $(date) $(sleep {=1 $_=1+rand()*5=}; date)' ::: a b /// 1 2 3 ::: A B C /// I II
+}
+
 par__dburl_parsing() {
     mkdir -p test
     (
@@ -92,7 +121,7 @@ par__dburl_parsing() {
     )
     rmdir test
 }
- 
+
 par_sshlogin_parsing() {
     echo '### Generate sshlogins to test parsing'
     sudo sshd -p 22222
