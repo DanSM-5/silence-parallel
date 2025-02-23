@@ -2919,7 +2919,8 @@ sub test_safe_env_vars {
     sub test_safe_chars {
 	my $var = shift;
 	if($ENV{$var} =~ s{\r$}{}) {
-	    ::warning("Removed ^M (<CR>) from end of $var");
+	    # If user wrote the script in DOS, we know what they meant
+	    ::warning("Removed ^M (\\r / <CR>) from end of $var");
 	}
 	if($ENV{$var} =~ m{^[-a-z0-9_+,.%\@:/= ]*$}is) {
 	    # OK
@@ -2935,7 +2936,7 @@ sub test_safe_env_vars {
 
 sub init_globals() {
     # Defaults:
-    $Global::version = 20250122;
+    $Global::version = 20250222;
     $Global::progname = 'parallel';
     $::name = "GNU Parallel";
     $Global::infinity = 2**31;
@@ -3004,7 +3005,8 @@ sub init_globals() {
 	 # echo {#z.*z.} ::: z.z.z.foo => z.foo
 	 # echo {##z.*z.} ::: z.z.z.foo => foo
 	 # Bash ${a#bc}
-	 '{#([^#}][^}]*?)}' =>
+	 # Complex regexp to avoid matching {#} with format {#:%05d}
+	 '{#((?:[^#}:]|:[^%])[^}]*?)}' =>
 	 '$nongreedy=::make_regexp_ungreedy($$1);s/^$nongreedy(.*)/$1/;',
 	 # Bash ${a##bc}
 	 '{##([^#}][^}]*?)}' => 's/^$$1//;',
@@ -5611,6 +5613,8 @@ sub onall($@) {
 			   "on the command line, ".
 			   "making it visible to local users via `ps`.");
 	}
+	# Quote any , as ,,
+	$qsshloginpw =~ s/,/,,/g;
 	my $joblog = tmp_joblog($opt::joblog);
 	if($joblog) {
 	    push @joblogs, $joblog;
@@ -5994,8 +5998,8 @@ sub usage() {
 	 "If you use programs that use GNU Parallel to process data for an article in a",
 	 "scientific publication, please cite:",
 	 "",
-	 "  Tange, O. (2025, January 22). GNU Parallel 20250122 ('4K-AZ65').",
-	 "  Zenodo. https://doi.org/10.5281/zenodo.14715132",
+	 "  Tange, O. (2025, February 22). GNU Parallel 20250222 ('Grete Tange').",
+	 "  Zenodo. https://doi.org/10.5281/zenodo.14911163",
 	 "",
 
 	 # Before changing these lines, please read
@@ -6444,24 +6448,25 @@ sub qqx(@) {
 	# open(STDERR, ">", "/dev/null");
 	open(local *CHILD_STDIN,  '<', '/dev/null') or die $!;
 	open(local *CHILD_STDERR, '>', '/dev/null') or die $!;
-	my $out;
+	my($out,$pid);
 	# eval is needed if open3 fails (e.g. command line too long)
 	eval {
-	    my $pid = open3(
+	    $pid = open3(
 		'<&CHILD_STDIN',
 		$out,
 		'>&CHILD_STDERR',
 		# && true is to force spawning a shell and not just exec'ing
 		"@_ && true");
-	    my @arr = <$out>;
-	    close $out;
-	    # Make sure $? is set
-	    waitpid($pid, 0);
-	    return wantarray ? @arr : join "",@arr;
 	} or do {
 	    # If eval fails, force $?=false
 	    `false`;
+	    return;
 	};
+	my @arr = <$out>;
+	close $out;
+	# Make sure $? is set
+	waitpid($pid, 0);
+	return wantarray ? @arr : join "",@arr;
     }
 }
 
@@ -13590,7 +13595,9 @@ sub new($) {
 		{
 		    # This a rewrite of the above to perl 5.8
 		    # (does not use $+{...} which was introduced in 5.010
-		    # Look for: { position prefix group format postfix }
+		    # Look for: { position prefix group postfix format }
+		    # Look for: { 1.1      /      (.*)  ''      :% 5d }
+		    # --match '\.(.*)' echo '{1.1/3/6:% 5d}' ::: fooa.123
 		    while($s =~
 			  s{( (?: ^|\177> ) (?: [^\177]*|[\177][^<>] )*?)
   			    \{
@@ -13601,9 +13608,9 @@ sub new($) {
  			    ($format_regexp)
  			    \}
 			   }
-			   {
+			  {
 				replacer_rpl($rpl, $1, $2, $grp_regexp, $3, $+);
- 			   }gsex){}
+ 			  }gsex){}
 		    # Look for: { position prefix group postfix }
 		    # (Same above - except "format")
 		    while($s =~
@@ -13658,13 +13665,22 @@ sub new($) {
 	    }
 	}
 	# Perl positional replacement fields {=1.2 perlexpr =}
-	while($s =~
-	      s{ \177<                   # {=
- 		 (-?\d+(?:\.\d+)\s*)	 # position
+	my $format_regexp = ":%.*?";
+	# Replace with format first
+	$s =~ s{ \177<                   # {=
+ 		 (-?\d+(?:\.\d+)?)?	 # position
+		 (([^\177]+|\177\177)*)  # perl expr
+ 		 ($format_regexp)        # format
+		 \177>			 # =}
+ 		 }
+	      { replacer($2, '', $1,'','',$4); }gsex;
+	# Then replace without format
+	$s =~ s{ \177<                   # {=
+ 		 (-?\d+(?:\.\d+)?)?	 # position
 		 (([^\177]+|\177\177)*)  # perl expr
 		 \177>			 # =}
  		 }
-	      { replacer($2, '', $1,''); }gsex){};
+	      { replacer($2, '', $1,'','',$4); }gsex;
 	return $s;
     }
     

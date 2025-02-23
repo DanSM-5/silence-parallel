@@ -132,6 +132,8 @@ perl -ne '$/="\n\n"; /^Output/../^[^O=]\S/ and next; /^  / and print;' "$testsui
 	      s{.*bash: -c: line .*\n}{};
 	      # This is input_file
 	      s{^This is input_file.*\n}{};
+	      # Different env
+	      s{mysqlrootpass\n}{};
 	      ' | uniq
 
 echo "### 3+3 .par files (from --files), 1 .tms-file from tmux attach"

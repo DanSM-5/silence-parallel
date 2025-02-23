@@ -23,8 +23,14 @@ par_sshlogin_with_comma() {
     parallel -S 'ssh -J lo\,localhost 127.0.0.1' echo ::: OK
     echo "### --sshlogin with ,,"
     parallel -S 'ssh -J lo,,localhost 127.0.0.1' echo ::: OK
+    echo "### Both , and ,, in -S"
+    parallel -S'1/ssh -oProxyJump=vagrant@parallel-server1,,vagrant@parallel-server2 vagrant@parallel-server3,1/vagrant@parallel-server1' ::: hostname hostname |
+	sort
+    parallel --nonall -S'1/ssh -oProxyJump=vagrant@parallel-server1,,vagrant@parallel-server2 vagrant@parallel-server3,1/vagrant@parallel-server1' hostname |
+        sort
+    parallel --onall -S'1/ssh -oProxyJump=vagrant@parallel-server1,,vagrant@parallel-server2 vagrant@parallel-server3,1/vagrant@parallel-server1' ::: hostname |
+        sort
 }
-
 
 par__sshpass_with_password() {
     echo '### sshpass'

@@ -5,10 +5,66 @@
 # Jobs that depend on the hardware
 # (e.g number of CPU threads, terminal type)
 
+par_maxlinelen_X_I() {
+    echo "### Test max line length -X -I"
+
+    seq 1 60000 | parallel -I :: -kX -j1 echo a::b::c | LC_ALL=C sort >/tmp/114-b$$;
+    md5sum </tmp/114-b$$;
+    export CHAR=$(cat /tmp/114-b$$ | wc -c);
+    export LINES=$(cat /tmp/114-b$$ | wc -l);
+    echo "Chars per line ($CHAR/$LINES): "$(echo "$CHAR/$LINES" | bc);
+    rm /tmp/114-b$$
+}
+
+par_maxlinelen_m_I() {
+    echo "### Test max line length -m -I"
+
+    seq 1 60000 | parallel -I :: -km -j1 echo a::b::c | LC_ALL=C sort >/tmp/114-a$$;
+    md5sum </tmp/114-a$$;
+    export CHAR=$(cat /tmp/114-a$$ | wc -c);
+    export LINES=$(cat /tmp/114-a$$ | wc -l);
+    echo "Chars per line ($CHAR/$LINES): "$(echo "$CHAR/$LINES" | bc);
+    rm /tmp/114-a$$
+}
+
+par_lines_over_130k() {
+    echo '### Test of xargs -m command lines > 130k'; 
+    seq 1 60000 | parallel -m -j1 echo a{}b{}c | tee >(wc >/tmp/awc$$) >(sort | md5sum) >/tmp/a$$
+    wait
+    CHAR=$(cat /tmp/a$$ | wc -c)
+    LINES=$(cat /tmp/a$$ | wc -l)
+    echo "Chars per line:" $(echo "$CHAR/$LINES" | bc)
+    cat /tmp/awc$$
+    rm /tmp/a$$ /tmp/awc$$
+
+    echo '### Test of xargs -X command lines > 130k'; 
+    seq 1 60000 | parallel -X -j1 echo a{}b{}c | tee >(wc >/tmp/bwc$$) >(sort | (sleep 1; md5sum)) >/tmp/b$$; 
+    wait; 
+    CHAR=$(cat /tmp/b$$ | wc -c); 
+    LINES=$(cat /tmp/b$$ | wc -l); 
+    echo "Chars per line:" $(echo "$CHAR/$LINES" | bc); 
+    cat /tmp/bwc$$; 
+    rm /tmp/b$$ /tmp/bwc$$
+
+    echo '### Test of xargs -m command lines > 130k'; 
+    seq 1 60000 | parallel -k -j1 -m echo | md5sum
+}
+ 
+par_xargs_bug_39787() {
+    echo '### bug #39787: --xargs broken'
+    perl -e 'for(1..30000){print "$_\n"}' |
+	parallel --xargs -k echo |
+	perl -ne 'print length $_,"\n"'
+}
+
 par_colour_failed() {
     echo '--colour-failed --colour'
-    parallel --colour-failed -kv 'seq {1};exit {2}' ::: 1 2 ::: 0 1 2
-    parallel --colour --colour-failed -kv 'seq {1};exit {2}' ::: 1 2 ::: 0 1 2
+    (
+	parallel --colour-failed -kv 'seq {1};exit {2}' ::: 1 2 ::: 0 1 2
+	parallel --colour --colour-failed -kv 'seq {1};exit {2}' ::: 1 2 ::: 0 1 2
+    ) |
+	# Ignore ^O, ^[(B
+	perl -pe 's/\017$//; s/.\(B//g;'
 }
 
 par_ctagstring() {
@@ -25,7 +81,9 @@ par_ll_color_long_line() {
     echo '### --latest-line --color with lines longer than terminal width'
     COLUMNS=30 parallel --delay 0.3 --color --tagstring '{=$_.="x"x$_=}' \
 	   --ll 'echo {}00000 | sed -e "s/$/' {1..100} /'"' ::: {01..30} |
-	perl -ne 's/.\[A//g;
+	perl -ne 's/\017$//;
+                  s/.\(B//g;
+	     	  s/.\[A//g;
 		  /.\[K .{4}\[m/ and next;
                   /\S/ && print'| sort -u
 }

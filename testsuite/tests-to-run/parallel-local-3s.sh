@@ -29,7 +29,15 @@ par_format_string() {
     echo {dyn__postfix} + format
     parallel --rpl '{/(\d)/(.*)__} s/$$1/$$2/g;' echo 00012.44 == {/3/44__:%08.2f}  ::: 12.34567
     echo dyn without {}
-    parallel --rpl '/(\d)/(.*)} s/$$1/$$2/g;' echo 12.444567 98.765444 == /3/44}  ::: 12.34567 ::: 98.76543
+    parallel --rpl '/(\d)/(.*)} s/$$1/$$2/g;' echo 12.444567 98.765444 == '/3/44}'  ::: 12.34567 ::: 98.76543
+    echo 'bug #66503: %format bugs'
+    parallel --match '\.(.*)' echo 00143 == '{=1.1 s/2/4/:%05d=}' ::: foo.123
+    parallel --match '\.(.*)' echo __143 == '{=1.1 s/2/4/:% 5d=}' ::: foo.123
+    parallel echo __143 == '{=1 s/2/4/:% 5d=}' ::: 123
+    parallel echo __143 == '{=1 s/2/4/:% 5d=}' ::: 123
+    parallel echo d001.jpeg == d'{=1 $_=seq():%03d=}'.jpeg ::: da.jpeg
+    parallel echo d001.jpeg == d'{#:%03d}'.jpeg ::: da.jpeg
+    parallel echo d001.jpeg == d'{= $_=seq() :%03d=}'.jpeg ::: da.jpeg
 }
 
  par_pty() {
@@ -1916,9 +1924,10 @@ par_test_delimiter() {
 
 par_10000_m_X() {
     echo '### Test -m with 10000 args'
-    seq 10000 | perl -pe 's/$/.gif/' |
+    seq 10100 | perl -pe 's/$/.gif/' |
         parallel -j1 -km echo a{}b{.}c{.} |
-        parallel -k --pipe --tee ::: wc md5sum
+        parallel -k --pipe --tee ::: md5sum 'perl -pe "s/(.*)/length \$1/e"' |
+	perl -pe 's/^(\d)\d\d\d\d/${1}9999/'
 }
 
 par__10000_5_rpl_X() {

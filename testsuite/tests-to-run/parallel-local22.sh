@@ -5,27 +5,6 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 cat <<'EOF' | sed -e 's/;$/; /;s/$SERVER1/'$SERVER1'/;s/$SERVER2/'$SERVER2'/' | stdout parallel -vj0 -k --joblog /tmp/jl-`basename $0` -L1 -r
-echo '### Test of xargs -m command lines > 130k'; 
-  seq 1 60000 | parallel -m -j1 echo a{}b{}c | tee >(wc >/tmp/awc$$) >(sort | md5sum) >/tmp/a$$; 
-  wait; 
-  CHAR=$(cat /tmp/a$$ | wc -c); 
-  LINES=$(cat /tmp/a$$ | wc -l); 
-  echo "Chars per line:" $(echo "$CHAR/$LINES" | bc); 
-  cat /tmp/awc$$; 
-  rm /tmp/a$$ /tmp/awc$$
-
-echo '### Test of xargs -X command lines > 130k'; 
-  seq 1 60000 | parallel -X -j1 echo a{}b{}c | tee >(wc >/tmp/bwc$$) >(sort | (sleep 1; md5sum)) >/tmp/b$$; 
-  wait; 
-  CHAR=$(cat /tmp/b$$ | wc -c); 
-  LINES=$(cat /tmp/b$$ | wc -l); 
-  echo "Chars per line:" $(echo "$CHAR/$LINES" | bc); 
-  cat /tmp/bwc$$; 
-  rm /tmp/b$$ /tmp/bwc$$
-
-echo '### Test of xargs -m command lines > 130k'; 
-  seq 1 60000 | parallel -k -j1 -m echo | md5sum
-
 echo '### This causes problems if we kill child processes'; 
 # 2>/dev/null to avoid parallel: Warning: Starting 45 processes took > 2 sec.
   seq 2 40 | parallel -j 0 seq 1 10 2>/dev/null | sort | md5sum

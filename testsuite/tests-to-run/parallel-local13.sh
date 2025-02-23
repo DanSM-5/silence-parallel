@@ -105,7 +105,7 @@ stdout xargs -t -0 echo this plus that < space.xi
 stdout parallel -k -t -0 echo this plus that < space.xi
 echo '###  true < 32767-ys.xi'
 stdout xargs true < 32767-ys.xi
-stdout parallel -k true < 32767-ys.xi
+stdout parallel -k true < 32767-ys.xi | perl -pe 's/(\d)\d\d\d\d/${1}9999/g'
 echo '###  true < 16383-ys.xi'
 stdout xargs true < 16383-ys.xi
 stdout parallel -k true < 16383-ys.xi

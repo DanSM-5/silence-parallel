@@ -22,6 +22,7 @@ all: mem short long polar
 # Mem
 mem: ../src/parallel tests-to-run/*mem* wanted-results/*mem*
 	make stopvm || true
+	make stopdb || true
 	time bash Start.sh mem NONE || true
 	touch ~/.parallel/will-cite
 	make stopvm
@@ -129,7 +130,7 @@ servers=parallel-server1 parallel-server2 parallel-server3 parallel-server4 ${na
 startvm:
 	sort -u ~/.ssh/*.pub vagrant/authorized_keys > vagrant/authorized_keys.
 	mv vagrant/authorized_keys. vagrant/authorized_keys
-	parallel -j0 --tag -k --timeout 60 '${start}' ::: ${servers} &
+	parallel -j0 --tag -k --timeout 100 '${start}' ::: ${servers} &
 stopvm:
 	parallel -j0 --tag -k '${stop}' ::: ${namedservers} || true
 
