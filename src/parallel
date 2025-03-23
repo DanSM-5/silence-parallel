@@ -2917,7 +2917,7 @@ sub check_invalid_option_combinations() {
 	if($opt::unsafe or grep /--unsafe/, @ARGV, $ENV{'PARALLEL'}) {
 	    # skip
 	} else {
-	    ::warn(@_,"Use '--unsafe' to ignore this.");
+	    ::warning(@_,"Use '--unsafe' to ignore this.");
 	}
     }
     if(defined $opt::results) {
@@ -2947,10 +2947,23 @@ sub test_safe_env_vars {
 	    # If user wrote the script in DOS, we know what they meant
 	    ::warning("Removed ^M (\\r / <CR>) from end of $var");
 	}
-	if($ENV{$var} =~ m{^[-a-z0-9_+,.%\@:/= ]*$}is) {
+	my $t = $ENV{$var};
+	my $ok;
+	eval q{
+	    use Encode qw(decode);
+	    if(not utf8::is_utf8($ENV{$var})) {
+		$t = decode('UTF-8', $ENV{$var});
+	    }
+	    $ok = ($t =~ m{^[-\p{L}\p{N}\p{M}_+,.%\@:/=() ]*$}is);
+	} or do {
+	    # no utf8 available: Fall back to simpler regexp
+	    $ok = ($t =~ m{^[-a-z0-9_+,.%\@:/=() ]*$}is);
+	};
+	if($ok) {
 	    # OK
 	} else {
-	    unsafe("\$$var can only contain [-a-z0-9_+,.%\@:/= ].");
+	    unsafe("\$$var ".
+		   'can only contain [-\p{L}\p{N}\p{M}_+,.%@:/=() ].');
 	}
     }
     for(qw(TMPDIR PARALLEL_HOME XDG_CONFIG_DIRS PARALLEL_REMOTE_TMPDIR
