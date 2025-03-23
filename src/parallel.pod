@@ -1588,6 +1588,31 @@ not be started until the wanted number of jobs has been reached.  This
 makes it possible to change the number of simultaneous running jobs
 while GNU B<parallel> is running.
 
+=item I<num>auto (alpha testing)
+
+If I<num> ends in auto, GNU B<parallel> will use the value as a max
+value. If a job fails, GNU B<parallel> will adjust the number of jobs
+down with a factor. If a job succeeds GNU B<parallel> will adjust the
+number of jobs up with a small factor.
+
+So if the number of jobs is a bit too high, GNU B<parallel> will
+dynamically lower it.
+
+Example:
+
+  # This fails if there are more than n sleeps running
+  n_sleeps() {
+    nsleeps=$(ps aux | grep sleep | grep 12345 | wc -l)
+    echo $nsleeps sleeps running now
+    [ $nsleeps -lt $1 ]
+  }
+  export -f n_sleeps
+  parallel --jobs 20auto 'sleep 2.${RANDOM}{}12345; n_sleeps 5' ::: {1..100}
+
+This will start 20 jobs in parallel. These will fail because more than 5
+sleeps are running. GNU B<parallel> will adjust the number of jobs
+until around 5 are running in parallel.
+
 =back
 
 If the evaluated number is less than 1 then 1 will be used.

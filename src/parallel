@@ -2828,6 +2828,7 @@ sub parse_options(@) {
     }
 
     if(not defined $opt::jobs) { $opt::jobs = "100%"; }
+    if($opt::jobs =~ s/auto$//) { $opt::autojobs = 1; }
     open_joblog();
     open_json_csv();
     if(defined $opt::sqlmaster or defined $opt::sqlworker) {
@@ -2916,8 +2917,7 @@ sub check_invalid_option_combinations() {
 	if($opt::unsafe or grep /--unsafe/, @ARGV, $ENV{'PARALLEL'}) {
 	    # skip
 	} else {
-	    ::error(@_,"Use '--unsafe' to ignore this.");
-	    exit(255);
+	    ::warn(@_,"Use '--unsafe' to ignore this.");
 	}
     }
     if(defined $opt::results) {
@@ -5879,6 +5879,7 @@ sub reaper() {
 	    # Update average runtime for timeout only for successful jobs
 	    $Global::timeoutq->update_median_runtime($job->runtime());
 	}
+	if($opt::autojobs) { $sshlogin->update_autojobs($job->exitstatus()); }
 	if($opt::keeporder and not $opt::latestline) {
 	    # --latestline fixes --keeporder in Job::row()
 	    $job->print_earlier_jobs();
@@ -7845,6 +7846,29 @@ sub inc_jobs_completed($) {
     $Global::total_completed++;
 }
 
+{
+    my $down_factor;
+    my $up_factor;
+    sub update_autojobs($$) {
+	my $self = shift;
+	my $status = shift;
+	# 100 job slots: If 10 jobs fail, this should give 30 job slots
+	$down_factor ||= 0.3 ** (1/$self->{'autojobs'});
+	# Grow 5 times slower than down regulation
+	$up_factor ||= (1 / $down_factor) ** (1/5);
+	if($status) {
+	    # last job failed
+	    $self->set_max_jobs_running(::max(1,$self->max_jobs_running() * $down_factor));
+	    ::debug("autojobs","max jobs down($down_factor): ",$self->max_jobs_running()," ");
+	} else {
+	    # last job succeeded
+	    $self->set_max_jobs_running(::min($self->{'autojobs'},
+					      $self->max_jobs_running() * $up_factor));
+	    ::debug("autojobs","max jobs up($up_factor): ",$self->max_jobs_running()," ");
+	}
+    }
+}
+
 sub set_max_jobs_running($$) {
     my $self = shift;
     if(defined $self->{'max_jobs_running'}) {
@@ -7856,8 +7880,8 @@ sub set_max_jobs_running($$) {
 	# max_jobs_running could be resat if -j is a changed file
 	$Global::max_jobs_running += $self->{'max_jobs_running'};
     }
-    # Initialize orig to the first non-zero value that comes around
-    $self->{'orig_max_jobs_running'} ||= $self->{'max_jobs_running'};
+    # Initialize autojobs to the first non-zero value that comes around
+    $self->{'autojobs'} ||= $self->{'max_jobs_running'};
 }
 
 sub memfree() {
