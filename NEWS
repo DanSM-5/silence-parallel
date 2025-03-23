@@ -1,3 +1,23 @@
+20250422
+
+New in this release:
+
+* No new features. This is a candidate for a stable release.
+
+* Bug fixes and man page updates.
+
+News about GNU Parallel:
+
+* GNU Parallel https://www.tunbury.org/gnu-parallel/
+
+* Understanding and Fixing Race Conditions in Bash Scripts with flock
+  and GNU Parallel
+  https://www.devgem.io/posts/understanding-and-fixing-race-conditions-in-bash-scripts-with-flock-and-gnu-parallel
+
+* Gnu parallel basic usage
+  https://freddieventura.github.io/2024/09/29/gnu-parallel-basics.html
+
+
 20250322
 
 New in this release:

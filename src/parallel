@@ -766,6 +766,10 @@ sub find_split_positions($$$) {
     #	@positions of block start/end
     my($file, $block, $header, $firstlinelen) = @_;
     my $skiplen = $firstlinelen + length $header;
+    # TODO size of gz - binary search?
+    #  gztool -l -I 18g.gzi  18g.gz 
+    #  Size of uncompressed file: 18.00 GiB (19327352832 Bytes)
+    #  Number of lines          : 1391156 (1.39 M)
     my $size = -s $file;
     if(-b $file) {
 	# $file is a blockdevice
@@ -792,6 +796,7 @@ sub find_split_positions($$$) {
 	    push(@pos,$pos);
 	} else {
 	    # Seek the the block start
+	    # TODO uncompress open($fh,"-|","gztool",$file,$pos,"..");
 	    if(not sysseek($fh, $pos, 0)) {
 		::error("Cannot seek to $pos in $file");
 		edit(255);
@@ -836,11 +841,14 @@ sub split_positions_for_group_by($$$$) {
 	my $pos = shift;
 	if(not defined $value{$pos}) {
 	    if($pos != 0) {
+		# TODO uncompress open($fh,"-|","gztool",$file,$pos,"..");
 		seek($fh, $pos-1, 0) || die;
 		# Read half line
 		<$fh>;
 	    }
 	    # Read full line
+	    # TODO compressed input cannot tell():
+	    #   instead use $pos + length halfline
 	    my $linepos = tell($fh);
 	    if(not defined $value{$linepos}) {
 		$_ = <$fh>;
@@ -2974,7 +2982,7 @@ sub test_safe_env_vars {
 
 sub init_globals() {
     # Defaults:
-    $Global::version = 20250322;
+    $Global::version = 20250422;
     $Global::progname = 'parallel';
     $::name = "GNU Parallel";
     $Global::infinity = 2**31;
@@ -3496,13 +3504,13 @@ sub find_compression_program() {
     # wait
     # onethread="zstd clzip lz4 lzop gzip lzma xz bzip2"
     # multithread="pzstd pigz pxz plzip pbzip2 lzip lbzip2 lrz pixz"
-    # parallel --shuf -j1  --joblog jl-m --arg-sep ,  parallel --compress-program \'{3}" "-{2}\' cat ::: 1gb '>'/dev/null , 1 2 3 ,  {1..3} , $multithread
-    # parallel --shuf -j50% --delay 1  --joblog jl-s --arg-sep ,  parallel --compress-program \'{3}" "-{2}\' cat ::: 1gb '>'/dev/null , 1 2 3 ,	 {1..3} , $onethread
-    # sort -nk4 jl-?
+    # parallel --shuf -j1  --joblog jl-m --arg-sep ,  parallel --compress-program \'{3}" "-{2}\' cat ::: 1gb , 1 2 3 ,  {1..3} , $multithread >/dev/null
+    # parallel --shuf -j50% --delay 1  --joblog jl-s --arg-sep ,  parallel --compress-program \'{3}" "-{2}\' cat ::: 1gb , 1 2 3 , {1..3} , $onethread >/dev/null
+    # sort -k4n jl-?
 
     # 1-core:
     # 2-cores: pzstd zstd lz4 lzop pigz gzip lbzip2 pbzip2 lrz bzip2 lzma pxz plzip xz lzip clzip
-    # 4-cores:
+    # 4-cores: pzstd zstd pigz lzop lz4 gzip lbzip2 pbzip2 lrz pixz plzip pxz bzip2 lzip xz clzip lzma
     # 8-cores: pzstd lz4 zstd pigz lzop lbzip2 pbzip2 gzip lzip lrz plzip pxz bzip2 lzma xz clzip
     # 16-cores: pzstd lz4 pigz lzop lbzip2 pbzip2 plzip lzip lrz pxz gzip lzma xz bzip2
     # 32-cores: pzstd lbzip2 pbzip2 zstd pigz lz4 lzop plzip lzip lrz gzip pxz lzma bzip2 xz clzip
@@ -6051,8 +6059,8 @@ sub usage() {
 	 "If you use programs that use GNU Parallel to process data for an article in a",
 	 "scientific publication, please cite:",
 	 "",
-	 "  Tange, O. (2025, March 22). GNU Parallel 20250322 ('Have you said thank you').",
-	 "  Zenodo. https://doi.org/10.5281/zenodo.15071920",
+	 "  Tange, O. (2025, April 22). GNU Parallel 20250422 ('Tariffs').",
+	 "  Zenodo. https://doi.org/10.5281/zenodo.15265748",
 	 "",
 	 # Before changing these lines,  please read
 	 # https://www.gnu.org/software/parallel/parallel_design.html#citation-notice
@@ -6084,8 +6092,8 @@ sub citation_notice() {
 	     "If you use programs that use GNU Parallel to process data for an article in a",
 	     "scientific publication, please cite:",
 	     "",
-	     "  Tange, O. (2025, March 22). GNU Parallel 20250322 ('Have you said thank you').",
-	     "  Zenodo. https://doi.org/10.5281/zenodo.15071920",
+	     "  Tange, O. (2025, April 22). GNU Parallel 20250422 ('Tariffs').",
+	     "  Zenodo. https://doi.org/10.5281/zenodo.15265748",
 	     "",
 	     # Before changing these line,   please read
 	     # https://www.gnu.org/software/parallel/parallel_design.html#citation-notice and
@@ -6211,20 +6219,20 @@ sub citation() {
 	"If you use programs that use GNU Parallel to process data for an article in a",
 	"scientific publication, please cite:",
 	"",
-	"\@software{tange_2025_15071920,",
+	"\@software{tange_2025_15265748,",
 	"      author       = {Tange, Ole},",
-	"      title        = {GNU Parallel 20250322 ('Have you said thank you')},",
-	"      month        = Mar,",
+	"      title        = {GNU Parallel 20250422 ('Tariffs')},",
+	"      month        = Apr,",
 	"      year         = 2025,",
 	"      note         = {{GNU Parallel is a general parallelizer to run",
 	"                       multiple serial command line programs in parallel",
 	"                       without changing them.}},",
 	"      publisher    = {Zenodo},",
-	"      doi          = {10.5281/zenodo.15071920},",
-	"      url          = {https://doi.org/10.5281/zenodo.15071920}",
+	"      doi          = {10.5281/zenodo.15265748},",
+	"      url          = {https://doi.org/10.5281/zenodo.15265748}",
 	"}",
 	"",
-	"(Feel free to use \\nocite{tange_2025_15071920})",
+	"(Feel free to use \\nocite{tange_2025_15265748})",
 	"",
 	# Before changing these lines, please read
 	# https://www.gnu.org/software/parallel/parallel_design.html#citation-notice and

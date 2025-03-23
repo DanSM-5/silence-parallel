@@ -1588,7 +1588,7 @@ not be started until the wanted number of jobs has been reached.  This
 makes it possible to change the number of simultaneous running jobs
 while GNU B<parallel> is running.
 
-=item I<num>auto (alpha testing)
+=item I<num>auto (beta testing)
 
 If I<num> ends in auto, GNU B<parallel> will use the value as a max
 value. If a job fails, GNU B<parallel> will adjust the number of jobs
@@ -1935,7 +1935,7 @@ I<size> can be postfixed with K, M, G, T, P, k, m, g, t, or p.
 See also: UNIT PREFIX B<--memfree>
 
 
-=item B<--milestone> I<str> (alpha testing)
+=item B<--milestone> I<str> (beta testing)
 
 Set milestones where all previous jobs must have finished.
 
