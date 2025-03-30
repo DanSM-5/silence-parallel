@@ -1,3 +1,31 @@
+20250322
+
+New in this release:
+
+* When hitting a --milestone, wait until running jobs are done before
+  starting more jobs.
+
+* Append 'auto' to --jobs and GNU Parallel will lower the number of
+  jobs if jobs fail and raise it up to the given number if they
+  succeed.
+
+* --unsafe now treats UFT8 as safe and only warns.
+
+* Bug fixes and man page updates.
+
+News about GNU Parallel:
+
+* Running programs in parallel
+  https://medium.com/opsops/running-programs-in-parallel-b332b1898c8e
+
+* Using ‘xargs’ and GNU Parallel for Bulk File Operations
+  https://www.heatware.net/linux/bulk-processing-with-xargs-parallel/
+
+* Bashスクリプト高速化のための実践テクニック：並列処理、xargs活用、バッ
+  クグラウンドジョブの使い方
+  https://bashdo.com/2025/02/26/bash%E3%82%B9%E3%82%AF%E3%83%AA%E3%83%97%E3%83%88%E9%AB%98%E9%80%9F%E5%8C%96%E3%81%AE%E3%81%9F%E3%82%81%E3%81%AE%E5%AE%9F%E8%B7%B5%E3%83%86%E3%82%AF%E3%83%8B%E3%83%83%E3%82%AF%EF%BC%9A%E4%B8%A6/
+
+
 20250222
 
 New in this release:

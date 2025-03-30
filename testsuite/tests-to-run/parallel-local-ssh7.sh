@@ -30,9 +30,9 @@ export -f retry
 #
 
 par__man_bash() {
-  echo '### bash'
+    echo '### bash'
 
-  myscript=$(cat <<'_EOF'
+    myscript=$(cat <<'_EOF'
     echo "### From man env_parallel"
 
     . `which env_parallel.bash`;
@@ -97,13 +97,13 @@ par__man_bash() {
     # Sleep 1 to delay output to stderr to avoid race
     echo exit value $? should be 255 `sleep 1`
 _EOF
-  )
-  ssh bash@lo "$myscript"
+	    )
+    ssh bash@lo "$myscript"
 }
 
 par__man_csh() {
-  echo '### csh'
-  myscript=$(cat <<'_EOF'
+    echo '### csh'
+    myscript=$(cat <<'_EOF'
     echo "### From man env_parallel"
 
 #    source `which env_parallel.csh`;
@@ -140,15 +140,15 @@ par__man_csh() {
     env_parallel --no-such-option >/dev/null
     echo exit value $status should be 255 `sleep 1`
 _EOF
-  )
-  # Sometimes the order f*cks up
-  stdout ssh csh@lo "$myscript" | LC_ALL=C sort
+	    )
+    # Sometimes the order f*cks up
+    stdout ssh csh@lo "$myscript" | LC_ALL=C sort
 }
 
 par__man_dash() {
-  echo '### dash'
+    echo '### dash'
 
-  myscript=$(cat <<'_EOF'
+    myscript=$(cat <<'_EOF'
     echo "### From man env_parallel"
 
     . `which env_parallel.dash`;
@@ -198,72 +198,18 @@ par__man_dash() {
     # Sleep 1 to delay output to stderr to avoid race
     echo exit value $? should be 255 `sleep 1`
 _EOF
-  )
-  ssh dash@lo "$myscript"
+	    )
+    ssh dash@lo "$myscript"
 }
 
 par__man_fish() {
-  echo '### fish'
-  myscript=$(cat <<'_EOF'
-    echo "### From man env_parallel"
-
-    env_parallel --session
-    alias myecho='echo aliases with \= \& \" \!'" \'"
-    myecho work
-    env_parallel myecho ::: work
-    env_parallel -S server myecho ::: work
-    env_parallel --env myecho myecho ::: work
-    env_parallel --env myecho -S server myecho ::: work
-
-    # multiline aliases does not work in fish
-
-    function myfunc
-      echo functions 'with  = & " !'" '" $argv;
-    end
-    myfunc work
-    env_parallel myfunc ::: work
-    env_parallel -S server myfunc ::: work
-    env_parallel --env myfunc myfunc ::: work
-    env_parallel --env myfunc -S server myfunc ::: work
-
-    set myvar 'variables with  = & " !'" '"
-    echo "$myvar" work
-    env_parallel echo '$myvar' ::: work
-    env_parallel -S server echo '$myvar' ::: work
-    env_parallel --env myvar echo '$myvar' ::: work
-    env_parallel --env myvar -S server echo '$myvar' ::: work
-
-    set multivar 'multiline
-    variables with  = & " !'" '"
-    echo "$multivar" work
-    env_parallel echo '"$multivar"' ::: work
-    env_parallel -S server echo '"$multivar"' ::: work
-    env_parallel --env multivar echo '"$multivar"' ::: work
-    env_parallel --env multivar -S server echo '"$multivar"' ::: work
-
-    set myarray arrays 'with  = & " !'" '" work, too
-    echo $myarray[1] $myarray[2] $myarray[3] $myarray[4]
-    echo "# these 4 fail often. Race condition?"
-    env_parallel -k echo '$myarray[{}]' ::: 1 2 3 4
-    env_parallel -k -S server echo '$myarray[{}]' ::: 1 2 3 4
-    env_parallel -k --env myarray echo '$myarray[{}]' ::: 1 2 3 4
-    env_parallel -k --env myarray -S server echo '$myarray[{}]' ::: 1 2 3 4
-    env_parallel --argsep --- env_parallel -k echo ::: multi level --- env_parallel
-
-    env_parallel ::: true false true false
-    echo exit value $status should be 2
-
-    env_parallel --no-such-option >/dev/null
-    echo exit value $status should be 255 `sleep 1`
-_EOF
-  )
-  ssh fish@lo "$myscript"
-    #| LC_ALL=C sort
+    echo '### fish'
+    echo moved to parallel-ssh-fish.sh
 }
 
 par__man_ksh() {
-  echo '### ksh'
-  myscript=$(cat <<'_EOF'
+    echo '### ksh'
+    myscript=$(cat <<'_EOF'
     echo "### From man env_parallel"
 
     . `which env_parallel.ksh`;
@@ -324,13 +270,13 @@ par__man_ksh() {
     # Sleep 1 to delay output to stderr to avoid race
     echo exit value $? should be 255 `sleep 1`
 _EOF
-  )
-  ssh ksh@lo "$myscript"
+	    )
+    ssh ksh@lo "$myscript"
 }
 
 par__man_mksh() {
-  echo '### mksh'
-  myscript=$(cat <<'_EOF'
+    echo '### mksh'
+    myscript=$(cat <<'_EOF'
     echo "### From man env_parallel"
 
     . `which env_parallel.mksh`;
@@ -389,14 +335,14 @@ par__man_mksh() {
     # Sleep 1 to delay output to stderr to avoid race
     echo exit value $? should be 255 `sleep 1`
 _EOF
-  )
-  ssh mksh@lo "$myscript"
+	    )
+    ssh mksh@lo "$myscript"
 }
 
 par__man_sh() {
-  echo '### sh'
+    echo '### sh'
 
-  myscript=$(cat <<'_EOF'
+    myscript=$(cat <<'_EOF'
     echo "### From man env_parallel"
 
     . `which env_parallel.sh`;
@@ -446,13 +392,13 @@ par__man_sh() {
     # Sleep 1 to delay output to stderr to avoid race
     echo exit value $? should be 255 `sleep 1`
 _EOF
-  )
-  ssh sh@lo "$myscript"
+	    )
+    ssh sh@lo "$myscript"
 }
 
 par__man_tcsh() {
-  echo '### tcsh'
-  myscript=$(cat <<'_EOF'
+    echo '### tcsh'
+    myscript=$(cat <<'_EOF'
     echo "### From man env_parallel"
 
 #    source `which env_parallel.tcsh`
@@ -490,14 +436,14 @@ par__man_tcsh() {
     env_parallel --no-such-option >/dev/null
     echo exit value $status should be 255 `sleep 1`
 _EOF
-  )
-  ssh -tt tcsh@lo "$myscript"
+	    )
+    ssh -tt tcsh@lo "$myscript"
 }
 
 par__man_zsh() {
-  echo '### zsh'
-  # eval is needed make aliases work
-  myscript=$(cat <<'_EOF'
+    echo '### zsh'
+    # eval is needed make aliases work
+    myscript=$(cat <<'_EOF'
     echo "### From man env_parallel"
 
     . `which env_parallel.zsh`;
@@ -563,13 +509,13 @@ par__man_zsh() {
     # Sleep 1 to delay output to stderr to avoid race
     echo exit value $? should be 255 `sleep 1`
 _EOF
-  )
-  ssh zsh@lo "$myscript"
+	    )
+    ssh zsh@lo "$myscript"
 }
 
 par_--env_underscore_bash() {
-  echo '### bash'
-  myscript=$(cat <<'_EOF'
+    echo '### bash'
+    myscript=$(cat <<'_EOF'
     echo "### Testing of --env _"
 
     . `which env_parallel.bash`;
@@ -612,13 +558,13 @@ par_--env_underscore_bash() {
     env_parallel --env _ -S server myfunc ::: work;
     echo "OK if no myfunc      ^^^^^^^^^^^^^^^^^^^^^^^^^" >&2;
 _EOF
-  )
-  stdout ssh bash@lo "$myscript"
+	    )
+    stdout ssh bash@lo "$myscript"
 }
 
 par_--env_underscore_csh() {
-  echo '### csh'
-  myscript=$(cat <<'_EOF'
+    echo '### csh'
+    myscript=$(cat <<'_EOF'
     echo "### Testing of --env _"
 
 #    source `which env_parallel.csh`;
@@ -647,13 +593,13 @@ par_--env_underscore_csh() {
     env_parallel --env _ -S server myecho ::: work;
     echo "OK      ^^^^^^^^^^^^^^^^^ if no myecho" >/dev/stderr;
 _EOF
-  )
-  ssh -tt csh@lo "$myscript"
+	    )
+    ssh -tt csh@lo "$myscript"
 }
 
 par_--env_underscore_dash() {
-  echo '### dash'
-  myscript=$(cat <<'_EOF'
+    echo '### dash'
+    myscript=$(cat <<'_EOF'
     echo "### Testing of --env _"
 
     alias not_copied_alias="echo BAD"
@@ -695,74 +641,18 @@ par_--env_underscore_dash() {
 #    env_parallel --env _ -S server myfunc ::: work;
 #    echo "OK if no myfunc         ^^^^^^^^^^^^^^^^^" >&2;
 _EOF
-  )
-  ssh dash@lo "$myscript"
+	    )
+    ssh dash@lo "$myscript"
 }
 
 par_--env_underscore_fish() {
-  echo '### fish'
-  myscript=$(cat <<'_EOF'
-    echo "Fish is broken"
-    echo "### Testing of --env _"
-
-    source (which env_parallel.fish)
-    true > ~/.parallel/ignored_vars;
-
-    alias not_copied_alias="echo BAD"
-    function not_copied_func
-      echo BAD
-    end
-    set not_copied_var "BAD";
-    set not_copied_array BAD BAD BAD;
-#    env_parallel --record-env;
-    env_parallel --session;
-    alias myecho="echo \$myvar aliases";
-    function myfunc
-      myecho $myarray functions $argv
-    end
-    set myvar "variables in";
-    set myarray and arrays in;
-
-    echo Test copying;
-    echo '*** Moved to parallel-ssh-fish.sh ***'
-
-    echo Test ignoring;
-    env_parallel --env _ -S server not_copied_alias ::: error=OK;
-    env_parallel --env _ -S server not_copied_func ::: error=OK;
-    env_parallel --env _ -S server echo \$not_copied_var ::: error=OK;
-    env_parallel --env _ -S server echo \$not_copied_array ::: error=OK;
-
-    echo Test single ignoring;
-    echo myvar > ~/.parallel/ignored_vars;
-    env_parallel --env _ myfunc ::: work;
-    sleep 0.1
-    env_parallel --env _ -S server myfunc ::: work;
-    sleep 0.1
-    echo myarray >> ~/.parallel/ignored_vars;
-    env_parallel --env _ myfunc ::: work;
-    env_parallel --env _ -S server myfunc ::: work;
-    echo myecho >> ~/.parallel/ignored_vars;
-    env_parallel --env _ myfunc ::: work;
-    echo "OK if   ^^^^^^^^^^^^^^^^^ no myecho" >&2;
-    env_parallel --env _ -S server myfunc ::: work;
-    echo "OK if   ^^^^^^^^^^^^^^^^^ no myecho" >&2;
-    echo myfunc >> ~/.parallel/ignored_vars;
-    env_parallel --env _ myfunc ::: work;
-    echo "OK if   ^^^^^^^^^^^^^^^^^ no myfunc" >&2;
-    env_parallel --env _ -S server myfunc ::: work;
-    echo "OK if   ^^^^^^^^^^^^^^^^^ no myfunc" >&2;
-_EOF
-  )
-  # Old versions of fish sometimes throw up bugs all over,
-  # but seem to work OK otherwise. So ignore these errors.
-  stdout ssh fish@lo "$myscript" |
-      perl -ne '/^\^|fish:|fish\(/ and next; print' |
-      perl -pe 's/^[ ~^]+$//g'
+    echo '### fish'
+    echo moved to parallel-ssh-fish.sh
 }
 
 par_--env_underscore_ksh() {
-  echo '### ksh'
-  myscript=$(cat <<'_EOF'
+    echo '### ksh'
+    myscript=$(cat <<'_EOF'
     echo "### Testing of --env _"
 
     alias not_copied_alias="echo BAD"
@@ -804,17 +694,17 @@ par_--env_underscore_ksh() {
     env_parallel --env _ -S server myfunc ::: work;
     echo "OK if no myfunc         ^^^^^^^^^^^^^^^^^" >&2;
 _EOF
-  )
-  stdout ssh ksh@lo "$myscript" |
-      # /bin/ksh[999]: myfunc[1]: myecho: not found
-      # =>
-      # /bin/ksh: myecho: not found
-      perl -pe 's/\[\d+\]:.*\[\d+\]:/:/;'
+	    )
+    stdout ssh ksh@lo "$myscript" |
+	# /bin/ksh[999]: myfunc[1]: myecho: not found
+	# =>
+	# /bin/ksh: myecho: not found
+	perl -pe 's/\[\d+\]:.*\[\d+\]:/:/;'
 }
 
 par_--env_underscore_mksh() {
-  echo '### mksh'
-  myscript=$(cat <<'_EOF'
+    echo '### mksh'
+    myscript=$(cat <<'_EOF'
     echo "### Testing of --env _"
 
     alias not_copied_alias="echo BAD"
@@ -857,14 +747,14 @@ par_--env_underscore_mksh() {
     env_parallel --env _ -S server myfunc ::: work;
     echo "OK if no myfunc         ^^^^^^^^^^^^^^^^^" >&2;
 _EOF
-  )
-  stdout ssh mksh@lo "$myscript" |
-      perl -pe 's/^[EŴ]:/EW:/g'
+	    )
+    stdout ssh mksh@lo "$myscript" |
+	perl -pe 's/^[EŴ]:/EW:/g'
 }
 
 par_--env_underscore_sh() {
-  echo '### sh'
-  myscript=$(cat <<'_EOF'
+    echo '### sh'
+    myscript=$(cat <<'_EOF'
     echo "### Testing of --env _"
 
     alias not_copied_alias="echo BAD"
@@ -906,13 +796,13 @@ par_--env_underscore_sh() {
 #    env_parallel --env _ -S server myfunc ::: work;
 #    echo "OK if no myfunc         ^^^^^^^^^^^^^^^^^" >&2;
 _EOF
-  )
-  ssh sh@lo "$myscript"
+	    )
+    ssh sh@lo "$myscript"
 }
 
 par_--env_underscore_tcsh() {
-  echo '### tcsh'
-  myscript=$(cat <<'_EOF'
+    echo '### tcsh'
+    myscript=$(cat <<'_EOF'
     echo "### Testing of --env _"
 
 #    source `which env_parallel.tcsh`;
@@ -941,13 +831,13 @@ par_--env_underscore_tcsh() {
     env_parallel --env _ -S server myecho ::: work;
     echo "OK      ^^^^^^^^^^^^^^^^^ if no myecho" >/dev/stderr;
 _EOF
-  )
-  ssh -tt tcsh@lo "$myscript"
+	    )
+    ssh -tt tcsh@lo "$myscript"
 }
 
 par_--env_underscore_zsh() {
-  echo '### zsh'
-  myscript=$(cat <<'_EOF'
+    echo '### zsh'
+    myscript=$(cat <<'_EOF'
     echo "### Testing of --env _"
 
     . `which env_parallel.zsh`;
@@ -993,8 +883,8 @@ par_--env_underscore_zsh() {
     echo OK if no .^^^^^^^^^^^^^^^^^^^^^^^^^ myfunc >&2;
 _EOS`
 _EOF
-  )
-  ssh zsh@lo "$myscript"
+	    )
+    ssh zsh@lo "$myscript"
 }
 
 
@@ -1004,7 +894,7 @@ _EOF
 # + variables, variables with funky content, arrays, assoc array, functions, aliases
 
 par_funky_bash() {
-  myscript=$(cat <<'_EOF'
+    myscript=$(cat <<'_EOF'
     . `which env_parallel.bash`;
 
     myvar="myvar  works"
@@ -1031,13 +921,13 @@ par_funky_bash() {
     echo "$funky_single_line" | parallel --shellquote
     echo "$funky_multi_line" | parallel --shellquote
 _EOF
-  )
-  # Order is often different. Dunno why. So sort
-  ssh bash@lo "$myscript" 2>&1 | LC_ALL=C sort
+	    )
+    # Order is often different. Dunno why. So sort
+    ssh bash@lo "$myscript" 2>&1 | LC_ALL=C sort
 }
 
 par_funky_csh() {
-  myscript=$(cat <<'_EOF'
+    myscript=$(cat <<'_EOF'
     set myvar = "myvar  works"
     set funky = "`perl -e 'print pack q(c*), 2..255'`"
     set myarray = ('' 'array_val2' '3' '' '5' '  space  6  ')
@@ -1064,13 +954,13 @@ par_funky_csh() {
     echo
     echo "$funky" | parallel --shellquote
 _EOF
-  )
-  # Sometimes the order f*cks up
-  stdout ssh csh@lo "$myscript" | LC_ALL=C sort
+	    )
+    # Sometimes the order f*cks up
+    stdout ssh csh@lo "$myscript" | LC_ALL=C sort
 }
 
 par_funky_dash() {
-  myscript=$(cat <<'_EOF'
+    myscript=$(cat <<'_EOF'
     . `which env_parallel.dash`;
 
     myvar="myvar  works"
@@ -1097,59 +987,17 @@ par_funky_dash() {
     echo
     echo "$funky" | parallel --shellquote
 _EOF
-  )
-  # Order is often different. Dunno why. So sort
-  ssh dash@lo "$myscript" 2>&1 | LC_ALL=C sort
+	    )
+    # Order is often different. Dunno why. So sort
+    ssh dash@lo "$myscript" 2>&1 | LC_ALL=C sort
 }
 
 par_funky_fish() {
-  myscript=$(cat <<'_EOF'
-    env_parallel --session
-    set myvar "myvar  works"
-    setenv myenvvar "myenvvar  works"
-
-    set funky (perl -e "print pack \"c*\", 1..255")
-    # 10 and 30 cause problems
-    setenv funkyenv (perl -e "print pack \"c*\", 1..9,11..29,31..255")
-
-    set myarray "" array_val2 3 "" 5 "  space  6  "
-
-    # Assoc arrays do not exist
-    #typeset -A assocarr
-    #assocarr[a]=assoc_val_a
-    #assocarr[b]=assoc_val_b
-    alias alias_echo="echo 3 arg";
-
-    function func_echo
-      echo $argv;
-      echo "$myvar"
-      echo "$myenvvar"
-      echo "$myarray[6]"
-    # Assoc arrays do not exist in fish
-    #  echo ${assocarr[a]}
-      echo
-      echo
-      echo
-      echo Funky-"$funky"-funky
-      echo Funkyenv-"$funkyenv"-funkyenv
-      echo
-      echo
-      echo
-    end
-
-    env_parallel alias_echo ::: alias_works
-    env_parallel func_echo ::: function_works
-    env_parallel -S fish@lo alias_echo ::: alias_works_over_ssh
-    env_parallel -S fish@lo func_echo ::: function_works_over_ssh
-    echo
-    echo "$funky" | parallel --shellquote
-_EOF
-  )
-  ssh fish@lo "$myscript"
+    echo moved to parallel-ssh-fish.sh
 }
 
 par_funky_ksh() {
-  myscript=$(cat <<'_EOF'
+    myscript=$(cat <<'_EOF'
     . `which env_parallel.ksh`;
 
     myvar="myvar  works"
@@ -1175,13 +1023,13 @@ par_funky_ksh() {
     echo
     echo "$funky" | parallel --shellquote
 _EOF
-  )
-  # Order is often different. Dunno why. So sort
-  ssh ksh@lo "$myscript" 2>&1 | LC_ALL=C sort
+	    )
+    # Order is often different. Dunno why. So sort
+    ssh ksh@lo "$myscript" 2>&1 | LC_ALL=C sort
 }
 
 par_funky_mksh() {
-  myscript=$(cat <<'_EOF'
+    myscript=$(cat <<'_EOF'
     . `which env_parallel.mksh`;
 
     myvar="myvar  works"
@@ -1208,13 +1056,13 @@ par_funky_mksh() {
     echo
     echo "$funky" | parallel --shellquote
 _EOF
-  )
-  # Order is often different. Dunno why. So sort
-  ssh mksh@lo "$myscript" 2>&1 | LC_ALL=C sort
+	    )
+    # Order is often different. Dunno why. So sort
+    ssh mksh@lo "$myscript" 2>&1 | LC_ALL=C sort
 }
 
 par_funky_sh() {
-  myscript=$(cat <<'_EOF'
+    myscript=$(cat <<'_EOF'
     . `which env_parallel.sh`;
 
     myvar="myvar  works"
@@ -1241,13 +1089,13 @@ par_funky_sh() {
     echo
     echo "$funky" | parallel --shellquote
 _EOF
-  )
-  # Order is often different. Dunno why. So sort
-  ssh sh@lo "$myscript" 2>&1 | LC_ALL=C sort
+	    )
+    # Order is often different. Dunno why. So sort
+    ssh sh@lo "$myscript" 2>&1 | LC_ALL=C sort
 }
 
 par_funky_tcsh() {
-  myscript=$(cat <<'_EOF'
+    myscript=$(cat <<'_EOF'
     # funky breaks with different LC_ALL
     setenv LC_ALL C
     set myvar = "myvar  works"
@@ -1276,13 +1124,13 @@ par_funky_tcsh() {
     echo
     echo "$funky" | parallel --shellquote
 _EOF
-  )
-  # Order is often different. Dunno why. So sort
-  ssh tcsh@lo "$myscript" 2>&1 | LC_ALL=C sort
+	    )
+    # Order is often different. Dunno why. So sort
+    ssh tcsh@lo "$myscript" 2>&1 | LC_ALL=C sort
 }
 
 par_funky_zsh() {
-  myscript=$(cat <<'_EOF'
+    myscript=$(cat <<'_EOF'
 
     . `which env_parallel.zsh`;
 
@@ -1308,13 +1156,13 @@ par_funky_zsh() {
     echo
     echo "$funky" | parallel --shellquote
 _EOF
-  )
-  # Order is often different. Dunno why. So sort
-  ssh zsh@lo "$myscript" 2>&1 | LC_ALL=C sort
+	    )
+    # Order is often different. Dunno why. So sort
+    ssh zsh@lo "$myscript" 2>&1 | LC_ALL=C sort
 }
 
 par_env_parallel_bash() {
-  myscript=$(cat <<'_EOF'
+    myscript=$(cat <<'_EOF'
     echo 'bug #50435: Remote fifo broke in 20150522'
     # Due to $PARALLEL_TMP being transferred
     . `which env_parallel.bash`
@@ -1333,25 +1181,25 @@ par_env_parallel_bash() {
     env_parallel myalias ::: myalias2
     env_parallel -S lo myalias ::: myalias2
 _EOF
-  )
-  # Order is often different. Dunno why. So sort
-  ssh bash@lo "$myscript" 2>&1 | LC_ALL=C sort
+	    )
+    # Order is often different. Dunno why. So sort
+    ssh bash@lo "$myscript" 2>&1 | LC_ALL=C sort
 }
 
 par_env_parallel_csh() {
-  myscript=$(cat <<'_EOF'
+    myscript=$(cat <<'_EOF'
     echo 'bug #50435: Remote fifo broke in 20150522'
     # Due to $PARALLEL_TMP being transferred
     set OK=OK
     echo data from stdin | env_parallel --pipe -S lo --fifo 'cat {} && echo $OK'
     echo data from stdin | env_parallel --pipe -S lo --cat 'cat {} && echo $OK'
 _EOF
-  )
-  ssh csh@lo "$myscript"
+	    )
+    ssh csh@lo "$myscript"
 }
 
 par_env_parallel_dash() {
-  myscript=$(cat <<'_EOF'
+    myscript=$(cat <<'_EOF'
     . `which env_parallel.dash`;
     echo 'bug #50435: Remote fifo broke in 20150522'
     # Due to $PARALLEL_TMP being transferred
@@ -1370,32 +1218,17 @@ par_env_parallel_dash() {
     env_parallel myalias ::: myalias2
     env_parallel -S lo myalias ::: myalias2
 _EOF
-  )
-  # Order is often different. Dunno why. So sort
-  ssh dash@lo "$myscript" 2>&1 | LC_ALL=C sort
+	    )
+    # Order is often different. Dunno why. So sort
+    ssh dash@lo "$myscript" 2>&1 | LC_ALL=C sort
 }
 
 par_env_parallel_fish() {
-  myscript=$(cat <<'_EOF'
-    echo 'bug #50435: Remote fifo broke in 20150522'
-    # Due to $PARALLEL_TMP being transferred
-    env_parallel --session
-    set OK OK
-    echo data from stdin | env_parallel --pipe -S lo --fifo 'cat {}; and echo $OK'
-    echo data from stdin | env_parallel --pipe -S lo --cat 'cat {}; and echo $OK'
-    echo OK: 0==$status
-    echo '### Test failing command with --cat'
-    echo data from stdin | env_parallel --pipe -S lo --cat 'cat {}; false'
-    echo OK: 1==$status
-    echo data from stdin | parallel --pipe -S lo --cat 'cat {}; false'
-    echo OK: 1==$status
-_EOF
-  )
-  ssh fish@lo "$myscript"
+    echo moved to parallel-ssh-fish.sh
 }
 
 par_env_parallel_ksh() {
-  myscript=$(cat <<'_EOF'
+    myscript=$(cat <<'_EOF'
     . `which env_parallel.ksh`;
     echo 'bug #50435: Remote fifo broke in 20150522'
     # Due to $PARALLEL_TMP being transferred
@@ -1414,13 +1247,13 @@ par_env_parallel_ksh() {
     env_parallel myalias ::: myalias2
     env_parallel -S lo myalias ::: myalias2
 _EOF
-  )
-  # Order is often different. Dunno why. So sort
-  ssh ksh@lo "$myscript" 2>&1 | LC_ALL=C sort
+	    )
+    # Order is often different. Dunno why. So sort
+    ssh ksh@lo "$myscript" 2>&1 | LC_ALL=C sort
 }
 
 par_env_parallel_mksh() {
-  myscript=$(cat <<'_EOF'
+    myscript=$(cat <<'_EOF'
     . `which env_parallel.mksh`;
     echo 'bug #50435: Remote fifo broke in 20150522'
     # Due to $PARALLEL_TMP being transferred
@@ -1439,13 +1272,13 @@ par_env_parallel_mksh() {
     env_parallel myalias ::: myalias2
     env_parallel -S lo myalias ::: myalias2
 _EOF
-  )
-  # Order is often different. Dunno why. So sort
-  ssh mksh@lo "$myscript" 2>&1 | LC_ALL=C sort
+	    )
+    # Order is often different. Dunno why. So sort
+    ssh mksh@lo "$myscript" 2>&1 | LC_ALL=C sort
 }
 
 par_env_parallel_sh() {
-  myscript=$(cat <<'_EOF'
+    myscript=$(cat <<'_EOF'
     . `which env_parallel.sh`;
     echo 'bug #50435: Remote fifo broke in 20150522'
     # Due to $PARALLEL_TMP being transferred
@@ -1464,26 +1297,26 @@ par_env_parallel_sh() {
     env_parallel myalias ::: myalias2
     env_parallel -S lo myalias ::: myalias2
 _EOF
-  )
-  # Order is often different. Dunno why. So sort
-  ssh sh@lo "$myscript" 2>&1 | LC_ALL=C sort
+	    )
+    # Order is often different. Dunno why. So sort
+    ssh sh@lo "$myscript" 2>&1 | LC_ALL=C sort
 }
 
 par_env_parallel_tcsh() {
-  myscript=$(cat <<'_EOF'
+    myscript=$(cat <<'_EOF'
     echo 'bug #50435: Remote fifo broke in 20150522'
     # Due to $PARALLEL_TMP being transferred
     set OK=OK
     echo data from stdin | env_parallel --pipe -S lo --fifo 'cat {} && echo $OK'
     echo data from stdin | env_parallel --pipe -S lo --cat 'cat {} && echo $OK'
 _EOF
-  )
-  # Order is often different. Dunno why. So sort
-  ssh tcsh@lo "$myscript" 2>&1 | LC_ALL=C sort
+	    )
+    # Order is often different. Dunno why. So sort
+    ssh tcsh@lo "$myscript" 2>&1 | LC_ALL=C sort
 }
 
 par_env_parallel_zsh() {
-  myscript=$(cat <<'_EOF'
+    myscript=$(cat <<'_EOF'
     echo 'bug #50435: Remote fifo broke in 20150522'
     # Due to $PARALLEL_TMP being transferred
     OK=OK
@@ -1501,13 +1334,13 @@ par_env_parallel_zsh() {
     env_parallel myalias ::: myalias2
     env_parallel -S lo myalias ::: myalias2
 _EOF
-  )
-  # Order is often different. Dunno why. So sort
-  ssh zsh@lo "$myscript" 2>&1 | LC_ALL=C sort
+	    )
+    # Order is often different. Dunno why. So sort
+    ssh zsh@lo "$myscript" 2>&1 | LC_ALL=C sort
 }
 
 par_environment_too_big_bash() {
-  myscript=$(cat <<'_EOF'
+    myscript=$(cat <<'_EOF'
     echo 'bug #50815: env_parallel should warn if the environment is too big'
     len_overhead=-27-$( (shopt;alias;typeset -f;typeset -p) | wc -c)/1000
     len_var=$len_overhead+56
@@ -1573,8 +1406,8 @@ par_environment_too_big_bash() {
 
     bigfunc() { true; }
 _EOF
-  )
-  ssh bash@lo "$myscript"
+	    )
+    ssh bash@lo "$myscript"
 }
 
 par_environment_too_big_csh() {
@@ -1591,7 +1424,7 @@ par_environment_too_big_fish() {
 
 
 par_environment_too_big_ksh() {
-  myscript=$(cat <<'_EOF'
+    myscript=$(cat <<'_EOF'
     echo 'bug #50815: env_parallel should warn if the environment is too big'
     len_functions=-20-$(functions|wc -c)/1000
     len_variables=-20-$(typeset -p | wc -c)/1000
@@ -1658,12 +1491,12 @@ par_environment_too_big_ksh() {
 
     bigfunc() { true; }
 _EOF
-  )
-  ssh ksh@lo "$myscript"
+	    )
+    ssh ksh@lo "$myscript"
 }
 
 par_environment_too_big_mksh() {
-  myscript=$(cat <<'_EOF'
+    myscript=$(cat <<'_EOF'
     echo 'bug #50815: env_parallel should warn if the environment is too big'
     len_var=46-15
     len_var_remote=$len_var-15
@@ -1729,12 +1562,12 @@ par_environment_too_big_mksh() {
 
     bigfunc() { true; }
 _EOF
-  )
-  ssh mksh@lo "$myscript"
+	    )
+    ssh mksh@lo "$myscript"
 }
 
 par_environment_too_big_sh() {
-  myscript=$(cat <<'_EOF'
+    myscript=$(cat <<'_EOF'
     echo 'bug #50815: env_parallel should warn if the environment is too big'
     len_var=58
     len_var_remote=42
@@ -1799,8 +1632,8 @@ par_environment_too_big_sh() {
 
     bigfunc() { true; }
 _EOF
-  )
-  ssh sh@lo "$myscript"
+	    )
+    ssh sh@lo "$myscript"
 }
 
 par_environment_too_big_tcsh() {
@@ -1812,7 +1645,7 @@ par_environment_too_big_zsh() {
 }
 
 par_parset_bash() {
-  myscript=$(cat <<'_EOF'
+    myscript=$(cat <<'_EOF'
     echo 'parset'
     . `which env_parallel.bash`
 
@@ -1865,8 +1698,8 @@ par_parset_bash() {
     env_parset a,b,c,d 'echo {};exit {}' ::: 0 1 1 0
     echo Exit value 2 = $?
 _EOF
-  )
-  ssh bash@lo "$myscript"
+	    )
+    ssh bash@lo "$myscript"
 }
 
 par_parset_csh() {
@@ -1874,7 +1707,7 @@ par_parset_csh() {
 }
 
 par_parset_dash() {
-  myscript=$(cat <<'_EOF'
+    myscript=$(cat <<'_EOF'
     echo 'parset'
     . `which env_parallel.dash`
 
@@ -1932,8 +1765,8 @@ par_parset_dash() {
     env_parset a,b,c,d 'echo {};exit {}' ::: 0 1 1 0
     echo Exit value 2 = $?
 _EOF
-  )
-  ssh dash@lo "$myscript"
+	    )
+    ssh dash@lo "$myscript"
 }
 
 par_parset_fish() {
@@ -1941,7 +1774,7 @@ par_parset_fish() {
 }
 
 par_parset_ksh() {
-  myscript=$(cat <<'_EOF'
+    myscript=$(cat <<'_EOF'
     echo 'parset'
     . `which env_parallel.ksh`
 
@@ -1994,12 +1827,12 @@ par_parset_ksh() {
     env_parset a,b,c,d 'echo {};exit {}' ::: 0 1 1 0
     echo Exit value 2 = $?
 _EOF
-  )
-  ssh ksh@lo "$myscript"
+	    )
+    ssh ksh@lo "$myscript"
 }
 
 par_parset_mksh() {
-  myscript=$(cat <<'_EOF'
+    myscript=$(cat <<'_EOF'
     echo 'parset'
     . `which env_parallel.mksh`
 
@@ -2054,12 +1887,12 @@ par_parset_mksh() {
     env_parset a,b,c,d 'echo {};exit {}' ::: 0 1 1 0
     echo Exit value 2 = $?
 _EOF
-  )
-  ssh mksh@lo "$myscript"
+	    )
+    ssh mksh@lo "$myscript"
 }
 
 par_parset_sh() {
-  myscript=$(cat <<'_EOF'
+    myscript=$(cat <<'_EOF'
     echo 'parset'
     . `which env_parallel.sh`
 
@@ -2140,8 +1973,8 @@ par_parset_sh() {
     env_parset a,b,c,d 'echo {};exit {}' ::: 0 1 1 0
     echo Exit value 2 = $?
 _EOF
-  )
-  ssh sh@lo "$myscript"
+	    )
+    ssh sh@lo "$myscript"
 }
 
 par_parset_tcsh() {
@@ -2149,7 +1982,7 @@ par_parset_tcsh() {
 }
 
 par_parset_zsh() {
-  myscript=$(cat <<'_EOF'
+    myscript=$(cat <<'_EOF'
     echo 'parset'
     . `which env_parallel.zsh`
     eval "`cat <<"_EOS";
@@ -2211,14 +2044,14 @@ par_parset_zsh() {
     echo Exit value 2 = $?
 _EOS`"
 _EOF
-  )
-  ssh zsh@lo "$myscript"
+	    )
+    ssh zsh@lo "$myscript"
 }
 
 ### env_parallel_session
 
 par_env_parallel_--session_bash() {
-  myscript=$(cat <<'_EOF'
+    myscript=$(cat <<'_EOF'
     echo '### Test env_parallel --session / --end-session'
     . `which env_parallel.bash`
 
@@ -2305,8 +2138,8 @@ par_env_parallel_--session_bash() {
 
     unset PARALLEL_IGNORED_NAMES
 _EOF
-  )
-  ssh bash@lo "$myscript"
+	    )
+    ssh bash@lo "$myscript"
 }
 
 par_env_parallel_--session_csh() {
@@ -2314,7 +2147,7 @@ par_env_parallel_--session_csh() {
 }
 
 par_env_parallel_--session_dash() {
-  myscript=$(cat <<'_EOF'
+    myscript=$(cat <<'_EOF'
     . `which env_parallel.dash`
     echo '### Test env_parallel --session'
 
@@ -2410,55 +2243,16 @@ par_env_parallel_--session_dash() {
 #    env_parallel -S lo echo '${arrayafter[*]}' ::: arrayafter_OK
     unset PARALLEL_IGNORED_NAMES
 _EOF
-  )
-  ssh dash@lo "$myscript"
+	    )
+    ssh dash@lo "$myscript"
 }
 
 par_env_parallel_--session_fish() {
-  myscript=$(cat <<'_EOF'
-    . (which env_parallel.fish)
-
-    echo '### Test env_parallel --session'
-
-    alias aliasbefore='echo before'
-    set varbefore 'before'
-    function funcbefore
-      echo 'before' "$argv"
-    end
-    set arraybefore array before
-    env_parallel --session
-    # stuff defined
-    env_parallel aliasbefore ::: must_fail
-    env_parallel -S lo aliasbefore ::: must_fail
-    env_parallel funcbefore ::: must_fail
-    env_parallel -S lo funcbefore ::: must_fail
-    env_parallel echo '$varbefore' ::: no_before
-    env_parallel -S lo echo '$varbefore' ::: no_before
-    env_parallel echo '$arraybefore' ::: no_before
-    env_parallel -S lo echo '$arraybefore' ::: no_before
-    alias aliasafter='echo after'
-    set varafter 'after'
-    function funcafter
-      echo 'after' "$argv"
-    end
-    set arrayafter array after
-    env_parallel aliasafter ::: aliasafter_OK
-    env_parallel -S lo aliasafter ::: aliasafter_OK
-    env_parallel funcafter ::: funcafter_OK
-    env_parallel -S lo funcafter ::: funcafter_OK
-    env_parallel echo '$varafter' ::: varafter_OK
-    env_parallel -S lo echo '$varafter' ::: varafter_OK
-    env_parallel echo '$arrayafter' ::: arrayafter_OK
-    env_parallel -S lo echo '$arrayafter' ::: arrayafter_OK
-    set -e PARALLEL_IGNORED_NAMES
-_EOF
-  )
-  ssh fish@lo "$myscript" 2>&1 |
-      perl -pe 's/^[ ~^]+$//g'
+    echo moved to parallel-ssh-fish.sh
 }
 
 par_env_parallel_--session_ksh() {
-  myscript=$(cat <<'_EOF'
+    myscript=$(cat <<'_EOF'
     . `which env_parallel.ksh`
     echo '### Test env_parallel --session'
 
@@ -2543,12 +2337,12 @@ par_env_parallel_--session_ksh() {
     env_parallel -S lo echo '${arrayafter[*]}' ::: arrayafter_OK
     unset PARALLEL_IGNORED_NAMES
 _EOF
-  )
-  ssh ksh@lo "$myscript"
+	    )
+    ssh ksh@lo "$myscript"
 }
 
 par_env_parallel_--session_mksh() {
-  myscript=$(cat <<'_EOF'
+    myscript=$(cat <<'_EOF'
     . `which env_parallel.mksh`
     echo '### Test env_parallel --session'
 
@@ -2633,13 +2427,13 @@ par_env_parallel_--session_mksh() {
     env_parallel -S lo echo '${arrayafter[*]}' ::: arrayafter_OK
     unset PARALLEL_IGNORED_NAMES
 _EOF
-  )
-  stdout ssh mksh@lo "$myscript" |
-      perl -pe 's/^[EŴ]:/EW:/g'
+	    )
+    stdout ssh mksh@lo "$myscript" |
+	perl -pe 's/^[EŴ]:/EW:/g'
 }
 
 par_env_parallel_--session_sh() {
-  myscript=$(cat <<'_EOF'
+    myscript=$(cat <<'_EOF'
     . `which env_parallel.sh`
     echo '### Test env_parallel --session'
 
@@ -2728,8 +2522,8 @@ par_env_parallel_--session_sh() {
 #    env_parallel -S lo echo '${arrayafter[*]}' ::: arrayafter_OK
     unset PARALLEL_IGNORED_NAMES
 _EOF
-  )
-  ssh sh@lo "$myscript"
+	    )
+    ssh sh@lo "$myscript"
 }
 
 par_env_parallel_--session_tcsh() {
@@ -2737,7 +2531,7 @@ par_env_parallel_--session_tcsh() {
 }
 
 par_env_parallel_--session_zsh() {
-  myscript=$(cat <<'_EOF'
+    myscript=$(cat <<'_EOF'
     . `which env_parallel.zsh`
     eval "`cat <<"_EOS";
     echo '### Test env_parallel --session'
@@ -2824,8 +2618,8 @@ par_env_parallel_--session_zsh() {
     unset PARALLEL_IGNORED_NAMES
 _EOS`"
 _EOF
-  )
-  ssh zsh@lo "$myscript"
+	    )
+    ssh zsh@lo "$myscript"
 }
 
 export -f $(compgen -A function | grep par_)
@@ -2843,7 +2637,7 @@ clean_output() {
     	      s/script: \d\d+/script: 99/g;
 	      '
 }
-    
+
 # --retries 2 due to ssh_exchange_identification: read: Connection reset by peer
 
 #compgen -A function | grep par_ | sort | parallel --delay $D -j$P --tag -k '{} 2>&1'

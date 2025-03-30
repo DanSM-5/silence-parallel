@@ -8,8 +8,8 @@
 # I think there is a race condition in fish
 
 par__man_fish() {
-  echo '### fish'
-  myscript=$(cat <<'_EOF'
+    echo '### fish'
+    myscript=$(cat <<'_EOF'
     echo "### From man env_parallel"
 
     env_parallel --session
@@ -61,14 +61,14 @@ par__man_fish() {
     env_parallel --no-such-option >/dev/null
     echo exit value $status should be 255 `sleep 1`
 _EOF
-  )
-  ssh fish@lo "$myscript"
+	    )
+    ssh fish@lo "$myscript"
     #| LC_ALL=C sort
 }
 
 par_--env_underscore_fish() {
-  echo '### fish'
-  myscript=$(cat <<'_EOF'
+    echo '### fish'
+    myscript=$(cat <<'_EOF'
     echo "Fish is broken"
     echo "### Testing of --env _"
 
@@ -124,17 +124,17 @@ par_--env_underscore_fish() {
 #    env_parallel --env _ -S server myfunc ::: work;
 #    echo "OK if   ^^^^^^^^^^^^^^^^^ no myfunc" >&2;
 _EOF
-  )
-  # Old versions of fish sometimes throw up bugs all over,
-  # but seem to work OK otherwise. So ignore these errors.
-  stdout ssh fish@lo "$myscript" |
-      perl -ne '/^\^|fish:|fish\(/ and next; print' |
-      perl -pe 's/^[ ~^]+$//g'
+	    )
+    # Old versions of fish sometimes throw up bugs all over,
+    # but seem to work OK otherwise. So ignore these errors.
+    stdout ssh fish@lo "$myscript" |
+	perl -ne '/^\^|fish:|fish\(/ and next; print' |
+	perl -pe 's/^[ ~^]+$//g'
 }
 
 
 par_funky_fish() {
-  myscript=$(cat <<'_EOF'
+    myscript=$(cat <<'_EOF'
     env_parallel --session
     set myvar "myvar  works"
     setenv myenvvar "myenvvar  works"
@@ -175,12 +175,12 @@ par_funky_fish() {
     echo
     echo "$funky" | parallel --shellquote
 _EOF
-  )
-  ssh fish@lo "$myscript"
+	    )
+    ssh fish@lo "$myscript"
 }
 
 par_env_parallel_fish() {
-  myscript=$(cat <<'_EOF'
+    myscript=$(cat <<'_EOF'
     echo 'bug #50435: Remote fifo broke in 20150522'
     # Due to $PARALLEL_TMP being transferred
     env_parallel --session
@@ -194,12 +194,12 @@ par_env_parallel_fish() {
     echo data from stdin | parallel --pipe -S lo --cat 'cat {}; false'
     echo OK: 1==$status
 _EOF
-  )
-  ssh fish@lo "$myscript"
+	    )
+    ssh fish@lo "$myscript"
 }
 
 par_env_parallel_--session_fish() {
-  myscript=$(cat <<'_EOF'
+    myscript=$(cat <<'_EOF'
     . (which env_parallel.fish)
 
     echo '### Test env_parallel --session'
@@ -236,9 +236,9 @@ par_env_parallel_--session_fish() {
     env_parallel -S lo echo '$arrayafter' ::: arrayafter_OK
     set -e PARALLEL_IGNORED_NAMES
 _EOF
-  )
-  ssh fish@lo "$myscript" 2>&1 |
-      perl -pe 's/^[ ~^]+$//g'
+	    )
+    ssh fish@lo "$myscript" 2>&1 |
+	perl -pe 's/^[ ~^]+$//g'
 }
 
 export -f $(compgen -A function | grep par_)

@@ -3180,6 +3180,44 @@ par_memfree	### test memfree - it should be killed by timeout
 par_memfree	Free mem: 1k
 par_memfree	parallel: Warning: This job was killed because it timed out:
 par_memfree	parallel: Warning: parallel --memfree 1t echo Free mem: ::: 1t
+par_milestone	### Test --milestone
+par_milestone	# 1..5 cannot mix with a..f
+par_milestone	4	4
+par_milestone	1	1
+par_milestone	5	5
+par_milestone	2	2
+par_milestone	3	3
+par_milestone	c	8
+par_milestone	d	9
+par_milestone	a	6
+par_milestone	e	10
+par_milestone	b	7
+par_milestone	f	11
+par_milestone	a A	1
+par_milestone	a B	2
+par_milestone	a C	3
+par_milestone	a I	4
+par_milestone	a II	5
+par_milestone	b C	8
+par_milestone	b A	6
+par_milestone	b B	7
+par_milestone	b I	9
+par_milestone	b II	10
+par_milestone	1 B	12
+par_milestone	1 C	13
+par_milestone	1 A	11
+par_milestone	1 I	14
+par_milestone	1 II	15
+par_milestone	2 A	16
+par_milestone	2 B	17
+par_milestone	2 C	18
+par_milestone	2 II	20
+par_milestone	2 I	19
+par_milestone	3 A	21
+par_milestone	3 B	22
+par_milestone	3 C	23
+par_milestone	3 I	24
+par_milestone	3 II	25
 par_no_newline_compress	bug #41613: --compress --line-buffer - no newline
 par_no_newline_compress	tagstring=--tagstring {#} compress=--compress
 par_no_newline_compress	1	OK

@@ -1,7 +1,10 @@
 WHY DOES THIS FAIL?
 ### --env _
+OK from fubar test
 In csh this may fail with ignored_var: Undefined variable.
 ### --env _ with explicit mentioning of normally ignored var $ignored_var
+OK from fubar should be copied test
+OK from fubar should be copied test
 par_hostgroup	### --hostgroup force ncpu - 2x parallel, 6x me
 par_hostgroup	parallel
 par_hostgroup	parallel

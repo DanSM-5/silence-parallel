@@ -10,7 +10,7 @@ sem - semaphore for executing shell command lines in parallel
 
 =head1 SYNOPSIS
 
-B<sem> [--fg] [--id <id>] [--semaphoretimeout <secs>] [-j <num>] [--wait] command
+B<sem> [--fg] [--id <id>] [--semaphore-timeout <secs>] [-j <num>] [--wait] command
 
 =head1 DESCRIPTION
 
@@ -123,7 +123,7 @@ Pass stdin (standard input) to I<command>.
 If I<command> read from stdin (standard input), use B<--pipe>.
 
 
-=item B<--semaphorename> I<name>
+=item B<--semaphore-name> I<name>
 
 =item B<--id> I<name>
 
@@ -149,7 +149,7 @@ takes a person to the toilet, waits for the person to finish, and
 exits.
 
 
-=item B<--semaphoretimeout> I<secs>
+=item B<--semaphore-timeout> I<secs>
 
 =item B<--st> I<secs>
 
