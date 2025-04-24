@@ -179,6 +179,7 @@ pushd
 == Commit released version ==
 
 git diff
+git log -n5
 
 # Recheck OBS https://build.opensuse.org/package/show/home:tange/parallel
 
@@ -275,28 +276,26 @@ from:tange@gnu.org
 to:parallel@gnu.org, bug-parallel@gnu.org
 stable-bcc: Jesse Alama <jessealama@fastmail.fm>
 
-Subject: GNU Parallel 20250422 ('Tariffs') released [stable]
+Subject: GNU Parallel 20250522 ('Iberian blackout<<>>') released <<[stable]>>
 
-GNU Parallel 20250422 ('Tariffs') has been released. It is available for download at: lbry://@GnuParallel:4
+GNU Parallel 20250522 ('Iberian blackout<<>>') has been released. It is available for download at: lbry://@GnuParallel:4
 
 Quote of the month:
 
-  Man, GNU Parallel is very cool.
-    -- jeeger @jeeger@mastodon.social
+  gnu parallel is my new favorite toy
+    -- Eytan Adar @eytan.adar.prof
   
 New in this release:
 
-* No new features. This is a candidate for a stable release.
+<<>>
+
+<<* No new features. This is a candidate for a stable release.>>
 
 * Bug fixes and man page updates.
 
 News about GNU Parallel:
 
-* GNU Parallel https://www.tunbury.org/gnu-parallel/
-
-* Understanding and Fixing Race Conditions in Bash Scripts with flock and GNU Parallel https://www.devgem.io/posts/understanding-and-fixing-race-conditions-in-bash-scripts-with-flock-and-gnu-parallel
-
-* Gnu parallel basic usage https://freddieventura.github.io/2024/09/29/gnu-parallel-basics.html
+<<>>
 
 
 GNU Parallel - For people who live life in the parallel lane.

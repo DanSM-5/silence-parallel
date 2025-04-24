@@ -1,3 +1,33 @@
+20250522
+
+New in this release:
+
+* No new features. This is a candidate for a stable release.
+
+* Bug fixes and man page updates.
+
+News about GNU Parallel:
+
+* Parallel CI Jobs with GNU Parallel
+  https://medium.com/@eren.c.uysal/parallel-ci-jobs-with-gnu-parallel-cda718af9975
+
+* Examples for PBS and SLURM
+  https://github.com/clemsonciti/palmetto-examples/tree/master/GNU-Parallel
+
+* screen and parallel
+  https://www.cs.tufts.edu/comp/21/notes/gnuparallel_screen/Parallel_Jared_Chandler_4_10_2025.pdf
+
+* TLDR for GNU Parallel https://linuxcommandlibrary.com/man/parallel
+
+* Faster and More Reliable Hugging Face Downloads Using aria2 and GNU
+  Parallel
+  https://dev.to/susumuota/faster-and-more-reliable-hugging-face-downloads-using-aria2-and-gnu-parallel-4f2b
+
+* Want to speed up your bioinformatics tasks? Stop looping. Start
+  paralleling. Here’s how to use GNU parallel like a pro
+  https://www.threads.com/@tommy585/post/DIgnUXkRvSY/want-to-speed-up-your-bioinformatics-tasks-stop-looping-start-paralleling-heres
+
+
 20250422
 
 New in this release:

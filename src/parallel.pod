@@ -1519,7 +1519,7 @@ If the host is long, you can use B<column -t> to pretty print it:
 
   cat joblog | column -t
 
-See also: B<--resume> B<--resume-failed>
+See also: B<--resume> B<--resume-failed> B<--progress>
 
 
 =item B<--jobs> I<num>
@@ -1588,7 +1588,7 @@ not be started until the wanted number of jobs has been reached.  This
 makes it possible to change the number of simultaneous running jobs
 while GNU B<parallel> is running.
 
-=item I<num>auto (beta testing)
+=item I<num>auto
 
 If I<num> ends in auto, GNU B<parallel> will use the value as a max
 value. If a job fails, GNU B<parallel> will adjust the number of jobs
@@ -1935,7 +1935,7 @@ I<size> can be postfixed with K, M, G, T, P, k, m, g, t, or p.
 See also: UNIT PREFIX B<--memfree>
 
 
-=item B<--milestone> I<str> (beta testing)
+=item B<--milestone> I<str>
 
 Set milestones where all previous jobs must have finished.
 
@@ -2270,7 +2270,7 @@ wasting time and memory by reading everything at startup.
 By sending GNU B<parallel> SIGUSR2 you can toggle turning on/off
 B<--progress> on a running GNU B<parallel> process.
 
-See also: B<--eta> B<--bar>
+See also: B<--eta> B<--bar> B<--joblog>
 
 
 =item B<--max-line-length-allowed>

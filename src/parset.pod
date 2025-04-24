@@ -114,14 +114,14 @@ or Bash/Zsh/Ksh process substitution:
 
 Put this in the relevant B<$HOME/.bashrc> or B<$HOME/.zshenv> or B<$HOME/.kshrc>:
 
-  . `which env_parallel.bash`
-  . `which env_parallel.zsh`
+  . env_parallel.bash
+  . env_parallel.zsh
   source `which env_parallel.ksh` 
 
 E.g. by doing:
 
-  echo '. `which env_parallel.bash`' >> $HOME/.bashrc
-  echo '. `which env_parallel.zsh`' >> $HOME/.zshenv
+  echo '. env_parallel.bash' >> $HOME/.bashrc
+  echo '. env_parallel.zsh' >> $HOME/.zshenv
   echo 'source `which env_parallel.ksh`' >> $HOME/.kshrc
 
 or by doing:
@@ -170,13 +170,13 @@ or a FIFO:
 
 Put the relevant one of these into B<$HOME/.profile>:
 
-  . `which env_parallel.sh`
-  . `which env_parallel.ash`
-  . `which env_parallel.dash`
+  . env_parallel.sh
+  . env_parallel.ash
+  . env_parallel.dash
 
 E.g. by doing:
 
-  echo '. `which env_parallel.ash`' >> $HOME/.bashrc
+  echo '. env_parallel.ash' >> $HOME/.bashrc
 
 or by doing:
 
