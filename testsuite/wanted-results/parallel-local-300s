@@ -755,65 +755,65 @@ par_retries_unreachable	2
 par_xhalt_on_error	-2 true true	0
 par_xhalt_on_error	-2 true true	0
 par_xhalt_on_error	-2 true true	parallel: This job succeeded:
-par_xhalt_on_error	-2 true true	sleep 1;true
+par_xhalt_on_error	-2 true true	sleep 2;true
 par_xhalt_on_error	-2 true true	parallel: This job succeeded:
-par_xhalt_on_error	-2 true true	sleep 1;true
+par_xhalt_on_error	-2 true true	sleep 2;true
 par_xhalt_on_error	-2 true false	0
 par_xhalt_on_error	-2 true false	0
 par_xhalt_on_error	-2 true false	parallel: This job succeeded:
-par_xhalt_on_error	-2 true false	sleep 1;true
+par_xhalt_on_error	-2 true false	sleep 2;true
 par_xhalt_on_error	-2 true false	parallel: This job succeeded:
-par_xhalt_on_error	-2 true false	sleep 1;true
+par_xhalt_on_error	-2 true false	sleep 2;true
 par_xhalt_on_error	-2 false true	0
 par_xhalt_on_error	-2 false true	0
 par_xhalt_on_error	-2 false true	parallel: This job succeeded:
-par_xhalt_on_error	-2 false true	sleep 2;true
+par_xhalt_on_error	-2 false true	sleep 3;true
 par_xhalt_on_error	-2 false true	parallel: This job succeeded:
-par_xhalt_on_error	-2 false true	sleep 2;true
+par_xhalt_on_error	-2 false true	sleep 3;true
 par_xhalt_on_error	-2 false false	3
 par_xhalt_on_error	-2 false false	4
 par_xhalt_on_error	-2 false false	/bin/bash: line 1: non_exist: command not found
 par_xhalt_on_error	-1 true true	0
 par_xhalt_on_error	-1 true true	0
 par_xhalt_on_error	-1 true true	parallel: This job succeeded:
-par_xhalt_on_error	-1 true true	sleep 1;true
+par_xhalt_on_error	-1 true true	sleep 2;true
 par_xhalt_on_error	-1 true true	parallel: Starting no more jobs. Waiting for 2 jobs to finish.
 par_xhalt_on_error	-1 true true	parallel: This job succeeded:
-par_xhalt_on_error	-1 true true	sleep 2;true
+par_xhalt_on_error	-1 true true	sleep 3;true
 par_xhalt_on_error	-1 true true	parallel: Starting no more jobs. Waiting for 1 jobs to finish.
 par_xhalt_on_error	-1 true true	parallel: This job succeeded:
-par_xhalt_on_error	-1 true true	sleep 3;true
-par_xhalt_on_error	-1 true true	parallel: This job succeeded:
-par_xhalt_on_error	-1 true true	sleep 1;true
-par_xhalt_on_error	-1 true true	parallel: Starting no more jobs. Waiting for 3 jobs to finish.
+par_xhalt_on_error	-1 true true	sleep 4;true
 par_xhalt_on_error	-1 true true	parallel: This job succeeded:
 par_xhalt_on_error	-1 true true	sleep 2;true
-par_xhalt_on_error	-1 true true	parallel: Starting no more jobs. Waiting for 2 jobs to finish.
+par_xhalt_on_error	-1 true true	parallel: Starting no more jobs. Waiting for 3 jobs to finish.
 par_xhalt_on_error	-1 true true	parallel: This job succeeded:
 par_xhalt_on_error	-1 true true	sleep 3;true
+par_xhalt_on_error	-1 true true	parallel: Starting no more jobs. Waiting for 2 jobs to finish.
+par_xhalt_on_error	-1 true true	parallel: This job succeeded:
+par_xhalt_on_error	-1 true true	sleep 4;true
 par_xhalt_on_error	-1 true true	parallel: Starting no more jobs. Waiting for 1 jobs to finish.
 par_xhalt_on_error	-1 true true	/bin/bash: line 1: non_exist: command not found
 par_xhalt_on_error	-1 true false	0
 par_xhalt_on_error	-1 true false	0
 par_xhalt_on_error	-1 true false	parallel: This job succeeded:
-par_xhalt_on_error	-1 true false	sleep 1;true
+par_xhalt_on_error	-1 true false	sleep 2;true
 par_xhalt_on_error	-1 true false	parallel: Starting no more jobs. Waiting for 2 jobs to finish.
 par_xhalt_on_error	-1 true false	parallel: This job succeeded:
-par_xhalt_on_error	-1 true false	sleep 3;true
+par_xhalt_on_error	-1 true false	sleep 4;true
 par_xhalt_on_error	-1 true false	parallel: This job succeeded:
-par_xhalt_on_error	-1 true false	sleep 1;true
+par_xhalt_on_error	-1 true false	sleep 2;true
 par_xhalt_on_error	-1 true false	parallel: Starting no more jobs. Waiting for 3 jobs to finish.
 par_xhalt_on_error	-1 true false	parallel: This job succeeded:
-par_xhalt_on_error	-1 true false	sleep 3;true
+par_xhalt_on_error	-1 true false	sleep 4;true
 par_xhalt_on_error	-1 true false	parallel: Starting no more jobs. Waiting for 1 jobs to finish.
 par_xhalt_on_error	-1 true false	/bin/bash: line 1: non_exist: command not found
 par_xhalt_on_error	-1 false true	0
 par_xhalt_on_error	-1 false true	0
 par_xhalt_on_error	-1 false true	parallel: This job succeeded:
-par_xhalt_on_error	-1 false true	sleep 2;true
+par_xhalt_on_error	-1 false true	sleep 3;true
 par_xhalt_on_error	-1 false true	parallel: Starting no more jobs. Waiting for 1 jobs to finish.
 par_xhalt_on_error	-1 false true	parallel: This job succeeded:
-par_xhalt_on_error	-1 false true	sleep 2;true
+par_xhalt_on_error	-1 false true	sleep 3;true
 par_xhalt_on_error	-1 false true	parallel: Starting no more jobs. Waiting for 2 jobs to finish.
 par_xhalt_on_error	-1 false true	/bin/bash: line 1: non_exist: command not found
 par_xhalt_on_error	-1 false false	3
@@ -835,76 +835,76 @@ par_xhalt_on_error	1 true true	0
 par_xhalt_on_error	1 true true	127
 par_xhalt_on_error	1 true true	/bin/bash: line 1: non_exist: command not found
 par_xhalt_on_error	1 true true	parallel: This job failed:
-par_xhalt_on_error	1 true true	sleep 4;non_exist
+par_xhalt_on_error	1 true true	sleep 5;non_exist
 par_xhalt_on_error	1 true false	1
 par_xhalt_on_error	1 true false	1
 par_xhalt_on_error	1 true false	parallel: This job failed:
-par_xhalt_on_error	1 true false	sleep 2;false
+par_xhalt_on_error	1 true false	sleep 3;false
 par_xhalt_on_error	1 true false	parallel: Starting no more jobs. Waiting for 1 jobs to finish.
 par_xhalt_on_error	1 true false	parallel: This job failed:
-par_xhalt_on_error	1 true false	sleep 2;false
+par_xhalt_on_error	1 true false	sleep 3;false
 par_xhalt_on_error	1 true false	parallel: Starting no more jobs. Waiting for 2 jobs to finish.
 par_xhalt_on_error	1 true false	/bin/bash: line 1: non_exist: command not found
 par_xhalt_on_error	1 true false	parallel: This job failed:
-par_xhalt_on_error	1 true false	sleep 4;non_exist
+par_xhalt_on_error	1 true false	sleep 5;non_exist
 par_xhalt_on_error	1 false true	1
 par_xhalt_on_error	1 false true	1
 par_xhalt_on_error	1 false true	parallel: This job failed:
-par_xhalt_on_error	1 false true	sleep 1;false
+par_xhalt_on_error	1 false true	sleep 2;false
 par_xhalt_on_error	1 false true	parallel: Starting no more jobs. Waiting for 2 jobs to finish.
 par_xhalt_on_error	1 false true	parallel: This job failed:
-par_xhalt_on_error	1 false true	sleep 3;false
+par_xhalt_on_error	1 false true	sleep 4;false
 par_xhalt_on_error	1 false true	parallel: This job failed:
-par_xhalt_on_error	1 false true	sleep 1;false
+par_xhalt_on_error	1 false true	sleep 2;false
 par_xhalt_on_error	1 false true	parallel: Starting no more jobs. Waiting for 3 jobs to finish.
 par_xhalt_on_error	1 false true	parallel: This job failed:
-par_xhalt_on_error	1 false true	sleep 3;false
+par_xhalt_on_error	1 false true	sleep 4;false
 par_xhalt_on_error	1 false true	parallel: Starting no more jobs. Waiting for 1 jobs to finish.
 par_xhalt_on_error	1 false true	/bin/bash: line 1: non_exist: command not found
 par_xhalt_on_error	1 false true	parallel: This job failed:
-par_xhalt_on_error	1 false true	sleep 4;non_exist
+par_xhalt_on_error	1 false true	sleep 5;non_exist
 par_xhalt_on_error	1 false false	1
 par_xhalt_on_error	1 false false	1
-par_xhalt_on_error	1 false false	parallel: This job failed:
-par_xhalt_on_error	1 false false	sleep 1;false
-par_xhalt_on_error	1 false false	parallel: Starting no more jobs. Waiting for 2 jobs to finish.
 par_xhalt_on_error	1 false false	parallel: This job failed:
 par_xhalt_on_error	1 false false	sleep 2;false
+par_xhalt_on_error	1 false false	parallel: Starting no more jobs. Waiting for 2 jobs to finish.
+par_xhalt_on_error	1 false false	parallel: This job failed:
+par_xhalt_on_error	1 false false	sleep 3;false
 par_xhalt_on_error	1 false false	parallel: Starting no more jobs. Waiting for 1 jobs to finish.
 par_xhalt_on_error	1 false false	parallel: This job failed:
-par_xhalt_on_error	1 false false	sleep 3;false
-par_xhalt_on_error	1 false false	parallel: This job failed:
-par_xhalt_on_error	1 false false	sleep 1;false
-par_xhalt_on_error	1 false false	parallel: Starting no more jobs. Waiting for 3 jobs to finish.
+par_xhalt_on_error	1 false false	sleep 4;false
 par_xhalt_on_error	1 false false	parallel: This job failed:
 par_xhalt_on_error	1 false false	sleep 2;false
-par_xhalt_on_error	1 false false	parallel: Starting no more jobs. Waiting for 2 jobs to finish.
+par_xhalt_on_error	1 false false	parallel: Starting no more jobs. Waiting for 3 jobs to finish.
 par_xhalt_on_error	1 false false	parallel: This job failed:
 par_xhalt_on_error	1 false false	sleep 3;false
+par_xhalt_on_error	1 false false	parallel: Starting no more jobs. Waiting for 2 jobs to finish.
+par_xhalt_on_error	1 false false	parallel: This job failed:
+par_xhalt_on_error	1 false false	sleep 4;false
 par_xhalt_on_error	1 false false	parallel: Starting no more jobs. Waiting for 1 jobs to finish.
 par_xhalt_on_error	1 false false	/bin/bash: line 1: non_exist: command not found
 par_xhalt_on_error	1 false false	parallel: This job failed:
-par_xhalt_on_error	1 false false	sleep 4;non_exist
+par_xhalt_on_error	1 false false	sleep 5;non_exist
 par_xhalt_on_error	2 true true	0
 par_xhalt_on_error	2 true true	127
 par_xhalt_on_error	2 true true	/bin/bash: line 1: non_exist: command not found
 par_xhalt_on_error	2 true true	parallel: This job failed:
-par_xhalt_on_error	2 true true	sleep 4;non_exist
+par_xhalt_on_error	2 true true	sleep 5;non_exist
 par_xhalt_on_error	2 true false	1
 par_xhalt_on_error	2 true false	1
 par_xhalt_on_error	2 true false	parallel: This job failed:
-par_xhalt_on_error	2 true false	sleep 2;false
+par_xhalt_on_error	2 true false	sleep 3;false
 par_xhalt_on_error	2 true false	parallel: This job failed:
-par_xhalt_on_error	2 true false	sleep 2;false
+par_xhalt_on_error	2 true false	sleep 3;false
 par_xhalt_on_error	2 false true	1
 par_xhalt_on_error	2 false true	1
 par_xhalt_on_error	2 false true	parallel: This job failed:
-par_xhalt_on_error	2 false true	sleep 1;false
+par_xhalt_on_error	2 false true	sleep 2;false
 par_xhalt_on_error	2 false true	parallel: This job failed:
-par_xhalt_on_error	2 false true	sleep 1;false
+par_xhalt_on_error	2 false true	sleep 2;false
 par_xhalt_on_error	2 false false	1
 par_xhalt_on_error	2 false false	1
 par_xhalt_on_error	2 false false	parallel: This job failed:
-par_xhalt_on_error	2 false false	sleep 1;false
+par_xhalt_on_error	2 false false	sleep 2;false
 par_xhalt_on_error	2 false false	parallel: This job failed:
-par_xhalt_on_error	2 false false	sleep 1;false
+par_xhalt_on_error	2 false false	sleep 2;false

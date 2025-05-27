@@ -124,7 +124,7 @@ par__dburl_parsing() {
 
 par_sshlogin_parsing() {
     echo '### Generate sshlogins to test parsing'
-    sudo sshd -p 22222
+    sudo $(which sshd) -p 22222
 
     gen_sshlogin() {
 	grp=grp1+grp2

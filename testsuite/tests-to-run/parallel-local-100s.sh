@@ -17,14 +17,14 @@ rm -f /tmp/*.{tmx,pac,arg,all,log,swp,loa,ssh,df,pip,tmb,chr,tms,par}
 par_--shellquote_command_len() {
     echo '### test quoting will not cause a crash if too long'
     # echo "'''" | parallel --shellquote --shellquote --shellquote --shellquote
-
+    export PARALLEL="--unsafe"
     testlen() {
 	echo "$1" | parallel $2 | wc
     }
     export -f testlen
 
     outer() {
-	export PARALLEL="--env testlen -k --tag"
+	export PARALLEL="$PARALLEL --env testlen -k --tag"
 	parallel $@ testlen '{=2 $_="$arg[1]"x$_ =}' '{=3 $_=" --shellquote"x$_ =}' \
 	     ::: '"' "'" ::: {1..10} ::: {1..10}
     }
