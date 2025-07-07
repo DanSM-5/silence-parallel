@@ -2982,7 +2982,7 @@ sub test_safe_env_vars {
 
 sub init_globals() {
     # Defaults:
-    $Global::version = 20250622;
+    $Global::version = 20250722;
     $Global::progname = 'parallel';
     $::name = "GNU Parallel";
     $Global::infinity = 2**31;
@@ -3038,7 +3038,7 @@ sub init_globals() {
 		    '$_=sprintf("%0${f}d",slot())'),
 	 # {seq-1} = seq-1 = counting from 0
 	 '{seq(.*?)}' => '$_=eval q{$job->seq()}.qq{$$1}',
-	 # {seq-1} = jobslot-1 = counting from 0
+	 # {slot-1} = jobslot-1 = counting from 0
 	 '{slot(.*?)}' => '$_=eval q{$job->slot()}.qq{$$1}',
 
 	 ## Bash inspired replacement strings
@@ -6059,8 +6059,8 @@ sub usage() {
 	 "If you use programs that use GNU Parallel to process data for an article in a",
 	 "scientific publication, please cite:",
 	 "",
-	 "  Tange, O. (2025, June 22). GNU Parallel 20250622 ('Павутина').",
-	 "  Zenodo. https://doi.org/10.5281/zenodo.15717374",
+	 "  Tange, O. (2025, July 22). GNU Parallel 20250722 ('Fordow').",
+	 "  Zenodo. https://doi.org/10.5281/zenodo.16289600",
 	 "",
 	 # Before changing these lines,  please read
 	 # https://www.gnu.org/software/parallel/parallel_design.html#citation-notice
@@ -6092,8 +6092,8 @@ sub citation_notice() {
 	     "If you use programs that use GNU Parallel to process data for an article in a",
 	     "scientific publication, please cite:",
 	     "",
-	     "  Tange, O. (2025, June 22). GNU Parallel 20250622 ('Павутина').",
-	     "  Zenodo. https://doi.org/10.5281/zenodo.15717374",
+	     "  Tange, O. (2025, July 22). GNU Parallel 20250722 ('Fordow').",
+	     "  Zenodo. https://doi.org/10.5281/zenodo.16289600",
 	     "",
 	     # Before changing these line,   please read
 	     # https://www.gnu.org/software/parallel/parallel_design.html#citation-notice and
@@ -6219,20 +6219,20 @@ sub citation() {
 	"If you use programs that use GNU Parallel to process data for an article in a",
 	"scientific publication, please cite:",
 	"",
-	"\@software{tange_2025_15717374,",
+	"\@software{tange_2025_16289600,",
 	"      author       = {Tange, Ole},",
-	"      title        = {GNU Parallel 20250622 ('Павутина')},",
-	"      month        = Jun,",
+	"      title        = {GNU Parallel 20250722 ('Fordow')},",
+	"      month        = Jul,",
 	"      year         = 2025,",
 	"      note         = {{GNU Parallel is a general parallelizer to run",
 	"                       multiple serial command line programs in parallel",
 	"                       without changing them.}},",
 	"      publisher    = {Zenodo},",
-	"      doi          = {10.5281/zenodo.15717374},",
-	"      url          = {https://doi.org/10.5281/zenodo.15717374}",
+	"      doi          = {10.5281/zenodo.16289600},",
+	"      url          = {https://doi.org/10.5281/zenodo.16289600}",
 	"}",
 	"",
-	"(Feel free to use \\nocite{tange_2025_15717374})",
+	"(Feel free to use \\nocite{tange_2025_16289600})",
 	"",
 	# Before changing these lines, please read
 	# https://www.gnu.org/software/parallel/parallel_design.html#citation-notice and

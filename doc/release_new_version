@@ -168,12 +168,16 @@ make web
 cp -r src/*.pdf src/sphinx/build/html/* ../parallel-web/parallel
 cp ../parallel-web/parallel/parallel.html  ../parallel-web/parallel/man.html
 
+
+# Savannah does not allow for many keys in ssh-agent
+ssh-add -D
+ssh-add ~/.ssh/16000/id_rsa
 pushd ../parallel-web/parallel
 # Bug at Savannah makes this take 30 seconds
 (cd ..;
- cvs -z3 -d:ext:tange@cvs.savannah.gnu.org:/web/parallel co parallel)
-cvs up
-cvs ci -m "New release"
+ torsocks cvs -z3 -d:ext:tange@cvs.savannah.gnu.org:/web/parallel co parallel)
+torsocks cvs up
+torsocks cvs ci -m "New release"
 pushd
 
 == Commit released version ==
@@ -276,14 +280,15 @@ from:tange@gnu.org
 to:parallel@gnu.org, bug-parallel@gnu.org
 stable-bcc: Jesse Alama <jessealama@fastmail.fm>
 
-Subject: GNU Parallel 20250622 ('Павутина') released [stable]
+Subject: GNU Parallel 20250722 ('Fordow') released [stable]
 
-GNU Parallel 20250622 ('Павутина') has been released. It is available for download at: lbry://@GnuParallel:4
+GNU Parallel 20250722 ('Fordow') has been released. It is available for download at: lbry://@GnuParallel:4
 
 Quote of the month:
 
-  GNU Parallel is a seriously underrated tool, at least based on how little I hear people talk about it (and how often I possibly over-use it)
-    -- Byron Alley @byronalley
+  My party trick is Map/Reduce with GNU Parallel XD￼
+    -- Paweł Lasek @pawel_lasek@twitter
+
 
 New in this release:
 
@@ -293,8 +298,15 @@ New in this release:
 
 News about GNU Parallel:
 
-* Maîtriser la commande parallel
-  https://blog.stephane-robert.info/docs/admin-serveurs/linux/parallel/
+* Background Jobs in a Loop in Bash
+  https://www.baeldung.com/linux/bash-background-jobs-loop
+
+* Spring 2025: GNU Parallel Training
+  https://youtu.be/rrvM1KfdEdI
+  http://www.hpc.lsu.edu/training/weekly-materials/2025-Spring/HPC_GNU_Parallel_09April2025.pdf
+
+* Short tutorial for GNU parallel
+  https://docs.lovelace.plymouth.ac.uk/user-guide/parallel
 
 
 GNU Parallel - For people who live life in the parallel lane.

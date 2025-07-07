@@ -95,16 +95,21 @@ install_packages() {
 }
 
 install_sqlite2() {
-    mkdir /tmp/sqlite2
-    cd /tmp/sqlite2
-    git clone https://github.com/sqlite/sqlite
-    cd sqlite
-    git checkout cc83b6e071ba69943f175a038d2625ae3d6abf47
-    # New GCC needs <stdlib.h>, so add that
-    perl -i -pe \
-	 's/echo (.#include <stdio.h>)(.)/printf $1\\n#include <stdlib.h>\\n$2/' \
-	 Makefile.in
-    ./configure --prefix=/usr/local && make -j && sudo make install
+    # sqlite2 already installed
+    sql --dbsize sqlite:///'?select "sqlite2 installed";' && return
+
+    mkdir -p /tmp/sqlite2
+    (
+	cd /tmp/sqlite2
+	git clone https://github.com/sqlite/sqlite
+	cd sqlite
+	git checkout cc83b6e071ba69943f175a038d2625ae3d6abf47
+	# New GCC needs <stdlib.h>, so add that
+	perl -i -pe \
+	     's/echo (.#include <stdio.h>)(.)/printf $1\\n#include <stdlib.h>\\n$2/' \
+	     Makefile.in
+	./configure --prefix=/usr/local && make -j && sudo make install
+    )
 }
 
 install_oracle_client() {
@@ -156,16 +161,24 @@ install_oracle_client() {
 
 install_oracle_server() {   
     # set up vagrant oracle server
+    vagrantid=OracleDatabase/23.7.0-Free
     git clone https://github.com/oracle/vagrant-projects.git
-    cd vagrant-projects/OracleDatabase/23.4.0-Free
-    echo export VM_ORACLE_PWD=`goodpasswd` >> ~/.passwords
-    echo export 'ORACLE_PWD=$VM_ORACLE_PWD' >> ~/.passwords
-    . ~/.passwords
-    vagrant up
-    # Pack as box
-    nice vagrant package --output oracledb-23.4.box &
-    # test it works:
-    sql --showtables oracle://SYSTEM:$VM_ORACLE_PWD@/FREE
+    (
+	cd vagrant-projects/"$vagrantid"
+	echo export VM_ORACLE_PWD=`goodpasswd` >> ~/.passwords
+	echo export 'ORACLE_PWD=$VM_ORACLE_PWD' >> ~/.passwords
+	. ~/.passwords
+	vagrant up
+	# test it works:
+	sql --showtables oracle://SYSTEM:$VM_ORACLE_PWD@/FREE &&
+	    (
+		# Pack as box
+		(
+		    nice vagrant package --output vagrant.box
+		    vagrant box add --name "$vagrantid" --force vagrant.box
+		) &
+	    )
+    )
 }
 
 setup_databases() {
@@ -183,10 +196,10 @@ setup_databases() {
 	sudo su - postgres -c 'createuser '$(whoami)
 	sudo su - postgres -c "sql pg:/// \"ALTER USER \\\"`whoami`\\\" WITH PASSWORD '$(whoami)';\""
 	sudo su - postgres -c "psql -d $(whoami) -c 'GRANT CREATE ON SCHEMA public TO \"$(whoami)\";'"
-	sql pg://// 'create table __test_foo_socket(i int)'
-	sql pg://$me:$me@// 'create table __test_foo(i int)'
-	sql pg://// 'drop table __test_foo_socket' &&
-	    sql pg://$me:$me@// 'drop table __test_foo' &&
+	sql pg:/// 'create table __test_foo_socket(i int)'
+	sql pg://$me:$me@/ 'create table __test_foo(i int)'
+	sql pg:/// 'drop table __test_foo_socket' &&
+	    sql pg://$me:$me@/ 'drop table __test_foo' &&
 	    echo OK: PostgreSQL
     }
 
@@ -209,10 +222,10 @@ setup_databases() {
 
 	
         # Drop database and user if needed
-        sql mysql://// 'create table __test_foo_socket(i int)'
-        sql mysql://$me:$me@// 'create table __test_foo(i int)'
-        sql mysql://// 'drop table __test_foo_socket' &&
-            sql mysql://$me:$me@// 'drop table __test_foo' &&
+        sql mysql:/// 'create table __test_foo_socket(i int)'
+        sql mysql://$me:$me@/ 'create table __test_foo(i int)'
+        sql mysql:/// 'drop table __test_foo_socket' &&
+            sql mysql://$me:$me@/ 'drop table __test_foo' &&
 	    echo OK: MySQL
     }
     setup_postgres &&
@@ -301,7 +314,8 @@ vagrant_up() {
     # This is due to changes on https://vagrantcloud.com incompatible
     # with vagrant 2.3.7
     parallel -j0 --ll --tag 'cd {//} && ./setup.sh' ::: vagrant/*/*/setup.sh
-    parallel -j0 --ll --tag 'cd {//} && vagrant up' ::: vagrant/*/*/Vagrantfile
+    # Disk I/O is high at the first 30 sec
+    parallel --delay 30 -j0 --ll --tag 'cd {//} && vagrant up' ::: vagrant/*/*/Vagrantfile
     # After this you should be able to 'vagrant ssh'
 }
 
@@ -353,7 +367,7 @@ add_key_to_auth_key() {
         ssh-keygen -f ~/.ssh/known_hosts -R $1
 	cat ~/.ssh/*.pub | (cd vagrant/*/$1 && vagrant ssh -c 'cat >>.ssh/authorized_keys')
 	sshpass -p vagrant ssh-copy-id -o StrictHostKeyChecking=accept-new vagrant@$1
-	ssh vagrant@$1 echo vagrant@$1 OK
+	ssh vagrant@$1 echo ssh vagrant@$1 OK
     }
     export -f sshaddvagrant
     sshaddlocal() {
@@ -370,11 +384,17 @@ add_key_to_auth_key() {
     ips="172.27.27.1 127.0.0.1 ::1 $ipv6"
     
     cat ~/.ssh/*pub >> ~/.ssh/authorized_keys
-    parallel --tag --timeout 20 sshaddvagrant ::: $vagrant_names parallel-server{1..4}
-    parallel --tag --timeout 20 sshaddlocal ::: $ips lo localhost 
-    parallel --tag --timeout 5 ssh vagrant@{} echo ssh vagrant@{} OK ::: $vagrant_names parallel-server{1..4}
+    parallel --tag --timeout 60 sshaddvagrant ::: $vagrant_names parallel-server{1..4}
+    exit=$?
+    parallel --tag --timeout 20 sshaddlocal ::: $ips lo localhost
+    exit=$(($exit + $?))
     parallel ssh vagrant@{} 'echo "PATH=\$PATH:\$HOME/bin" >> .bashrc' ::: $vagrant_names
+    exit=$(($exit + $?))
     parallel --tag --timeout 5 ssh {} echo ssh {} OK ::: $ips lo localhost 
+    exit=$(($exit + $?))
+    parallel --tag --timeout 5 ssh vagrant@{} echo ssh vagrant@{} OK ::: $vagrant_names parallel-server{1..4}
+    exit=$(($exit + $?))
+    (exit $exit)
 }
 
 install_rsync_on_vagrant() {
@@ -462,17 +482,21 @@ copy_ssh_keys() {
 	    echo
     }
     export -f make_sshkey
-
+    
+    ssh-add -d ~/.ssh/16000/id_rsa
     echo '# Make and copy sshkey'
-    shellsplus | parallel --timeout 20 --retries 5 --tag -j5 make_sshkey
+    shellsplus | parallel --timeout 40 --retries 5 --tag -j50% make_sshkey
 
     ssh_a_to_b() {
 	ssh $1@lo ssh $2@lo echo OK ||
+
+
+	    
 	    (echo failed && false)
     }
     export -f ssh_a_to_b
     echo "# copy id from X to X"
-    shellsplus | parallel --timeout 10 --tag ssh_a_to_b {} {}
+    shellsplus | parallel --timeout 20 --retries 5 --tag ssh_a_to_b {} {}
 
     ssh_copy_id() {
 	from="$1"
@@ -482,7 +506,7 @@ copy_ssh_keys() {
     export -f ssh_copy_id
 
     echo '# copy id from any X to any Y'
-    parallel --bar -j3 --timeout 7 --retries 10 --tag \
+    parallel --bar -j3 --timeout 20 --retries 10 --tag \
 	     ssh_copy_id {1}@lo {2}@lo ::: $(shellsplus) ::: $(shellsplus)
     echo '# Test the copying went well'
     parallel --bar -j2 --timeout 9 --retries 10 --tag \
