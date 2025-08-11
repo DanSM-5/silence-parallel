@@ -652,7 +652,7 @@ each page is fetched first.
 
 Run like this:
 
-  PARALLEL=-j100 ./parallel-crawl http://gatt.org.yeslab.org/
+  PARALLEL=-j100 ./parallel-crawl https://freenet.org/
 
 Remove the B<wget> part if you only want a web crawler.
 
@@ -664,32 +664,47 @@ URLs and the process is started over until no unseen links are found.
 
   #!/bin/bash
 
-  # E.g. http://gatt.org.yeslab.org/
-  URL=$1
+  # E.g. https://freenet.org/
+  url=$1
   # Stay inside the start dir
-  BASEURL=$(echo $URL | perl -pe 's:#.*::; s:(//.*/)[^/]*:$1:')
-  URLLIST=$(mktemp urllist.XXXX)
-  URLLIST2=$(mktemp urllist.XXXX)
-  SEEN=$(mktemp seen.XXXX)
-
-  # Spider to get the URLs
-  echo $URL >$URLLIST
-  cp $URLLIST $SEEN
-
-  while [ -s $URLLIST ] ; do
-    cat $URLLIST |
-      parallel lynx -listonly -image_links -dump {} \; \
-        wget -qm -l1 -Q1 {} \; echo Spidered: {} \>\&2 |
-        perl -ne 's/#.*//; s/\s+\d+.\s(\S+)$/$1/ and
-          do { $seen{$1}++ or print }' |
-      grep -F $BASEURL |
-      grep -v -x -F -f $SEEN | tee -a $SEEN > $URLLIST2
-    mv $URLLIST2 $URLLIST
+  baseurl=$(echo "$url" | perl -pe 's:#.*::; s:(//.*/)[^/]*:$1:')
+  urllist=$(mktemp -t urllist.XXXX)
+  newurllist=$(mktemp -t urllist.XXXX)
+  seen=$(mktemp -t seen.XXXX)
+  
+  # Add start url to the list
+  echo "$url" >"$urllist"
+  cp "$urllist" "$seen"
+  
+  process_single_url() {
+      # Find all links in the url
+      lynx -listonly -image_links -dump "$1"
+      # Remove this line to get spider only
+      wget -qm -l1 -Q1 "$1"
+      echo
+      echo Spidered: "$1" >&2
+  }
+  export -f process_single_url
+  
+  unique() {
+      # Like `sort -u` but without the sorting
+      perl -ne 's/#.*//; s/\s+\d+.\s(\S+)$/$1/ and do { $seen{$1}++ or print }'
+  }
+  
+  while [ -s "$urllist" ] ; do
+    cat "$urllist" |
+      parallel process_single_url |
+      unique |
+      # Ignore links outside $baseurl
+      grep -a -F "$baseurl" |
+      # Ignore links already seen
+      grep -a -v -x -F -f "$seen" |
+      tee -a "$seen" > "$newurllist"
+    mv "$newurllist" "$urllist"
   done
-
-  rm -f $URLLIST $URLLIST2 $SEEN
-
-
+  
+  rm -f "$newurllist" "$urllist" "$seen"
+  
 =head2 EXAMPLE: Process files from a tar file while unpacking
 
 If the files to be processed are in a tar file then unpacking one file

@@ -3,33 +3,20 @@ par_big_func	       1    3XXX   90XXX
 par_big_func	       1    3XXX   90XXX
 par_big_func	       1    2XXX   49XXX
 par_big_func	
-par_big_func_name	   17XXX
-par_big_func_name	   17XXX
-par_big_func_name	   17XXX
-par_big_func_name	   17XXX
-par_big_func_name	   17XXX
-par_big_func_name	   17XXX
-par_big_func_name	   12XXX
+par_big_func_name	   18XXX
+par_big_func_name	   18XXX
+par_big_func_name	   18XXX
+par_big_func_name	   18XXX
+par_big_func_name	   18XXX
+par_big_func_name	   18XXX
+par_big_func_name	   11XXX
 par_big_func_name	
-par_big_var_func_name	   17XXX
-par_big_var_func_name	   17XXX
-par_big_var_func_name	   17XXX
-par_big_var_func_name	   17XXX
-par_big_var_func_name	   17XXX
-par_big_var_func_name	   17XXX
-par_big_var_func_name	   17XXX
-par_big_var_func_name	   17XXX
-par_big_var_func_name	   17XXX
-par_big_var_func_name	   17XXX
-par_big_var_func_name	   17XXX
-par_big_var_func_name	   17XXX
-par_big_var_func_name	   17XXX
-par_big_var_func_name	   17XXX
-par_big_var_func_name	   17XXX
-par_big_var_func_name	   17XXX
-par_big_var_func_name	   17XXX
-par_big_var_func_name	   17XXX
-par_big_var_func_name	    2XXX
+par_big_var_func_name	   55XXX
+par_big_var_func_name	   55XXX
+par_big_var_func_name	   55XXX
+par_big_var_func_name	   55XXX
+par_big_var_func_name	   55XXX
+par_big_var_func_name	   43XXX
 par_big_var_func_name	
 par_many_args	       1    2XXX    5XXX
 par_many_args	       1    2XXX    5XXX
@@ -37,21 +24,13 @@ par_many_args	       1    2XXX    5XXX
 par_many_args	       1    2XXX    5XXX
 par_many_args	       1    2XXX    5XXX
 par_many_args	       1    2XXX    5XXX
-par_many_args	       1    2XXX    5XXX
+par_many_args	       1    2XXX    4XXX
 par_many_args	
-par_many_func	       1     532   12XXX
-par_many_func	       1     532   12XXX
-par_many_func	       1     532   12XXX
-par_many_func	       1     532   12XXX
-par_many_func	       1     532   12XXX
-par_many_func	       1     532   12XXX
-par_many_func	       1     532   12XXX
-par_many_func	       1     532   12XXX
-par_many_func	       1     532   12XXX
-par_many_func	       1     532   12XXX
-par_many_func	       1     532   12XXX
-par_many_func	       1     532   12XXX
-par_many_func	       1     284    6XXX
+par_many_func	       1    1XXX   39XXX
+par_many_func	       1    1XXX   39XXX
+par_many_func	       1    1XXX   39XXX
+par_many_func	       1    1XXX   39XXX
+par_many_func	       1      12     260
 par_many_func	
 par_many_func	
 par_many_var	   21XXX
@@ -61,7 +40,7 @@ par_many_var	   21XXX
 par_many_var	   21XXX
 par_many_var	   21XXX
 par_many_var	   21XXX
-par_many_var	    7XXX
+par_many_var	    6XXX
 par_many_var	
 par_many_var_big_func	    4XXX
 par_many_var_big_func	    4XXX
@@ -97,19 +76,9 @@ par_many_var_big_func	    4XXX
 par_many_var_big_func	    4XXX
 par_many_var_big_func	    4XXX
 par_many_var_big_func	    4XXX
-par_many_var_big_func	    4XXX
-par_many_var_big_func	    4XXX
-par_many_var_big_func	    4XXX
-par_many_var_big_func	     164
+par_many_var_big_func	      68
 par_many_var_big_func	
-par_many_var_func	       1     692   16XXX
-par_many_var_func	       1     692   16XXX
-par_many_var_func	       1     692   16XXX
-par_many_var_func	       1     692   16XXX
-par_many_var_func	       1     692   16XXX
-par_many_var_func	       1     692   16XXX
-par_many_var_func	       1     692   16XXX
-par_many_var_func	       1     692   16XXX
-par_many_var_func	       1     692   16XXX
-par_many_var_func	       1     440   10XXX
+par_many_var_func	       1    2XXX   57XXX
+par_many_var_func	       1    2XXX   57XXX
+par_many_var_func	       1    1XXX   44XXX
 par_many_var_func	

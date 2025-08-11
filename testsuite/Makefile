@@ -128,6 +128,7 @@ namedservers=centos9 freebsd13 freebsd14 rhel8 centos3 openindiana centos8
 servers=parallel-server1 parallel-server2 parallel-server3 parallel-server4 ${namedservers}
 
 startvm:
+	touch vagrant/authorized_keys
 	sort -u ~/.ssh/*.pub vagrant/authorized_keys > vagrant/authorized_keys.
 	mv vagrant/authorized_keys. vagrant/authorized_keys
 	parallel -j0 --tag -k --timeout 100 '${start}' ::: ${servers} &

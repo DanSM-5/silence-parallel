@@ -391,7 +391,7 @@ Summary (see legend above):
 
 =back
 
-B<ppss> is also a tool for running jobs in parallel.
+B<ppss> is a tool for running jobs in parallel.
 
 The output of B<ppss> is status information and thus not useful for
 using as input for another command. The output from the jobs are put
@@ -5006,6 +5006,65 @@ If you like bash's parameter expansion, use --plus to get familar {1%.*}:
 
 https://git.sr.ht/~q3cpma/scripts/
 (Last checked: 2025-01)
+
+
+=head2 DIFFERENCES BETWEEN concur AND GNU Parallel
+
+Summary (see legend above):
+
+=over
+
+=item I1 -  -  I4 -  -  (I7)
+
+=item - - M3 - - -
+
+=item O1 - O3 - - - - x x O10
+
+=item E1 -  (E3) E4 - - - - -
+
+=item -  -  -  -  -  -  -  -  -
+
+=item - -
+
+=back
+
+B<concur> outputs in json. Output is cached in RAM and takes up a
+factor of 6: 1 GB output uses 6 GB RAM.
+
+Standard input is split on space - not newline.
+
+It can stop when the first job stops.
+
+It gives the wrong output on jobs like:
+
+  concur 'perl -e "print(shift)"' "foo"
+  concur 'bash -c "sleep {{1}}; touch a{{1}}"' 3 2 1
+
+=head3 EXAMPLES
+
+  1$ concur "dig @{{1}} ocw.mit.edu" 1.1.1.1 9.9.9.9 8.8.8.8 94.140.14.14 \
+     208.67.222.222
+
+  1$ parallel --results -.json  "dig @{1} ocw.mit.edu" 1 ::: 1.1.1.1 9.9.9.9\
+     8.8.8.8 94.140.14.14 208.67.222.222 | jq .
+
+  2$ echo "foo bar baz" | concur "touch /tmp/{{1}}.foo"
+
+  2$ printf "%s\n" foo bar baz | parallel "touch /tmp/{1}.foo"
+
+  3$ concur "ping -c 1 {{1}}" www.mit.edu www.ucla.edu www.slashdot.org
+
+  3$ parallel --results -.json "ping -c 1 {1}" ::: www.mit.edu \
+     www.ucla.edu www.slashdot.org | jq .
+
+  4$ concur "ping -c 1 {{1}}" www.mit.edu www.ucla.edu www.slashdot.org |
+     jq '.command[0]'
+
+  4$ parallel --results -.json "ping -c 1 {1}" ::: www.mit.edu www.ucla.edu \
+     www.slashdot.org | jq -s '.[1]'
+
+https://github.com/ewosborne/concur
+(Last checked: 2025-05)
 
 
 =head2 Todo

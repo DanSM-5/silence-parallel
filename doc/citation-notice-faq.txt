@@ -96,11 +96,15 @@ The notice is only relevant if you write scientific articles.
 
 == What shows citing software is an academic tradition? ==
 
+Software used to be a convenience in academia - like a
+typewriter. That is not the case any more. Today software is an
+essential part of the research.
+
 These links say: Yes, you should cite software, and if the author
 suggests a way of citing, use that.
 
 * https://www.force11.org/software-citation-principles (refers to many others)
-* https://www.software.ac.uk/blog/2016-09-30-oh-research-software-how-shalt-i-cite-thee
+* https://www.software.ac.uk/blog/oh-research-software-how-shalt-i-cite-thee
 * https://blog.apastyle.org/apastyle/2015/01/how-to-cite-software-in-apa-style.html
 * https://libguides.mit.edu/c.php?g=551454&p=3900280
 * https://www.software.ac.uk/how-cite-software

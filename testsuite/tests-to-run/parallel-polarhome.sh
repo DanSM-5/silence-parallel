@@ -6,7 +6,7 @@
 
 # Check servers up on http://www.polarhome.com/service/status/
 unset TIMEOUT
-. `which env_parallel.bash`
+. env_parallel.bash
 env_parallel --session
 
 P_ALL="openstep qnx pidora alpha tru64 hpux-ia64 syllable raspbian solaris openindiana aix hpux debian-ppc suse solaris-x86 mandriva ubuntu scosysv unixware centos miros macosx redhat netbsd openbsd freebsd debian dragonfly vax ultrix minix irix hurd beaglebone cubieboard2"
