@@ -1416,9 +1416,14 @@ sub spreadstdin() {
     while(1) {
 	$anything_written = 0;
 	read_block();
-	if($opt::r) {
+	if($Global::ignore_empty) {
 	    # Remove empty lines
-	    $buf =~ s/^\s*\n//gm;
+	    # - in the middle
+	    $buf =~ s/\Q$recend$recstart\E\s*(?=\Q$recend$recstart\E)//gso;
+	    # - at the start
+	    $buf =~ s/^\s*\Q$recend$recstart\E/$recstart/so;
+	    # - at the end
+	    $buf =~ s/\Q$recend$recstart\E\s*$/$recend/so;
 	    if(length $buf == 0) {
 		if($eof) {
 		    last;
@@ -2982,7 +2987,7 @@ sub test_safe_env_vars {
 
 sub init_globals() {
     # Defaults:
-    $Global::version = 20250722;
+    $Global::version = 20250724;
     $Global::progname = 'parallel';
     $::name = "GNU Parallel";
     $Global::infinity = 2**31;
