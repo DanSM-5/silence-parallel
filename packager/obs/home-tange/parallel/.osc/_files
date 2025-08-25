@@ -1,17 +1,8 @@
-<directory name="parallel" rev="415" vrev="2" srcmd5="9064aab9b77c59a3e4fdec682a503692">
+<directory name="parallel" rev="416" vrev="2" srcmd5="ed6de279badaf03d47d620cd8bd6c8af">
   <entry name="Makefile" md5="0115832fdb6c4a22e3c305a2a21bbbf9" size="1359" mtime="1737501886" />
-  <entry name="PKGBUILD" md5="5c2fe2ccc5372255b444e437f1d77ceb" size="1373" mtime="1756148347" />
-  <entry name="parallel-20250522.tar.bz2" md5="3a1a87122be6039c1d8049fa89ab265c" size="2690190" mtime="1747859034" />
-  <entry name="parallel-20250522.tar.bz2.sig" md5="409d54f627f3d6fdfce067eca58b3132" size="2080" mtime="1747859034" />
-  <entry name="parallel-20250622.tar.bz2" md5="9c33030c026805f2e3d42c2338d2a2ba" size="2703218" mtime="1750630915" />
-  <entry name="parallel-20250722.tar.bz2" md5="e29c2cc9bc2d75afec10a128f58e85e3" size="2620953" mtime="1753135572" />
-  <entry name="parallel-20250722.tar.bz2.sig" md5="0dda620663b334037f2c7fa9b58700c7" size="2080" mtime="1753135573" />
-  <entry name="parallel-20250822.tar.bz2" md5="d3246b8f4a778d440569c33683b5fb24" size="2702012" mtime="1756148347" />
-  <entry name="parallel-20250822.tar.bz2.sig" md5="bcf241b415fe1454b1f103517cfa75b1" size="2080" mtime="1756148347" />
-  <entry name="parallel.spec" md5="b00542ad72a02cd2f4b650d735d7f709" size="6224" mtime="1756148347" />
-  <entry name="parallel_20250522.tar.gz" md5="d2ff1d7dc070add603756964b805517a" size="2966515" mtime="1747859036" />
-  <entry name="parallel_20250622.tar.gz" md5="4918acdcbd1ecbc6b262901cee1f5265" size="2954977" mtime="1750630915" />
-  <entry name="parallel_20250722.tar.gz" md5="33655566f2901ad92ee470bac1ad31c0" size="2891242" mtime="1753135579" />
-  <entry name="parallel_20250822.dsc" md5="ab87ef97bcd9831f948de7c856e21bb8" size="557" mtime="1756148348" />
-  <entry name="parallel_20250822.tar.gz" md5="1267ca274288c65b459c3e46f12ae300" size="2955557" mtime="1756148348" />
+  <entry name="PKGBUILD" md5="3e38db5844f8cdec0e5425ee760b258e" size="1442" mtime="1758574191" />
+  <entry name="parallel-20250922.tar.bz2" md5="ce838062a037f91339a5a5c6427bb6e3" size="2702843" mtime="1758574192" />
+  <entry name="parallel-20250922.tar.bz2.sig" md5="d479617fcd564cc57d70a1a3f863b54b" size="2080" mtime="1758574192" />
+  <entry name="parallel.spec" md5="723474981f3686e909c1af06de7aa5f4" size="6224" mtime="1758574192" />
+  <entry name="parallel_20250922.tar.gz" md5="36c8bd05bcbd0108ba178ef76ec03267" size="2954609" mtime="1758574193" />
 </directory>

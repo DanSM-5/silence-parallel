@@ -171,8 +171,7 @@ cp ../parallel-web/parallel/parallel.html  ../parallel-web/parallel/man.html
 
 # Savannah does not allow for many keys in ssh-agent
 ssh-add -D
-ssh-add ~/.ssh/16000/id_rsa
-ssh-add ~/.ssh/16000
+ssh-add ~/.ssh/16000/id_rsa || ssh-add ~/.ssh/16000
 pushd ../parallel-web/parallel
 # Bug at Savannah makes this take 30 seconds
 (cd ..;
@@ -281,14 +280,14 @@ from:tange@gnu.org
 to:parallel@gnu.org, bug-parallel@gnu.org
 stable-bcc: Jesse Alama <jessealama@fastmail.fm>
 
-Subject: GNU Parallel 20250822 ('Петропавловск') released [stable]
+Subject: GNU Parallel 20250922 ('Iryna Zarutska') released [stable]
 
-GNU Parallel 20250822 ('Петропавловск') has been released. It is available for download at: lbry://@GnuParallel:4
+GNU Parallel 20250922 ('Iryna Zarutska') has been released. It is available for download at: lbry://@GnuParallel:4
 
 Quote of the month:
 
-  gnuparallel is sacred Unix magic
-    -- Dr. Dylan Beaudette, Soil Scientis ‪@dylanbeaudette.bsky.social
+  GNU parallel is awesome. Use it more often in your scripts!
+    -- Wade @WadeGrimshire@twitter
 
 New in this release:
 
