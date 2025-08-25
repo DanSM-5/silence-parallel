@@ -7,9 +7,6 @@ Quote of the month:
   idk who built GNU parallel but I owe them a beer
     -- ram @h4x0r1ng
 
-  gnuparallel is sacred Unix magic
-    -- Dr. Dylan Beaudette, Soil Scientis ‪@dylanbeaudette.bsky.social
-
   64コアで、64並列でsimlationを回してtopコマンドで状況を見るのは心地よい。簡単に並列処理を実現できるGNU parallelコマンドは素晴らしい。
     -- Daisuke Iizuka @diizuka@twitter
 
@@ -250,6 +247,9 @@ https://negfeedback.blogspot.com/2020/05/indispensable-command-line-tools.html
     -- @alinajaf@twitter
 
 === Used ===
+
+  gnuparallel is sacred Unix magic
+    -- Dr. Dylan Beaudette, Soil Scientis ‪@dylanbeaudette.bsky.social
 
   My party trick is Map/Reduce with GNU Parallel XD￼
     -- Paweł Lasek @pawel_lasek@twitter

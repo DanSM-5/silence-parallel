@@ -172,6 +172,7 @@ cp ../parallel-web/parallel/parallel.html  ../parallel-web/parallel/man.html
 # Savannah does not allow for many keys in ssh-agent
 ssh-add -D
 ssh-add ~/.ssh/16000/id_rsa
+ssh-add ~/.ssh/16000
 pushd ../parallel-web/parallel
 # Bug at Savannah makes this take 30 seconds
 (cd ..;
@@ -280,33 +281,20 @@ from:tange@gnu.org
 to:parallel@gnu.org, bug-parallel@gnu.org
 stable-bcc: Jesse Alama <jessealama@fastmail.fm>
 
-Subject: GNU Parallel 20250722 ('Fordow') released [stable]
+Subject: GNU Parallel 20250822 ('Петропавловск') released [stable]
 
-GNU Parallel 20250722 ('Fordow') has been released. It is available for download at: lbry://@GnuParallel:4
+GNU Parallel 20250822 ('Петропавловск') has been released. It is available for download at: lbry://@GnuParallel:4
 
 Quote of the month:
 
-  My party trick is Map/Reduce with GNU Parallel XD￼
-    -- Paweł Lasek @pawel_lasek@twitter
-
+  gnuparallel is sacred Unix magic
+    -- Dr. Dylan Beaudette, Soil Scientis ‪@dylanbeaudette.bsky.social
 
 New in this release:
 
 * No new features.
 
 * Bug fixes and man page updates.
-
-News about GNU Parallel:
-
-* Background Jobs in a Loop in Bash
-  https://www.baeldung.com/linux/bash-background-jobs-loop
-
-* Spring 2025: GNU Parallel Training
-  https://youtu.be/rrvM1KfdEdI
-  http://www.hpc.lsu.edu/training/weekly-materials/2025-Spring/HPC_GNU_Parallel_09April2025.pdf
-
-* Short tutorial for GNU parallel
-  https://docs.lovelace.plymouth.ac.uk/user-guide/parallel
 
 
 GNU Parallel - For people who live life in the parallel lane.
