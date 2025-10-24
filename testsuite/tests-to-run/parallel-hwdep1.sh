@@ -257,13 +257,13 @@ par__environment_too_big_zsh() {
     . `which env_parallel.zsh`;
 
     len_var=16
-    len_var_remote=$len_var
+    len_var_remote=$len_var-6
     len_var_quote=$len_var
     len_var_quote_remote=$len_var-15
     len_fun=18
     len_fun_remote=$len_fun-10
     len_fun_quote=$len_fun
-    len_fun_quote_remote=$len_fun-5
+    len_fun_quote_remote=$len_fun-8
 
     repeat_() {
       # Repeat input string n*1000 times

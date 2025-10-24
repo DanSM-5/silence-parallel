@@ -142,7 +142,7 @@ par_linebuffer_files() {
     }
     export -f doit
     # lrz complains 'Warning, unable to set nice value on thread'
-    parallel -j1 --tag -k doit ::: zstd pzstd clzip lz4 lzop pigz pxz gzip plzip pbzip2 lzma xz lzip bzip2 lbzip2 lrz
+    parallel -j1 --tag -k doit ::: zstd pzstd clzip lz4 lzop pigz pixz gzip plzip pbzip2 lzma xz lzip bzip2 lbzip2 lrz
 }
 
 par_timeout() {

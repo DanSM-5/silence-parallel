@@ -1808,6 +1808,44 @@ par__groupby_pipepart	csv , s/^(\d+[\t ,]+){2}(\d+).*/$2/	NewRec
 par__groupby_pipepart	csv , s/^(\d+[\t ,]+){2}(\d+).*/$2/	  90001   90001 1170031
 par__keeporder_roundrobin	bug #50081: --keep-order --round-robin should give predictable results
 par__keeporder_roundrobin	OK
+par__milestone	### Test --milestone
+par__milestone	# 1..5 cannot mix with a..f
+par__milestone	4	4
+par__milestone	1	1
+par__milestone	5	5
+par__milestone	2	2
+par__milestone	3	3
+par__milestone	c	8
+par__milestone	d	9
+par__milestone	a	6
+par__milestone	e	10
+par__milestone	b	7
+par__milestone	f	11
+par__milestone	a A	1
+par__milestone	a B	2
+par__milestone	a C	3
+par__milestone	a I	4
+par__milestone	a II	5
+par__milestone	b C	8
+par__milestone	b A	6
+par__milestone	b B	7
+par__milestone	b I	9
+par__milestone	b II	10
+par__milestone	1 B	12
+par__milestone	1 C	13
+par__milestone	1 A	11
+par__milestone	1 I	14
+par__milestone	1 II	15
+par__milestone	2 A	16
+par__milestone	2 B	17
+par__milestone	2 C	18
+par__milestone	2 II	20
+par__milestone	2 I	19
+par__milestone	3 A	21
+par__milestone	3 B	22
+par__milestone	3 C	23
+par__milestone	3 I	24
+par__milestone	3 II	25
 par__plus_dyn_repl	Dynamic replacement strings defined by --plus
 par__plus_dyn_repl	myval
 par__plus_dyn_repl	myval
@@ -1942,37 +1980,6 @@ par__test_detected_shell	test_known_shell_pipe tcsh	Global::shell /usr/bin/tcsh
 par__test_detected_shell	test_known_shell_pipe yash	Global::shell /usr/bin/yash
 par__test_detected_shell	test_known_shell_pipe zsh	Global::shell /usr/bin/zsh
 par__test_ipv6_format	### Host as IPv6 address
-par_bin	### Test --bin
-par_bin	      2       2       4
-par_bin	      2       2       4
-par_bin	      3       3       6
-par_bin	      3       3       7
-par_bin	      2       4       8
-par_bin	      2       4       8
-par_bin	      3       6      13
-par_bin	      3       6      13
-par_bin	### Test --bin with expression that gives 1..n
-par_bin	      0       0       0
-par_bin	      0       0       0
-par_bin	      5      10      21
-par_bin	      5      10      21
-par_bin	### Test --bin with expression that gives 0..n-1
-par_bin	      0       0       0
-par_bin	      0       0       0
-par_bin	      5      10      21
-par_bin	      5      10      21
-par_bin	### Blocks in version 20220122
-par_bin	10
-par_bin	1	10
-par_bin	10	1
-par_bin	2	9
-par_bin	3	8
-par_bin	4	7
-par_bin	5	6
-par_bin	6	5
-par_bin	7	4
-par_bin	8	3
-par_bin	9	2
 par_exit_code	bug #52207: Exit status 0 when child job is killed, even with "now,fail=1"
 par_exit_code	# Ideally the command should return the same
 par_exit_code	#   with or without parallel
@@ -3180,61 +3187,6 @@ par_memfree	### test memfree - it should be killed by timeout
 par_memfree	Free mem: 1k
 par_memfree	parallel: Warning: This job was killed because it timed out:
 par_memfree	parallel: Warning: parallel --memfree 1t echo Free mem: ::: 1t
-par_milestone	### Test --milestone
-par_milestone	# 1..5 cannot mix with a..f
-par_milestone	4	4
-par_milestone	1	1
-par_milestone	5	5
-par_milestone	2	2
-par_milestone	3	3
-par_milestone	c	8
-par_milestone	d	9
-par_milestone	a	6
-par_milestone	e	10
-par_milestone	b	7
-par_milestone	f	11
-par_milestone	a A	1
-par_milestone	a B	2
-par_milestone	a C	3
-par_milestone	a I	4
-par_milestone	a II	5
-par_milestone	b C	8
-par_milestone	b A	6
-par_milestone	b B	7
-par_milestone	b I	9
-par_milestone	b II	10
-par_milestone	1 B	12
-par_milestone	1 C	13
-par_milestone	1 A	11
-par_milestone	1 I	14
-par_milestone	1 II	15
-par_milestone	2 A	16
-par_milestone	2 B	17
-par_milestone	2 C	18
-par_milestone	2 II	20
-par_milestone	2 I	19
-par_milestone	3 A	21
-par_milestone	3 B	22
-par_milestone	3 C	23
-par_milestone	3 I	24
-par_milestone	3 II	25
-par_no_newline_compress	bug #41613: --compress --line-buffer - no newline
-par_no_newline_compress	tagstring=--tagstring {#} compress=--compress
-par_no_newline_compress	1	OK
-par_no_newline_compress	tagstring=--tagstring {#} compress=--compress
-par_no_newline_compress	1	OK
-par_no_newline_compress	tagstring=--tagstring {#} compress=-k
-par_no_newline_compress	1	OK
-par_no_newline_compress	tagstring=--tagstring {#} compress=-k
-par_no_newline_compress	1	OK
-par_no_newline_compress	tagstring=-k compress=--compress
-par_no_newline_compress	OK
-par_no_newline_compress	tagstring=-k compress=--compress
-par_no_newline_compress	OK
-par_no_newline_compress	tagstring=-k compress=-k
-par_no_newline_compress	OK
-par_no_newline_compress	tagstring=-k compress=-k
-par_no_newline_compress	OK
 par_perlexpr_repl	### {= and =} in different groups separated by space
 par_perlexpr_repl	b
 par_perlexpr_repl	b
@@ -3295,97 +3247,6 @@ par_race_condition1	9
 par_race_condition1	10
 par_reload_slf_every_second	### --slf should reload every second
 par_reload_slf_every_second	OK
-par_shard	### --shard
-par_shard	OK
-par_shard	OK
-par_shard	OK
-par_shard	OK
-par_shard	OK
-par_shard	     10 1
-par_shard	     10 2
-par_shard	     10 3
-par_shard	     10 4
-par_shard	     10 5
-par_shard	     10 6
-par_shard	     10 7
-par_shard	     10 8
-par_shard	     10 9
-par_shard	      9 0
-par_shard	      9 1
-par_shard	      9 2
-par_shard	      9 3
-par_shard	      9 4
-par_shard	      9 5
-par_shard	      9 6
-par_shard	      9 7
-par_shard	      9 8
-par_shard	      9 9
-par_shard	### --shard
-par_shard	     10 1
-par_shard	     10 2
-par_shard	     10 3
-par_shard	     10 4
-par_shard	     10 5
-par_shard	     10 6
-par_shard	     10 7
-par_shard	     10 8
-par_shard	     10 9
-par_shard	      9 0
-par_shard	      9 1
-par_shard	      9 2
-par_shard	      9 3
-par_shard	      9 4
-par_shard	      9 5
-par_shard	      9 6
-par_shard	      9 7
-par_shard	      9 8
-par_shard	      9 9
-par_shard	### --shard
-par_shard	     10 1
-par_shard	     10 2
-par_shard	     10 3
-par_shard	     10 4
-par_shard	     10 5
-par_shard	     10 6
-par_shard	     10 7
-par_shard	     10 8
-par_shard	     10 9
-par_shard	      2 c1
-par_shard	      9 0
-par_shard	      9 1
-par_shard	      9 2
-par_shard	      9 3
-par_shard	      9 4
-par_shard	      9 5
-par_shard	      9 6
-par_shard	      9 7
-par_shard	      9 8
-par_shard	      9 9
-par_shard	      2 c2
-par_shard	     10 1
-par_shard	     10 2
-par_shard	     10 3
-par_shard	     10 4
-par_shard	     10 5
-par_shard	     10 6
-par_shard	     10 7
-par_shard	     10 8
-par_shard	     10 9
-par_shard	      2 c1
-par_shard	      9 0
-par_shard	      9 1
-par_shard	      9 2
-par_shard	      9 3
-par_shard	      9 4
-par_shard	      9 5
-par_shard	      9 6
-par_shard	      9 7
-par_shard	      9 8
-par_shard	      9 9
-par_shard	      2 c2
-par_shard	*** broken
-par_shard	parallel: Error: --shard requires --jobs to be higher than the number of
-par_shard	parallel: Error: arguments. Increase --jobs.
 par_sighup	### Test SIGHUP
 par_sighup	1
 par_sighup	10

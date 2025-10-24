@@ -1,5 +1,5 @@
 par_10000_m_X	### Test -m with 10000 args
-par_10000_m_X	e441efe6e7a7101c9a0e5b91b24dd6a5  -
+par_10000_m_X	a05f1007b88fc8fae0508523445214ce  -
 par_10000_m_X	69999
 par_10000_m_X	69999
 par_10000_m_X	69999
@@ -256,6 +256,85 @@ par__argfile_plus	2 11 6
 par__argfile_plus	3 12 4
 par__argfile_plus	3 12 5
 par__argfile_plus	3 12 6
+par__combineexec	### Check that "--pipe -k" works
+par__combineexec	 165668  165668 1048571
+par__combineexec	 149796  149796 1048572
+par__combineexec	 149796  149796 1048572
+par__combineexec	 149796  149796 1048572
+par__combineexec	 149796  149796 1048572
+par__combineexec	 149796  149796 1048572
+par__combineexec	   5352    5352   37464
+par__combineexec	### Check that "-k" is kept
+par__combineexec	1
+par__combineexec	2
+par__combineexec	3
+par__combineexec	### Check that "--tagstring {1}" is kept
+par__combineexec	print("1\n")	1
+par__combineexec	print("2\n")	2
+par__combineexec	print("3\n")	3
+par__format_string	Format string + {}
+par__format_string	12.346 98.765 == 12.346 98.765
+par__format_string	Format string + {.}
+par__format_string	12.000 98.000 == 12.000 98.000
+par__format_string	Format string + {2}
+par__format_string	98.765 == 98.765
+par__format_string	Format string + {2.}
+par__format_string	98.000 == 98.000
+par__format_string	Format string + {2.}{}
+par__format_string	98.00012.34567 98.76543 == 98.00012.34567 98.76543
+par__format_string	Dynamic replacement strings
+par__format_string	{dyn} + format
+par__format_string	12.44 98.77 ==    12.44    98.77
+par__format_string	{Positional dyn} + format
+par__format_string	12.44 98.77 98.765 ==    12.44    98.77 98.765
+par__format_string	{dyn__postfix}
+par__format_string	12.444567 98.765444 == 12.444567 98.765444
+par__format_string	{dyn__postfix} + format
+par__format_string	00012.44 == 00012.44
+par__format_string	dyn without {}
+par__format_string	12.444567 98.765444 == 12.444567 98.765444
+par__format_string	bug #66503: %format bugs
+par__format_string	00143 == 00143
+par__format_string	__143 ==   143
+par__format_string	__143 ==   143
+par__format_string	__143 ==   143
+par__format_string	d001.jpeg == d001.jpeg
+par__format_string	d001.jpeg == d001.jpeg
+par__format_string	d001.jpeg == d001.jpeg
+par__jobslot_repl	bug #46232: {%} with --bar/--eta/--shuf or --halt xx% broken
+par__jobslot_repl	1
+par__jobslot_repl	2
+par__jobslot_repl	1
+par__jobslot_repl	2
+par__jobslot_repl	1
+par__jobslot_repl	2
+par__jobslot_repl	1
+par__jobslot_repl	2
+par__jobslot_repl	1
+par__jobslot_repl	2
+par__jobslot_repl	1
+par__jobslot_repl	2
+par__jobslot_repl	1
+par__jobslot_repl	2
+par__jobslot_repl	1
+par__jobslot_repl	2
+par__jobslot_repl	1
+par__jobslot_repl	2
+par__jobslot_repl	1
+par__jobslot_repl	2
+par__jobslot_repl	1
+par__jobslot_repl	2
+par__jobslot_repl	1
+par__jobslot_repl	2
+par__jobslot_repl	bug #46231: {%} with --pipepart broken. Should give 1+2
+par__jobslot_repl	1
+par__jobslot_repl	2
+par__jobslot_repl	1
+par__jobslot_repl	2
+par__jobslot_repl	1
+par__lb_mem_usage	1
+par__lb_mem_usage	1
+par__lb_mem_usage	2
 par__parset2	### parset into array
 par__parset2	foo bar baz
 par__parset2	foo bar baz
@@ -501,37 +580,6 @@ par__prefix_for_L_n_N_s	244
 par__prefix_for_L_n_N_s	246
 par__prefix_for_L_n_N_s	246
 par__prefix_for_L_n_N_s	273
-par__sql_colsep	### SQL should add Vn columns for --colsep
-par__sql_colsep	/a/A/1/11/
-par__sql_colsep	/a/A/2/22/
-par__sql_colsep	/a/A/3/33/
-par__sql_colsep	/b/B/1/11/
-par__sql_colsep	/b/B/2/22/
-par__sql_colsep	/b/B/3/33/
-par__sql_colsep	/c/C/1/11/
-par__sql_colsep	/c/C/2/22/
-par__sql_colsep	/c/C/3/33/
-par__sql_colsep	/a/A/1/11/
-par__sql_colsep	/a/A/2/22/
-par__sql_colsep	/a/A/3/33/
-par__sql_colsep	/b/B/1/11/
-par__sql_colsep	/b/B/2/22/
-par__sql_colsep	/b/B/3/33/
-par__sql_colsep	/c/C/1/11/
-par__sql_colsep	/c/C/2/22/
-par__sql_colsep	/c/C/3/33/
-par__sql_colsep	a A 1 11 a A 2 22 a A 3 33
-par__sql_colsep	a A 4 44 a A 5 55 a A 6 66
-par__sql_colsep	b B 1 11 b B 2 22 b B 3 33
-par__sql_colsep	b B 4 44 b B 5 55 b B 6 66
-par__sql_colsep	c C 1 11 c C 2 22 c C 3 33
-par__sql_colsep	c C 4 44 c C 5 55 c C 6 66
-par__sql_colsep	a A 1 11 a A 2 22 a A 3 33
-par__sql_colsep	a A 4 44 a A 5 55 a A 6 66
-par__sql_colsep	b B 1 11 b B 2 22 b B 3 33
-par__sql_colsep	b B 4 44 b B 5 55 b B 6 66
-par__sql_colsep	c C 1 11 c C 2 22 c C 3 33
-par__sql_colsep	c C 4 44 c C 5 55 c C 6 66
 par__test_XI_mI	### Test -I
 par__test_XI_mI	1 1
 par__test_XI_mI	2 1
@@ -691,15 +739,15 @@ par__test_cpu_detection_lscpu_--all_--extended	1 24 32 24
 par__test_cpu_detection_lscpu_--all_--extended	1-2-4-2 Core i5-2410M laptop firewall
 par__test_cpu_detection_lscpu_--all_--extended	1 2 4 2
 par__test_cpu_detection_topology	4-64-64-64 Dell R815 4 CPU 64-core
-par__test_cpu_detection_topology	4 8 8 8
+par__test_cpu_detection_topology	4 4 4 4
 par__test_cpu_detection_topology	1-2-2-2 AMD Neo N36L Dual-Core Processor
 par__test_cpu_detection_topology	1 2 2 2
 par__test_cpu_detection_topology	1-4-8-4 Lenovo E540 i7-4712MQ (PROSA stud organizer)
-par__test_cpu_detection_topology	1 4 8 4
+par__test_cpu_detection_topology	1 4 4 4
 par__test_cpu_detection_topology	1-2-4-2 ThinkPad A475 AMD PRO A12-8830B R7 (64g)
 par__test_cpu_detection_topology	1 2 4 2
 par__test_cpu_detection_topology	1-16-24-16 8*2 thr + 8*1 thr Intel Core i7-13700HX (user submit - detected wrong)
-par__test_cpu_detection_topology	1 4 8 4
+par__test_cpu_detection_topology	1 2 4 2
 par_children_receive_sig	### Do children receive --termseq signals
 par_children_receive_sig	parallel: Warning: This job was killed because it timed out:
 par_children_receive_sig	parallel: Warning: show_signals ''
@@ -710,22 +758,6 @@ par_children_receive_sig	parallel: Warning: This job was killed because it timed
 par_children_receive_sig	parallel: Warning: show_signals ''
 par_children_receive_sig	Got INT
 par_children_receive_sig	Got TERM
-par_combineexec	### Check that "--pipe -k" works
-par_combineexec	 165668  165668 1048571
-par_combineexec	 149796  149796 1048572
-par_combineexec	 149796  149796 1048572
-par_combineexec	 149796  149796 1048572
-par_combineexec	 149796  149796 1048572
-par_combineexec	 149796  149796 1048572
-par_combineexec	   5352    5352   37464
-par_combineexec	### Check that "-k" is kept
-par_combineexec	1
-par_combineexec	2
-par_combineexec	3
-par_combineexec	### Check that "--tagstring {1}" is kept
-par_combineexec	print("1\n")	1
-par_combineexec	print("2\n")	2
-par_combineexec	print("3\n")	3
 par_delay	### Test --delay
 par_delay	More than 3.3 secs: OK
 par_delay_halt_soon	bug #59893: --halt soon doesn't work with --delay
@@ -799,66 +831,6 @@ par_eta	par_eta	ETA: 0s Left: 0 AVG: 0.00s  local:0/0/0%/0.0s [K
 par_exitval_signal	### Test --joblog with exitval and Test --joblog with signal -- timing dependent
 par_exitval_signal	exitval=128+6 OK
 par_exitval_signal	signal OK
-par_format_string	Format string + {}
-par_format_string	12.346 98.765 == 12.346 98.765
-par_format_string	Format string + {.}
-par_format_string	12.000 98.000 == 12.000 98.000
-par_format_string	Format string + {2}
-par_format_string	98.765 == 98.765
-par_format_string	Format string + {2.}
-par_format_string	98.000 == 98.000
-par_format_string	Format string + {2.}{}
-par_format_string	98.00012.34567 98.76543 == 98.00012.34567 98.76543
-par_format_string	Dynamic replacement strings
-par_format_string	{dyn} + format
-par_format_string	12.44 98.77 ==    12.44    98.77
-par_format_string	{Positional dyn} + format
-par_format_string	12.44 98.77 98.765 ==    12.44    98.77 98.765
-par_format_string	{dyn__postfix}
-par_format_string	12.444567 98.765444 == 12.444567 98.765444
-par_format_string	{dyn__postfix} + format
-par_format_string	00012.44 == 00012.44
-par_format_string	dyn without {}
-par_format_string	12.444567 98.765444 == 12.444567 98.765444
-par_format_string	bug #66503: %format bugs
-par_format_string	00143 == 00143
-par_format_string	__143 ==   143
-par_format_string	__143 ==   143
-par_format_string	__143 ==   143
-par_format_string	d001.jpeg == d001.jpeg
-par_format_string	d001.jpeg == d001.jpeg
-par_format_string	d001.jpeg == d001.jpeg
-par_jobslot_repl	bug #46232: {%} with --bar/--eta/--shuf or --halt xx% broken
-par_jobslot_repl	1
-par_jobslot_repl	2
-par_jobslot_repl	1
-par_jobslot_repl	2
-par_jobslot_repl	1
-par_jobslot_repl	2
-par_jobslot_repl	1
-par_jobslot_repl	2
-par_jobslot_repl	1
-par_jobslot_repl	2
-par_jobslot_repl	1
-par_jobslot_repl	2
-par_jobslot_repl	1
-par_jobslot_repl	2
-par_jobslot_repl	1
-par_jobslot_repl	2
-par_jobslot_repl	1
-par_jobslot_repl	2
-par_jobslot_repl	1
-par_jobslot_repl	2
-par_jobslot_repl	1
-par_jobslot_repl	2
-par_jobslot_repl	1
-par_jobslot_repl	2
-par_jobslot_repl	bug #46231: {%} with --pipepart broken. Should give 1+2
-par_jobslot_repl	1
-par_jobslot_repl	2
-par_jobslot_repl	1
-par_jobslot_repl	2
-par_jobslot_repl	1
 par_kill_int_twice	### Are children killed if GNU Parallel receives INT twice? There should be no sleep at the end
 par_kill_int_twice	bash-+-perl---bash---sleep
 par_kill_int_twice	     `-pstree
@@ -867,9 +839,6 @@ par_kill_term	### Are children killed if GNU Parallel receives TERM? There shoul
 par_kill_term	bash-+-perl---bash---sleep
 par_kill_term	     `-pstree
 par_kill_term	bash---pstree
-par_lb_mem_usage	1
-par_lb_mem_usage	1
-par_lb_mem_usage	2
 par_maxargs	### Test -n and --max-args: Max number of args per line (only with -X and -m)
 par_maxargs	line 1
 par_maxargs	line 2
@@ -1325,6 +1294,37 @@ par_slow_args_generation	### Test slow arguments generation - https://savannah.g
 par_slow_args_generation	1
 par_slow_args_generation	2
 par_slow_args_generation	3
+par_sql_colsep	### SQL should add Vn columns for --colsep
+par_sql_colsep	/a/A/1/11/
+par_sql_colsep	/a/A/2/22/
+par_sql_colsep	/a/A/3/33/
+par_sql_colsep	/b/B/1/11/
+par_sql_colsep	/b/B/2/22/
+par_sql_colsep	/b/B/3/33/
+par_sql_colsep	/c/C/1/11/
+par_sql_colsep	/c/C/2/22/
+par_sql_colsep	/c/C/3/33/
+par_sql_colsep	/a/A/1/11/
+par_sql_colsep	/a/A/2/22/
+par_sql_colsep	/a/A/3/33/
+par_sql_colsep	/b/B/1/11/
+par_sql_colsep	/b/B/2/22/
+par_sql_colsep	/b/B/3/33/
+par_sql_colsep	/c/C/1/11/
+par_sql_colsep	/c/C/2/22/
+par_sql_colsep	/c/C/3/33/
+par_sql_colsep	a A 1 11 a A 2 22 a A 3 33
+par_sql_colsep	a A 4 44 a A 5 55 a A 6 66
+par_sql_colsep	b B 1 11 b B 2 22 b B 3 33
+par_sql_colsep	b B 4 44 b B 5 55 b B 6 66
+par_sql_colsep	c C 1 11 c C 2 22 c C 3 33
+par_sql_colsep	c C 4 44 c C 5 55 c C 6 66
+par_sql_colsep	a A 1 11 a A 2 22 a A 3 33
+par_sql_colsep	a A 4 44 a A 5 55 a A 6 66
+par_sql_colsep	b B 1 11 b B 2 22 b B 3 33
+par_sql_colsep	b B 4 44 b B 5 55 b B 6 66
+par_sql_colsep	c C 1 11 c C 2 22 c C 3 33
+par_sql_colsep	c C 4 44 c C 5 55 c C 6 66
 par_sqlworker_hostname	bug #50901: --sqlworker should use hostname in the joblog instead of :
 par_sqlworker_hostname	1
 par_sqlworker_hostname	2

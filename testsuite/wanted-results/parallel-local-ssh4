@@ -148,16 +148,6 @@ par_--nonall_results	/TMP/nonall/slash/sh@lo/1
 par_--nonall_results	/TMP/nonall/slash/sh@lo/1/seq
 par_--nonall_results	/TMP/nonall/slash/sh@lo/1/stderr
 par_--nonall_results	/TMP/nonall/slash/sh@lo/1/stdout
-par_--tmux_length	### tmux examples that earlier blocked
-par_--tmux_length	Runtime 14 seconds on non-loaded machine
-par_--tmux_length	See output with: tmux -S /TMP/tmsXXXXX attach
-par_--tmux_length	See output with: tmux -S /TMP/tmsXXXXX attach
-par_--tmux_length	### These blocked due to length
-par_--tmux_length	See output with: tmux -S /TMP/tmsXXXXX attach
-par_--tmux_length	See output with: tmux -S /TMP/tmsXXXXX attach
-par_--tmux_length	See output with: tmux -S /TMP/tmsXXXXX attach
-par_--tmux_length	See output with: tmux -S /TMP/tmsXXXXX attach
-par_--tmux_length	See output with: tmux -S /TMP/tmsXXXXX attach
 par__--tmux_different_shells	### Test tmux works on different shells
 par__--tmux_different_shells	See output with: tmux -S /TMP/tmsXXXXX attach
 par__--tmux_different_shells	0
@@ -180,6 +170,16 @@ par__--tmux_different_shells	See output with: tmux -S /TMP/tmsXXXXX attach
 par__--tmux_different_shells	0
 par__--tmux_different_shells	See output with: tmux -S /TMP/tmsXXXXX attach
 par__--tmux_different_shells	4
+par__--tmux_length	### tmux examples that earlier blocked
+par__--tmux_length	Runtime 14 seconds on non-loaded machine
+par__--tmux_length	See output with: tmux -S /TMP/tmsXXXXX attach
+par__--tmux_length	See output with: tmux -S /TMP/tmsXXXXX attach
+par__--tmux_length	### These blocked due to length
+par__--tmux_length	See output with: tmux -S /TMP/tmsXXXXX attach
+par__--tmux_length	See output with: tmux -S /TMP/tmsXXXXX attach
+par__--tmux_length	See output with: tmux -S /TMP/tmsXXXXX attach
+par__--tmux_length	See output with: tmux -S /TMP/tmsXXXXX attach
+par__--tmux_length	See output with: tmux -S /TMP/tmsXXXXX attach
 par__test_different_rsync_versions	### different versions of rsync need fixups
 par__test_different_rsync_versions	### no output is good
 par__test_different_rsync_versions	rsync-v1.6.4	Basic use failed - not tested: rsync-v1.6.4
@@ -266,7 +266,16 @@ par__test_different_rsync_versions	rsync-v3.2.4	Basic use works: rsync-v3.2.4
 par__test_different_rsync_versions	rsync-v3.2.5	Basic use works: rsync-v3.2.5
 par__test_different_rsync_versions	rsync-v3.2.6	Basic use works: rsync-v3.2.6
 par__test_different_rsync_versions	rsync-v3.2.7	Basic use works: rsync-v3.2.7
-par__test_different_rsync_versions	rsync-v3.3.0	Basic use works: rsync-v3.3.0
+par__test_different_rsync_versions	rsync-v3.3.0	Basic use failed - not tested: rsync-v3.3.0
+par__test_different_rsync_versions	rsync-v3.4.0	Basic use works: rsync-v3.4.0
+par__test_different_rsync_versions	rsync-v3.4.1	Basic use works: rsync-v3.4.1
+par__transfer_return_multiple_inputs	### bug #43746: --transfer and --return of multiple inputs {1} and {2}
+par__transfer_return_multiple_inputs	### and:
+par__transfer_return_multiple_inputs	### bug #44371: --trc with csh complains
+par__transfer_return_multiple_inputs	file1 output line 1
+par__transfer_return_multiple_inputs	A file1 output line 2
+par__transfer_return_multiple_inputs	file2 output line 3
+par__transfer_return_multiple_inputs	B file2 output line 4
 par_bigvar_csh	### csh
 par_bigvar_csh	3 big vars run remotely - length(base64) > 1000
 par_bigvar_csh	      1     200     692
@@ -297,13 +306,6 @@ par_exporting_in_zsh	Function export as function
 par_exporting_in_zsh	myfunc ran OK
 par_exporting_in_zsh	function from zsh to zsh OK
 par_exporting_in_zsh	function from zsh to bash OK
-par_transfer_return_multiple_inputs	### bug #43746: --transfer and --return of multiple inputs {1} and {2}
-par_transfer_return_multiple_inputs	### and:
-par_transfer_return_multiple_inputs	### bug #44371: --trc with csh complains
-par_transfer_return_multiple_inputs	file1 output line 1
-par_transfer_return_multiple_inputs	A file1 output line 2
-par_transfer_return_multiple_inputs	file2 output line 3
-par_transfer_return_multiple_inputs	B file2 output line 4
 par_warn_when_exporting_func	bug #40137: SHELL not bash: Warning when exporting funcs
 par_warn_when_exporting_func	/bin/sh	Run function in /bin/sh
 par_warn_when_exporting_func	/bin/sh	parallel: Warning: Shell functions may not be supported in /bin/sh.

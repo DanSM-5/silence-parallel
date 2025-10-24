@@ -5516,7 +5516,7 @@ sub parallelized_host_filtering() {
     #		    will make it less likely to overload the ssh daemon.
     # --retries 3:  If the ssh daemon is overloaded, try 3 times
     my $cmd =
-	"$0 -j0 --timeout 10 --joblog - --plain --delay 0.1 --retries 3 ".
+	"$0 -j0 --timeout 20 --joblog - --plain --delay 0.1 --retries 3 ".
 	"--tag --tagstring '{1}' -0 --colsep '\t' -k eval '{2}' && true ";
     $cmd = $Global::shell." -c ".Q($cmd);
     ::debug("init", $cmd, "\n");

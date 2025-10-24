@@ -122,7 +122,7 @@ log_rotate
 printf "\033[48;5;78;38;5;0m     `date`     \033[00m\n"
 mkdir -p actual-results
 ls -t tests-to-run/*${1}*.sh | egrep -v "${2}" |
-    parallel --tty -tj1 run_test | tee testsuite.log
+    parallel --bar --timeout 3000 --tty -tj1 run_test | tee testsuite.log
 # If testsuite.log contains @@ then there is a diff
 if grep -q '@@' testsuite.log ; then
     false

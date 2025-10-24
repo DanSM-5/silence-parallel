@@ -46,10 +46,16 @@ par_fg_line-buffer() {
 
 par__semaphore-timeout() {
     echo '### Test --st +1/-1'
+    # A normal-start
+    # parallel: Warning: Semaphore timed out. Stealing the semaphore.
+    # B st1-start
+    # C normal-end
+    # D st1-end
+    # parallel: Warning: Semaphore timed out. Exiting.
     (
-	stdout sem --id st --line-buffer "echo A normal-start;sleep 4;echo C normal-end"
-	stdout sem --id st --line-buffer --st 2 "echo B st1-start;sleep 4;echo D st1-end"
-	stdout sem --id st --line-buffer --st -2 "echo ERROR-st-1-start;sleep 4;echo ERROR-st-1-end"
+	stdout sem --id st --line-buffer "echo A normal-start;sleep 6;echo C normal-end"
+	stdout sem --id st --line-buffer --st 2 "echo B st1-start;sleep 5;echo D st1-end"
+	stdout sem --id st --line-buffer --st -2 "echo ERROR-st-1-start;sleep 5;echo ERROR-st-1-end"
 	stdout sem --id st --wait
     ) | sort
 }

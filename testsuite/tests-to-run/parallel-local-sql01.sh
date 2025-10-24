@@ -188,13 +188,14 @@ export -f $(compgen -A function | G par_ "$@")
 # Run the DBURLs in parallel, but only one of the same DBURL at the same time
 
 joblog=/tmp/jl-`basename $0`
+export joblog
 true > $joblog
 
 do_dburl() {
     export dbvar=$1
     hostname=`hostname`
     compgen -A function | G par_ | sort |
-	stdout parallel -vj1 -k --tag --joblog +$joblog p_wrapper {} \$$dbvar |
+	stdout parallel -vj1 --timeout 200 --tagstring {#}{} --joblog +$joblog p_wrapper {} \$$dbvar |
 	perl -pe 's/tbl\d+/TBL99999/gi;' |
 	perl -pe 's/(from TBL99999 order) .*/$1/g' |
 	perl -pe 's/ *\b'"$hostname"'\b */hostname/g' |
@@ -206,4 +207,4 @@ do_dburl() {
 	perl -pe 's/Error: near line 1: in prepare, (.*)/Parse error near line 1: $1/'
 }
 export -f do_dburl
-parallel -vk --tag do_dburl ::: CSV INFLUX MYSQL PG SQLITE
+parallel -j0 --timeout 1000% -v -k --tag do_dburl ::: CSV INFLUX MYSQL PG SQLITE

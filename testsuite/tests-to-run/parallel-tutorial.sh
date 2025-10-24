@@ -134,6 +134,8 @@ perl -ne '$/="\n\n"; /^Output/../^[^O=]\S/ and next; /^  / and print;' "$testsui
 	      s{^This is input_file.*\n}{};
 	      # Different env
 	      s{mysqlrootpass\n}{};
+	      # Single number after zenity
+	      s{^\d+\n}{}
 	      ' | uniq
 
 echo "### 3+3 .par files (from --files), 1 .tms-file from tmux attach"

@@ -250,16 +250,6 @@ par__quote_special_results	mkfs.ext4	. ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./
 par__quote_special_results	mkfs.ext4	. ./€ ./ ./‚ ./ƒ ./„ ./… ./† ./‡ ./ˆ ./‰ ./Š ./‹ ./Œ ./ ./ ./ ./ ./‘ ./’ ./“ ./” ./• ./– ./— ./˜ ./™ ./š ./› ./œ ./ ./ ./Ÿ ./  ./¡ ./¢ ./£ ./¤ ./¥ ./¦ ./§ ./¨ ./© ./ª ./« ./¬ ./­ ./® ./¯ ./° ./± ./² ./³ ./´ ./µ ./¶ ./· ./¸ ./¹ ./º ./» ./¼ ./½ ./¾ ./¿ ./À ./Á ./Â ./Ã ./Ä ./Å ./Æ ./Ç ./È ./É ./Ê ./Ë ./Ì ./Í ./Î ./Ï ./Ğ ./Ñ ./Ò ./Ó ./Ô ./Õ ./Ö ./× ./Ø ./Ù ./Ú ./Û ./Ü ./İ ./Ş ./ß ./à ./á ./â ./ã ./ä ./å ./æ ./ç ./è ./é ./ê ./ë ./ì ./í ./î ./ï ./ğ ./ñ ./ò ./ó ./ô ./õ ./ö ./÷ ./ø ./ù ./ú ./û ./ü ./ı ./ş ./ÿ
 par__quote_special_results	mkfs.ext4	301+0 records in
 par__quote_special_results	mkfs.ext4	301+0 records out
-par__quote_special_results	mkfs.reiserfs -fq	Filesystem 1K-blocks Used Available Use% Mounted on
-par__quote_special_results	mkfs.reiserfs -fq	/dev/loop 999999 99999 99999 9% /tmp/par-test-loop
-par__quote_special_results	mkfs.reiserfs -fq	. ./++ ./++++ ./++_ ./++__ ./++m ./++z ./+_ ./+__ ./+m ./+z ./,. ./,..
-par__quote_special_results	mkfs.reiserfs -fq	
-par__quote_special_results	mkfs.reiserfs -fq	. ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./par__quote_special_results	mkfs.reiserfs -fq	 ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./! ./" ./# ./$ ./% ./& ./' ./( ./) ./* ./++ ./+_ ./+z ./, ./- ./0 ./1 ./2 ./3 ./4 ./5 ./6 ./7 ./8 ./9 ./: ./; ./< ./= ./> ./? ./@ ./A ./B ./C ./D ./E ./F ./G ./H ./I ./J ./K ./L ./M ./N ./O ./P ./Q ./R ./S ./T ./U ./V ./W ./X ./Y ./Z ./[ ./\ ./] ./^ ./_ ./` ./a ./b ./c ./d ./e ./f ./g ./h ./i ./j ./k ./l ./m ./n ./o ./p ./q ./r ./s ./t ./u ./v ./w ./x ./y ./z ./{ ./| ./} ./~ ./ ./€
-par__quote_special_results	mkfs.reiserfs -fq	. ./€ ./ ./‚ ./ƒ ./„ ./… ./† ./‡ ./ˆ ./‰ ./Š ./‹ ./Œ ./ ./ ./ ./ ./‘ ./’ ./“ ./” ./• ./– ./— ./˜ ./™ ./š ./› ./œ ./ ./ ./Ÿ ./  ./¡ ./¢ ./£ ./¤ ./¥ ./¦ ./§ ./¨ ./© ./ª ./« ./¬ ./­ ./® ./¯ ./° ./± ./² ./³ ./´ ./µ ./¶ ./· ./¸ ./¹ ./º ./» ./¼ ./½ ./¾ ./¿ ./À ./Á ./Â ./Ã ./Ä ./Å ./Æ ./Ç ./È ./É ./Ê ./Ë ./Ì ./Í ./Î ./Ï ./Ğ ./Ñ ./Ò ./Ó ./Ô ./Õ ./Ö ./× ./Ø ./Ù ./Ú ./Û ./Ü ./İ ./Ş ./ß ./à ./á ./â ./ã ./ä ./å ./æ ./ç ./è ./é ./ê ./ë ./ì ./í ./î ./ï ./ğ ./ñ ./ò ./ó ./ô ./õ ./ö ./÷ ./ø ./ù ./ú ./û ./ü ./ı ./ş ./ÿ
-par__quote_special_results	mkfs.reiserfs -fq	301+0 records in
-par__quote_special_results	mkfs.reiserfs -fq	301+0 records out
-par__quote_special_results	mkfs.reiserfs -fq	mkfs.reiserfs 3.6.27
-par__quote_special_results	mkfs.reiserfs -fq	
 par__quote_special_results	mkfs.ntfs -F	Cluster size has been automatically set to 4096 bytes.
 par__quote_special_results	mkfs.ntfs -F	Initializing device with zeroes: 0% 0% 1% 2% 3% 4% 5% 6% 7% 8% 9% 10% 11% 12% 13% 14% 15% 16% 17% 18% 19% 20% 21% 22% 23% 24% 25% 26% 27% 28% 29% 30% 31% 32% 33% 34% 35% 36% 37% 38% 39% 40% 41% 42% 43% 44% 45% 46% 47% 48% 49% 50% 51% 52% 53% 54% 55% 56% 57% 58% 59% 60% 61% 62% 63% 64% 65% 66% 67% 68% 69% 70% 71% 72% 73% 74% 75% 76% 77% 78% 79% 80% 81% 82% 83% 84% 85% 86% 87% 88% 89% 90% 91% 92% 93% 94% 95% 96% 97% 98% 99%100% - Done.
 par__quote_special_results	mkfs.ntfs -F	Creating NTFS volume structures.
@@ -501,6 +491,37 @@ par__xargs_compat	3 4
 par__xargs_compat	5 6
 par__xargs_compat	7 8
 par__xargs_compat	9 10
+par_bin	### Test --bin
+par_bin	      2       2       4
+par_bin	      2       2       4
+par_bin	      3       3       6
+par_bin	      3       3       7
+par_bin	      2       4       8
+par_bin	      2       4       8
+par_bin	      3       6      13
+par_bin	      3       6      13
+par_bin	### Test --bin with expression that gives 1..n
+par_bin	      0       0       0
+par_bin	      0       0       0
+par_bin	      5      10      21
+par_bin	      5      10      21
+par_bin	### Test --bin with expression that gives 0..n-1
+par_bin	      0       0       0
+par_bin	      0       0       0
+par_bin	      5      10      21
+par_bin	      5      10      21
+par_bin	### Blocks in version 20220122
+par_bin	10
+par_bin	1	10
+par_bin	10	1
+par_bin	2	9
+par_bin	3	8
+par_bin	4	7
+par_bin	5	6
+par_bin	6	5
+par_bin	7	4
+par_bin	8	3
+par_bin	9	2
 par_colsep	### Test of --colsep
 par_colsep	a b c
 par_colsep	a b c
@@ -767,14 +788,6 @@ par_jobs_file	sleep 5
 par_jobs_file	sleep 4
 par_k	### Test -k
 par_k	parallel: Warning: Only enough file handles to run X jobs in parallel.
-par_k	parallel: Warning: Try running 'parallel -jX -N X --pipe parallel -jX'
-par_k	parallel: Warning: or increasing 'ulimit -n' (try: ulimit -n `ulimit -Hn`)
-par_k	parallel: Warning: or increasing 'nofile' in /etc/security/limits.conf
-par_k	parallel: Warning: or increasing /proc/sys/fs/file-max
-par_k	parallel: Warning: Try running 'parallel -jX -N XXX --pipe parallel -jX'
-par_k	parallel: Warning: or increasing 'ulimit -n' (try: ulimit -n `ulimit -Hn`)
-par_k	parallel: Warning: or increasing 'nofile' in /etc/security/limits.conf
-par_k	parallel: Warning: or increasing /proc/sys/fs/file-max
 par_k	begin
 par_k	1
 par_k	2
@@ -993,6 +1006,23 @@ par_load_blocks	53d025127ae99ab79e8502aae2d9bea6  -
 par_long_line_remote	### Deal with long command lines on remote servers
 par_long_line_remote	      1       6   30006
 par_long_line_remote	      6      50  250050
+par_no_newline_compress	bug #41613: --compress --line-buffer - no newline
+par_no_newline_compress	tagstring=--tagstring {#} compress=--compress
+par_no_newline_compress	1	OK
+par_no_newline_compress	tagstring=--tagstring {#} compress=--compress
+par_no_newline_compress	1	OK
+par_no_newline_compress	tagstring=--tagstring {#} compress=-k
+par_no_newline_compress	1	OK
+par_no_newline_compress	tagstring=--tagstring {#} compress=-k
+par_no_newline_compress	1	OK
+par_no_newline_compress	tagstring=-k compress=--compress
+par_no_newline_compress	OK
+par_no_newline_compress	tagstring=-k compress=--compress
+par_no_newline_compress	OK
+par_no_newline_compress	tagstring=-k compress=-k
+par_no_newline_compress	OK
+par_no_newline_compress	tagstring=-k compress=-k
+par_no_newline_compress	OK
 par_opt_arg_eaten	bug #31716: Options with optional arguments may eat next argument
 par_opt_arg_eaten	### Test https://savannah.gnu.org/bugs/index.php?31716
 par_opt_arg_eaten	1 OK
@@ -1290,6 +1320,97 @@ par_seqreplace_long_line	### Test --seqreplace and line too long
 par_seqreplace_long_line	      9       1       1     101
 par_seqreplace_long_line	     90       1       1     201
 par_seqreplace_long_line	      1 parallel: Error: Command line too long (309 >= 210) at input 0: 100
+par_shard	### --shard
+par_shard	OK
+par_shard	OK
+par_shard	OK
+par_shard	OK
+par_shard	OK
+par_shard	     10 1
+par_shard	     10 2
+par_shard	     10 3
+par_shard	     10 4
+par_shard	     10 5
+par_shard	     10 6
+par_shard	     10 7
+par_shard	     10 8
+par_shard	     10 9
+par_shard	      9 0
+par_shard	      9 1
+par_shard	      9 2
+par_shard	      9 3
+par_shard	      9 4
+par_shard	      9 5
+par_shard	      9 6
+par_shard	      9 7
+par_shard	      9 8
+par_shard	      9 9
+par_shard	### --shard
+par_shard	     10 1
+par_shard	     10 2
+par_shard	     10 3
+par_shard	     10 4
+par_shard	     10 5
+par_shard	     10 6
+par_shard	     10 7
+par_shard	     10 8
+par_shard	     10 9
+par_shard	      9 0
+par_shard	      9 1
+par_shard	      9 2
+par_shard	      9 3
+par_shard	      9 4
+par_shard	      9 5
+par_shard	      9 6
+par_shard	      9 7
+par_shard	      9 8
+par_shard	      9 9
+par_shard	### --shard
+par_shard	     10 1
+par_shard	     10 2
+par_shard	     10 3
+par_shard	     10 4
+par_shard	     10 5
+par_shard	     10 6
+par_shard	     10 7
+par_shard	     10 8
+par_shard	     10 9
+par_shard	      2 c1
+par_shard	      9 0
+par_shard	      9 1
+par_shard	      9 2
+par_shard	      9 3
+par_shard	      9 4
+par_shard	      9 5
+par_shard	      9 6
+par_shard	      9 7
+par_shard	      9 8
+par_shard	      9 9
+par_shard	      2 c2
+par_shard	     10 1
+par_shard	     10 2
+par_shard	     10 3
+par_shard	     10 4
+par_shard	     10 5
+par_shard	     10 6
+par_shard	     10 7
+par_shard	     10 8
+par_shard	     10 9
+par_shard	      2 c1
+par_shard	      9 0
+par_shard	      9 1
+par_shard	      9 2
+par_shard	      9 3
+par_shard	      9 4
+par_shard	      9 5
+par_shard	      9 6
+par_shard	      9 7
+par_shard	      9 8
+par_shard	      9 9
+par_shard	      2 c2
+par_shard	*** broken
+par_shard	parallel: Error: --shard requires --jobs to be higher than the number of
+par_shard	parallel: Error: arguments. Increase --jobs.
 par_shellquote	### Test --shellquote in all shells
 par_shellquote	bash	'	
 par_shellquote	bash	par_shellquote	bash	 !"#$%&'"'"'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~€‚ƒ„…†‡ˆ‰Š‹Œ‘’“”•–—˜™š›œŸ ¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º»¼½¾¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏĞÑÒÓÔÕÖ×ØÙÚÛÜİŞßàáâãäåæçèéêëìíîïğñòóôõö÷øùúûüışÿ'

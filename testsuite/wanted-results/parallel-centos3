@@ -1,5 +1,6 @@
 ### These tests requires VirtualBox running with the following images
 vagrant@centos3
+ssh vagrant@centos3 OK
 par_--ssh_lsh	### --ssh lsh
 par_--ssh_lsh	OK
 par_--ssh_lsh	OK

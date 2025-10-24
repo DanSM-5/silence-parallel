@@ -1,9 +1,6 @@
 echo TODO
 TODO
 ## echo '### Test --trc --basefile --/./--foo7 :/./:foo8 " "/./" "foo9 ./foo11/./foo11'
-par_--onall_--plus	### Test --plus is respected with --onall/--nonall
-par_--onall_--plus	lo
-par_--onall_--plus	lo
 par_--onall_--transfer	### bug #46519: --onall ignores --transfer
 par_--onall_--transfer	bug46519.a
 par_--onall_--transfer	bug46519.b
@@ -39,9 +36,6 @@ par_--ssh_ssh_in_ssh	myhostname
 par_--ssh_ssh_in_ssh	OK
 par_--ssh_ssh_in_ssh	myhostname
 par_--ssh_ssh_in_ssh	OK
-par_PARALLEL_SSH_function	### use function as $PARALLEL_SSH
-par_PARALLEL_SSH_function	Run through FOOSSH?
-par_PARALLEL_SSH_function	FOOSSH
 par__remote_load	### Test --load remote
 par__remote_load	parallel: Warning: This job was killed because it timed out:
 par__remote_load	parallel: Warning: perl -e 'while(1){ }'
@@ -86,6 +80,57 @@ par__sshpass_with_password	ssh: Could not resolve hostname host:
 par__sshpass_with_password	
 par__sshpass_with_password	This must stay empty:
 par__sshpass_with_password	OK
+par__trc_colon	### Test --trc ./:dir/:foo2
+par__trc_colon	Content :dir/:foo2
+par__trc_colon	remote1
+par__trc_colon	Content :dir/:foo2
+par__trc_colon	remote2
+par__trc_colondot	### Test --trc ./:/./:foo5
+par__trc_colondot	Content :a/./:foo5
+par__trc_colondot	remote./:a/./:foo5
+par__trc_dashdash	### Test --trc ./--/--foo1
+par__trc_dashdash	Content --/--foo1
+par__trc_dashdash	remote1
+par__trc_dashdash	Content --/--foo1
+par__trc_dashdash	remote2
+par__trc_dashdashdashspace	### Test --trc "/tmp/./--- /A" "/tmp/./ ---/B"
+par__trc_dashdashdashspace	./ ---/B.a
+par__trc_dashdashdashspace	./--- /A.a
+par__trc_dashdashdashspace	ls: No match.
+par__trc_dashdashdashspace	ls: cannot access './?---': No such file or directory
+par__trc_dashdashdashspace	ls: cannot access './---?': No such file or directory
+par__trc_dashdashdashspace	OK
+par__trc_dashdashdashspace	OK
+par__trc_dashdashdot	### Test --trc ./--/./--foo4
+par__trc_dashdashdot	Content --/./--foo4
+par__trc_dashdashdot	remote--/./--foo4
+par__trc_dashdashspace	### Test --trc "-- " "-- "
+par__trc_dashdashspace	./ --.a
+par__trc_dashdashspace	./-- .a
+par__trc_dashdashspace	OK
+par__trc_dashdashspace	ls: cannot access './ --': No such file or directory
+par__trc_dashdashspace	OK
+par__trc_dashdashspace	ls: cannot access './ --': No such file or directory
+par__trc_dashdashspace	OK
+par__trc_dashdashspace	ls: cannot access './-- ': No such file or directory
+par__trc_dashdashspace	OK
+par__trc_dashdashspace	ls: cannot access './-- ': No such file or directory
+par__trc_dashdashspace	OK
+par__trc_dashdashspace	ls: cannot access './ --.a': No such file or directory
+par__trc_dashdashspace	OK
+par__trc_dashdashspace	ls: cannot access './ --.a': No such file or directory
+par__trc_dashdashspace	OK
+par__trc_dashdashspace	ls: cannot access './-- .a': No such file or directory
+par__trc_dashdashspace	OK
+par__trc_dashdashspace	ls: cannot access './-- .a': No such file or directory
+par__trc_space	### Test --trc ./" "/" "foo3
+par__trc_space	Content _/_foo3
+par__trc_space	remote1
+par__trc_space	Content _/_foo3
+par__trc_space	remote2
+par__trc_spacedot	### Test --trc ./" "/./" "foo6
+par__trc_spacedot	Content _/./_foo6
+par__trc_spacedot	remote./ /./ foo6
 par_csh_variable_newline	### Can csh propagate a variable containing \n
 par_csh_variable_newline	1
 par_csh_variable_newline	2
@@ -124,66 +169,15 @@ par_sshlogin_with_comma	OK
 par_sshlogin_with_comma	### --sshlogin with ,,
 par_sshlogin_with_comma	OK
 par_sshlogin_with_comma	### Both , and ,, in -S
-par_sshlogin_with_comma	centos9s.localdomain
 par_sshlogin_with_comma	freebsd14.localdomain
-par_sshlogin_with_comma	centos9s.localdomain
+par_sshlogin_with_comma	rhel8.localdomain
 par_sshlogin_with_comma	freebsd14.localdomain
-par_sshlogin_with_comma	centos9s.localdomain
+par_sshlogin_with_comma	rhel8.localdomain
 par_sshlogin_with_comma	freebsd14.localdomain
+par_sshlogin_with_comma	rhel8.localdomain
 par_stop_if_no_hosts_left	### Stop if all hosts are filtered and there are no hosts left to run on
 par_stop_if_no_hosts_left	parallel: Warning: Removed no-such.host.
 par_stop_if_no_hosts_left	parallel: Error: Cannot run any jobs.
-par_trc_colon	### Test --trc ./:dir/:foo2
-par_trc_colon	Content :dir/:foo2
-par_trc_colon	remote1
-par_trc_colon	Content :dir/:foo2
-par_trc_colon	remote2
-par_trc_colondot	### Test --trc ./:/./:foo5
-par_trc_colondot	Content :a/./:foo5
-par_trc_colondot	remote./:a/./:foo5
-par_trc_dashdash	### Test --trc ./--/--foo1
-par_trc_dashdash	Content --/--foo1
-par_trc_dashdash	remote1
-par_trc_dashdash	Content --/--foo1
-par_trc_dashdash	remote2
-par_trc_dashdashdashspace	### Test --trc "/tmp/./--- /A" "/tmp/./ ---/B"
-par_trc_dashdashdashspace	./ ---/B.a
-par_trc_dashdashdashspace	./--- /A.a
-par_trc_dashdashdashspace	ls: No match.
-par_trc_dashdashdashspace	ls: cannot access './?---': No such file or directory
-par_trc_dashdashdashspace	ls: cannot access './---?': No such file or directory
-par_trc_dashdashdashspace	OK
-par_trc_dashdashdashspace	OK
-par_trc_dashdashdot	### Test --trc ./--/./--foo4
-par_trc_dashdashdot	Content --/./--foo4
-par_trc_dashdashdot	remote--/./--foo4
-par_trc_dashdashspace	### Test --trc "-- " "-- "
-par_trc_dashdashspace	./ --.a
-par_trc_dashdashspace	./-- .a
-par_trc_dashdashspace	OK
-par_trc_dashdashspace	ls: cannot access './ --': No such file or directory
-par_trc_dashdashspace	OK
-par_trc_dashdashspace	ls: cannot access './ --': No such file or directory
-par_trc_dashdashspace	OK
-par_trc_dashdashspace	ls: cannot access './-- ': No such file or directory
-par_trc_dashdashspace	OK
-par_trc_dashdashspace	ls: cannot access './-- ': No such file or directory
-par_trc_dashdashspace	OK
-par_trc_dashdashspace	ls: cannot access './ --.a': No such file or directory
-par_trc_dashdashspace	OK
-par_trc_dashdashspace	ls: cannot access './ --.a': No such file or directory
-par_trc_dashdashspace	OK
-par_trc_dashdashspace	ls: cannot access './-- .a': No such file or directory
-par_trc_dashdashspace	OK
-par_trc_dashdashspace	ls: cannot access './-- .a': No such file or directory
-par_trc_space	### Test --trc ./" "/" "foo3
-par_trc_space	Content _/_foo3
-par_trc_space	remote1
-par_trc_space	Content _/_foo3
-par_trc_space	remote2
-par_trc_spacedot	### Test --trc ./" "/./" "foo6
-par_trc_spacedot	Content _/./_foo6
-par_trc_spacedot	remote./ /./ foo6
 par_wd_dashdash	### Test --wd --
 par_wd_dashdash	OK
 par_wd_dotdotdot	### Test --wd ... --cleanup which should remove the filled tmp dir
@@ -194,3 +188,9 @@ par_wd_space	### Test --wd " "
 par_wd_space	OK
 par_workdir_home	### bug #40132: FreeBSD: --workdir . gives warning if . == $HOME
 par_workdir_home	~
+par_z_--onall_--plus	### Test --plus is respected with --onall/--nonall
+par_z_--onall_--plus	lo
+par_z_--onall_--plus	lo
+par_z_PARALLEL_SSH_function	### use function as $PARALLEL_SSH
+par_z_PARALLEL_SSH_function	Run through FOOSSH?
+par_z_PARALLEL_SSH_function	FOOSSH

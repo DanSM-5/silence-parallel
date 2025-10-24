@@ -29,7 +29,7 @@ SSHUSER2=parallel
 export SSHLOGIN2=$SSHUSER2@$SERVER2
 
 start_centos3() {
-    stdout ping -w 1 -c 1 centos3 >/dev/null || (
+    timeout 10 ssh $SSHLOGIN1 echo ssh $SSHLOGIN1 OK || (
 	# Vagrant does not set the IP addr
 	# cd to the centos3 dir with the Vagrantfile
 	# Try different "cd"s as the script may be started from another dir
@@ -39,8 +39,8 @@ start_centos3() {
 	cd ../vagrant/FritsHoogland/centos3/ 2>/dev/null
 	vagrantssh() {
 	    port=$(perl -ne '/#/ and next; /config.vm.network.*host:\s*(\d+)/ and print $1' Vagrantfile)
-	    w4it-for-port-open localhost $port
-	    ssh -oKexAlgorithms=+diffie-hellman-group1-sha1 \
+	    timeout 100 w4it-for-port-open localhost $port &&
+	    timeout 100 ssh -oKexAlgorithms=+diffie-hellman-group1-sha1 \
 		-oHostKeyAlgorithms=+ssh-rsa,ssh-dss \
 		-oPubkeyAcceptedAlgorithms=+ssh-dss -p$port vagrant@localhost "$@" |
 		# Ignore empty ^M line
@@ -49,9 +49,10 @@ start_centos3() {
 	stdout vagrant up >/dev/null &
 	(sleep 10; stdout vagrant up >/dev/null ) &
 	vagrantssh 'sudo /sbin/ifconfig eth1 172.27.27.3; echo centos3: added 172.27.27.3 >&2'
+	timeout 10 ssh $SSHLOGIN1 echo ssh $SSHLOGIN1 OK
     )
 }
-start_centos3
+start_centos3 || exit 1
 
 (
     pwd=$(pwd)

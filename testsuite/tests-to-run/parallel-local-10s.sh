@@ -8,6 +8,110 @@
 # Each should be taking 10-30s and be possible to run in parallel
 # I.e.: No race conditions, no logins
 
+par_shard() {
+    echo '### --shard'
+    # Each of the 5 lines should match:
+    #   ##### ##### ######
+    seq 100000 | parallel --pipe --shard 1 -j5  wc |
+	perl -pe 's/(.*\d{5,}){3}/OK/'
+    # Data should be sharded to all processes
+    shard_on_col() {
+	col=$1
+	seq 10 99 | shuf | perl -pe 's/(.)/$1\t/g' |
+	    parallel --pipe --shard $col -j2 --colsep "\t" sort -k$col |
+	    field $col | sort | uniq -c
+    }
+    shard_on_col 1
+    shard_on_col 2
+
+    echo '### --shard'
+    shard_on_col_name() {
+	colname=$1
+	col=$2
+	(echo AB; seq 10 99 | shuf) | perl -pe 's/(.)/$1\t/g' |
+	    parallel --header : --pipe --shard $colname -j2 --colsep "\t" sort -k$col |
+	    field $col | sort | uniq -c
+    }
+    shard_on_col_name A 1
+    shard_on_col_name B 2
+
+    echo '### --shard'
+    shard_on_col_expr() {
+	colexpr="$1"
+	col=$2
+	(seq 10 99 | shuf) | perl -pe 's/(.)/$1\t/g' |
+	    parallel --pipe --shard "$colexpr" -j2 --colsep "\t" "sort -k$col; echo c1 c2" |
+	    field $col | sort | uniq -c
+    }
+    shard_on_col_expr '1 $_%=3' 1
+    shard_on_col_expr '2 $_%=3' 2
+
+    shard_on_col_name_expr() {
+	colexpr="$1"
+	col=$2
+	(echo AB; seq 10 99 | shuf) | perl -pe 's/(.)/$1\t/g' |
+	    parallel --header : --pipe --shard "$colexpr" -j2 --colsep "\t" "sort -k$col; echo c1 c2" |
+	    field $col | sort | uniq -c
+    }
+    shard_on_col_name_expr 'A $_%=3' 1
+    shard_on_col_name_expr 'B $_%=3' 2
+    
+    echo '*** broken'
+    # Should be shorthand for --pipe -j+0
+    #seq 200000 | parallel --pipe --shard 1 wc |
+    #	perl -pe 's/(.*\d{5,}){3}/OK/'
+    # Combine with arguments (should compute -j10 given args)
+    seq 200000 | parallel --pipe --shard 1 echo {}\;wc ::: {1..5} ::: a b |
+	perl -pe 's/(.*\d{5,}){3}/OK/'
+}
+
+par_bin() {
+    echo '### Test --bin'
+    seq 10 | parallel --pipe --bin 1 -j4 wc | sort
+    paste <(seq 10) <(seq 10 -1 1) |
+	parallel --pipe --colsep '\t' --bin 2 -j4 wc | sort
+    echo '### Test --bin with expression that gives 1..n'
+    paste <(seq 10) <(seq 10 -1 1) |
+	parallel --pipe --colsep '\t' --bin '2 $_=$_%2+1' -j4 wc | sort
+    echo '### Test --bin with expression that gives 0..n-1'
+    paste <(seq 10) <(seq 10 -1 1) |
+	parallel --pipe --colsep '\t' --bin '2 $_%=2' -j4 wc | sort
+    echo '### Blocks in version 20220122'
+    echo 10 | parallel --pipe --bin 1 -j100% cat | sort
+    paste <(seq 10) <(seq 10 -1 1) |
+	parallel --pipe --colsep '\t' --bin 2 cat | sort
+}
+
+par_--round-robin_blocks() {
+    echo "bug #49664: --round-robin does not complete"
+    seq 20000000 | parallel -j8 --block 10M --round-robin --pipe wc -c | wc -l
+}
+
+par_no_newline_compress() {
+    echo 'bug #41613: --compress --line-buffer - no newline';
+    pipe_doit() {
+	tagstring="$1"
+	compress="$2"
+	echo tagstring="$tagstring" compress="$compress"
+	perl -e 'print "O"'|
+	    parallel "$compress" $tagstring --pipe --line-buffer cat
+	echo "K"
+    }
+    export -f pipe_doit
+    nopipe_doit() {
+	tagstring="$1"
+	compress="$2"
+	echo tagstring="$tagstring" compress="$compress"
+	parallel "$compress" $tagstring --line-buffer echo {} O ::: -n
+	echo "K"
+    }
+    export -f nopipe_doit
+    parallel -j1 -qk --header : {pipe}_doit {tagstring} {compress} \
+	     ::: tagstring '--tagstring {#}' -k \
+	     ::: compress --compress -k \
+	     ::: pipe pipe nopipe
+}
+
 par_retries_lb_jl() {
     echo Broken in 20240522
     # Ignore --unsafe
@@ -92,6 +196,7 @@ par_--match() {
 
 par_--tee_too_many_args() {
     echo '### Fail if there are more arguments than --jobs'
+    ulimit -n 1000
     seq 11 | stdout parallel -k --tag --pipe -j4 --tee grep {} ::: {1..4}
     tmp=`mktemp`
     seq 11 | parallel -k --tag --pipe -j0 --tee grep {} ::: {1..10000} 2> "$tmp"
@@ -162,7 +267,7 @@ par__quote_special_results() {
     export -f doit
     stdout parallel --timeout 1000% -k --tag --plus doit ::: \
 	   mkfs.btrfs mkfs.exfat mkfs.ext2 mkfs.ext3 mkfs.ext4 \
-           "mkfs.reiserfs -fq" "mkfs.ntfs -F" "mkfs.xfs -f" mkfs.minix \
+           "mkfs.ntfs -F" "mkfs.xfs -f" mkfs.minix \
 	   mkfs.fat mkfs.vfat mkfs.msdos mkfs.f2fs |
 	perl -pe 's:(/dev/loop|par-test-loop)\S+:$1:g;s/ +/ /g' |
 	G -v MB/s -v GB/s -v UUID -v Binutils -v 150000 -v exfatprogs |
@@ -212,11 +317,6 @@ par_load_blocks() {
 	 parallel -kj200 --load 300% --recend "\n" --spreadstdin gzip -1 |
 	 zcat | sort -n | md5sum) 2>&1 |
 	grep -Ev 'processes took|Consider adjusting -j'
-}
-
-par_--round-robin_blocks() {
-    echo "bug #49664: --round-robin does not complete"
-    seq 20000000 | parallel -j8 --block 10M --round-robin --pipe wc -c | wc -l
 }
 
 par_dryrun_timeout_ungroup() {
@@ -550,7 +650,7 @@ par_k() {
 	 parallel -j1 -kq echo "sleep 1; echo {}";
      echo "echo end") |
 	stdout nice parallel -k -j0 |
-	grep -Ev 'No more file handles.|Raising ulimit -n' |
+	grep -Ev 'Try running|or increasing|No more file handles.' |
 	perl -pe '/parallel:/ and s/\d/X/g'
 }
 

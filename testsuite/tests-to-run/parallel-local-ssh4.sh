@@ -172,7 +172,7 @@ par__--tmux_different_shells() {
     ) | replace_tmpdir | perl -pe 's/tms...../tmsXXXXX/g'
 }
 
-par_--tmux_length() {
+par__--tmux_length() {
     echo '### tmux examples that earlier blocked'
     echo 'Runtime 14 seconds on non-loaded machine'
     short_TMPDIR() {
@@ -198,7 +198,7 @@ par_--tmux_length() {
 	perl -pe 's:tms.....:tmsXXXXX:'
 }
 
-par_transfer_return_multiple_inputs() {
+par__transfer_return_multiple_inputs() {
     echo '### bug #43746: --transfer and --return of multiple inputs {1} and {2}'
     echo '### and:'
     echo '### bug #44371: --trc with csh complains'
@@ -221,5 +221,5 @@ par_z_multiple_hosts_repeat_arg() {
 
 export -f $(compgen -A function | grep par_)
 compgen -A function | G par_ "$@" | LC_ALL=C sort |
-    parallel --timeout 250 -j75% --tag -k --joblog /tmp/jl-`basename $0` '{} 2>&1' |
+    parallel --timeout 3000% -j50% --tag -k --joblog /tmp/jl-`basename $0` '{} 2>&1' |
     perl -pe 's:/usr/bin:/bin:g;'

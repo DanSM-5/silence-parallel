@@ -128,6 +128,7 @@ par_listproc() {
 		shortest_output="$output"
 		shortest_length=$output_length
 	    fi
+	    sleep 0.2
 	done
 
 	# Print the shortest output
@@ -136,7 +137,7 @@ par_listproc() {
     # Try 10 times: Other jobs may be running in parallel
     shortest-output 10 nice sql --listproc :oraunittest |
 	perl -ne '/select 1 from dual|user_objects|user_tablespaces|connect_by_filtering/ and next;
-                  s/[21 ]\.\d{4,5}/1.99999/;
+                  s/[54321 ]\.\d{4,5}/1.99999/;
                   s/\s+/ /g;
                   print'
     sql --listproc $MYSQL_TEST_DBURL |
