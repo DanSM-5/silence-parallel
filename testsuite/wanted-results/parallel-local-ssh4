@@ -306,6 +306,25 @@ par_exporting_in_zsh	Function export as function
 par_exporting_in_zsh	myfunc ran OK
 par_exporting_in_zsh	function from zsh to zsh OK
 par_exporting_in_zsh	function from zsh to bash OK
+par_sshloginfile	### --slf with mIxEd cAsE
+par_sshloginfile	1
+par_sshloginfile	2
+par_sshloginfile	3
+par_sshloginfile	4
+par_sshloginfile	5
+par_sshloginfile	6
+par_sshloginfile	7
+par_sshloginfile	8
+par_sshloginfile	9
+par_sshloginfile	bash
+par_sshloginfile	bash
+par_sshloginfile	ksh
+par_sshloginfile	ksh
+par_sshloginfile	ksh
+par_sshloginfile	ksh
+par_sshloginfile	parallel
+par_sshloginfile	parallel
+par_sshloginfile	parallel
 par_warn_when_exporting_func	bug #40137: SHELL not bash: Warning when exporting funcs
 par_warn_when_exporting_func	/bin/sh	Run function in /bin/sh
 par_warn_when_exporting_func	/bin/sh	parallel: Warning: Shell functions may not be supported in /bin/sh.
@@ -328,22 +347,3 @@ par_z_multiple_hosts_repeat_arg	parallel: Warning: Using -X or -m with --sshlogi
 par_z_multiple_hosts_repeat_arg	1
 par_z_multiple_hosts_repeat_arg	2
 par_z_multiple_hosts_repeat_arg	3
-par_z_sshloginfile	### --slf with mIxEd cAsE
-par_z_sshloginfile	1
-par_z_sshloginfile	2
-par_z_sshloginfile	3
-par_z_sshloginfile	4
-par_z_sshloginfile	5
-par_z_sshloginfile	6
-par_z_sshloginfile	7
-par_z_sshloginfile	8
-par_z_sshloginfile	9
-par_z_sshloginfile	bash
-par_z_sshloginfile	bash
-par_z_sshloginfile	ksh
-par_z_sshloginfile	ksh
-par_z_sshloginfile	ksh
-par_z_sshloginfile	ksh
-par_z_sshloginfile	parallel
-par_z_sshloginfile	parallel
-par_z_sshloginfile	parallel

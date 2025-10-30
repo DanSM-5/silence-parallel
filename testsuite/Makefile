@@ -133,6 +133,21 @@ stop=(stdout ping -w 1 -c 1 {} && \
   (cd vagrant/*/{} && vagrant suspend) ) | \
   grep -Ev "${ignore}"
 
+# make startv VM=freebsd13
+startv:
+	(stdout ping -w 1 -c 1 ${VM} && ssh vagrant@${VM} echo ssh {} works || \
+	  (cd vagrant/*/${VM} 2>/dev/null && vagrant up ; \
+	   echo ${VM} | grep -q centos3 && \
+	    (cat ../../authorized_keys | vagrant ssh -c "cat >>.ssh/authorized_keys"; \
+	     vagrant ssh -c "sudo /sbin/ifconfig eth1 172.27.27.3"); \
+	   ssh-keygen -R ${VM}; \
+	   stdout wssh -oStrictHostKeyChecking=accept-new vagrant@${VM} echo ssh ${VM} started and works) ) | \
+	grep -Ev "${ignore}"
+
+
+stopv:
+	(stdout ping -w 1 -c 1 ${VM} && (cd vagrant/*/${VM} && vagrant suspend) ) | grep -Ev "${ignore}"
+
 # parallel --rpl '{s} s:/setup.sh::;s:.*/::' echo {s} ::: vagrant/*/*/setup.sh
 namedservers=centos3 centos8 centos9 freebsd13 freebsd14 openindiana rhel8
 
@@ -151,7 +166,7 @@ startvm:
 	touch vagrant/authorized_keys
 	sort -u ~/.ssh/*.pub vagrant/authorized_keys > vagrant/authorized_keys.
 	mv vagrant/authorized_keys. vagrant/authorized_keys
-	parallel -j0 --tag -k --timeout 200 '${start}' ::: ${servers} &
+	parallel -j0 --tag --lb --timeout 200 '${start}' ::: ${servers} &
 stopvm:
 	parallel -j0 --tag -k '${stop}' ::: ${namedservers} || true
 

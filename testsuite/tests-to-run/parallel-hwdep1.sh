@@ -5,6 +5,14 @@
 # Jobs that depend on the hardware
 # (e.g number of CPU threads, terminal type)
 
+par_10000_m_X() {
+    echo '### Test -m with 10000 args'
+    seq 10100 | perl -pe 's/$/.gif/' |
+        parallel -j1 -km echo a{}b{.}c{.} |
+        parallel -k --pipe --tee ::: md5sum 'perl -pe "s/(.*)/length \$1/e"' |
+	perl -pe 's/^(\d)\d\d\d\d/${1}9999/'
+}
+
 par_maxlinelen_X_I() {
     echo "### Test max line length -X -I"
 

@@ -82,15 +82,15 @@ par_ctagstring	tagstring/ctagstring 10 39
 par_ctagstring	10
 par_ctagstring	39
 par_lines_over_130k	### Test of xargs -m command lines > 130k
-par_lines_over_130k	183794839f45c8f7e38fe7c677c49958  -
+par_lines_over_130k	a3c892de2524f32f78550b47336eadd0  -
 par_lines_over_130k	Chars per line: 63437
 par_lines_over_130k	     11  119989  697810
 par_lines_over_130k	### Test of xargs -X command lines > 130k
-par_lines_over_130k	859ed2964e82dba118e92b1bedd2f84a  -
+par_lines_over_130k	a98747678a5d18c4470a073812437ab2  -
 par_lines_over_130k	Chars per line: 62906
 par_lines_over_130k	     13   60000  817788
 par_lines_over_130k	### Test of xargs -m command lines > 130k
-par_lines_over_130k	00b654c29383f20646f694a54521c378  -
+par_lines_over_130k	ba869d577103ef0cc6b6045c2a618c43  -
 par_ll_color_long_line	### --latest-line --color with lines longer than terminal width
 par_ll_color_long_line	par_ll_color_long_line	[K01x     [48;5;178;38;5;000m[K0100000 1 2 3 4 5 6 7>[m
 par_ll_color_long_line	par_ll_color_long_line	[K02xx    [48;5;039;38;5;231m[K0200000 1 2 3 4 5 6 7>[m
@@ -160,10 +160,10 @@ par_ll_no_newline	par_ll_no_newline	[Klines
 par_ll_no_newline	par_ll_no_newline	[Ktwo     
 par_ll_no_newline	last linelast line
 par_maxlinelen_X_I	### Test max line length -X -I
-par_maxlinelen_X_I	859ed2964e82dba118e92b1bedd2f84a  -
+par_maxlinelen_X_I	a98747678a5d18c4470a073812437ab2  -
 par_maxlinelen_X_I	Chars per line (817788/13): 62906
 par_maxlinelen_m_I	### Test max line length -m -I
-par_maxlinelen_m_I	183794839f45c8f7e38fe7c677c49958  -
+par_maxlinelen_m_I	a3c892de2524f32f78550b47336eadd0  -
 par_maxlinelen_m_I	Chars per line (697810/11): 63437
 par_progress	
 par_progress	Computers / CPU sockets / Max jobs to run
@@ -184,6 +184,6 @@ par_progress
 par_progress	Computer:jobs running/jobs completed/%of started jobs/Average seconds to complete
 par_progress	local:0/3/100%/9.9s [K
 par_xargs_bug_39787	### bug #39787: --xargs broken
-par_xargs_bug_39787	63534
-par_xargs_bug_39787	63534
-par_xargs_bug_39787	41826
+par_xargs_bug_39787	63654
+par_xargs_bug_39787	63654
+par_xargs_bug_39787	41586

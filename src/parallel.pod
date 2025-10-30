@@ -4676,8 +4676,9 @@ it does not, read below.
 
 =item *
 
-The output of your example. If your problem is not easily reproduced
-by others, the output might help them figure out the problem.
+The output of your example and what you expected instead. If your
+problem is not easily reproduced by others, the output might help them
+figure out the problem.
 
 =item *
 

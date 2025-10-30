@@ -9,7 +9,7 @@ unset run_once
 
 # SSH only allowed to localhost/lo
 
-par_z_sshloginfile() {
+par_sshloginfile() {
     echo '### --slf with mIxEd cAsE'
     tmp=$(mktemp)
     (

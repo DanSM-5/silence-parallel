@@ -281,14 +281,14 @@ from:tange@gnu.org
 to:parallel@gnu.org, bug-parallel@gnu.org
 stable-bcc: Jesse Alama <jessealama@fastmail.fm>
 
-Subject: GNU Parallel 20250922 ('Iryna Zarutska') released [stable]
+Subject: GNU Parallel 20251122 ('Mamdani') released [stable]
 
-GNU Parallel 20251022 ('Goodall') has been released. It is available for download at: lbry://@GnuParallel:4
+GNU Parallel 20251122 ('Mamdani') has been released. It is available for download at: lbry://@GnuParallel:4
 
 Quote of the month:
 
-  idk who built GNU parallel but I owe them a beer
-    -- ram @h4x0r1ng
+  ainda não inventaram palavras capazes de expressar minha gratidão aos desenvolvedores do GNU Parallel
+    -- @nueidris.kawaii.social
 
 New in this release:
 
