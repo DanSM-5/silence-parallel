@@ -27,7 +27,7 @@ install_packages() {
     
     # Debian package
     packaging_pkgs="dpkg-dev build-essential debhelper osc cvs automake"
-    packaging_pkgs="$packaging_pkgs python3-m2crypto alien python3-pip"
+    packaging_pkgs="$packaging_pkgs python3-m2crypto alien python3-pip lftp"
 
     # Shebang Tools
     shebang_pkgs="gnuplot octave ruby r-base-core"

@@ -92,6 +92,7 @@ make alphaupload
 . .last-doitag.txt
 cd ~/privat/parallel/packager/obs
 
+osc repairwc home-tange/parallel/
 find home-tange/parallel/* -type f |
   grep -Ev '(PKGBUILD|parallel.spec|Makefile)' |
   parallel -j1 'osc rm {} || rm {}'
@@ -282,18 +283,18 @@ stable-bcc: Jesse Alama <jessealama@fastmail.fm>
 
 Subject: GNU Parallel 20250922 ('Iryna Zarutska') released [stable]
 
-GNU Parallel 20250922 ('Iryna Zarutska') has been released. It is available for download at: lbry://@GnuParallel:4
+GNU Parallel 20251022 ('Goodall') has been released. It is available for download at: lbry://@GnuParallel:4
 
 Quote of the month:
 
-  GNU parallel is awesome. Use it more often in your scripts!
-    -- Wade @WadeGrimshire@twitter
+  idk who built GNU parallel but I owe them a beer
+    -- ram @h4x0r1ng
 
 New in this release:
 
 * No new features.
 
-* Bug fixes and man page updates.
+* Bug fixes.
 
 
 GNU Parallel - For people who live life in the parallel lane.
