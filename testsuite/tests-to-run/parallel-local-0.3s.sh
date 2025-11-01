@@ -16,6 +16,26 @@ export -f stdsort
 # Test amount of parallelization
 # parallel --shuf --jl /tmp/myjl -j1 'export JOBS={1};'bash tests-to-run/parallel-local-0.3s.sh ::: {1..16} ::: {1..5}
 
+par_pipe_no_run_if_empty() {
+    echo 'bug #67351: Newlines are ommitted when using `--no-run-if-empty` and null separators'
+    printf ' \nA\n \n\nB\n\n ' |
+	parallel -n 1 --pipe -r --recend '\n' -k 'echo {#};cat;echo {#}'
+    echo "### no recstart - not newline"
+    printf ' \0A\0 \0\0B\0\0 ' |
+	parallel -n 1 --pipe -r --recend '\0' -k 'echo {#};cat;echo {#}'
+    echo "### recstart, recend"
+    printf ' ]][[A]][[ ]][[]][[B]][[]][[ ' |
+	parallel -n 1 --pipe -r --recstart '[[' --recend ']]' -k 'echo {#};cat;echo {#}'
+    echo "### First record contains --recstart as data (not record sep)"
+    echo "### and last record contains --recend as data (not record sep)"
+    printf ' [[A]][[ ]][[]][[B]][[]] ' |
+	parallel -n 1 --pipe -r --recstart '[[' --recend ']]' -k 'echo {#};cat;echo {#}'
+    echo "### records contain --recstart/--recend as data (not record sep)"
+    printf ' [[A]] ]][[ ]][[]][[[[B]][[]] ' |
+	parallel -n 1 --pipe -r --recstart '[[' --recend ']]' -k 'echo {#};cat;echo {#}'
+}
+
+
 par_cr_end_of_env_var() {
     echo 'bug #66646: Wish: Ignore \r at end of string in environment variables'
     cr=$(printf "\r")
@@ -213,7 +233,7 @@ EOF
 	     --tmpl "$tmp2"=/tmp/tmpl-{x}-{y}.t2 \
 	     myprog {#}.t1 /tmp/tmpl-{x}-{y}.t2 \
 	     ::: x 1.1 2.22 3.333 ::: y 111.111 222.222 333.333 |
-	perl -pe 's/0.\d{12,}/0.RANDOM_NUMBER/' |
+	perl -pe 's/0.\d{11,}/0.RANDOM_NUMBER/' |
 	perl -pe 's/Slot: \d/Slot: X/'
     rm "$tmp1" "$tmp2"
 }

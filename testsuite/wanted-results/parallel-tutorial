@@ -130,7 +130,6 @@ C F
   parallel -d '\0' echo :::: abc0-file
   parallel -E stop echo ::: A B stop C D
   (echo 1; echo; echo 2) | parallel --no-run-if-empty echo
-9
   parallel ::: ls 'echo foo' pwd
 abc-file
 abc0-file
@@ -163,9 +162,7 @@ B.C
   parallel echo {//} ::: A/B.C
   parallel echo {/.} ::: A/B.C
   parallel echo {#} ::: A B C
-9
   parallel -j 2 echo {%} ::: A B C
-9
   parallel -I ,, echo ,, ::: A/B.C
 A/B.C
   parallel --extensionreplace ,, echo ,, ::: A/B.C
@@ -175,9 +172,7 @@ B.C
   parallel --dirnamereplace ,, echo ,, ::: A/B.C
   parallel --basenameextensionreplace ,, echo ,, ::: A/B.C
   parallel --seqreplace ,, echo ,, ::: A B C
-9
   parallel -j2 --slotreplace ,, echo ,, ::: A B C
-9
   parallel echo '{= s:\.[^.]+$::;s:\.[^.]+$::; =}' ::: foo.tar.gz
 foo
   parallel echo Job {#} of {= '$_=total_jobs()' =} ::: {1..5}
@@ -189,7 +184,6 @@ Job 5 of 5
   parallel echo {} shell quoted is {= '$_=Q($_)' =} ::: '*/!#$'
 */!#$ shell quoted is '*/!#$'
   parallel echo {= 'if($_==3) { skip() }' =} ::: {1..5}
-9
   parallel echo {= 'if($arg[1]==$arg[2]) { skip() }' =} \
     ::: {1..3} ::: {1..3}
 1 2
@@ -311,16 +305,12 @@ cAaAdef
 abcAaAdef
 abcaaadef
   cat num30000 | parallel --xargs echo | wc -l
-9
   cat num30000 | parallel --xargs -s 10000 echo | wc -l
-99
   cat num30000 | parallel --jobs 4 -m echo | wc -l
-9
   parallel --jobs 4 -m echo ::: 1 2 3 4 5 6 7 8 9 10
 1 2 3
 4 5 6
 7 8 9
-99
   parallel --jobs 4 -X echo pre-{}-post ::: A B C D E F G
 pre-A-post pre-B-post
 pre-C-post pre-D-post
@@ -474,13 +464,11 @@ DATE OUTPUT
 Starting 3
 DATE OUTPUT
   parallel --timeout 4.1 sleep {}\; echo {} ::: 2 4 6 8
-9
 parallel: Warning: This job was killed because it timed out:
 parallel: Warning: sleep 6; echo 6
 parallel: Warning: This job was killed because it timed out:
 parallel: Warning: sleep 8; echo 8
   parallel --timeout 200% sleep {}\; echo {} ::: 2.1 2.2 3 7 2.3
-9
 parallel: Warning: This job was killed because it timed out:
 parallel: Warning: sleep 7; echo 7
   parallel --eta sleep ::: 1 3 2 2 1 3 3 2 1
@@ -544,14 +532,10 @@ Seq	Host	Starttime	JobRuntime	Send	Receive	Exitval	Signal	Command
 1	:	TIMESTAMP	9.999	0	0	1	0	exit 1
 2	:	TIMESTAMP	9.999	0	0	2	0	exit 2
 3	:	TIMESTAMP	9.999	0	0	3	0	exit 3
-9
   parallel -j2 --halt now,fail=1 echo {}\; exit {} ::: 0 0 1 2 3
-9
   parallel -j2 --halt soon,fail=20% echo {}\; exit {} \
     ::: 0 1 2 3 4 5 6 7 8 9
-9
   parallel -j2 --halt now,success=1 echo {}\; exit {} ::: 1 2 3 0 4 5 6
-9
 parallel: This job succeeded:
   parallel -k --retries 3 \
     'echo tried {} >>/tmp/runs; echo completed {}; exit {}' ::: 1 2 0
@@ -639,9 +623,7 @@ foo
 /TMP
 /home/parallel/.TMPWORKDIR
   parallel -S $SERVER1 --sshdelay 0.2 echo ::: 1 2 3
-9
   parallel --controlmaster -S $SERVER1 echo ::: 1 2 3
-9
   parallel --onall -S $SERVER1,$SERVER2 echo ::: foo bar
 foo
 bar
@@ -944,16 +926,12 @@ For details: see  man parset
   parallel --sqlandworker csv:///%2Ftmp/log.csv \
     seq ::: 10 ::: 12 13 14
   cat /tmp/log.csv
-99
 Seq,Host,Starttime,JobRuntime,Send,Receive,Exitval,_Signal,Command,V1,V2,Stdout,Stderr
 1,:,000000000.000,0.000,0,9,0,0,"seq 10 12",10,12,"10
-99
 ",
 2,:,000000000.000,0.000,0,12,0,0,"seq 10 13",10,13,"10
-99
 ",
 3,:,000000000.000,0.000,0,15,0,0,"seq 10 14",10,14,"10
-99
 ",
   parallel --results outdir --sqlandworker csv:///%2Ftmp/log2.csv \
     seq ::: 10 ::: 12 13 14
@@ -1222,7 +1200,6 @@ https://www.gnu.org/software/tempfileallel_design.html#citation-notice
 https:BASE64-notice-faq.txt
   parallel --number-of-cpus
   parallel --number-of-cores
-9
   echo '--nice 17' > ~/.parallel/nicetimeout
   echo '--timeout 300%' >> ~/.parallel/nicetimeout
   parallel --profile nicetimeout echo ::: A B C

@@ -37,11 +37,10 @@ par_termseq_remote() {
 	' $file
     }
     file=/tmp/sig$$
-    . `which env_parallel.bash`
-    env_parallel -v --timeout 2 --termseq HUP,30,INT,30,QUIT,30,ILL,30,TRAP,30,ABRT,30,BUS,30,FPE,30,USR1,30,SEGV,30,USR2,30,PIPE,30,ALRM,30,TERM,30,STKFLT,30,CHLD,30,CONT,30,TSTP,30,TTIN,30,TTOU,30,URG,30,XCPU,30,XFSZ,30,VTALRM,30,PROF,30,WINCH,30,IO,30,PWR,30,SYS,30,RTMIN,30,RTMAX,30,KILL,9 -S $SSHLOGIN1 doit ::: 1
-    sleep 1
-    cat $file
-    ssh $SSHLOGIN1 rm $file
+    . env_parallel.bash
+    env_parallel -v --timeout 5 --termseq HUP,40,INT,40,QUIT,40,ILL,40,TRAP,40,ABRT,40,BUS,40,FPE,40,USR1,40,SEGV,40,USR2,40,PIPE,40,ALRM,40,TERM,40,STKFLT,40,CHLD,40,CONT,40,TSTP,40,TTIN,40,TTOU,40,URG,40,XCPU,40,XFSZ,40,VTALRM,40,PROF,40,WINCH,40,IO,40,PWR,40,SYS,40,RTMIN,40,RTMAX,40,KILL,9 -S $SSHLOGIN1 doit ::: 1
+    sleep 5
+    ssh $SSHLOGIN1 "sort $file; rm $file"
 }
 
 par_nonall_ssh() {
@@ -205,5 +204,5 @@ par_rsync_3.2.3() {
 
 export -f $(compgen -A function | grep par_)
 #compgen -A function | grep par_ | sort | parallel --delay $D -j$P --tag -k '{} 2>&1'
-compgen -A function | grep par_ | sort |
+compgen -A function | G par_ "$@" | sort |
     parallel --joblog /tmp/jl-`basename $0` -j5 --tag -k '{} 2>&1'

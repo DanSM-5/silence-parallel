@@ -42,6 +42,185 @@ par__arg_sep	b
 par__arg_sep	cat
 par__arg_sep	echo b
 par__arg_sep	b
+par__mix_triple_colon_with_quad_colon	### Test :::: mixed with :::
+par__mix_triple_colon_with_quad_colon	### Test :::: < ::: :::
+par__mix_triple_colon_with_quad_colon	6 4 1
+par__mix_triple_colon_with_quad_colon	6 4 2
+par__mix_triple_colon_with_quad_colon	6 4 3
+par__mix_triple_colon_with_quad_colon	6 5 1
+par__mix_triple_colon_with_quad_colon	6 5 2
+par__mix_triple_colon_with_quad_colon	6 5 3
+par__mix_triple_colon_with_quad_colon	7 4 1
+par__mix_triple_colon_with_quad_colon	7 4 2
+par__mix_triple_colon_with_quad_colon	7 4 3
+par__mix_triple_colon_with_quad_colon	7 5 1
+par__mix_triple_colon_with_quad_colon	7 5 2
+par__mix_triple_colon_with_quad_colon	7 5 3
+par__mix_triple_colon_with_quad_colon	### Test :::: <  < :::: <
+par__mix_triple_colon_with_quad_colon	6 4 1
+par__mix_triple_colon_with_quad_colon	6 4 2
+par__mix_triple_colon_with_quad_colon	6 4 3
+par__mix_triple_colon_with_quad_colon	6 5 1
+par__mix_triple_colon_with_quad_colon	6 5 2
+par__mix_triple_colon_with_quad_colon	6 5 3
+par__mix_triple_colon_with_quad_colon	7 4 1
+par__mix_triple_colon_with_quad_colon	7 4 2
+par__mix_triple_colon_with_quad_colon	7 4 3
+par__mix_triple_colon_with_quad_colon	7 5 1
+par__mix_triple_colon_with_quad_colon	7 5 2
+par__mix_triple_colon_with_quad_colon	7 5 3
+par__mix_triple_colon_with_quad_colon	### Test -a ::::  < :::: <
+par__mix_triple_colon_with_quad_colon	6 4 1
+par__mix_triple_colon_with_quad_colon	6 4 2
+par__mix_triple_colon_with_quad_colon	6 4 3
+par__mix_triple_colon_with_quad_colon	6 5 1
+par__mix_triple_colon_with_quad_colon	6 5 2
+par__mix_triple_colon_with_quad_colon	6 5 3
+par__mix_triple_colon_with_quad_colon	7 4 1
+par__mix_triple_colon_with_quad_colon	7 4 2
+par__mix_triple_colon_with_quad_colon	7 4 3
+par__mix_triple_colon_with_quad_colon	7 5 1
+par__mix_triple_colon_with_quad_colon	7 5 2
+par__mix_triple_colon_with_quad_colon	7 5 3
+par__mix_triple_colon_with_quad_colon	### Test -a -a :::
+par__mix_triple_colon_with_quad_colon	6 4 1
+par__mix_triple_colon_with_quad_colon	6 4 2
+par__mix_triple_colon_with_quad_colon	6 4 3
+par__mix_triple_colon_with_quad_colon	6 5 1
+par__mix_triple_colon_with_quad_colon	6 5 2
+par__mix_triple_colon_with_quad_colon	6 5 3
+par__mix_triple_colon_with_quad_colon	7 4 1
+par__mix_triple_colon_with_quad_colon	7 4 2
+par__mix_triple_colon_with_quad_colon	7 4 3
+par__mix_triple_colon_with_quad_colon	7 5 1
+par__mix_triple_colon_with_quad_colon	7 5 2
+par__mix_triple_colon_with_quad_colon	7 5 3
+par__mix_triple_colon_with_quad_colon	### Test -a - -a :::
+par__mix_triple_colon_with_quad_colon	6 4 1
+par__mix_triple_colon_with_quad_colon	6 4 2
+par__mix_triple_colon_with_quad_colon	6 4 3
+par__mix_triple_colon_with_quad_colon	6 5 1
+par__mix_triple_colon_with_quad_colon	6 5 2
+par__mix_triple_colon_with_quad_colon	6 5 3
+par__mix_triple_colon_with_quad_colon	7 4 1
+par__mix_triple_colon_with_quad_colon	7 4 2
+par__mix_triple_colon_with_quad_colon	7 4 3
+par__mix_triple_colon_with_quad_colon	7 5 1
+par__mix_triple_colon_with_quad_colon	7 5 2
+par__mix_triple_colon_with_quad_colon	7 5 3
+par__mix_triple_colon_with_quad_colon	### Test :::: < - :::
+par__mix_triple_colon_with_quad_colon	6 4 1
+par__mix_triple_colon_with_quad_colon	6 4 2
+par__mix_triple_colon_with_quad_colon	6 4 3
+par__mix_triple_colon_with_quad_colon	6 5 1
+par__mix_triple_colon_with_quad_colon	6 5 2
+par__mix_triple_colon_with_quad_colon	6 5 3
+par__mix_triple_colon_with_quad_colon	7 4 1
+par__mix_triple_colon_with_quad_colon	7 4 2
+par__mix_triple_colon_with_quad_colon	7 4 3
+par__mix_triple_colon_with_quad_colon	7 5 1
+par__mix_triple_colon_with_quad_colon	7 5 2
+par__mix_triple_colon_with_quad_colon	7 5 3
+par__pipe_compress_blocks	### bug #41482: --pipe --compress blocks at different -j/seq combinations
+par__pipe_compress_blocks	1
+par__pipe_compress_blocks	echo 1-4 + 1-4
+par__pipe_compress_blocks	echo 1
+par__pipe_compress_blocks	1
+par__pipe_compress_blocks	echo 2
+par__pipe_compress_blocks	2
+par__pipe_compress_blocks	echo 3
+par__pipe_compress_blocks	3
+par__pipe_compress_blocks	echo 4
+par__pipe_compress_blocks	4
+par__pipe_compress_blocks	4 times wc to stderr to stdout
+par__pipe_compress_blocks	      1       1       2
+par__pipe_compress_blocks	      1       1       2
+par__pipe_compress_blocks	      1       1       2
+par__pipe_compress_blocks	      1       1       2
+par__pipe_compress_blocks	1 2 3 4
+par__pipe_compress_blocks	1
+par__pipe_compress_blocks	2
+par__pipe_compress_blocks	3
+par__pipe_compress_blocks	4
+par__pipe_compress_blocks	1 2 3 4
+par__pipe_compress_blocks	1
+par__pipe_compress_blocks	2
+par__pipe_compress_blocks	3
+par__pipe_compress_blocks	4
+par__pipe_compress_blocks	1 2
+par__pipe_compress_blocks	1
+par__pipe_compress_blocks	2
+par__pipe_compress_blocks	1 2 3
+par__pipe_compress_blocks	1
+par__pipe_compress_blocks	2
+par__pipe_compress_blocks	3
+par__quote_bugs	### Bug did not quote
+par__quote_bugs	echo '>'
+par__quote_bugs	>
+par__quote_bugs	echo '>'
+par__quote_bugs	>
+par__quote_bugs	echo '>' 2
+par__quote_bugs	> 2
+par__quote_bugs	> 2
+par__quote_bugs	### Must not quote
+par__quote_bugs	echo | wc -l
+par__quote_bugs	1
+par__quote_bugs	echo | wc -l
+par__quote_bugs	1
+par__quote_bugs	echo a b c | wc -w
+par__quote_bugs	3
+par__quote_bugs	echo a b c | wc -w
+par__quote_bugs	3
+par__quote_bugs	echo a b | wc -w
+par__quote_bugs	2
+par__replacement_rename	### Test --basenamereplace
+par__replacement_rename	b.c b.c b.c b b b
+par__replacement_rename	b.c
+par__replacement_rename	b.c
+par__replacement_rename	b.c
+par__replacement_rename	b
+par__replacement_rename	b
+par__replacement_rename	b
+par__replacement_rename	### Test --bnr
+par__replacement_rename	b.c b.c b.c b b b
+par__replacement_rename	b.c
+par__replacement_rename	b.c
+par__replacement_rename	b.c
+par__replacement_rename	b
+par__replacement_rename	b
+par__replacement_rename	b
+par__replacement_rename	### Test --extensionreplace
+par__replacement_rename	/a/b a/b b /a/b a/b b
+par__replacement_rename	/a/b
+par__replacement_rename	a/b
+par__replacement_rename	b
+par__replacement_rename	/a/b
+par__replacement_rename	a/b
+par__replacement_rename	b
+par__replacement_rename	### Test --er
+par__replacement_rename	/a/b a/b b /a/b a/b b
+par__replacement_rename	/a/b
+par__replacement_rename	a/b
+par__replacement_rename	b
+par__replacement_rename	/a/b
+par__replacement_rename	a/b
+par__replacement_rename	b
+par__replacement_rename	### Test --basenameextensionreplace
+par__replacement_rename	b b b b b b
+par__replacement_rename	b
+par__replacement_rename	b
+par__replacement_rename	b
+par__replacement_rename	b
+par__replacement_rename	b
+par__replacement_rename	b
+par__replacement_rename	### Test --bner
+par__replacement_rename	b b b b b b
+par__replacement_rename	b
+par__replacement_rename	b
+par__replacement_rename	b
+par__replacement_rename	b
+par__replacement_rename	b
+par__replacement_rename	b
 par_basic_halt	parallel: This job failed:
 par_basic_halt	false
 par_basic_halt	parallel: This job succeeded:
@@ -247,85 +426,6 @@ par_long_input	c c c c
 par_long_input	a a a a
 par_long_input	b b b b
 par_long_input	c c c c
-par_mix_triple_colon_with_quad_colon	### Test :::: mixed with :::
-par_mix_triple_colon_with_quad_colon	### Test :::: < ::: :::
-par_mix_triple_colon_with_quad_colon	6 4 1
-par_mix_triple_colon_with_quad_colon	6 4 2
-par_mix_triple_colon_with_quad_colon	6 4 3
-par_mix_triple_colon_with_quad_colon	6 5 1
-par_mix_triple_colon_with_quad_colon	6 5 2
-par_mix_triple_colon_with_quad_colon	6 5 3
-par_mix_triple_colon_with_quad_colon	7 4 1
-par_mix_triple_colon_with_quad_colon	7 4 2
-par_mix_triple_colon_with_quad_colon	7 4 3
-par_mix_triple_colon_with_quad_colon	7 5 1
-par_mix_triple_colon_with_quad_colon	7 5 2
-par_mix_triple_colon_with_quad_colon	7 5 3
-par_mix_triple_colon_with_quad_colon	### Test :::: <  < :::: <
-par_mix_triple_colon_with_quad_colon	6 4 1
-par_mix_triple_colon_with_quad_colon	6 4 2
-par_mix_triple_colon_with_quad_colon	6 4 3
-par_mix_triple_colon_with_quad_colon	6 5 1
-par_mix_triple_colon_with_quad_colon	6 5 2
-par_mix_triple_colon_with_quad_colon	6 5 3
-par_mix_triple_colon_with_quad_colon	7 4 1
-par_mix_triple_colon_with_quad_colon	7 4 2
-par_mix_triple_colon_with_quad_colon	7 4 3
-par_mix_triple_colon_with_quad_colon	7 5 1
-par_mix_triple_colon_with_quad_colon	7 5 2
-par_mix_triple_colon_with_quad_colon	7 5 3
-par_mix_triple_colon_with_quad_colon	### Test -a ::::  < :::: <
-par_mix_triple_colon_with_quad_colon	6 4 1
-par_mix_triple_colon_with_quad_colon	6 4 2
-par_mix_triple_colon_with_quad_colon	6 4 3
-par_mix_triple_colon_with_quad_colon	6 5 1
-par_mix_triple_colon_with_quad_colon	6 5 2
-par_mix_triple_colon_with_quad_colon	6 5 3
-par_mix_triple_colon_with_quad_colon	7 4 1
-par_mix_triple_colon_with_quad_colon	7 4 2
-par_mix_triple_colon_with_quad_colon	7 4 3
-par_mix_triple_colon_with_quad_colon	7 5 1
-par_mix_triple_colon_with_quad_colon	7 5 2
-par_mix_triple_colon_with_quad_colon	7 5 3
-par_mix_triple_colon_with_quad_colon	### Test -a -a :::
-par_mix_triple_colon_with_quad_colon	6 4 1
-par_mix_triple_colon_with_quad_colon	6 4 2
-par_mix_triple_colon_with_quad_colon	6 4 3
-par_mix_triple_colon_with_quad_colon	6 5 1
-par_mix_triple_colon_with_quad_colon	6 5 2
-par_mix_triple_colon_with_quad_colon	6 5 3
-par_mix_triple_colon_with_quad_colon	7 4 1
-par_mix_triple_colon_with_quad_colon	7 4 2
-par_mix_triple_colon_with_quad_colon	7 4 3
-par_mix_triple_colon_with_quad_colon	7 5 1
-par_mix_triple_colon_with_quad_colon	7 5 2
-par_mix_triple_colon_with_quad_colon	7 5 3
-par_mix_triple_colon_with_quad_colon	### Test -a - -a :::
-par_mix_triple_colon_with_quad_colon	6 4 1
-par_mix_triple_colon_with_quad_colon	6 4 2
-par_mix_triple_colon_with_quad_colon	6 4 3
-par_mix_triple_colon_with_quad_colon	6 5 1
-par_mix_triple_colon_with_quad_colon	6 5 2
-par_mix_triple_colon_with_quad_colon	6 5 3
-par_mix_triple_colon_with_quad_colon	7 4 1
-par_mix_triple_colon_with_quad_colon	7 4 2
-par_mix_triple_colon_with_quad_colon	7 4 3
-par_mix_triple_colon_with_quad_colon	7 5 1
-par_mix_triple_colon_with_quad_colon	7 5 2
-par_mix_triple_colon_with_quad_colon	7 5 3
-par_mix_triple_colon_with_quad_colon	### Test :::: < - :::
-par_mix_triple_colon_with_quad_colon	6 4 1
-par_mix_triple_colon_with_quad_colon	6 4 2
-par_mix_triple_colon_with_quad_colon	6 4 3
-par_mix_triple_colon_with_quad_colon	6 5 1
-par_mix_triple_colon_with_quad_colon	6 5 2
-par_mix_triple_colon_with_quad_colon	6 5 3
-par_mix_triple_colon_with_quad_colon	7 4 1
-par_mix_triple_colon_with_quad_colon	7 4 2
-par_mix_triple_colon_with_quad_colon	7 4 3
-par_mix_triple_colon_with_quad_colon	7 5 1
-par_mix_triple_colon_with_quad_colon	7 5 2
-par_mix_triple_colon_with_quad_colon	7 5 3
 par_null_resume	### --null --resume --jl
 par_null_resume	a
 par_null_resume	b
@@ -355,39 +455,6 @@ par_open_files_blocks	18 of 21
 par_open_files_blocks	19 of 21
 par_open_files_blocks	20 of 21
 par_open_files_blocks	21 of 21
-par_pipe_compress_blocks	### bug #41482: --pipe --compress blocks at different -j/seq combinations
-par_pipe_compress_blocks	1
-par_pipe_compress_blocks	echo 1-4 + 1-4
-par_pipe_compress_blocks	echo 1
-par_pipe_compress_blocks	1
-par_pipe_compress_blocks	echo 2
-par_pipe_compress_blocks	2
-par_pipe_compress_blocks	echo 3
-par_pipe_compress_blocks	3
-par_pipe_compress_blocks	echo 4
-par_pipe_compress_blocks	4
-par_pipe_compress_blocks	4 times wc to stderr to stdout
-par_pipe_compress_blocks	      1       1       2
-par_pipe_compress_blocks	      1       1       2
-par_pipe_compress_blocks	      1       1       2
-par_pipe_compress_blocks	      1       1       2
-par_pipe_compress_blocks	1 2 3 4
-par_pipe_compress_blocks	1
-par_pipe_compress_blocks	2
-par_pipe_compress_blocks	3
-par_pipe_compress_blocks	4
-par_pipe_compress_blocks	1 2 3 4
-par_pipe_compress_blocks	1
-par_pipe_compress_blocks	2
-par_pipe_compress_blocks	3
-par_pipe_compress_blocks	4
-par_pipe_compress_blocks	1 2
-par_pipe_compress_blocks	1
-par_pipe_compress_blocks	2
-par_pipe_compress_blocks	1 2 3
-par_pipe_compress_blocks	1
-par_pipe_compress_blocks	2
-par_pipe_compress_blocks	3
 par_pipe_unneeded_procs	bug #34241: --pipe should not spawn unneeded processes - part 2
 par_pipe_unneeded_procs	2
 par_pipe_unneeded_procs	No .par should exist
@@ -444,29 +511,11 @@ par_profiles_with_space	/bin/bash=/bin/bash
 par_profiles_with_space	echo '/bin/bash=/bin/bash'
 par_profiles_with_space	/bin/bash=/bin/bash
 par_profiles_with_space	With script in $PARALLEL /bin/bash=/TMP
-par_pxz_complains	bug #44250: pxz complains File format not recognized but decompresses anyway
+par_pxz_complains	bug #44250: pxz pre-2020 complains File format not recognized but decompresses anyway
+par_pxz_complains	can not seek in input: Illegal seek
 par_pxz_complains	ls: cannot access '/OK-if-missing-file': No such file or directory
 par_pxz_complains	can not seek in input: Illegal seek
 par_pxz_complains	ls: cannot access '/OK-if-missing-file': No such file or directory
-par_quote_bugs	### Bug did not quote
-par_quote_bugs	echo '>'
-par_quote_bugs	>
-par_quote_bugs	echo '>'
-par_quote_bugs	>
-par_quote_bugs	echo '>' 2
-par_quote_bugs	> 2
-par_quote_bugs	> 2
-par_quote_bugs	### Must not quote
-par_quote_bugs	echo | wc -l
-par_quote_bugs	1
-par_quote_bugs	echo | wc -l
-par_quote_bugs	1
-par_quote_bugs	echo a b c | wc -w
-par_quote_bugs	3
-par_quote_bugs	echo a b c | wc -w
-par_quote_bugs	3
-par_quote_bugs	echo a b | wc -w
-par_quote_bugs	2
 par_recend_recstart_hash	### bug #59843: --regexp --recstart '#' fails
 par_recend_recstart_hash	      2       2      10
 par_recend_recstart_hash	      1       1       6
@@ -476,54 +525,6 @@ par_recend_recstart_hash	      1       2       9
 par_recend_recstart_hash	      2       1       6
 par_recend_recstart_hash	      1       2       9
 par_recend_recstart_hash	      2       1       6
-par_replacement_rename	### Test --basenamereplace
-par_replacement_rename	b.c b.c b.c b b b
-par_replacement_rename	b.c
-par_replacement_rename	b.c
-par_replacement_rename	b.c
-par_replacement_rename	b
-par_replacement_rename	b
-par_replacement_rename	b
-par_replacement_rename	### Test --bnr
-par_replacement_rename	b.c b.c b.c b b b
-par_replacement_rename	b.c
-par_replacement_rename	b.c
-par_replacement_rename	b.c
-par_replacement_rename	b
-par_replacement_rename	b
-par_replacement_rename	b
-par_replacement_rename	### Test --extensionreplace
-par_replacement_rename	/a/b a/b b /a/b a/b b
-par_replacement_rename	/a/b
-par_replacement_rename	a/b
-par_replacement_rename	b
-par_replacement_rename	/a/b
-par_replacement_rename	a/b
-par_replacement_rename	b
-par_replacement_rename	### Test --er
-par_replacement_rename	/a/b a/b b /a/b a/b b
-par_replacement_rename	/a/b
-par_replacement_rename	a/b
-par_replacement_rename	b
-par_replacement_rename	/a/b
-par_replacement_rename	a/b
-par_replacement_rename	b
-par_replacement_rename	### Test --basenameextensionreplace
-par_replacement_rename	b b b b b b
-par_replacement_rename	b
-par_replacement_rename	b
-par_replacement_rename	b
-par_replacement_rename	b
-par_replacement_rename	b
-par_replacement_rename	b
-par_replacement_rename	### Test --bner
-par_replacement_rename	b b b b b b
-par_replacement_rename	b
-par_replacement_rename	b
-par_replacement_rename	b
-par_replacement_rename	b
-par_replacement_rename	b
-par_replacement_rename	b
 par_replacement_string_as_part_of_command	### {} as part of the command
 par_replacement_string_as_part_of_command	/bin/ls
 par_replacement_string_as_part_of_command	/bin/ls

@@ -7,17 +7,11 @@ Quote of the month:
   64コアで、64並列でsimlationを回してtopコマンドで状況を見るのは心地よい。簡単に並列処理を実現できるGNU parallelコマンドは素晴らしい。
     -- Daisuke Iizuka @diizuka@twitter
 
-  Man, GNU Parallel is very cool.
-    -- jeeger @jeeger@mastodon.social
-
-  gnu parallel is my new favorite toy
+Used?  gnu parallel is my new favorite toy
     -- Eytan Adar @eytan.adar.prof
 
   ainda não inventaram palavras capazes de expressar minha gratidão aos desenvolvedores do GNU Parallel
     -- @nueidris.kawaii.social
-
-  GNU parallel is awesome. Use it more often in your scripts!
-    -- Wade @WadeGrimshire@twitter
 
   i rly love gnu parallel over xargs, it's basically the same but has lots of useful and well documented options. sry if u know already
     -- d@nny "disc@" mc² @hipsterelectron@circumstances.run
@@ -247,6 +241,25 @@ https://negfeedback.blogspot.com/2020/05/indispensable-command-line-tools.html
     -- @alinajaf@twitter
 
 === Used ===
+
+  idk who built GNU parallel but I owe them a beer
+    -- ram @h4x0r1ng
+
+  GNU parallel is awesome. Use it more often in your scripts!
+    -- Wade @WadeGrimshire@twitter
+
+  gnuparallel is sacred Unix magic
+    -- Dr. Dylan Beaudette, Soil Scientis ‪@dylanbeaudette.bsky.social
+
+  My party trick is Map/Reduce with GNU Parallel XD￼
+    -- Paweł Lasek @pawel_lasek@twitter
+
+  GNU Parallel is a seriously underrated tool, at least based on how little I hear people talk about it
+  (and how often I possibly over-use it)
+    -- Byron Alley @byronalley
+
+  Man, GNU Parallel is very cool.
+    -- jeeger @jeeger@mastodon.social
 
   te amo gnu parallel
     -- Ayleen I. C. @ayleen_ic

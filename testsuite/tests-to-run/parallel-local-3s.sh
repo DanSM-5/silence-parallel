@@ -8,7 +8,7 @@
 # Each should be taking 3-10s and be possible to run in parallel
 # I.e.: No race conditions, no logins
 
-par_format_string() {
+par__format_string() {
     echo Format string + {}
     parallel echo 12.346 98.765 == {:%.3f} ::: 12.34567 ::: 98.76543
     echo Format string + {.}
@@ -1480,7 +1480,7 @@ par__test_cpu_detection_lscpu_--all_--extended() {
     rm ~/.parallel/tmp/sshlogin/*/cpuspec 2>/dev/null
 }
 
-par_combineexec() {
+par__combineexec() {
     combineexec() {
 	stderr=$(mktemp)
 	parallel --combineexec "$combo" "$@" 2>"$stderr"
@@ -1579,7 +1579,7 @@ par__plus() {
     parallel -k --plus echo {choose_k} ::: A B C D ::: A B C D ::: A B C D
 }
 
-par__sql_colsep() {
+par_sql_colsep() {
     echo '### SQL should add Vn columns for --colsep'
     dburl=sqlite3:///%2ftmp%2fparallel-sql-colsep-$$/bar
     parallel -k -C' ' --sqlandworker $dburl echo /{1}/{2}/{3}/{4}/ \
@@ -2058,7 +2058,7 @@ par_maxargs() {
     (echo line 1;echo line 1;echo line 2) | parallel -k --max-args 2 echo
 }
 
-par_jobslot_repl() {
+par__jobslot_repl() {
     echo 'bug #46232: {%} with --bar/--eta/--shuf or --halt xx% broken'
 
     parallel -kj2 --delay 0.1 --bar  'sleep 0.2;echo {%}' ::: a b  ::: c d e 2>/dev/null
@@ -2214,7 +2214,7 @@ par_exitval_signal() {
     rm -f /tmp/parallel_joblog_exitval /tmp/parallel_joblog_signal
 }
 
-par_lb_mem_usage() {
+par__lb_mem_usage() {
     long_line() {
 	perl -e 'print "x"x100_000_000'
     }
@@ -2236,4 +2236,4 @@ par_lb_mem_usage() {
 
 export -f $(compgen -A function | grep par_)
 compgen -A function | G par_ "$@" | LC_ALL=C sort |
-    parallel --timeout 1000% -j6 --tag -k --joblog /tmp/jl-`basename $0` '{} 2>&1'
+    parallel --timeout 2000% -j50% --tag -k --joblog /tmp/jl-`basename $0` '{} 2>&1'

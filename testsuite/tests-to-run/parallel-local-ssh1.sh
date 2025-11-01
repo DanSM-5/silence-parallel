@@ -98,7 +98,7 @@ par_workdir_home() {
     cd && parallel --workdir . -S lo pwd ::: ""
 }
 
-par_PARALLEL_SSH_function() {
+par_z_PARALLEL_SSH_function() {
     echo '### use function as $PARALLEL_SSH'
     foossh() { echo "FOOSSH" >&2; ssh "$@"; }
     export -f foossh
@@ -147,14 +147,14 @@ par_wd_quote() {
     stdout ssh sh@lo rm ./"\\'"/uNiQuE_sTrInG.9
 }
 
-par_trc_dashdash() {
+par__trc_dashdash() {
     echo '### Test --trc ./--/--foo1'
     mkdir -p ./--; echo 'Content --/--foo1' > ./--/--foo1
     stdout parallel --trc {}.1 -S sh@lo '(cat {}; echo remote1) > {}.1' ::: ./--/--foo1; cat ./--/--foo1.1
     stdout parallel --trc {}.2 -S sh@lo '(cat ./{}; echo remote2) > {}.2' ::: --/--foo1; cat ./--/--foo1.2
 }
 
-par_trc_colon() {
+par__trc_colon() {
     echo '### Test --trc ./:dir/:foo2'
     mkdir -p ./:dir; echo 'Content :dir/:foo2' > ./:dir/:foo2
     stdout parallel --trc {}.1 -S sh@lo '(cat {}; echo remote1) > {}.1' ::: ./:dir/:foo2
@@ -163,7 +163,7 @@ par_trc_colon() {
     cat ./:dir/:foo2.2
 }
 
-par_trc_space() {
+par__trc_space() {
     echo '### Test --trc ./" "/" "foo3'
     mkdir -p ./" "; echo 'Content _/_foo3' > ./" "/" "foo3
     stdout parallel --trc {}.1 -S sh@lo '(cat {}; echo remote1) > {}.1' ::: ./" "/" "foo3
@@ -172,28 +172,28 @@ par_trc_space() {
     cat ./" "/" "foo3.2
 }
 
-par_trc_dashdashdot() {
+par__trc_dashdashdot() {
     echo '### Test --trc ./--/./--foo4'
     mkdir -p ./--; echo 'Content --/./--foo4' > ./--/./--foo4
     stdout parallel --trc {}.1 -S sh@lo '(cat ./--foo4; echo remote{}) > --foo4.1' ::: --/./--foo4
     cat ./--/./--foo4.1
 }
 
-par_trc_colondot() {
+par__trc_colondot() {
     echo '### Test --trc ./:/./:foo5'
     mkdir -p ./:a; echo 'Content :a/./:foo5' > ./:a/./:foo5
     stdout parallel --trc {}.1 -S sh@lo '(cat ./:foo5; echo remote{}) > ./:foo5.1' ::: ./:a/./:foo5
     cat ./:a/./:foo5.1
 }
 
-par_trc_spacedot() {
+par__trc_spacedot() {
     echo '### Test --trc ./" "/./" "foo6'
     mkdir -p ./" "; echo 'Content _/./_foo6' > ./" "/./" "foo6
     stdout parallel --trc {}.1 -S sh@lo '(cat ./" "foo6; echo remote{}) > ./" "foo6.1' ::: ./" "/./" "foo6
     cat ./" "/./" "foo6.1
 }
 
-par_trc_dashdashspace() {
+par__trc_dashdashspace() {
     echo '### Test --trc "-- " "-- "'
     touch -- '-- ' ' --'; rm -f ./?--.a ./--?.a
     parallel --trc {}.a -S csh@lo,sh@lo touch ./{}.a ::: '-- ' ' --'; ls ./--?.a ./?--.a
@@ -203,7 +203,7 @@ par_trc_dashdashspace() {
     parallel --nonall -k -S csh@lo,sh@lo 'ls ./--" ".a || echo OK'
 }
 
-par_trc_dashdashdashspace() {
+par__trc_dashdashdashspace() {
     echo '### Test --trc "/tmp/./--- /A" "/tmp/./ ---/B"'
     mkdir -p '/tmp/./--- '   '/tmp/ ---'
     touch -- '/tmp/./--- /A' '/tmp/ ---/B'
@@ -222,7 +222,7 @@ par_--onall_--transfer() {
 	echo Cleanup failed
 }
 
-par_--onall_--plus() {
+par_z_--onall_--plus() {
     echo '### Test --plus is respected with --onall/--nonall'
     parallel -S bash@lo --onall --plus echo {host} ::: OK
     parallel -S bash@lo --nonall --plus echo {host}
@@ -422,7 +422,7 @@ _
 
 export -f $(compgen -A function | grep par_)
 compgen -A function | G "$@" par_ | LC_ALL=C sort |
-    parallel --timeout 130 -j6 --tag -k --joblog /tmp/jl-`basename $0` '{} 2>&1'
+    parallel --timeout 1000% -j75% --tag -k --joblog /tmp/jl-`basename $0` '{} 2>&1'
 
 cd ..
 rm -rf tmp

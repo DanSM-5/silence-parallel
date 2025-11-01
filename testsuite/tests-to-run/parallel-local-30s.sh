@@ -8,10 +8,10 @@
 # Each should be taking 30-100s and be possible to run in parallel
 # I.e.: No race conditions, no logins
 
-par_milestone() {
+par__milestone() {
     echo '### Test --milestone'
     echo '# 1..5 cannot mix with a..f'
-    parallel  --tag  --delay 0.1 --milestone /// \
+    parallel -j8 --tag  --delay 0.1 --milestone /// \
 	      'echo {#}; sleep {=1 $_=1+(seq()%4)=};' \
 	      ::: {1..5} /// {a..f}
     # Ideally this should run:
@@ -124,7 +124,7 @@ par__dburl_parsing() {
 
 par_sshlogin_parsing() {
     echo '### Generate sshlogins to test parsing'
-    sudo sshd -p 22222
+    sudo $(which sshd) -p 22222
 
     gen_sshlogin() {
 	grp=grp1+grp2
@@ -298,23 +298,6 @@ par_test_diff_roundrobin_k() {
     fi
 }
 
-par_bin() {
-    echo '### Test --bin'
-    seq 10 | parallel --pipe --bin 1 -j4 wc | sort
-    paste <(seq 10) <(seq 10 -1 1) |
-	parallel --pipe --colsep '\t' --bin 2 -j4 wc | sort
-    echo '### Test --bin with expression that gives 1..n'
-    paste <(seq 10) <(seq 10 -1 1) |
-	parallel --pipe --colsep '\t' --bin '2 $_=$_%2+1' -j4 wc | sort
-    echo '### Test --bin with expression that gives 0..n-1'
-    paste <(seq 10) <(seq 10 -1 1) |
-	parallel --pipe --colsep '\t' --bin '2 $_%=2' -j4 wc | sort
-    echo '### Blocks in version 20220122'
-    echo 10 | parallel --pipe --bin 1 -j100% cat | sort
-    paste <(seq 10) <(seq 10 -1 1) |
-	parallel --pipe --colsep '\t' --bin 2 cat | sort
-}
-
 par_perlexpr_repl() {
     echo '### {= and =} in different groups separated by space'
     parallel echo {= s/a/b/ =} ::: a
@@ -338,63 +321,6 @@ par_perlexpr_repl() {
     parallel echo '{= s/O{2}//=}' ::: OOOK
     parallel echo '{2}-{=1 s/O{2}//=}' ::: OOOK ::: OK
     true Dummy for emacs =}}}}}
-}
-
-par_shard() {
-    echo '### --shard'
-    # Each of the 5 lines should match:
-    #   ##### ##### ######
-    seq 100000 | parallel --pipe --shard 1 -j5  wc |
-	perl -pe 's/(.*\d{5,}){3}/OK/'
-    # Data should be sharded to all processes
-    shard_on_col() {
-	col=$1
-	seq 10 99 | shuf | perl -pe 's/(.)/$1\t/g' |
-	    parallel --pipe --shard $col -j2 --colsep "\t" sort -k$col |
-	    field $col | sort | uniq -c
-    }
-    shard_on_col 1
-    shard_on_col 2
-
-    echo '### --shard'
-    shard_on_col_name() {
-	colname=$1
-	col=$2
-	(echo AB; seq 10 99 | shuf) | perl -pe 's/(.)/$1\t/g' |
-	    parallel --header : --pipe --shard $colname -j2 --colsep "\t" sort -k$col |
-	    field $col | sort | uniq -c
-    }
-    shard_on_col_name A 1
-    shard_on_col_name B 2
-
-    echo '### --shard'
-    shard_on_col_expr() {
-	colexpr="$1"
-	col=$2
-	(seq 10 99 | shuf) | perl -pe 's/(.)/$1\t/g' |
-	    parallel --pipe --shard "$colexpr" -j2 --colsep "\t" "sort -k$col; echo c1 c2" |
-	    field $col | sort | uniq -c
-    }
-    shard_on_col_expr '1 $_%=3' 1
-    shard_on_col_expr '2 $_%=3' 2
-
-    shard_on_col_name_expr() {
-	colexpr="$1"
-	col=$2
-	(echo AB; seq 10 99 | shuf) | perl -pe 's/(.)/$1\t/g' |
-	    parallel --header : --pipe --shard "$colexpr" -j2 --colsep "\t" "sort -k$col; echo c1 c2" |
-	    field $col | sort | uniq -c
-    }
-    shard_on_col_name_expr 'A $_%=3' 1
-    shard_on_col_name_expr 'B $_%=3' 2
-    
-    echo '*** broken'
-    # Should be shorthand for --pipe -j+0
-    #seq 200000 | parallel --pipe --shard 1 wc |
-    #	perl -pe 's/(.*\d{5,}){3}/OK/'
-    # Combine with arguments (should compute -j10 given args)
-    seq 200000 | parallel --pipe --shard 1 echo {}\;wc ::: {1..5} ::: a b |
-	perl -pe 's/(.*\d{5,}){3}/OK/'
 }
 
 par_exit_code() {
@@ -706,31 +632,6 @@ par__test_detected_shell() {
 	grep -Ev 'parallel: Warning: (Starting .* processes took|Consider adjusting)'
 }
 
-par_no_newline_compress() {
-    echo 'bug #41613: --compress --line-buffer - no newline';
-    pipe_doit() {
-	tagstring="$1"
-	compress="$2"
-	echo tagstring="$tagstring" compress="$compress"
-	perl -e 'print "O"'|
-	    parallel "$compress" $tagstring --pipe --line-buffer cat
-	echo "K"
-    }
-    export -f pipe_doit
-    nopipe_doit() {
-	tagstring="$1"
-	compress="$2"
-	echo tagstring="$tagstring" compress="$compress"
-	parallel "$compress" $tagstring --line-buffer echo {} O ::: -n
-	echo "K"
-    }
-    export -f nopipe_doit
-    parallel -j1 -qk --header : {pipe}_doit {tagstring} {compress} \
-	     ::: tagstring '--tagstring {#}' -k \
-	     ::: compress --compress -k \
-	     ::: pipe pipe nopipe
-}
-
 par_max_length_len_128k() {
     echo "### BUG: The length for -X is not close to max (131072)"
     (
@@ -854,8 +755,12 @@ par__test_ipv6_format() {
     ipv6() {
 	ifconfig | perl -nE '/inet6 ([0-9a-f:]+) .*(host|global)/ and say $1'
     }
-    (ipv4; ipv6) |
-	nice parallel ssh -oStrictHostKeyChecking=accept-new {} true 2>/dev/null
+    refresh_known_host() {
+	ssh-keygen -f ~/.ssh/known_hosts -R "$@"
+	ssh -oStrictHostKeyChecking=accept-new "$@" true
+    }
+    export -f refresh_known_host
+    (ipv4; ipv6) | nice stdout parallel -j1 refresh_known_host >/dev//null
     echo '### Host as IPv6 address'
     (
 	ipv6 |
@@ -880,4 +785,4 @@ par__test_ipv6_format() {
 export -f $(compgen -A function | grep par_)
 compgen -A function | G par_ "$@" | sort |
     #    parallel --delay 0.3 --timeout 1000% -j6 --tag -k --joblog /tmp/jl-`basename $0` '{} 2>&1'
-    parallel --delay 0.3 --timeout 3000% -j6 --lb --tag -k --joblog /tmp/jl-`basename $0` '{} 2>&1'
+    parallel --delay 0.3 --timeout 10000% -j75% --lb --tag -k --joblog /tmp/jl-`basename $0` '{} 2>&1'

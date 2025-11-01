@@ -1,6 +1,7 @@
 par__filter_hosts_different_errors	### --filter-hosts - OK, non-such-user, connection refused, wrong host
 par__filter_hosts_different_errors	myhostname
 par__filter_hosts_no_ssh_nxserver	### test --filter-hosts with server w/o ssh, non-existing server
+par__filter_hosts_no_ssh_nxserver	parallel: Warning: Could not figure out number of cpus on vagrant@parallel-server2 (). Using 1.
 par__filter_hosts_no_ssh_nxserver	vagrant@parallel-server1	
 par__filter_hosts_no_ssh_nxserver	vagrant@parallel-server2	
 par__filter_hosts_no_ssh_nxserver	vagrant@parallel-server3	
@@ -14,6 +15,7 @@ par_force_number_of_cpu	7
 par_force_number_of_cpu	13
 par_special_ssh	### Test use special ssh
 par_special_ssh	TODO test ssh with > 9 simultaneous
+par_special_ssh	parallel: Warning: Could not figure out number of cpus on /tmp/myssh2 vagrant@parallel-server2 (). Using 1.
 par_special_ssh	1
 par_special_ssh	2
 par_special_ssh	3

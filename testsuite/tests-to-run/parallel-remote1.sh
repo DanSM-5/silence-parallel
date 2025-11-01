@@ -57,6 +57,10 @@ par_timeout_retries() {
 
 par__filter_hosts_no_ssh_nxserver() {
     echo '### test --filter-hosts with server w/o ssh, non-existing server'
+    # make them warm so they do not timeout
+    ssh $SSHLOGIN1 true
+    ssh $SSHLOGIN2 true
+    ssh $SSHLOGIN3 true
     stdout parallel -S 192.168.1.197,8.8.8.8,8.8.8.9,$SSHLOGIN1,$SSHLOGIN2,$SSHLOGIN3 --filter-hosts --nonall -k --tag echo |
 	grep -v 'parallel: Warning: Removed'
 }
@@ -90,7 +94,7 @@ compgen -A function | G "$@" par_ | LC_ALL=C sort |
     perl -pe 's:/usr/bin:/bin:g'
 
   
-cat <<'EOF' | sed -e s/\$SERVER1/$SERVER1/\;s/\$SERVER2/$SERVER2/\;s/\$SSHLOGIN1/$SSHLOGIN1/\;s/\$SSHLOGIN2/$SSHLOGIN2/\;s/\$SSHLOGIN3/$SSHLOGIN3/ | parallel -vj3 -k -L1 -r
+cat <<'EOF' | sed -e s/\$SERVER1/$SERVER1/\;s/\$SERVER2/$SERVER2/\;s/\$SSHLOGIN1/$SSHLOGIN1/\;s/\$SSHLOGIN2/$SSHLOGIN2/\;s/\$SSHLOGIN3/$SSHLOGIN3/ | parallel -vj100% -k -L1 -r
 
 
 

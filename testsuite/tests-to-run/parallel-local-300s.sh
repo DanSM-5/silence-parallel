@@ -166,17 +166,17 @@ par_xhalt_on_error() {
 	HALT=$1
 	BOOL1=$2
 	BOOL2=$3
-	(echo "sleep 1;$BOOL1";
-	    echo "sleep 2;$BOOL2";
-	    echo "sleep 3;$BOOL1") |
-	parallel -j10 --halt-on-error $HALT
+	(echo "sleep 2;$BOOL1";
+	    echo "sleep 3;$BOOL2";
+	    echo "sleep 4;$BOOL1") |
+	    parallel -j10 --halt-on-error $HALT
 	echo $?
-	(echo "sleep 1;$BOOL1";
-	    echo "sleep 2;$BOOL2";
-	    echo "sleep 3;$BOOL1";
-	    echo "sleep 4;non_exist";
+	(echo "sleep 2;$BOOL1";
+	    echo "sleep 3;$BOOL2";
+	    echo "sleep 4;$BOOL1";
+	    echo "sleep 5;non_exist";
 	) |
-	parallel -j10 --halt-on-error $HALT
+	    parallel -j10 --halt-on-error $HALT
 	echo $?
     }
     export -f mytest

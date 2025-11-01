@@ -637,6 +637,40 @@ par_pipe_float_blocksize	      1       1       2
 par_pipe_float_blocksize	      1       1       2
 par_pipe_no_command	### --pipe without command
 par_pipe_no_command	parallel: Error: --pipe/--pipepart must have a command to pipe into (e.g. 'cat').
+par_pipe_no_run_if_empty	bug #67351: Newlines are ommitted when using `--no-run-if-empty` and null separators
+par_pipe_no_run_if_empty	1
+par_pipe_no_run_if_empty	A
+par_pipe_no_run_if_empty	1
+par_pipe_no_run_if_empty	2
+par_pipe_no_run_if_empty	B
+par_pipe_no_run_if_empty	2
+par_pipe_no_run_if_empty	### no recstart - not newline
+par_pipe_no_run_if_empty	1
+par_pipe_no_run_if_empty	A
+1
+par_pipe_no_run_if_empty	2
+par_pipe_no_run_if_empty	B
+2
+par_pipe_no_run_if_empty	### recstart, recend
+par_pipe_no_run_if_empty	1
+par_pipe_no_run_if_empty	[[A]]1
+par_pipe_no_run_if_empty	2
+par_pipe_no_run_if_empty	[[B]]2
+par_pipe_no_run_if_empty	### First record contains --recstart as data (not record sep)
+par_pipe_no_run_if_empty	### and last record contains --recend as data (not record sep)
+par_pipe_no_run_if_empty	1
+par_pipe_no_run_if_empty	 [[A]]1
+par_pipe_no_run_if_empty	2
+par_pipe_no_run_if_empty	[[B]]2
+par_pipe_no_run_if_empty	3
+par_pipe_no_run_if_empty	[[]] 3
+par_pipe_no_run_if_empty	### records contain --recstart/--recend as data (not record sep)
+par_pipe_no_run_if_empty	1
+par_pipe_no_run_if_empty	 [[A]] ]]1
+par_pipe_no_run_if_empty	2
+par_pipe_no_run_if_empty	[[[[B]]2
+par_pipe_no_run_if_empty	3
+par_pipe_no_run_if_empty	[[]] 3
 par_pipe_recend	bug #54328: --pipe --recend  blocks
 par_pipe_recend	00000000: 31                                       1
 par_pipe_recend	00000000: 0a                                       .

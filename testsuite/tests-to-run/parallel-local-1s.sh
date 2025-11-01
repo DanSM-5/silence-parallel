@@ -43,7 +43,7 @@ par_tagstring() {
     parallel -j1 -k -v --tagstring ajob{#}b echo job{#} ::: 3 4
 }
 
-par_quote_bugs() {
+par__quote_bugs() {
     echo '### Bug did not quote'
     echo '>' | parallel -v echo
     parallel -v echo ::: '>'
@@ -292,7 +292,7 @@ _EOF
 	LC_ALL=C sort
 }
 
-par_replacement_rename() {
+par__replacement_rename() {
     echo "### Test --basenamereplace"
     parallel -j1 -k -X --basenamereplace FOO echo FOO ::: /a/b.c a/b.c b.c /a/b a/b b
     parallel -k --basenamereplace FOO echo FOO ::: /a/b.c a/b.c b.c /a/b a/b b
@@ -360,7 +360,7 @@ par_trailing_space_line_continuation() {
     parallel -kr -L2 -E bar echo ::: foo '' 'ole ' bar quux
 }
 
-par_mix_triple_colon_with_quad_colon() {
+par__mix_triple_colon_with_quad_colon() {
     echo '### Test :::: mixed with :::'
     echo '### Test :::: < ::: :::'
     parallel -k echo {1} {2} {3} :::: <(seq 6 7) ::: 4 5 ::: 1 2 3
@@ -503,13 +503,13 @@ par_profiles_with_space() {
 }
 
 par_pxz_complains() {
-    echo 'bug #44250: pxz complains File format not recognized but decompresses anyway'
+    echo 'bug #44250: pxz pre-2020 complains File format not recognized but decompresses anyway'
 
     # The first line dumps core if run from make file. Why?!
-    stdout parallel --compress --compress-program pxz ls /{} ::: OK-if-missing-file
+    stdout parallel --compress --compress-program pixz ls /{} ::: OK-if-missing-file
     stdout parallel --compress --compress-program pixz --decompress-program 'pixz -d' ls /{}  ::: OK-if-missing-file
     stdout parallel --compress --compress-program pixz --decompress-program 'pixz -d' true ::: OK-if-no-output
-    stdout parallel --compress --compress-program pxz true ::: OK-if-no-output
+    stdout parallel --compress --compress-program pixz true ::: OK-if-no-output
 }
 
 par_result() {
@@ -623,7 +623,7 @@ par_header_parens() {
     parallel --header : echo {var.} ::: var sub/dir/file.ext
 }
 
-par_pipe_compress_blocks() {
+par__pipe_compress_blocks() {
     echo "### bug #41482: --pipe --compress blocks at different -j/seq combinations"
     seq 1 | parallel -k -j2 --compress -N1 -L1 --pipe cat
     echo echo 1-4 + 1-4

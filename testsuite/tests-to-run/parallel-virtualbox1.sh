@@ -26,7 +26,8 @@ start_centos3() {
 	) &
     )
 }
-start_centos3
+export -f start_centos3
+timeout --kill-after=160 100 bash -c start_centos3
 
 stdout parallel --tag -k 'ping -w 1 -c 1 {} || (cd vagrant/*/{} && vagrant up)' ::: rhel8 centos3 |
 	grep -v 'default' | grep -v '==>' | grep -E '^$' &

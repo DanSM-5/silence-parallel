@@ -26,13 +26,6 @@ par_2jobs() {
     sem --id ex2jobs --wait
 }
 
-par_change_content_--jobs_filename() {
-    echo '### Test of -j filename with file content changing (missing -k is correct)'
-    echo 1 >/tmp/jobs_to_run2
-    (sleep 3; echo 10 >/tmp/jobs_to_run2) &
-    parallel -j /tmp/jobs_to_run2 -v sleep {} ::: 3.3 2.{1..5} 0.{1..7}
-}
-
 par_csv_not_installed() {
     echo '### Give error if CSV.pm is not installed when using --csv'
     sudo parallel mv {} {}.hidden ::: /usr/share/perl5/Text/CSV.pm

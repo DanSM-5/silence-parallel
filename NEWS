@@ -1,3 +1,115 @@
+20251022
+
+New in this release:
+
+* No new features.
+
+* Bug fixes.
+
+
+20250922
+
+New in this release:
+
+* No new features.
+
+* Bug fixes and man page updates.
+
+
+20250822
+
+New in this release:
+
+* No new features.
+
+* Bug fixes and man page updates.
+
+
+20250722
+
+New in this release:
+
+* No new features.
+
+* Bug fixes and man page updates.
+
+News about GNU Parallel:
+
+* Background Jobs in a Loop in Bash
+  https://www.baeldung.com/linux/bash-background-jobs-loop
+
+* Spring 2025: GNU Parallel Training
+  https://youtu.be/rrvM1KfdEdI
+  http://www.hpc.lsu.edu/training/weekly-materials/2025-Spring/HPC_GNU_Parallel_09April2025.pdf
+
+* Short tutorial for GNU parallel
+  https://docs.lovelace.plymouth.ac.uk/user-guide/parallel
+
+
+20250622
+
+New in this release:
+
+* No new features.
+
+* Bug fixes and man page updates.
+
+News about GNU Parallel:
+
+* Maîtriser la commande parallel
+  https://blog.stephane-robert.info/docs/admin-serveurs/linux/parallel/
+
+
+20250522
+
+New in this release:
+
+* No new features. This is a candidate for a stable release.
+
+* Bug fixes and man page updates.
+
+News about GNU Parallel:
+
+* Parallel CI Jobs with GNU Parallel
+  https://medium.com/@eren.c.uysal/parallel-ci-jobs-with-gnu-parallel-cda718af9975
+
+* Examples for PBS and SLURM
+  https://github.com/clemsonciti/palmetto-examples/tree/master/GNU-Parallel
+
+* screen and parallel
+  https://www.cs.tufts.edu/comp/21/notes/gnuparallel_screen/Parallel_Jared_Chandler_4_10_2025.pdf
+
+* TLDR for GNU Parallel https://linuxcommandlibrary.com/man/parallel
+
+* Faster and More Reliable Hugging Face Downloads Using aria2 and GNU
+  Parallel
+  https://dev.to/susumuota/faster-and-more-reliable-hugging-face-downloads-using-aria2-and-gnu-parallel-4f2b
+
+* Want to speed up your bioinformatics tasks? Stop looping. Start
+  paralleling. Here’s how to use GNU parallel like a pro
+  https://www.threads.com/@tommy585/post/DIgnUXkRvSY/want-to-speed-up-your-bioinformatics-tasks-stop-looping-start-paralleling-heres
+
+
+20250422
+
+New in this release:
+
+* No new features. This is a candidate for a stable release.
+
+* Bug fixes and man page updates.
+
+News about GNU Parallel:
+
+* GNU Parallel https://www.tunbury.org/gnu-parallel/
+
+* Understanding and Fixing Race Conditions in Bash Scripts with flock
+  and GNU Parallel
+  https://www.devgem.io/posts/understanding-and-fixing-race-conditions-in-bash-scripts-with-flock-and-gnu-parallel
+
+* Gnu parallel basic usage
+  https://freddieventura.github.io/2024/09/29/gnu-parallel-basics.html
+
+
 20250322
 
 New in this release:

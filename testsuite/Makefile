@@ -86,7 +86,7 @@ REQUIRE=bash -c '\
   parallel -n2 --tag is_installed ::: \
 	script		"echo | script -c echo -q /dev/null"			\
 	"ssh sh@lo"	"timeout 20 ssh sh@lo true"				\
-	"ssh csh@lo"	"timeout 5 ssh csh@lo true"				\
+	"ssh csh@lo"	"timeout 15 ssh csh@lo true"				\
 	niceload	"niceload echo niceload is installed"			\
 	expect	"expect -c \"spawn cat; puts \\\"expect is installed\\\"\"" 	\
 	autossh		"autossh -V"						\
@@ -104,6 +104,8 @@ REQUIRE=bash -c '\
 
 prereqlocal: installparallel startvm
 	${REQUIRE}
+	# Bug that causes systemd-logind to go into 100%
+	sudo modprobe -r ucsi_acpi
 	(parallel 'ssh -oStrictHostKeyChecking=accept-new vagrant@parallel-server{} mkdir -p bin; scp `which parallel` vagrant@parallel-server{}:bin/' ::: 1 2 3 4)&
 
 prereqremote: installparallel startvm
@@ -111,6 +113,13 @@ prereqremote: installparallel startvm
 
 ignore=bytes.of.data|ping.statistics|packets.transmitted|64.bytes.from|\
   min/avg/max/mdev|default|known.hosts|Host.*found
+
+restoresnapshot=(stdout ping -w 1 -c 1 {} >/dev/null && \
+  ssh vagrant@{} echo ssh vagrant@{} OK ) || \
+  (cd vagrant/*/{} && \
+   vagrant snapshot restore $$(vagrant snapshot list | tail -1) && \
+   ssh vagrant@{} echo ssh vagrant@{} OK )
+
 start=(stdout ping -w 1 -c 1 {} && ssh vagrant@{} echo ssh {} works || \
   (cd vagrant/*/{} 2>/dev/null && vagrant up ; \
    echo {} | grep -q centos3 && \
@@ -124,22 +133,43 @@ stop=(stdout ping -w 1 -c 1 {} && \
   (cd vagrant/*/{} && vagrant suspend) ) | \
   grep -Ev "${ignore}"
 
-namedservers=centos9 freebsd13 freebsd14 rhel8 centos3 openindiana centos8
+# parallel --rpl '{s} s:/setup.sh::;s:.*/::' echo {s} ::: vagrant/*/*/setup.sh
+namedservers=centos3 centos8 centos9 freebsd13 freebsd14 openindiana rhel8
+
 servers=parallel-server1 parallel-server2 parallel-server3 parallel-server4 ${namedservers}
 
-startvm:
+snapstart: startsnap
+	true
+
+startsnap:
+	touch vagrant/authorized_keys
 	sort -u ~/.ssh/*.pub vagrant/authorized_keys > vagrant/authorized_keys.
 	mv vagrant/authorized_keys. vagrant/authorized_keys
-	parallel -j0 --tag -k --timeout 100 '${start}' ::: ${servers} &
+	parallel -j0 --tagstring {#}-{} -k --timeout 300 '${restoresnapshot}' ::: ${servers} &
+
+startvm:
+	touch vagrant/authorized_keys
+	sort -u ~/.ssh/*.pub vagrant/authorized_keys > vagrant/authorized_keys.
+	mv vagrant/authorized_keys. vagrant/authorized_keys
+	parallel -j0 --tag -k --timeout 200 '${start}' ::: ${servers} &
 stopvm:
 	parallel -j0 --tag -k '${stop}' ::: ${namedservers} || true
 
+snapshot:
+	# Make snapshots of the running vms
+	VBoxManage list runningvms|parallel --tagstring {1} --colsep ' ' eval VBoxManage snapshot {1} take running-$$$$
+
+snapshotclean:
+	# Keep 2 snapshots of the running vms
+	VBoxManage list runningvms | parallel --colsep ' ' --tagstring {2} -k VBoxManage snapshot {2} list '| head -n -2' | parallel --match '(\S+)\s+.*UUID: (\S+).' -j1 VBoxManage snapshot {1.1} delete {1.2}
+	VBoxManage list runningvms | parallel --colsep ' ' --tagstring {2} -k VBoxManage snapshot {2} list
+
 startdb:
 	sql oracle://SYSTEM:$$VM_ORACLE_PWD@/FREE "select 'Oracle is running' from dual;" || \
-	  (cd vagrant-projects/OracleDatabase/23.3.0-Free && vagrant up && \
+	  (cd vagrant-projects/OracleDatabase/23.7.0-Free && vagrant up && \
 	   sql oracle://SYSTEM:$$VM_ORACLE_PWD@/FREE "select 'Oracle is running' from dual;")
 stopdb:
-	cd vagrant-projects/OracleDatabase/23.3.0-Free; vagrant suspend
+	cd vagrant-projects/OracleDatabase/23.7.0-Free; vagrant suspend
 
 ### Distribution
 installparallel: ../src/parallel

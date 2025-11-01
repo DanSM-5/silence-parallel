@@ -31,13 +31,6 @@ par_nonall() {
     parallel --nonall -k -S $SSHLOGIN1,$SSHLOGIN2 'hostname' | sort
 }
 
-par_nonall_u() {
-    echo '### Test --nonall -u - should be interleaved x y x y'
-    parallel --nonall --sshdelay 2 -S $SSHLOGIN1,$SSHLOGIN2 -u \
-	     'hostname|grep -q centos && sleep 2; hostname;sleep 4;hostname;' |
-	uniq -c | sort
-}
-
 par_nonall_sshloginfile_stdin() {
     echo '### Test read sshloginfile from STDIN'
     echo $SSHLOGIN1 | parallel -S - --nonall hostname; 

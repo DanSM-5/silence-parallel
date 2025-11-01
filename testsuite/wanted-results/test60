@@ -1,17 +1,12 @@
 par_nonall	### Test --nonall
-par_nonall	centos9s.localdomain
-par_nonall	freebsd13.localdomain
+par_nonall	openindiana
+par_nonall	rhel8.localdomain
 par_nonall_basefile	### Test --nonall --basefile
 par_nonall_basefile	/tmp/nonall--basefile
 par_nonall_basefile	/tmp/nonall--basefile
 par_nonall_sshloginfile_stdin	### Test read sshloginfile from STDIN
-par_nonall_sshloginfile_stdin	centos9s.localdomain
-par_nonall_sshloginfile_stdin	centos9s.localdomain
-par_nonall_u	### Test --nonall -u - should be interleaved x y x y
-par_nonall_u	      1 centos9s.localdomain
-par_nonall_u	      1 centos9s.localdomain
-par_nonall_u	      1 freebsd13.localdomain
-par_nonall_u	      1 freebsd13.localdomain
+par_nonall_sshloginfile_stdin	rhel8.localdomain
+par_nonall_sshloginfile_stdin	rhel8.localdomain
 par_onall	### Test --onall
 par_onall	1
 par_onall	2
@@ -67,6 +62,7 @@ par_pipe_onall	1
 par_pipe_onall	2
 par_pipe_onall	3
 par_wd	### Test --wd .
-par_wd	/usr/home/vagrant/mydir
+par_wd	parallel: Warning: Could not figure out number of cpus on vagrant@parallel-server2 (). Using 1.
+par_wd	/export/home/vagrant/mydir
 par_workdir	### Test --workdir .
 par_workdir	/home/vagrant/mydir
