@@ -2,7 +2,7 @@
 
 # Copyright (C) 2004-2010 Ole Tange, http://ole.tange.dk
 #
-# Copyright (C) 2010-2025 Ole Tange, http://ole.tange.dk and
+# Copyright (C) 2010-2026 Ole Tange, http://ole.tange.dk and
 # Free Software Foundation, Inc.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -20,13 +20,13 @@
 # or write to the Free Software Foundation, Inc., 51 Franklin St,
 # Fifth Floor, Boston, MA 02110-1301 USA
 #
-# SPDX-FileCopyrightText: 2021-2025 Ole Tange, http://ole.tange.dk and Free Software and Foundation, Inc.
+# SPDX-FileCopyrightText: 2021-2026 Ole Tange, http://ole.tange.dk and Free Software and Foundation, Inc.
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 use strict;
 use Getopt::Long;
 $Global::progname="niceload";
-$Global::version = 20251222;
+$Global::version = 20260122;
 Getopt::Long::Configure("bundling","require_order");
 get_options_from_array(\@ARGV) || die_usage();
 if($opt::version) {
@@ -462,7 +462,7 @@ sub version {
     print join("\n",
 	       "GNU $Global::progname $Global::version",
 	       "Copyright (C) 2004-2009 Ole Tange",
-	       "Copyright (C) 2010-2025 Ole Tange and Free Software Foundation, Inc.",
+	       "Copyright (C) 2010-2026 Ole Tange and Free Software Foundation, Inc.",
 	       "License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>",
 	       "This is free software: you are free to change and redistribute it.",
 	       "GNU $Global::progname comes with no warranty.",

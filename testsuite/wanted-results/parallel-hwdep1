@@ -1,3 +1,8 @@
+par_10000_m_X	### Test -m with 10000 args
+par_10000_m_X	e441efe6e7a7101c9a0e5b91b24dd6a5  -
+par_10000_m_X	69999
+par_10000_m_X	69999
+par_10000_m_X	69999
 par__environment_too_big_dash	bug #5XXXX: env_parallel should warn if the environment is too big
 par__environment_too_big_dash	OK_bigvar
 par__environment_too_big_dash	OK_bigvar_remote

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# SPDX-FileCopyrightText: 2002-2025 Ole Tange, http://ole.tange.dk and Free Software and Foundation, Inc.
+# SPDX-FileCopyrightText: 2002-2026 Ole Tange, http://ole.tange.dk and Free Software and Foundation, Inc.
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -322,11 +322,16 @@ vagrant_up() {
     # This is due to changes on https://vagrantcloud.com incompatible
     # with vagrant 2.3.7
     build() {
-	# If ssh works, then vagrant ssh probably also works
-	ssh vagrant@$1 echo ssh vagrant@$1 OK && return 0
+	vm=$1
+	echo Testing $vm
+	# If "ssh" works, then "vagrant ssh" probably also works
+	timeout 10 ssh vagrant@$vm echo ssh vagrant@$vm OK && return 0
 	cd "$2" || return 1
-	vagrant ssh -c "echo '$1 OK'" && return 0
-	./setup.sh && vagrant up && vagrant ssh -c "echo '$1 OK'"
+	vagrant ssh -c "echo 'vagrant ssh $vm OK'" && return 0
+	# Fetch .box and do any special config
+	./setup.sh &&
+	    (vagrant up || (echo vagrant up FAILED; false) ) &&
+		 vagrant ssh -c "echo 'vagrant ssh $vm OK'"
     }
     export -f build
     parallel -j0 --ll --rpl '{s} s:/setup.sh::;s:.*/::' --tagstring {s}  build {s} {//} ::: vagrant/*/*/setup.sh
@@ -384,7 +389,10 @@ vagrant_centos3() {
 
 add_key_to_auth_key() {
     sshaddvagrant() {
-	ssh -o StrictHostKeyChecking=yes vagrant@$1 echo ssh vagrant@$1 OK || (
+	ssh -o PreferredAuthentications=publickey \
+	    -o PasswordAuthentication=no \
+	    -o KbdInteractiveAuthentication=no \
+	    -o StrictHostKeyChecking=yes vagrant@$1 echo ssh vagrant@$1 OK || (
             ssh-keygen -f ~/.ssh/known_hosts -R $1
 	    cat ~/.ssh/*.pub | (cd vagrant/*/$1 && vagrant ssh -c 'cat >>.ssh/authorized_keys')
 	    sshpass -p vagrant ssh-copy-id -o StrictHostKeyChecking=accept-new vagrant@$1
@@ -545,7 +553,8 @@ copy_ssh_keys() {
 	    echo $shell
     }
     export -f grep_not_OK
-    
+
+    # Do not include 16000 bit key
     ssh-add -d ~/.ssh/16000/id_rsa
     echo '# Make and copy sshkey'
     shellsplus | parallel grep_not_OK | parallel --timeout 40 --retries 5 --tag -j50% make_sshkey
@@ -836,9 +845,9 @@ run() {
 	# fast
 	install_sqlite2 &&
 	# fast
-	install_oracle_client &&
-	# fast
 	install_oracle_server &&
+	# fast
+	install_oracle_client &&
 	# fast
 	setup_databases &&
 	# fast

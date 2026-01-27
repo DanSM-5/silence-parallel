@@ -13,7 +13,7 @@
 # after which 'env_parallel' works
 #
 #
-# Copyright (C) 2016-2025 Ole Tange, http://ole.tange.dk and Free
+# Copyright (C) 2016-2026 Ole Tange, http://ole.tange.dk and Free
 # Software Foundation, Inc.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -31,7 +31,7 @@
 # or write to the Free Software Foundation, Inc., 51 Franklin St,
 # Fifth Floor, Boston, MA 02110-1301 USA
 #
-# SPDX-FileCopyrightText: 2016-2025 Ole Tange, http://ole.tange.dk and Free Software and Foundation, Inc.
+# SPDX-FileCopyrightText: 2016-2026 Ole Tange, http://ole.tange.dk and Free Software and Foundation, Inc.
 # SPDX-License-Identifier: GPL-3.0-or-later
 # shellcheck disable=SC2006
 
@@ -605,8 +605,8 @@ _parset_main() {
     fi
     if [ "$_parset_NAME" = "--version" ] ; then
 	# shellcheck disable=SC2006
-	echo "parset 20251222 (GNU parallel `parallel --minversion 1`)"
-	echo "Copyright (C) 2007-2025 Ole Tange, http://ole.tange.dk and Free Software"
+	echo "parset 20260122 (GNU parallel `parallel --minversion 1`)"
+	echo "Copyright (C) 2007-2026 Ole Tange, http://ole.tange.dk and Free Software"
 	echo "Foundation, Inc."
 	echo "License GPLv3+: GNU GPL version 3 or later <https://gnu.org/licenses/gpl.html>"
 	echo "This is free software: you are free to change and redistribute it."
