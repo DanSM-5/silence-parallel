@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: 2021-2025 Ole Tange, http://ole.tange.dk and Free Software and Foundation, Inc.
+# SPDX-FileCopyrightText: 2021-2026 Ole Tange, http://ole.tange.dk and Free Software and Foundation, Inc.
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -114,26 +114,6 @@ prereqremote: installparallel startvm
 ignore=bytes.of.data|ping.statistics|packets.transmitted|64.bytes.from|\
   min/avg/max/mdev|default|known.hosts|Host.*found
 
-restoresnapshot=(stdout ping -w 1 -c 1 {} >/dev/null && \
-  ssh vagrant@{} echo ssh vagrant@{} OK ) || \
-  (cd vagrant/*/{} && \
-   vagrant snapshot restore $$(vagrant snapshot list | tail -1) && \
-   ssh vagrant@{} echo ssh vagrant@{} OK )
-
-start=(stdout ping -w 1 -c 1 {} && ssh vagrant@{} echo ssh {} works || \
-  (cd vagrant/*/{} 2>/dev/null && vagrant up ; \
-   echo {} | grep -q centos3 && \
-    (cat ../../authorized_keys | vagrant ssh -c "cat >>.ssh/authorized_keys"; \
-     vagrant ssh -c "sudo /sbin/ifconfig eth1 172.27.27.3"); \
-   ssh-keygen -R {}; \
-   stdout wssh -oStrictHostKeyChecking=accept-new vagrant@{} echo ssh {} started and works) ) | \
-  grep -Ev "${ignore}"
-
-stop=(stdout ping -w 1 -c 1 {} && \
-  (cd vagrant/*/{} && vagrant suspend) ) | \
-  grep -Ev "${ignore}"
-
-# parallel --rpl '{s} s:/setup.sh::;s:.*/::' echo {s} ::: vagrant/*/*/setup.sh
 namedservers=centos3 centos8 centos9 freebsd13 freebsd14 openindiana rhel8
 
 servers=parallel-server1 parallel-server2 parallel-server3 parallel-server4 ${namedservers}
@@ -142,22 +122,28 @@ snapstart: startsnap
 	true
 
 startsnap:
+	# Restore last snapshot
 	touch vagrant/authorized_keys
 	sort -u ~/.ssh/*.pub vagrant/authorized_keys > vagrant/authorized_keys.
 	mv vagrant/authorized_keys. vagrant/authorized_keys
-	parallel -j0 --tagstring {#}-{} -k --timeout 300 '${restoresnapshot}' ::: ${servers} &
+	parallel -j0 --tagstring {#}-{} -k --timeout 300 bin/vm restoresnapshot ::: ${servers} &
 
 startvm:
 	touch vagrant/authorized_keys
 	sort -u ~/.ssh/*.pub vagrant/authorized_keys > vagrant/authorized_keys.
 	mv vagrant/authorized_keys. vagrant/authorized_keys
-	parallel -j0 --tag -k --timeout 200 '${start}' ::: ${servers} &
+	parallel -j0 --tagstring '/|\ {}' --lb --timeout 400 bin/vm start ::: ${servers} &
+
 stopvm:
-	parallel -j0 --tag -k '${stop}' ::: ${namedservers} || true
+	parallel -vj0 --tag -k bin/vm stop ::: ${namedservers} || true
+
+haltvm:
+	parallel -vj0 --tag -k bin/vm halt ::: ${namedservers} || true
 
 snapshot:
-	# Make snapshots of the running vms
-	VBoxManage list runningvms|parallel --tagstring {1} --colsep ' ' eval VBoxManage snapshot {1} take running-$$$$
+	# Make snapshots of the working, running vms
+	parallel -j0 ssh vagrant@{} echo {} ::: ${namedservers} | parallel --tagstring {1} --colsep ' ' bin/vm snapshot
+	sql oracle://SYSTEM:$$VM_ORACLE_PWD@/FREE "select 'Oracle is running' from dual;" | grep Oracle && bin/vm snapshot 23.7.0-Free
 
 snapshotclean:
 	# Keep 2 snapshots of the running vms
@@ -170,6 +156,8 @@ startdb:
 	   sql oracle://SYSTEM:$$VM_ORACLE_PWD@/FREE "select 'Oracle is running' from dual;")
 stopdb:
 	cd vagrant-projects/OracleDatabase/23.7.0-Free; vagrant suspend
+haltdb:
+	cd vagrant-projects/OracleDatabase/23.7.0-Free; vagrant halt
 
 ### Distribution
 installparallel: ../src/parallel

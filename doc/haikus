@@ -4,15 +4,6 @@
  
 Quote of the month:
 
-  64コアで、64並列でsimlationを回してtopコマンドで状況を見るのは心地よい。簡単に並列処理を実現できるGNU parallelコマンドは素晴らしい。
-    -- Daisuke Iizuka @diizuka@twitter
-
-Used?  gnu parallel is my new favorite toy
-    -- Eytan Adar @eytan.adar.prof
-
-  ainda não inventaram palavras capazes de expressar minha gratidão aos desenvolvedores do GNU Parallel
-    -- @nueidris.kawaii.social
-
   i rly love gnu parallel over xargs, it's basically the same but has lots of useful and well documented options. sry if u know already
     -- d@nny "disc@" mc² @hipsterelectron@circumstances.run
 
@@ -241,6 +232,15 @@ https://negfeedback.blogspot.com/2020/05/indispensable-command-line-tools.html
     -- @alinajaf@twitter
 
 === Used ===
+
+  64コアで、64並列でsimlationを回してtopコマンドで状況を見るのは心地よい。簡単に並列処理を実現できるGNU parallelコマンドは素晴らしい。
+    -- Daisuke Iizuka @diizuka@twitter
+
+  gnu parallel is my new favorite toy
+    -- Eytan Adar @eytan.adar.prof
+
+  ainda não inventaram palavras capazes de expressar minha gratidão aos desenvolvedores do GNU Parallel
+    -- @nueidris.kawaii.social
 
   idk who built GNU parallel but I owe them a beer
     -- ram @h4x0r1ng

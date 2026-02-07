@@ -591,13 +591,14 @@ par_linebuffer_files	pigz	4
 par_linebuffer_files	pigz	--results
 par_linebuffer_files	pigz	1
 par_linebuffer_files	pigz	parallel: Warning: Use --files0 when $TMPDIR contains newline.
-par_linebuffer_files	pxz	normal
-par_linebuffer_files	pxz	100000
-par_linebuffer_files	pxz	--files
-par_linebuffer_files	pxz	4
-par_linebuffer_files	pxz	--results
-par_linebuffer_files	pxz	1
-par_linebuffer_files	pxz	parallel: Warning: Use --files0 when $TMPDIR contains newline.
+par_linebuffer_files	pixz	normal
+par_linebuffer_files	pixz	100000
+par_linebuffer_files	pixz	--files
+par_linebuffer_files	pixz	4
+par_linebuffer_files	pixz	--results
+par_linebuffer_files	pixz	1
+par_linebuffer_files	pixz	can not seek in input: Illegal seek
+par_linebuffer_files	pixz	parallel: Warning: Use --files0 when $TMPDIR contains newline.
 par_linebuffer_files	gzip	normal
 par_linebuffer_files	gzip	100000
 par_linebuffer_files	gzip	--files

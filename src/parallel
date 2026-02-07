@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 
-# Copyright (C) 2007-2025 Ole Tange, http://ole.tange.dk and Free
+# Copyright (C) 2007-2026 Ole Tange, http://ole.tange.dk and Free
 # Software Foundation, Inc.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -18,7 +18,7 @@
 # or write to the Free Software Foundation, Inc., 51 Franklin St,
 # Fifth Floor, Boston, MA 02110-1301 USA
 #
-# SPDX-FileCopyrightText: 2007-2025 Ole Tange, http://ole.tange.dk and Free Software and Foundation, Inc.
+# SPDX-FileCopyrightText: 2007-2026 Ole Tange, http://ole.tange.dk and Free Software and Foundation, Inc.
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 # open3 used in Job::start
@@ -2965,7 +2965,7 @@ sub test_safe_env_vars {
 
 sub init_globals() {
     # Defaults:
-    $Global::version = 20251022;
+    $Global::version = 20260122;
     $Global::progname = 'parallel';
     $::name = "GNU Parallel";
     $Global::infinity = 2**31;
@@ -6042,8 +6042,8 @@ sub usage() {
 	 "If you use programs that use GNU Parallel to process data for an article in a",
 	 "scientific publication, please cite:",
 	 "",
-	 "  Tange, O. (2025, October 22). GNU Parallel 20251022 ('Goodall').",
-	 "  Zenodo. https://doi.org/10.5281/zenodo.17488917",
+	 "  Tange, O. (2026, January 22). GNU Parallel 20260122 ('Maduro').",
+	 "  Zenodo. https://doi.org/10.5281/zenodo.18395892",
 	 "",
 
 	 # Before changing these lines, please read
@@ -6122,7 +6122,7 @@ sub version() {
     print join
 	("\n",
 	 "GNU $Global::progname $Global::version",
-	 "Copyright (C) 2007-2025 Ole Tange, http://ole.tange.dk and Free Software",
+	 "Copyright (C) 2007-2026 Ole Tange, http://ole.tange.dk and Free Software",
 	 "Foundation, Inc.",
 	 "License GPLv3+: GNU GPL version 3 or later <https://gnu.org/licenses/gpl.html>",
 	 "This is free software: you are free to change and redistribute it.",
@@ -6173,7 +6173,7 @@ sub embed() {
     }
     print "#!$Global::shell
 
-# Copyright (C) 2007-2025 $user, Ole Tange, http://ole.tange.dk
+# Copyright (C) 2007-2026 $user, Ole Tange, http://ole.tange.dk
 # and Free Software Foundation, Inc.
 #
 # This program is free software; you can redistribute it and/or modify

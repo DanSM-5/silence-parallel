@@ -1,11 +1,41 @@
 #!/bin/bash
 
-# SPDX-FileCopyrightText: 2021-2025 Ole Tange, http://ole.tange.dk and Free Software and Foundation, Inc.
+# SPDX-FileCopyrightText: 2021-2026 Ole Tange, http://ole.tange.dk and Free Software and Foundation, Inc.
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 # These fail regularly if run in parallel
 # If they fail: Move them to race02.sh
+
+timeoutpidtree() {
+    _pidtree() {
+	declare -A children
+	# Make table pid => child pids
+	# This way we only run 'ps' once
+	while read pid parent ; do
+            children[$parent]+=" $pid"
+	done < <(ps -e -o pid,ppid)
+
+	__pidtree() {
+            # Indent pid with spaces ($1)
+            echo "$1$2"
+            for child in ${children["$2"]} ; do
+		__pidtree " $1" "$child"
+            done
+	}
+
+	for pid in "$@" ; do
+            __pidtree '' "$pid"
+	done
+    }
+    pids=$(_pidtree $2)
+    sleep $1
+    echo $pids | xargs kill
+    sleep 1
+    echo $pids | xargs kill -9
+}
+# Start timeout if this script gets stuck
+timeoutpidtree 200 $$ &
 
 ctrlz_should_suspend_children() {
     echo 'bug #46120: Suspend should suspend (at least local) children'
@@ -41,6 +71,7 @@ ctrlz_should_suspend_children() {
     echo "Control case: This should run 2.9 seconds"
     stdout bash -i -c 'run input_source_cmdline 2.9 1=OK' | clean
 }
+
 ctrlz_should_suspend_children
 
 env_underscore() {
@@ -104,4 +135,4 @@ par_continuous_output() {
 export -f $(compgen -A function | grep par_)
 compgen -A function | G "$@" | grep par_ | sort |
     #    parallel --joblog /tmp/jl-`basename $0` -j10 --tag -k '{} 2>&1'
-        parallel -o --joblog /tmp/jl-`basename $0` -j1 --tag -k '{} 2>&1'
+        parallel --timeout 500 -o --joblog /tmp/jl-`basename $0` -j1 --tag -k '{} 2>&1'

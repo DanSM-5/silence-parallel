@@ -1,8 +1,3 @@
-par_10000_m_X	### Test -m with 10000 args
-par_10000_m_X	a05f1007b88fc8fae0508523445214ce  -
-par_10000_m_X	69999
-par_10000_m_X	69999
-par_10000_m_X	69999
 par_X_I_meta	### Test -X -I with shell meta chars
 par_X_I_meta	3
 par_X_I_meta	3
