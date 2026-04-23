@@ -13433,7 +13433,10 @@ sub print_files($) {
 		    $self->set_exitstatus(255);
 		}
 		# Blocked reading in final round
-		for my $fdno (1,2) { ::set_fh_blocking($self->fh($fdno,'r')); }
+		for my $fdno (1,2) {
+		    my $fh = $self->fh($fdno,'r');
+		    $fh and ::set_fh_blocking($fh);
+		}
 	    }
 	    if($opt::latestline) { $print_later{$self->row()} = $self; }
 	}
@@ -13608,7 +13611,9 @@ sub print_files($) {
 		} else {
 		    # decompress done: close fh
 		    close $in_fh;
-		    if($? and $opt::compress) {
+		    my $close_q = $?;
+		    $self->set_fh($fdno,'r', undef);
+		    if($close_q and $opt::compress) {
 			::error($opt::decompress_program." failed.");
 			$self->set_exitstatus(255);
 		    }
@@ -17549,6 +17554,7 @@ sub main() {
     ::debug("init", "Halt\n");
     halt();
 }
+
 
 main();
 __END__
