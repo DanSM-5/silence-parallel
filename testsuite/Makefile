@@ -51,6 +51,13 @@ polar: ../src/parallel tests-to-run/*polar* wanted-results/*polar* prereqlocal
 	time bash Start.sh polar NONE || true
 	touch ~/.parallel/will-cite
 
+test-recent: ../src/parallel tests-to-run/recent.sh wanted-results/recent prereqlocal installparallel
+	TRIES=1 time bash Start.sh recent NONE
+
+# Generic test runner: make test-local-fast -> bash Start.sh local-fast NONE
+test-%:	../src/parallel prereqlocal installparallel
+	TRIES=1 time bash Start.sh $* NONE
+
 # *local* only
 local:	../src/parallel tests-to-run/*local* wanted-results/*local* prereqlocal installparallel
 	time bash Start.sh local 'mem|ssh'

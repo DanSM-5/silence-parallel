@@ -1374,19 +1374,80 @@ only need to look one character ahead, and never have to look behind.
 
 =head2 Fast mode
 
-B<--fast> / B<-D fast> is an experimental execution path that avoids
-spawning one process per job. Instead jobs are batched into shell
-script chunks separated by the sentinel string C<"\n#\0\n">, and the
-batch is piped to a child C<parallel --pipe> instance for parallel
-execution.
+B<--fast> is an execution path that avoids spawning one process per
+job. Instead jobs are batched into shell script chunks. Each chunk
+contains multiple jobs that run sequentially inside one B</bin/sh>
+process (override with B<$PARALLEL_SHELL>). Chunks are separated by
+the sentinel string C<"\n#\0\n"> and fed to an inner
+C<parallel --pipe -N1> that executes B<-j> chunks in parallel.
+The inner B<parallel> sees each chunk as a single job, so grouping
+and ordering happen at the chunk level, not the individual-job level.
 
-The batch size starts at 100 and grows 3x each round (capped at 100 000)
-to amortise overhead for large queues. Shell helper functions
-(C<error()>, C<_tagger()>, C<_taggerwrap()>) are injected into every
-chunk so that tagging and error counting work without extra processes.
+The chunk size starts at 100 jobs and grows 1.5x each round (capped at
+250) to keep chunks small enough that all worker slots stay busy. The
+inner B<parallel> uses C<--block 512000>.
 
-Limitations: B<--group>, B<--halt>, B<--tag>, and B<$PARALLEL_JOBSLOT>
-are not yet supported in fast mode.
+Shell helper functions injected into every chunk:
+
+=over 4
+
+=item C<_error()>
+
+Accumulates failure count in C<$_exit>. Defined only when B<--halt>
+is active; each job is wrapped as C<( cmd ) || _error>.
+
+=item C<_tagger()>
+
+Awk stream that reads marker lines to switch the tag string and
+prefixes all other lines. Used with B<--tag>/B<--tagstring>. Two
+named fifos (immediately unlinked after creation) route stdout and
+stderr through separate awk processes, giving correct per-job
+labelling even inside a multi-job chunk.
+
+=back
+
+The fast path (C<$fp_fh> set) reads input lines directly and does
+string substitution without creating Job objects, giving ~0.1 ms/job.
+When the fast path is not eligible (non-trivial replacement strings,
+multiple input sources, etc.) the normal job-queue machinery builds
+the command strings (~0.5 ms/job) but the same chunk-based executor
+is used.
+
+See B<parallel --fast --help> for the full option support matrix.
+
+=head3 Fast mode buffer parameter tuning
+
+Three parameters govern chunk sizing: C<pipe_block> (the C<--block>
+given to inner B<parallel --pipe>), C<buf_growth> (the multiplier
+applied after each chunk is sent), and C<buf_cap> (the maximum chunk
+size in jobs).
+
+Two benchmarks were run to find the best values:
+
+B<Benchmark 1 — fast jobs (C<echo>, ~0 ms/job):> 25 combinations of
+C<pipe_block> (64000–1048576 bytes) × C<buf_growth> (1.2–5.0) across
+seven job-count scales (1 000–1 000 000), five runs each.  Best:
+C<pipe_block=512000, buf_growth=5.0, buf_cap=100000>.
+
+B<Benchmark 2 — slow jobs (C<sleep 0.001>, ~1 ms/job, 4-core machine):>
+25 combinations of C<buf_growth> (1.2–5.0) × C<buf_cap> (100–2500)
+for 1 000 and 10 000 jobs, three runs each.  Best: C<buf_growth=1.5,
+buf_cap=250>.
+
+The chosen defaults B<buf_growth=1.5, buf_cap=250> optimise for
+real-world jobs (≥1 ms each) on 4–20 cores by generating many small,
+balanced chunks.  The growth sequence 100 → 150 → 225 → 337 → 337 → …
+produces ~32 chunks for 10 000 jobs, keeping all cores busy across
+the full run.
+
+The table below shows median elapsed time (seconds) for the slow-job
+benchmark.  "Best" is the fastest of all 25 combinations at that job
+count; "chosen" is C<buf_growth=1.5, buf_cap=250>.
+
+  Jobs    Best(s)  Chosen(s)  Overhead
+  ------  -------  ---------  --------
+   1 000    3.824      4.201      +9.9%
+  10 000   28.802     28.802      +0.0%  <- primary target
 
 
 =head2 Test suite

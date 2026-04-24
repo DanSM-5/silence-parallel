@@ -1132,13 +1132,113 @@ Useful for benchmarking and if you have 1000's of tiny jobs.
 
 Compare:
 
-    time parallel echo ::: {1..10} ::: {1..10} ::: {1..10}
-    time parallel --fast echo ::: {1..10} ::: {1..10} ::: {1..10}
-    time parallel --fast echo ::: {1..100} ::: {1..100} ::: {1..100}
+    # ~10 seconds/1000 jobs
+    seq 1000 | time parallel echo | wc -l
+    # ~1 seconds/1000 jobs
+    seq 1000 | time parallel --fast echo | wc -l
+    # ~10 seconds/1000000 jobs
+    seq 1000000 | time parallel --fast echo | wc -l
 
-Supported options: B<--group> B<--keep-order>
 
-If you need more options: File a bug.
+B<Fully supported:>
+
+B<{}>, B<--compress>/B<--compress-program>, B<--dry-run>,
+B<--jobs>, B<--keep-order>, B<--nice>, B<--tag>, B<--tagstring>
+(fixed strings and B<{}>), B<--ungroup>.
+
+B<Supported but slower (falls back to the job-queue path, ~0.5 ms/job):>
+
+=over 4
+
+=item All non-plain replacement strings: B<{.}> B<{/}> B<{//}> B<{/.}>
+B<{#}> B<{%}> B<{>I<n>B<}>.
+
+B<--tagstring> with replacement strings other than B<{}>.
+
+Multiple input sources (multiple B<:::>), B<-a>/B<--arg-file>, B<::::>.
+
+B<--null>/B<-0>, B<-d>/B<--delimiter>, B<--colsep>/B<-C>, B<--csv>,
+B<--link>/B<:::+>/B<::::+>, B<-N> (for I<N>E<gt>1), B<-m>, B<-X>,
+B<--filter>, B<--trim> (non-B<n> values).
+
+=item B<-E>/B<--eof>: end-of-file string not implemented.
+
+=back
+
+B<Supported with slightly different semantics:>
+
+=over 4
+
+=item B<--group> (default): output is grouped per chunk (several jobs).
+All stdout from jobs in a chunk is printed before all their stderr.
+
+=item B<--halt>/B<--halt-on-error>: failure detection is per chunk, so
+it will not trigger until a full chunk of jobs has finished.  The exit
+value is 0 unless B<--halt> is set; use B<--halt never> to propagate
+non-zero exit codes without stopping early.
+
+=item B<{=>I<perl>B<=}>: Expressions that cannot be computed upfront
+(e.g. B<slot()>) may give unexpected values.
+
+=item B<--timeout>: applies to each chunk of jobs, not each individual
+job.
+
+=item B<--bar>/B<--eta>/B<--progress>: the inner B<parallel> counts
+chunks, not individual jobs, so counts and time estimates are
+imprecise.
+
+=item B<--joblog>/B<--jl>: logged at chunk granularity; no per-job
+timing.  Command lines longer than 4 KB may be truncated.
+
+=item B<--delay>: delay is applied after each chunk, not after each
+individual job.
+
+=item B<--env>: environment variables are inherited via normal B<fork>;
+B<parallel>'s explicit env-transfer mechanism is not invoked.
+
+=item B<--retries>: These will retry the whole group of jobs.
+
+=item B<--load>/B<--limit>/B<--memfree>/B<--noswap>: These will retry
+the whole group of jobs.
+
+=back
+
+B<Not supported:>
+
+=over 4
+
+=item B<--results>/B<-o>: no per-job output file support.
+
+=item B<--tty>: jobs inherit B</bin/sh>'s stdin (a pipe), not a terminal.
+
+=item B<-L>/B<--max-lines>/B<-l>: multi-line records not supported.
+
+=item B<--verbose>/B<-t>: echoing commands to stderr not implemented.
+
+=item B<--total-jobs>: total job count is not known ahead of time.
+
+=back
+
+B<Impossible given current architecture:>
+
+=over 4
+
+=item B<--pipe>/B<--pipepart>/B<--tee>/B<--fifo>/B<--cat>/B<--header>/B<--group-by>:
+separate execution modes incompatible with B<--fast>.
+
+=item B<SSH/remote options> (B<--sshlogin>, B<--sshloginfile>/B<--slf>,
+B<--basefile>/B<--bf>, B<--transfer>, B<--return>, B<--cleanup>,
+B<--trc>, B<--filter-hosts>, B<--workdir>, B<--hostgroups>):
+B<--fast> is local-only.
+
+=item B<--tmux>/B<--tmuxpane>/B<--bg>/B<--fg>/B<--wait>/B<--semaphore>:
+separate execution modes.
+
+=back
+
+If you need an unsupported option: File a bug.
+
+See B<parallel_design> for the architecture details.
 
 
 =item B<--fg>
@@ -1243,6 +1343,12 @@ This takes in the order of 0.5ms CPU time per job and depends on the
 speed of your disk for larger output.
 
 B<--group> is the default.
+
+With B<--fast>: output is grouped per chunk (a chunk contains multiple
+jobs).  Within a chunk stdout and stderr of each job appear in natural
+order (jobs run sequentially), but the inner B<parallel> buffers all
+of a chunk's stdout before all of its stderr.  Use B<--tag> for
+correct per-job labelling.
 
 See also: B<--line-buffer> B<--ungroup> B<--tag>
 

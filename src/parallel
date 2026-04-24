@@ -187,93 +187,311 @@ sub halt() {
 
 sub __FAST_MODE__() {}
 
+sub tokenize($) {
+    # Tokenize a command-token array into alternating fixed strings and undef
+    # replacement slots, suitable for the fast path in fast().
+    #
+    # Uses the same tokenization logic as replace_placeholders() but runs once
+    # at setup time.  Returns a list: [fixed_str, undef, fixed_str, ...]
+    # where undef marks a simple {} replacement slot.
+    my $cmd_ref = shift;
+    my $spacer = 0;
+    my @tokens = grep { length $_ > 0 } map {
+	if(/^\177<|^ $/) { $_ }
+	else { split /(?=\s)|(?<=\s)/ }
+    }
+    map { split /(?=\177<)|(?<=\177>)/ }
+    map { $spacer++ ? ("\0spc",$_) : $_ }
+    map { $_ eq "" ? "\0empty" : $_ }
+    @$cmd_ref;
+    my @tpl;
+    my $acc = "";
+    for my $t (@tokens) {
+	if($t =~ /^\177<\177>$/) {
+	    push @tpl, $acc, undef;
+	    $acc = "";
+	} elsif($t eq "\0spc") {
+	    $acc .= " ";
+	} elsif($t eq "\0empty") {
+	    # skip
+	} else {
+	    $acc .= $t;
+	}
+    }
+    push @tpl, $acc;
+    return @tpl;
+}
 
 sub fast() {
     # Fast-mode execution: bundle jobs into shell scripts and pipe them to a
     # child `parallel --pipe` instance for parallel execution.
-    #
-    # Instead of spawning one process per job, jobs are batched into shell
-    # script chunks.  Each chunk is separated by the sentinel string
-    # "\n#\0\n" so the receiver can split them apart.  The batch size starts
-    # at 100 and grows 3x each round (capped at 100 000) to amortise the
-    # overhead for large job queues.
-    #
-    # Shell helper functions injected into every chunk:
-    #   error()        - accumulates failure count in $_exit
-    #   _tagger()      - prefixes stdout/stderr lines with PARALLEL_TAGSTRING
-    #   _taggerwrap()  - wraps a command so its output goes through _tagger
-    #
-    # TODO: --group, --halt, --tag, $PARALLEL_JOBSLOT are not yet supported
-    #       in fast mode. | tagger, use _PARALLEL_TAG as tag
-    #
-    # Side effects:
-    #   Drains $Global::JobQueue completely, then exits with status 0.
+    # Side effects: drains $Global::JobQueue completely, then exits.
     my $jobslots = $Global::host{':'}->user_requested_processes($opt::jobs);
-    my $i;
-    my $buffer_len = 100;
-    # Sentinel that separates script chunks; chosen to be extremely unlikely
-    # to appear in real job output.
-    my $splitstring = ("\n#\0\n");
-    my $executer_fh;
-    if($opt::D eq "fast") {
-	open($executer_fh, "|-", "cat") || die;
-    } else {
-	open($executer_fh, "|-", "parallel --plain -j $jobslots  --block 1k --pipe -N1 --recend '\\n#\\0\\n' $Global::shell") || die;
+    my ($buffer_len, $buf_growth, $buf_cap, $pipe_block) = fast_buffer_params();
+    my (undef, $count_file) = ::tempfile(DIR=>$ENV{'TMPDIR'}, TEMPLATE=>'parXXXXX', UNLINK=>1);
+    my $executer_fh = fast_open_executer($jobslots, $pipe_block);
+
+    my $needs_tag  = $opt::tag || $opt::tagstring;
+    my $needs_exit = defined $opt::halt;
+    my $tagmark    = "^^^^".join "", map { (0..9,"a".."z","A".."Z")[rand(62)] } (1..12);
+    my $jl_path    = defined($opt::joblog) ? Q($opt::joblog) : undef;
+
+    my ($block_start, $block_end) =
+	fast_chunk_scripts($needs_exit, $needs_tag, $tagmark, $count_file, $jl_path);
+    my ($fh, $build, $tag) = fast_setup($needs_tag);
+    my $build_run = fast_make_runner($needs_exit, $jl_path);
+
+    while(1) {
+	my @chunk = fast_fill_chunk($fh, $build, $tag, $tagmark,
+				     $build_run, $needs_tag, $buffer_len);
+	last unless @chunk;
+	::debug("fast", $block_start, @chunk, $block_end);
+	print $executer_fh $block_start;
+	print $executer_fh @chunk;
+	print $executer_fh $block_end;
+	$buffer_len *= $buf_growth if $buffer_len < $buf_cap;
     }
-    # Do some testing of a stuck job - dns = 5 sec
-    my $block_start = q{
-	error() {
-	    _exit=$((_exit+1))
- 	    # --halt-on-error stuff
-	    if [ $_exit -gt 40 ]; then
-	        echo "ERROR: More than 40"
-	        exit 1
-	    fi
-        }
-        
-        _tagger() {
-          {
-            rm -f "$1"
-            # This will fail for either /1 or /2
-            rmdir "$2" 2>/dev/null
-	    # TODO use awk (see fasttag)
-            perl -pe 's{^}{$ENV{PARALLEL_TAGSTRING}}'
-          } < "$1"
-        }
-        
-        _taggerwrap() {
-            _dir=`mktemp -d`
-            mkfifo "$_dir"/1 "$_dir"/2
-            _tagger "$_dir"/1 "$_dir" >&1 &
-            _tagger "$_dir"/2 "$_dir" >&2 &
-            # ( ... ) is needed to deal correctly with 'exit 1'
-            ( eval $@ ; ) >"$_dir"/1 2>"$_dir"/2 || error
-            wait
-        }
-	PARALLEL_TAGSTRING=dummy
-	export PARALLEL_TAGSTRING
+
+    if($opt::dryrun) { wait_and_exit(0); }
+    close $executer_fh;
+    wait_and_exit(_fast_sum_exit($count_file));
+}
+
+sub fast_buffer_params() {
+    # Returns the four buffer/block parameters, honouring internal CLI overrides.
+    my $buffer_len = defined($opt::_buf_start)  ? $opt::_buf_start  : 300;
+    my $buf_growth = defined($opt::_buf_growth) ? $opt::_buf_growth : 1.5;
+    my $buf_cap    = defined($opt::_buf_cap)    ? $opt::_buf_cap    : 1000;
+    my $pipe_block = defined($opt::_pipe_block) ? $opt::_pipe_block : 512000;
+    return ($buffer_len, $buf_growth, $buf_cap, $pipe_block);
+}
+
+sub fast_open_executer($$) {
+    # Opens the pipe to the inner `parallel --pipe` (or stdout for --dryrun).
+    my ($jobslots, $pipe_block) = @_;
+    my $inner_opts = "-j $jobslots --block $pipe_block --pipe -N1 --recend '\\n#\\0\\n' --_no_blocksize_warning";
+    $inner_opts .= " --keeporder"        if $opt::keeporder;
+    $inner_opts .= " --ungroup"          if $opt::ungroup;
+    $inner_opts .= " --compress"         if $opt::compress;
+    $inner_opts .= " --nice $opt::nice"  if $opt::nice;
+    my $executer_fh;
+    if($opt::dryrun) {
+	open($executer_fh, ">&", \*STDOUT) || die;
+    } else {
+	open($executer_fh, "|-", " parallel --plain $inner_opts $Global::shell") || die;
+    }
+    return $executer_fh;
+}
+
+sub fast_chunk_scripts($$$$$) {
+    # Builds the shell-script header ($block_start) and footer ($block_end)
+    # injected into every chunk sent to the inner parallel.
+    #
+    # $block_start sets up:
+    #   _error()   - failure counter (when --halt is active)
+    #   _tagger()  - per-fd awk tagger via two named fifos (when --tag/--tagstring)
+    #   joblog preamble vars (when --joblog is active)
+    #
+    # $block_end tears down the tagger fifos, writes $_exit to $count_file,
+    # and emits the "\n#\0\n" chunk sentinel for the inner parallel --pipe.
+    #
+    # Tagging design: one persistent awk process per fd reads a fifo.  Before
+    # each job a marker line switches the tag; all other lines are prefixed.
+    # The marker prefix is 4 carets (^^^^): printable and very unlikely in output.
+    my ($needs_exit, $needs_tag, $tagmark, $count_file, $jl_path) = @_;
+    my $splitstring = "\n#\0\n";
+    my $block_start = "";
+    if($needs_exit) {
+	$block_start .= "_error() { _exit=\$((_exit+1)); }\n";
+    }
+    if($needs_tag) {
+	$block_start .= q{
+_awk=$(command -v mawk 2>/dev/null || command -v nawk 2>/dev/null || command -v gawk 2>/dev/null || command -v awk)
+_marker='}.$tagmark.q{'
+_tagger() {
+    "$_awk" -v m="$_marker" '{if(n=index($0,m)){if(n>1)print TAG substr($0,1,n-1);TAG=substr($0,n+16)}else{print TAG $0}}'
+}
+_d=$(mktemp -d)
+mkfifo "$_d/1" "$_d/2"
+_tagger <"$_d/1" &
+_awk1pid=$!
+_tagger <"$_d/2" >&2 &
+_awk2pid=$!
+exec 1>"$_d/1" 2>"$_d/2"
+rm "$_d/1" "$_d/2"
+rmdir "$_d"
+};
+    }
+    if($jl_path) {
+	$block_start .= "_fast_epoch=\$(date +%s)\n_fast_secs=\$SECONDS\n";
+    }
+    my $block_end = ($needs_tag
+	? "\nexec 1>&- 2>&-\nwait \$_awk1pid\nwait \$_awk2pid\nrm -rf \"\$_d\"\n"
+	: "")
+    ."\necho \$_exit >> ".Q($count_file)."\nexit \$_exit\n"
+    .$splitstring."\n";
+    if($opt::dryrun and $Global::verbose < 2) {
+	$block_start = "";
+	$block_end   = "";
+    }
+    return ($block_start, $block_end);
+}
+
+sub fast_setup($) {
+    # Checks whether the fast path (bypass Job/CommandLine/Arg machinery) is
+    # eligible for this invocation.  Eligible means: single stdin source, only
+    # simple {} replacements, no special input modes.
+    #
+    # Returns ($fp_fh, $fp_build, $fp_tag):
+    #   $fp_fh    - input filehandle to read lines from (undef = use job queue)
+    #   $fp_build - closure: $line -> command string
+    #   $fp_tag   - closure: $line -> tag string with trailing tab (undef if no tagging)
+    my ($needs_tag) = @_;
+    my ($fp_fh, $fp_build, $fp_tag);
+    my $clq = $Global::JobQueue->{'commandlinequeue'};
+    my $arg_sub_q = $clq->{'arg_queue'}{'arg_sub_queue'};
+    if(ref($arg_sub_q) eq 'MultifileQueue'
+       and @{$arg_sub_q->{'fhs'}} == 1
+       and not @Global::unget_argv
+       and not $opt::colsep
+       and not $opt::csv
+       and not $opt::link
+       and not $opt::sqlworker
+       and not $opt::null
+       and not defined($opt::d)
+       and not $opt::header
+       and not defined($opt::filter[0])
+       and not $Global::end_of_file_string
+       and not $Global::max_lines
+       and not $Global::ignore_empty
+       and (not $Global::trim or $Global::trim eq 'n')
+       and (not defined($Global::max_number_of_args)
+	    or $Global::max_number_of_args == 0
+	    or $Global::max_number_of_args == 1)
+       and not $opt::m and not $opt::X) {
+	my @cmd = @{$clq->{'command'}};
+	my $all_simple = not grep { /\177<([^\177]+)\177>/ } @cmd;
+	if($needs_tag and defined $opt::tagstring) {
+	    $all_simple = 0 if $opt::tagstring =~ /\177<([^\177]+)\177>/;
+	}
+	if($all_simple) {
+	    $fp_fh = $arg_sub_q->{'fhs'}[0];
+	    my $quote_arg = ($Global::quote_replace and not $Global::quoting);
+	    my @tpl = tokenize(\@cmd);
+	    if(defined $Global::max_number_of_args
+	       and $Global::max_number_of_args == 0) {
+		my $const_cmd = join "", map { defined($_) ? $_ : "" } @tpl;
+		$fp_build = sub { $const_cmd };
+	    } else {
+		$fp_build = sub {
+		    my $q = $quote_arg ? Q($_[0]) : $_[0];
+		    return join "", map { defined($_) ? $_ : $q } @tpl;
+		};
+	    }
+	    if($needs_tag) {
+		my @ttpl = tokenize([$opt::tagstring]);
+		if(defined $Global::max_number_of_args
+		   and $Global::max_number_of_args == 0) {
+		    my $const_tag = join("", map { defined($_) ? $_ : "" } @ttpl)."\t";
+		    $fp_tag = sub { $const_tag };
+		} else {
+		    $fp_tag = sub {
+			my $q = $_[0];
+			return join("", map { defined($_) ? $_ : $q } @ttpl)."\t";
+		    };
+		}
+	    }
+	}
+    }
+    return ($fp_fh, $fp_build, $fp_tag);
+}
+
+sub fast_make_runner($$) {
+    # Returns a closure that wraps a command string for execution inside a chunk.
+    # Without --joblog: wraps with _error on failure (if --halt) or runs bare.
+    # With --joblog: adds timing shell code and appends a log line per job.
+    my ($needs_exit, $jl_path) = @_;
+    my $jl_seq = 0;
+    return sub {
+	my ($cmd) = @_;
+	if($jl_path) {
+	    $jl_seq++;
+	    my $cmd_for_log = $cmd;
+	    $cmd_for_log =~ s/\n/\000/g;
+	    my $q_cmd = Q($cmd_for_log);
+	    my $seq = $jl_seq;
+	    my $jl_write = "_jl_s1=\$SECONDS\n"
+		. "printf '%d\\t:\\t%d\\t%10.3f\\t0\\t0\\t%d\\t0\\t%s\\n' "
+		. "$seq \"\$((_fast_epoch+_jl_s0-_fast_secs))\" \"\$((_jl_s1-_jl_s0))\" \"\$_jl_rv\" $q_cmd >> $jl_path\n";
+	    if($needs_exit) {
+		return "_jl_s0=\$SECONDS\n( $cmd )\n_jl_rv=\$?\n[ \$_jl_rv -ne 0 ] && _error\n".$jl_write;
+	    } else {
+		return "_jl_s0=\$SECONDS\n$cmd\n_jl_rv=\$?\n".$jl_write;
+	    }
+	} else {
+	    return $needs_exit ? "( $cmd ) || _error\n" : $cmd."\n";
+	}
     };
-    my $block_end = "\n# Define get exit value\ntrue EXIT=\$_exit\n".$splitstring."\n";
-    do {
-	$i = 0;
-	my @jobbuffer;
-	while(my $job = $Global::JobQueue->get()) {
-	    push (@jobbuffer, "PARALLEL_TAGSTRING=".Q($job->tag()).
-	    	 "\n_taggerwrap ". Q($job->replaced()));
+}
+
+sub fast_fill_chunk($$$$$$$) {
+    # Fills one chunk: reads up to $buffer_len jobs from either the fast-path
+    # filehandle or the job queue, returning the list of per-job script entries.
+    # An empty return means the input is exhausted and the loop should stop.
+    my ($fp_fh, $fp_build, $fp_tag, $tagmark, $build_run, $needs_tag, $buffer_len) = @_;
+    my @jobbuffer;
+    my $i = 0;
+    if($fp_fh) {
+	# When the tag doesn't vary by line (e.g. -N0, or tagstring with no {}),
+	# precompute the tagmarker once rather than calling Q() per job.
+	my $const_tagmarker;
+	if($needs_tag) {
+	    my $t0 = $fp_tag->("\x00");
+	    $const_tagmarker = Q($tagmark.$t0) if $t0 eq $fp_tag->("\x01");
+	}
+	while(defined(my $line = <$fp_fh>)) {
+	    chomp $line;
+	    my $cmd = $fp_build->($line);
+	    my $run = $build_run->($cmd);
+	    my $entry;
+	    if($needs_tag) {
+		my $tm = defined($const_tagmarker) ? $const_tagmarker
+		                                   : Q($tagmark.$fp_tag->($line));
+		$entry = "printf '%s\\n' $tm\nprintf '%s\\n' $tm >&2\n$run";
+	    } else {
+		$entry = $run;
+	    }
+	    push(@jobbuffer, $entry);
 	    ($i++ < $buffer_len) or last;
 	}
-	my $jobs_per_chunk = 1 + ($i / $jobslots);
-	my $j = 0;
-	print $executer_fh $block_start;
-	for(@jobbuffer) {
-	    print $executer_fh $_,"\n";
-	    (++$j % $jobs_per_chunk) or print $executer_fh $block_end,$block_start;
+    } else {
+	while(my $job = $Global::JobQueue->get()) {
+	    my $cmd = $job->replaced();
+	    my $run = $build_run->($cmd);
+	    my $entry;
+	    if($needs_tag) {
+		my $tagmarker = Q($tagmark.$job->tag());
+		$entry = "printf '%s\\n' $tagmarker\nprintf '%s\\n' $tagmarker >&2\n$run";
+	    } else {
+		$entry = $run;
+	    }
+	    push(@jobbuffer, $entry);
+	    ($i++ < $buffer_len) or last;
 	}
-	print $executer_fh $block_end;
-	if($buffer_len < 100000) { $buffer_len *= 3; }
-    } while ($i);
-    close $executer_fh;
-    exit(0);
+    }
+    return @jobbuffer;
+}
+
+sub _fast_sum_exit($) {
+    # Sums per-chunk failure counts written to $count_file and returns the
+    # exit code, capped at 101 (parallel's maximum exit value).
+    my ($count_file) = @_;
+    my $total_failed = 0;
+    if(open(my $cf, "<", $count_file)) {
+	while(<$cf>) { chomp; $total_failed += int($_) }
+	close $cf;
+    }
+    return $total_failed > 101 ? 101 : $total_failed;
 }
 
 
@@ -1599,14 +1817,16 @@ sub spreadstdin() {
 	    if($] >= 5.026) {
 		do {
 		    $nread = sysread $in, $buf, $readsize, length $buf;
-		    if(not $read_everything) { $readsize -= $nread; }
-		} while($readsize and $nread);
+		    # undef means EINTR: do not update $readsize, retry
+		    if(defined($nread) and not $read_everything) { $readsize -= $nread; }
+		} while($readsize and (!defined($nread) or $nread));
 	    } else {
 		# Less efficient reading, but 32-bit sysread compatible
 		do {
 		    $nread = sysread($in,substr($buf,length $buf,0),$readsize,0);
-		    if(not $read_everything) { $readsize -= $nread; }
-		} while($readsize and $nread);
+		    # undef means EINTR: do not update $readsize, retry
+		    if(defined($nread) and not $read_everything) { $readsize -= $nread; }
+		} while($readsize and (!defined($nread) or $nread));
 	    }
 	    alarm 0;
 	};
@@ -1803,8 +2023,10 @@ sub spreadstdin() {
 	    if($blocksize < $two_gb) {
 		my $old_blocksize = $blocksize;
 		$blocksize = ::min(ceil($blocksize * 1.3 + 1), $two_gb);
-		::warning("A record was longer than $old_blocksize. " .
-			  "Increasing to --blocksize $blocksize.");
+		if(not $opt::_no_blocksize_warning) {
+		    ::warning("A record was longer than $old_blocksize. " .
+			      "Increasing to --blocksize $blocksize.");
+		}
 	    }
 	}
     }
@@ -2797,11 +3019,14 @@ sub options_completion_hash() {
 	  => \@opt::filter),
 	 "fast[Run commands fast]" => \$opt::fast,
 	 "_parset=s[Internal: Generate shell code for parset]" => \$opt::_parset,
+	 "_pipe_block=i[Internal: --block size for inner parallel in --fast]" => \$opt::_pipe_block,
+	 "_buf_start=i[Internal: initial buffer_len for --fast]" => \$opt::_buf_start,
+	 "_buf_growth=f[Internal: buffer_len growth factor for --fast]" => \$opt::_buf_growth,
+	 "_buf_cap=i[Internal: buffer_len cap for --fast]" => \$opt::_buf_cap,
+	 "_no_blocksize_warning[Internal: suppress blocksize auto-expand warning]" => \$opt::_no_blocksize_warning,
 	 ("shell-completion|shellcompletion=s".
 	  "[Generate shell code for shell completion]:shell:(bash zsh)"
 	  => \$opt::shellcompletion),
-	 # Parameter for testing optimal values
-	 "_test=s" => \$opt::_test,
 	);
 }
 
@@ -2945,7 +3170,7 @@ sub parse_options(@) {
     ## Shell
     #
     if($opt::fast) {
-	$Global::shell = $ENV{'PARALLEL_SHELL'} || which("dash") || "/bin/sh";
+	$Global::shell = $ENV{'PARALLEL_SHELL'} || "/bin/sh";
     } else {
 	$Global::shell = $ENV{'PARALLEL_SHELL'} || parent_shell($$)
 	    || $ENV{'SHELL'} || "/bin/sh";
@@ -3810,6 +4035,12 @@ sub parse_replacement_string_options() {
     if(defined $opt::dirnamereplace) { rpl('{//}',$opt::dirnamereplace); }
     if(defined $opt::seqreplace) { rpl('{#}',$opt::seqreplace); }
     if(defined $opt::slotreplace) { rpl('{%}',$opt::slotreplace); }
+    elsif($opt::fast) {
+	# In fast mode, slots are never freed so the Perl slot counter grows
+	# monotonically.  The inner parallel --pipe sets $PARALLEL_JOBSLOT to
+	# the real slot number for each chunk; emit that shell variable instead.
+	$Global::rpl{'{%}'} = 'uq;$_="\${PARALLEL_JOBSLOT}"';
+    }
     if(defined $opt::basenameextensionreplace) {
        rpl('{/.}',$opt::basenameextensionreplace);
     }
@@ -11072,7 +11303,8 @@ sub write_block($) {
 	    # SSH --pipe non-tee: write bootstrap payload only when actual
 	    # data follows so empty_input_wrapper exits 0 on empty slots.
 	    while(length $payload) {
-		my $n = syswrite($stdin_fh, $payload) or last;
+		my $n = syswrite($stdin_fh, $payload);
+		next unless defined $n;
 		substr($payload, 0, $n) = "";
 	    }
 	}
@@ -11080,7 +11312,9 @@ sub write_block($) {
 	    # syswrite may not write all in one go,
 	    # so make sure everything is written.
 	    my $written;
-	    while($written = syswrite($stdin_fh,$$part)) {
+	    while(length $$part) {
+		$written = syswrite($stdin_fh,$$part);
+		next unless defined $written;
 		substr($$part,0,$written) = "";
 	    }
 	}
@@ -11102,7 +11336,9 @@ sub write($) {
     # If writing is to a closed pipe:
     #	Do not call signal handler, but let nothing be written
     local $SIG{PIPE} = undef;
-    while($written = syswrite($stdin_fh,$$remaining_ref)){
+    while(length $$remaining_ref) {
+	$written = syswrite($stdin_fh,$$remaining_ref);
+	next unless defined $written;
 	substr($$remaining_ref,0,$written) = "";
     }
 }

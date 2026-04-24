@@ -39,6 +39,7 @@ torrsync: check-tor-sshlogin
 tor-%: torrsync
 	torsocks ssh -t -o ServerAliveInterval=60 -o ServerAliveCountMax=60 $(TOR_BUILDHOST) 'cd privat/parallel && (test -f Makefile || ./configure) && make $*'
 
+
 test-%:
 	cd testsuite && make test-$*
 

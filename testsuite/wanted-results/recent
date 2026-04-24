@@ -1,0 +1,363 @@
+par_fast_recent_N2	### --fast -N2
+par_fast_recent_N2	1+2
+par_fast_recent_N2	3+4
+par_fast_recent_N2	5+6
+par_fast_recent_N2	1+2
+par_fast_recent_N2	3+4
+par_fast_recent_N2	5+6
+par_fast_recent_N2	455+456
+par_fast_recent_N2	457+458
+par_fast_recent_N2	459+460
+par_fast_recent_X	### --fast -X
+par_fast_recent_X	1 2 3 4
+par_fast_recent_X	1 2 3 4
+par_fast_recent_X	228
+par_fast_recent_X	229
+par_fast_recent_X	230
+par_fast_recent_argfile	### --fast -a/--arg-file
+par_fast_recent_argfile	x
+par_fast_recent_argfile	y
+par_fast_recent_argfile	z
+par_fast_recent_argfile	x
+par_fast_recent_argfile	y
+par_fast_recent_argfile	z
+par_fast_recent_argfile	228
+par_fast_recent_argfile	229
+par_fast_recent_argfile	230
+par_fast_recent_bar	### --fast --bar/--eta/--progress: counts chunks not individual jobs
+par_fast_recent_bar	a
+par_fast_recent_bar	b
+par_fast_recent_bar	c
+par_fast_recent_colsep	### --fast --colsep
+par_fast_recent_colsep	a=1
+par_fast_recent_colsep	b=2
+par_fast_recent_colsep	c=3
+par_fast_recent_colsep	a=1
+par_fast_recent_colsep	b=2
+par_fast_recent_colsep	c=3
+par_fast_recent_colsep	228=228
+par_fast_recent_colsep	229=229
+par_fast_recent_colsep	230=230
+par_fast_recent_compress	### --fast --compress
+par_fast_recent_compress	a
+par_fast_recent_compress	b
+par_fast_recent_compress	c
+par_fast_recent_compress	a
+par_fast_recent_compress	b
+par_fast_recent_compress	c
+par_fast_recent_compress	228
+par_fast_recent_compress	229
+par_fast_recent_compress	230
+par_fast_recent_csv	### --fast --csv
+par_fast_recent_csv	a-1
+par_fast_recent_csv	b-2
+par_fast_recent_csv	c-3
+par_fast_recent_csv	a-1
+par_fast_recent_csv	b-2
+par_fast_recent_csv	c-3
+par_fast_recent_csv	228-228
+par_fast_recent_csv	229-229
+par_fast_recent_csv	230-230
+par_fast_recent_delay	### --fast --delay: applied per chunk not per job
+par_fast_recent_delay	a
+par_fast_recent_delay	b
+par_fast_recent_delay	c
+par_fast_recent_delay	a
+par_fast_recent_delay	b
+par_fast_recent_delay	c
+par_fast_recent_delay	228
+par_fast_recent_delay	229
+par_fast_recent_delay	230
+par_fast_recent_delimiter	### --fast -d/--delimiter
+par_fast_recent_delimiter	a
+par_fast_recent_delimiter	b
+par_fast_recent_delimiter	c
+par_fast_recent_delimiter	a
+par_fast_recent_delimiter	b
+par_fast_recent_delimiter	c
+par_fast_recent_delimiter	228
+par_fast_recent_delimiter	229
+par_fast_recent_delimiter	230
+par_fast_recent_dryrun	### --fast --dry-run: no execution
+par_fast_recent_dryrun	no files created
+par_fast_recent_dryrun	no files created
+par_fast_recent_dryrun	no files created
+par_fast_recent_dryrun_commands	### --fast --dry-run: commands in output
+par_fast_recent_dryrun_commands	echo a
+par_fast_recent_dryrun_commands	echo b
+par_fast_recent_dryrun_commands	echo c
+par_fast_recent_dryrun_commands	echo a
+par_fast_recent_dryrun_commands	echo b
+par_fast_recent_dryrun_commands	echo c
+par_fast_recent_dryrun_commands	230
+par_fast_recent_env	### --fast --env
+par_fast_recent_env	hello-a
+par_fast_recent_env	hello-b
+par_fast_recent_env	hello-c
+par_fast_recent_env	hello-a
+par_fast_recent_env	hello-b
+par_fast_recent_env	hello-c
+par_fast_recent_env	230
+par_fast_recent_filter	### --fast --filter
+par_fast_recent_filter	1
+par_fast_recent_filter	2
+par_fast_recent_filter	3
+par_fast_recent_filter	1
+par_fast_recent_filter	2
+par_fast_recent_filter	3
+par_fast_recent_filter	4
+par_fast_recent_filter	5
+par_fast_recent_filter	228
+par_fast_recent_filter	229
+par_fast_recent_filter	230
+par_fast_recent_halt_semantics	### --fast --halt never exit code
+par_fast_recent_halt_semantics	exit=2
+par_fast_recent_halt_semantics	exit=2
+par_fast_recent_halt_semantics	exit=10
+par_fast_recent_inline_argfile	### --fast ::::
+par_fast_recent_inline_argfile	a
+par_fast_recent_inline_argfile	b
+par_fast_recent_inline_argfile	c
+par_fast_recent_inline_argfile	a
+par_fast_recent_inline_argfile	b
+par_fast_recent_inline_argfile	c
+par_fast_recent_inline_argfile	228
+par_fast_recent_inline_argfile	229
+par_fast_recent_inline_argfile	230
+par_fast_recent_joblog	### --fast --joblog header
+par_fast_recent_joblog	4
+par_fast_recent_joblog	4
+par_fast_recent_joblog	231
+par_fast_recent_jobs	### --fast --jobs/-j
+par_fast_recent_jobs	a
+par_fast_recent_jobs	b
+par_fast_recent_jobs	c
+par_fast_recent_jobs	d
+par_fast_recent_jobs	a
+par_fast_recent_jobs	b
+par_fast_recent_jobs	c
+par_fast_recent_jobs	d
+par_fast_recent_jobs	228
+par_fast_recent_jobs	229
+par_fast_recent_jobs	230
+par_fast_recent_keeporder	### --fast --keep-order
+par_fast_recent_keeporder	1
+par_fast_recent_keeporder	2
+par_fast_recent_keeporder	3
+par_fast_recent_keeporder	4
+par_fast_recent_keeporder	5
+par_fast_recent_keeporder	1
+par_fast_recent_keeporder	2
+par_fast_recent_keeporder	3
+par_fast_recent_keeporder	4
+par_fast_recent_keeporder	5
+par_fast_recent_keeporder	ordered
+par_fast_recent_link	### --fast :::+
+par_fast_recent_link	a 1
+par_fast_recent_link	b 2
+par_fast_recent_link	c 3
+par_fast_recent_link	a 1
+par_fast_recent_link	b 2
+par_fast_recent_link	c 3
+par_fast_recent_link	228 228
+par_fast_recent_link	229 229
+par_fast_recent_link	230 230
+par_fast_recent_load	### --fast --load/--limit/--memfree/--noswap: retries whole chunk
+par_fast_recent_load	a
+par_fast_recent_load	b
+par_fast_recent_load	c
+par_fast_recent_load	a
+par_fast_recent_load	b
+par_fast_recent_load	c
+par_fast_recent_load	228
+par_fast_recent_load	229
+par_fast_recent_load	230
+par_fast_recent_m	### --fast -m
+par_fast_recent_m	1 2 3 4
+par_fast_recent_m	1 2 3 4
+par_fast_recent_m	228
+par_fast_recent_m	229
+par_fast_recent_m	230
+par_fast_recent_multisource	### --fast multiple :::
+par_fast_recent_multisource	a 1
+par_fast_recent_multisource	a 2
+par_fast_recent_multisource	b 1
+par_fast_recent_multisource	b 2
+par_fast_recent_multisource	a 1
+par_fast_recent_multisource	a 2
+par_fast_recent_multisource	b 1
+par_fast_recent_multisource	b 2
+par_fast_recent_multisource	9 1
+par_fast_recent_multisource	9 10
+par_fast_recent_multisource	9 2
+par_fast_recent_multisource	9 3
+par_fast_recent_multisource	9 4
+par_fast_recent_multisource	9 5
+par_fast_recent_multisource	9 6
+par_fast_recent_multisource	9 7
+par_fast_recent_multisource	9 8
+par_fast_recent_multisource	9 9
+par_fast_recent_nice	### --fast --nice
+par_fast_recent_nice	10
+par_fast_recent_nice	10
+par_fast_recent_nice	10
+par_fast_recent_null	### --fast -0/--null
+par_fast_recent_null	a
+par_fast_recent_null	b
+par_fast_recent_null	c
+par_fast_recent_null	a
+par_fast_recent_null	b
+par_fast_recent_null	c
+par_fast_recent_null	228
+par_fast_recent_null	229
+par_fast_recent_null	230
+par_fast_recent_perl_expr	### --fast {= perl =}
+par_fast_recent_perl_expr	HELLO
+par_fast_recent_perl_expr	WORLD
+par_fast_recent_perl_expr	HELLO
+par_fast_recent_perl_expr	WORLD
+par_fast_recent_perl_expr	456
+par_fast_recent_perl_expr	458
+par_fast_recent_perl_expr	460
+par_fast_recent_replacement_dot	### --fast {.}
+par_fast_recent_replacement_dot	bar
+par_fast_recent_replacement_dot	baz
+par_fast_recent_replacement_dot	foo
+par_fast_recent_replacement_dot	bar
+par_fast_recent_replacement_dot	baz
+par_fast_recent_replacement_dot	foo
+par_fast_recent_replacement_dot	228
+par_fast_recent_replacement_dot	229
+par_fast_recent_replacement_dot	230
+par_fast_recent_replacement_dotslash	### --fast {/.}
+par_fast_recent_replacement_dotslash	bar
+par_fast_recent_replacement_dotslash	foo
+par_fast_recent_replacement_dotslash	bar
+par_fast_recent_replacement_dotslash	foo
+par_fast_recent_replacement_dotslash	228
+par_fast_recent_replacement_dotslash	229
+par_fast_recent_replacement_dotslash	230
+par_fast_recent_replacement_n	### --fast {n} with colsep
+par_fast_recent_replacement_n	a-1
+par_fast_recent_replacement_n	b-2
+par_fast_recent_replacement_n	c-3
+par_fast_recent_replacement_n	a-1
+par_fast_recent_replacement_n	b-2
+par_fast_recent_replacement_n	c-3
+par_fast_recent_replacement_n	221-221
+par_fast_recent_replacement_n	222-222
+par_fast_recent_replacement_n	223-223
+par_fast_recent_replacement_n	224-224
+par_fast_recent_replacement_n	225-225
+par_fast_recent_replacement_n	226-226
+par_fast_recent_replacement_n	227-227
+par_fast_recent_replacement_n	228-228
+par_fast_recent_replacement_n	229-229
+par_fast_recent_replacement_n	230-230
+par_fast_recent_replacement_seqno	### --fast {#}
+par_fast_recent_replacement_seqno	1
+par_fast_recent_replacement_seqno	2
+par_fast_recent_replacement_seqno	3
+par_fast_recent_replacement_seqno	1
+par_fast_recent_replacement_seqno	2
+par_fast_recent_replacement_seqno	3
+par_fast_recent_replacement_seqno	228
+par_fast_recent_replacement_seqno	229
+par_fast_recent_replacement_seqno	230
+par_fast_recent_replacement_slash	### --fast {/}
+par_fast_recent_replacement_slash	bar.py
+par_fast_recent_replacement_slash	foo.txt
+par_fast_recent_replacement_slash	bar.py
+par_fast_recent_replacement_slash	foo.txt
+par_fast_recent_replacement_slash	228.txt
+par_fast_recent_replacement_slash	229.txt
+par_fast_recent_replacement_slash	230.txt
+par_fast_recent_replacement_slashslash	### --fast {//}
+par_fast_recent_replacement_slashslash	/tmp
+par_fast_recent_replacement_slashslash	/var
+par_fast_recent_replacement_slashslash	/tmp
+par_fast_recent_replacement_slashslash	/var
+par_fast_recent_replacement_slashslash	/dir228
+par_fast_recent_replacement_slashslash	/dir229
+par_fast_recent_replacement_slashslash	/dir230
+par_fast_recent_replacement_slot	### --fast {%}
+par_fast_recent_replacement_slot	1=1
+par_fast_recent_replacement_slot	2=2
+par_fast_recent_replacement_slot	1=1
+par_fast_recent_replacement_slot	2=2
+par_fast_recent_retries	### --fast --retries
+par_fast_recent_retries	exit>0=yes
+par_fast_recent_retries	exit>0=yes
+par_fast_recent_retries	exit>0=yes
+par_fast_recent_tag	### --fast --tag
+par_fast_recent_tag	a	a
+par_fast_recent_tag	b	b
+par_fast_recent_tag	c	c
+par_fast_recent_tag	a	a
+par_fast_recent_tag	b	b
+par_fast_recent_tag	c	c
+par_fast_recent_tag	228	228
+par_fast_recent_tag	229	229
+par_fast_recent_tag	230	230
+par_fast_recent_tagstring_dot	### --fast --tagstring with {.}
+par_fast_recent_tagstring_dot	bar	bar.py
+par_fast_recent_tagstring_dot	foo	foo.txt
+par_fast_recent_tagstring_dot	bar	bar.py
+par_fast_recent_tagstring_dot	foo	foo.txt
+par_fast_recent_tagstring_dot	221	221.txt
+par_fast_recent_tagstring_dot	222	222.txt
+par_fast_recent_tagstring_dot	223	223.txt
+par_fast_recent_tagstring_dot	224	224.txt
+par_fast_recent_tagstring_dot	225	225.txt
+par_fast_recent_tagstring_dot	226	226.txt
+par_fast_recent_tagstring_dot	227	227.txt
+par_fast_recent_tagstring_dot	228	228.txt
+par_fast_recent_tagstring_dot	229	229.txt
+par_fast_recent_tagstring_dot	230	230.txt
+par_fast_recent_tagstring_fixed	### --fast --tagstring fixed string
+par_fast_recent_tagstring_fixed	TAG	a
+par_fast_recent_tagstring_fixed	TAG	b
+par_fast_recent_tagstring_fixed	TAG	c
+par_fast_recent_tagstring_fixed	TAG	a
+par_fast_recent_tagstring_fixed	TAG	b
+par_fast_recent_tagstring_fixed	TAG	c
+par_fast_recent_tagstring_fixed	TAG	228
+par_fast_recent_tagstring_fixed	TAG	229
+par_fast_recent_tagstring_fixed	TAG	230
+par_fast_recent_tagstring_replacement	### --fast --tagstring with replacement
+par_fast_recent_tagstring_replacement	Ta	a
+par_fast_recent_tagstring_replacement	Tb	b
+par_fast_recent_tagstring_replacement	Tc	c
+par_fast_recent_tagstring_replacement	Ta	a
+par_fast_recent_tagstring_replacement	Tb	b
+par_fast_recent_tagstring_replacement	Tc	c
+par_fast_recent_tagstring_replacement	T228	228
+par_fast_recent_tagstring_replacement	T229	229
+par_fast_recent_tagstring_replacement	T230	230
+par_fast_recent_timeout	### --fast --timeout: applies per chunk
+par_fast_recent_timeout	exit=0
+par_fast_recent_timeout	exit=0
+par_fast_recent_timeout	228
+par_fast_recent_timeout	229
+par_fast_recent_timeout	230
+par_fast_recent_trim	### --fast --trim rl
+par_fast_recent_trim	a
+par_fast_recent_trim	b
+par_fast_recent_trim	c
+par_fast_recent_trim	a
+par_fast_recent_trim	b
+par_fast_recent_trim	c
+par_fast_recent_trim	228
+par_fast_recent_trim	229
+par_fast_recent_trim	230
+par_fast_recent_ungroup	### --fast --ungroup
+par_fast_recent_ungroup	a
+par_fast_recent_ungroup	b
+par_fast_recent_ungroup	c
+par_fast_recent_ungroup	a
+par_fast_recent_ungroup	b
+par_fast_recent_ungroup	c
+par_fast_recent_ungroup	228
+par_fast_recent_ungroup	229
+par_fast_recent_ungroup	230
+par_fast_recent_ungroup	exit=0
