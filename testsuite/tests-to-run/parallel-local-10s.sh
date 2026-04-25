@@ -8,6 +8,40 @@
 # Each should be taking 10-30s and be possible to run in parallel
 # I.e.: No race conditions, no logins
 
+par_zextract() {
+    # Generate /tmp/zextract.{bz2,gz,zst,raw}
+    seq 1000000 |
+	parallel -j0 --pipe --tee '{1} > /tmp/zextract.{2}' \
+		 ::: 'bzip2 -1' 'gzip -1' 'zstd -1' cat :::+ bz2 gz zst raw
+    # Here with wrong extension to test 4CC detection
+    parallel cp {} {}.bin ::: /tmp/zextract.{bz2,gz,zst,raw}
+    doit() {
+	parallel -k --block -1 --tagstring "$1-$2" $2 -j4 --pipepart -a $1 wc
+    }
+    export -f doit
+    stdout parallel -j 25% -k doit ::: /tmp/zextract.{bz2,gz,zst,raw}{,.bin} \
+	   ::: '' -L100000 "-L100000 -N3"
+}
+ 
+par_pipepart_lines() {
+    echo "### zextract --lines"
+    zst=$(mktemp)
+    raw=$(mktemp)
+    opt="-j10 --block -1  --pipepart -a"
+    seq 1000000 | zstd -1 > "$zst"
+    seq 1000000 > "$raw"
+    seq 1000000 | parallel --pipe -L30000 wc | sort
+    seq 1000000 | parallel --pipe -N30000 wc | sort
+    seq 1000000 | parallel --pipe -L30000 -N3 wc | sort
+    parallel -L30000      $opt "$zst" wc | sort
+    parallel -N30000      $opt "$zst" wc | sort
+    parallel -L30000 -N3  $opt "$zst" wc | sort
+    parallel -L30000      $opt "$raw" wc | sort
+    parallel -N30000      $opt "$raw" wc | sort
+    parallel -L30000 -N3  $opt "$raw" wc | sort
+    rm "$zst" "$raw"
+}
+
 par_shard() {
     echo '### --shard'
     # Each of the 5 lines should match:

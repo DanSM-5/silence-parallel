@@ -527,41 +527,6 @@ sub __PIPE_MODE__() {}
     }
 }
 
-sub zextract_uncompressed_size($) {
-    # Run `zextract --size $file` and return the uncompressed byte count.
-    # zextract output format: "<bytes>\t<filename>\n"
-    # Also builds the compression index (.zex) if it is missing or stale.
-    my ($file) = @_;
-    my $out = qx{zextract --size @{[ ::Q($file) ]}};
-    my ($bytes) = split(/\t/, $out);
-    return int($bytes || 0);
-}
-
-sub zextract_line_count($) {
-    # Run `zextract --lines --size $file` and return the line count.
-    # Works for both compressed and uncompressed files.
-    # Also builds the line index (.zexl) if it is missing or stale.
-    my ($file) = @_;
-    my $out = qx{zextract --lines --size @{[ ::Q($file) ]}};
-    my ($lines) = split(/\t/, $out);
-    return int($lines || 0);
-}
-
-sub open_compressed_at($$$) {
-    # Return an open read filehandle streaming decompressed $file from
-    # $position onwards, using zextract for random access.
-    #   $mode = "bytes"  =>  zextract --range $position- $file  (0-based)
-    #   $mode = "lines"  =>  zextract --lines --range $position- $file (1-based)
-    # zextract auto-builds (.zex/.zexl) indexes when missing or stale.
-    my ($file, $mode, $position) = @_;
-    my $fh;
-    my @cmd = ("zextract");
-    push @cmd, "--lines" if $mode eq "lines";
-    push @cmd, "--range", "${position}-", $file;
-    open($fh, "-|", @cmd)
-        or ::die_bug("open_compressed_at failed for $file at $position: $!");
-    return $fh;
-}
 
 sub pipepart_setup() {
     # Prepare the job queue for --pipepart mode, where each job receives a
@@ -579,13 +544,10 @@ sub pipepart_setup() {
     #   $Global::JobQueue      - re-populated with one entry per file block
     if($opt::tee) {
 	# Prepend each command with
-	#   < file
+	#   cat file |
 	my $qfile = Q($opt::a[0]);
-	my $cat_string = "< $qfile";
 	for(1..$Global::JobQueue->total_jobs()) {
-	    push @Global::cat_appends, $cat_string;
-	    push @Global::cat_prepends, "";
-	    push @Global::cat_ssh_pipe_cmds, "(cat - $qfile)";
+	    push @Global::cat_prepends, "cat $qfile";
 	}
     } else {
 	if(not $opt::blocksize) {
@@ -596,16 +558,14 @@ sub pipepart_setup() {
 	    # --blocksize with 1 job per jobslot
 	    $opt::blocksize = -1;
 	}
+	my %zex_for;
 	if($opt::blocksize < 0) {
 	    my $size = 0;
 	    # Compute size of -a
 	    for(@opt::a) {
-		if(is_compressed_file($_) and -f $_) {
-		    $size += zextract_uncompressed_size($_);
-		} elsif(-f $_) {
-		    $size += -s $_;
-		} elsif(-b $_) {
-		    $size += size_of_block_dev($_);
+		$zex_for{$_} = Zextract->new($_, 0);
+		if(-f $_ or -b $_) {
+		    $size += $zex_for{$_}->size();
 		} elsif(-e $_) {
 		    ::error("$_ is neither a file nor a block device");
 		    wait_and_exit(255);
@@ -622,9 +582,9 @@ sub pipepart_setup() {
 		    -multiply_binary_prefix($opt::blocksize));
 	}
 	for my $file (grep { ! fileno $_ } @opt::a) {
-	    my ($prepends, $ssh_cmds) = pipe_part_files($file);
+	    $zex_for{$file} = Zextract->new($file, 0) unless defined $zex_for{$file};
+	    my $prepends = pipe_part_files($zex_for{$file});
 	    push @Global::cat_prepends, @$prepends;
-	    push @Global::cat_ssh_pipe_cmds, @$ssh_cmds;
 	}
 	# Unget the empty arg as many times as there are parts
 	$Global::JobQueue->{'commandlinequeue'}{'arg_queue'}->unget(
@@ -645,8 +605,7 @@ sub pipe_tee_setup() {
     # suppress errors when a consumer exits before all input is consumed.
     #
     # Side effects:
-    #   @Global::cat_prepends  - "(rm fifoN;" for each job (removes fifo on open)
-    #   @Global::cat_appends   - ") < fifoN"  for each job
+    #   @Global::cat_prepends  - "(rm fifoN; cat) < fifoN" for each job
     my @fifos;
     for(1..$Global::JobQueue->total_jobs()) {
 	push @fifos, tmpfifo();
@@ -675,15 +634,10 @@ sub pipe_tee_setup() {
 	}
 	exit(0);
     }
-    # For each fifo
-    #	(rm fifo1; grep 1) < fifo1
-    #	(rm fifo2; grep 2) < fifo2
-    #	(rm fifo3; grep 3) < fifo3
+    # For each fifo, stream its content to the job via a pipe:
+    #   (rm fifo1; cat) < fifo1 | CMD
     # Remove the tmpfifo as soon as it is open
-    @Global::cat_prepends = map { "(rm $_;" } shell_quote(@fifos);
-    @Global::cat_appends = map { ") < $_" } shell_quote(@fifos);
-    @Global::cat_ssh_pipe_cmds =
-	map { "(cat -; (rm $_; cat) < $_)" } shell_quote(@fifos);
+    @Global::cat_prepends = map { "(rm $_; cat) < $_" } shell_quote(@fifos);
 }
 
 
@@ -1095,10 +1049,7 @@ sub pipe_shard_setup() {
     }
     @Global::cat_prepends =
 	map { "perl -e $parcat ".
-		  join(" ",shell_quote(@$_))." | "} @parcatfifos;
-    @Global::cat_ssh_pipe_cmds =
-	map { "(cat -; perl -e $parcat ".
-		  join(" ",shell_quote(@$_)).")"} @parcatfifos;
+		  join(" ",shell_quote(@$_))} @parcatfifos;
 }
 
 sub pipe_part_files_by_lines($) {
@@ -1106,7 +1057,7 @@ sub pipe_part_files_by_lines($) {
     # boundaries, for use when --pipepart is combined with -L or -N.
     # Uses `zextract --lines --range START-END` which works for both
     # compressed and uncompressed files.
-    my ($file) = @_;
+    my ($zex) = @_;
     # Use the explicit options directly: $Global::max_number_of_args may have
     # been auto-set from max_lines (for non-pipe mode), so we read $opt:: vars.
     my $n = (defined $opt::max_replace_args) ? $opt::max_replace_args : 1;
@@ -1114,17 +1065,15 @@ sub pipe_part_files_by_lines($) {
           : (defined $opt::max_lines) ? $opt::max_lines
           : 1;
     my $lines_per_job = $n * $l;
-    my $total = zextract_line_count($file);
-    my (@cat_prepends, @ssh_pipe_cmds);
+    my $total = $zex->size();
+    my @cat_prepends;
     for(my $start = 1; $start <= $total; $start += $lines_per_job) {
         my $end = $start + $lines_per_job - 1;
         $end = $total if $end > $total;
-        my $cmd = "zextract --lines --range ${start}-${end} " . Q($file) . " |";
+        my $cmd = $zex->cat_partial($start, $end + 1);
         push @cat_prepends, $cmd;
-        (my $data_cmd = $cmd) =~ s/\s*\|\s*\z//;
-        push @ssh_pipe_cmds, "(cat -; $data_cmd)";
     }
-    return (\@cat_prepends, \@ssh_pipe_cmds);
+    return \@cat_prepends;
 }
 
 sub pipe_part_files(@) {
@@ -1135,15 +1084,16 @@ sub pipe_part_files(@) {
     #   1. Optionally skip the first line (--skip-first-line).
     #   2. Read and capture any header (--header) from the file.
     #   3. Compute split positions (byte offsets of record boundaries).
-    #   4. Return one cat_partial() command per consecutive pair of positions.
+    #   4. Return one Zextract->cat_partial() command per consecutive pair of positions.
     #
     # Input:
     #   $file   path to a regular file or block device (streams not supported)
     # Returns:
     #   @commands  shell strings, each of which streams one block to stdout
-    my ($file) = @_;
+    my ($zex) = @_;
+    my $file = $zex->filename();
     if(defined $opt::L or defined $opt::max_lines or defined $opt::max_replace_args) {
-        return pipe_part_files_by_lines($file);
+        return pipe_part_files_by_lines(Zextract->new($zex->filename(), 1));
     }
     my $buf = "";
     if(not -f $file and not -b $file) {
@@ -1151,10 +1101,7 @@ sub pipe_part_files(@) {
 		"$file is not a seekable file.");
 	::wait_and_exit(255);
     }
-
-    my $fh = is_compressed_file($file)
-        ? open_compressed_at($file, "bytes", 0)
-        : open_or_exit("<",$file);
+    my $fh = $zex->fh();
     my $firstlinelen = 0;
     if($opt::skip_first_line) {
 	my $newline;
@@ -1164,30 +1111,17 @@ sub pipe_part_files(@) {
 	}
     }
     my $header = find_header(\$buf,$fh);
-    close $fh if is_compressed_file($file);
+    close $fh if $zex->{compressed};
     # find positions
-    my @pos = find_split_positions($file,int($Global::blocksize),
-				   $header,$firstlinelen);
-    my (@cat_prepends, @ssh_pipe_cmds);
-    if(is_compressed_file($file)) {
-	for(my $i=0; $i<$#pos; $i++) {
-	    my $cmd = cat_partial_compressed($file,
-					     $firstlinelen, $firstlinelen+length($header),
-					     $pos[$i], $pos[$i+1]);
-	    push @cat_prepends, $cmd;
-	    (my $data_cmd = $cmd) =~ s/\s*\|\s*\z//;
-	    push @ssh_pipe_cmds, "(cat -; $data_cmd)";
-	}
-    } else {
-	for(my $i=0; $i<$#pos; $i++) {
-	    my $cmd = cat_partial($file, $firstlinelen, $firstlinelen+length($header),
-				  $pos[$i], $pos[$i+1]);
-	    push @cat_prepends, $cmd;
-	    (my $data_cmd = $cmd) =~ s/\s*\|\s*\z//;
-	    push @ssh_pipe_cmds, "(cat -; $data_cmd)";
-	}
+    my @pos = $zex->find_split_positions(int($Global::blocksize),
+					  $header,$firstlinelen);
+    my @cat_prepends;
+    for(my $i=0; $i<$#pos; $i++) {
+	my $cmd = $zex->cat_partial($firstlinelen, $firstlinelen+length($header),
+				    $pos[$i], $pos[$i+1]);
+	push @cat_prepends, $cmd;
     }
-    return (\@cat_prepends, \@ssh_pipe_cmds);
+    return \@cat_prepends;
 }
 
 sub find_header($$) {
@@ -1225,365 +1159,7 @@ sub find_header($$) {
     return $header;
 }
 
-sub find_split_positions($$$) {
-    # Scan a file and return a list of byte offsets at which it can be split
-    # into chunks suitable for --pipepart.  Each offset points to the start
-    # of a new record (just after a recend+recstart boundary).
-    #
-    # The first offset is always $skiplen (past the first-line skip and header).
-    # The last offset is always the file size.
-    # Between them, offsets are spaced roughly $block bytes apart.
-    #
-    # For --groupby the work is delegated to split_positions_for_group_by().
-    #
-    # Input:
-    #   $file          path to regular file or block device
-    #   $block         minimum chunk size in bytes
-    #   $header        header string already consumed (used to compute skiplen)
-    #   $firstlinelen  bytes consumed by --skip-first-line (0 if not used)
-    # Returns:
-    #   @positions     ascending list of byte offsets (at least two elements)
-    my($file, $block, $header, $firstlinelen) = @_;
-    my $skiplen = $firstlinelen + length $header;
-    my $size = is_compressed_file($file) ? zextract_uncompressed_size($file)
-             : -b $file                  ? size_of_block_dev($file)
-             :                             -s $file;
-    $block = int $block;
-    if($opt::groupby) {
-	return split_positions_for_group_by($file,$size,$block,
-					    $header,$firstlinelen);
-    }
-    # The optimal dd blocksize for mint, redhat, solaris, openbsd = 2^17..2^20
-    # The optimal dd blocksize for freebsd = 2^15..2^17
-    # The optimal dd blocksize for ubuntu (AMD6376) = 2^16
-    my $dd_block_size = 131072; # 2^17
-    my @pos;
-    my ($recstart,$recend) = recstartrecend();
-    my $recendrecstart = $recend.$recstart;
-    my $fh = is_compressed_file($file) ? undef : ::open_or_exit("<",$file);
-    push(@pos,$skiplen);
-    for(my $pos = $block+$skiplen; $pos < $size; $pos += $block) {
-	my $buf;
-	if($recendrecstart eq "") {
-	    # records ends anywhere
-	    push(@pos,$pos);
-	} else {
-	    # Seek to the block start (or open a new zextract pipe for compressed)
-	    if(is_compressed_file($file)) {
-		$fh = open_compressed_at($file, "bytes", $pos);
-		$buf = "";
-	    } elsif(not sysseek($fh, $pos, 0)) {
-		::error("Cannot seek to $pos in $file");
-		wait_and_exit(255);
-	    }
-	    while(sysread($fh,$buf,$dd_block_size,length $buf)) {
-		if($opt::regexp) {
-		    # If match /$recend$recstart/ => Record position
-		    if($buf =~ m:^(.*$recend)$recstart:os) {
-			# Start looking for next record _after_ this match
-			$pos += length($1);
-			push(@pos,$pos);
-			last;
-		    }
-		} else {
-		    # If match $recend$recstart => Record position
-		    # TODO optimize to only look at the appended
-		    #	$dd_block_size + len $recendrecstart
-		    # TODO increase $dd_block_size to optimize for longer records
-		    my $i = index64(\$buf,$recendrecstart);
-		    if($i != -1) {
-			# Start looking for next record _after_ this match
-			$pos += $i + length($recend);
-			push(@pos,$pos);
-			last;
-		    }
-		}
-	    }
-	    if(is_compressed_file($file)) { close $fh; }
-	}
-    }
-    if($pos[$#pos] != $size) {
-	# Last splitpoint was not at end of the file: add $size as the last
-	push @pos, $size;
-    }
-    close $fh if defined $fh;
-    return @pos;
-}
 
-sub split_positions_for_group_by($$$$) {
-    # Compute byte offsets for splitting a file into chunks where each chunk
-    # contains all consecutive rows that share the same group-by key value.
-    # Used by find_split_positions() when --groupby is active.
-    #
-    # The algorithm uses three nested closures:
-    #   value_at($pos)            - return (key_value, line_start_pos) at $pos;
-    #                               results are memoised in %value.
-    #   binary_search_end(s,lo,hi)  - find the last byte position where the
-    #                               key equals $s (starting from $lo where it
-    #                               equals $s, ending at $hi where it differs).
-    #   binary_search_start(s,lo,hi)- find the first byte position where the
-    #                               key equals $s (starting from $lo where it
-    #                               differs, ending at $hi where it equals $s).
-    #
-    # When --max-args is set the file is split into single-value groups which
-    # are then merged N at a time.  Otherwise blocks of approximately $block
-    # bytes are used, extended to the nearest group boundary.
-    #
-    # Input:
-    #   $file          path to the input file
-    #   $size          total file size in bytes
-    #   $block         target chunk size
-    #   $header        header string (its length is added to the skip offset)
-    #   $firstlinelen  bytes to skip for --skip-first-line
-    # Returns:
-    #   @positions     ascending byte offsets (first = after header, last = size)
-    my ($file,$size,$block,$header,$firstlinelen) = @_;
-    my($fh);
-    my %value;
-    sub value_at($) {
-	my $pos = shift;
-	if(not defined $value{$pos}) {
-	    my ($linepos, $handle);
-	    if(is_compressed_file($file)) {
-		# For compressed files we cannot seek/tell; open a new pipe
-		# starting 1 byte before $pos to land on a line boundary.
-		$handle = open_compressed_at($file, "bytes",
-					     $pos > 0 ? $pos - 1 : 0);
-		if($pos > 0) {
-		    # Discard the partial line we landed inside.
-		    my $partial = <$handle>;
-		    $linepos = $pos - 1 + length($partial);
-		} else {
-		    $linepos = 0;
-		}
-	    } else {
-		if($pos != 0) {
-		    seek($fh, $pos-1, 0) || die;
-		    # Read half line
-		    <$fh>;
-		}
-		# Read full line
-		$linepos = tell($fh);
-		$handle = $fh;
-	    }
-	    if(not defined $value{$linepos}) {
-		$_ = <$handle>;
-		if(defined $_) {
-		    # Not end of file
-		    my @F;
-		    if(defined $group_by::col) {
-			$opt::colsep ||= "\t";
-			@F = split /$opt::colsep/, $_;
-			$_ = $F[$group_by::col];
-		    }
-		    eval $group_by::perlexpr;
-		}
-		$value{$linepos} = [$_,$linepos];
-	    }
-	    close $handle if is_compressed_file($file);
-	    $value{$pos} = $value{$linepos};
-	}
-	return (@{$value{$pos}});
-    }
-
-    sub binary_search_end($$$) {
-	my ($s,$spos,$epos) = @_;
-	# value_at($spos) == $s
-	# value_at($epos) != $s
-	my $posdif = $epos - $spos;
-	my ($v,$vpos);
-	while($posdif) {
-	    ($v,$vpos) = value_at($spos+$posdif);
-	    if($v eq $s) {
-		$spos = $vpos;
-		$posdif = $epos - $spos;
-	    } else {
-		$epos = $vpos;
-	    }
-	    $posdif = int($posdif/2);
-	}
-	return($v,$vpos);
-    }
-
-    sub binary_search_start($$$) {
-	my ($s,$spos,$epos) = @_;
-	# value_at($spos) != $s
-	# value_at($epos) == $s
-	my $posdif = $epos - $spos;
-	my ($v,$vpos);
-	while($posdif) {
-	    ($v,$vpos) = value_at($spos+$posdif);
-	    if($v eq $s) {
-		$epos = $vpos;
-	    } else {
-		$spos = $vpos;
-		$posdif = $epos - $spos;
-	    }
-	    $posdif = int($posdif/2);
-	}
-	return($v,$vpos);
-    }
-
-    my @pos;
-    $fh = is_compressed_file($file)
-        ? open_compressed_at($file, "bytes", 0)
-        : open_or_exit("<",$file);
-    # Set $Global::group_by_column $Global::group_by_perlexpr
-    group_by_loop($fh,$opt::recsep);
-    if($opt::max_args) {
-	# Split after n values
-	my ($a,$apos);
-	# $xpos = linestart, $x = value at $xpos
-	$apos = $firstlinelen + length $header;
-	for(($a,$apos) = value_at($apos); $apos < $size;) {
-	    push @pos, $apos;
-	    ($a,$apos) = binary_search_end($a,$apos,$size);
-	    if(is_compressed_file($file) ? $apos >= $size : eof($fh)) {
-		push @pos, $size; last;
-	    }
-	}
-	# @pos = start of every value
-	# Merge n values
-	# -nX = keep every X'th position
-	my $i = 0;
-	@pos = grep { not ($i++ % $opt::max_args) } @pos;
-    } else {
-	# Split after any value group
-	# Preferable < $blocksize
-	my ($a,$b,$c,$apos,$bpos,$cpos);
-	# $xpos = linestart, $x = value at $xpos, $apos < $bpos < $cpos
-	$apos = $firstlinelen + length $header;
-	for(($a,$apos) = value_at($apos); $apos < $size;) {
-	    push @pos, $apos;
-	    $bpos = $apos + $block;
-	    ($b,$bpos) = value_at($bpos);
-	    if(is_compressed_file($file) ? $bpos >= $size : eof($fh)) {
-		# EOF is less than 1 block away
-		push @pos, $size; last;
-	    }
-	    $cpos = $bpos + $block;
-	    ($c,$cpos) = value_at($cpos);
-	    if($a eq $b) {
-		while($b eq $c) {
-		    # Move bpos, cpos a block forward until $a == $b != $c
-		    $bpos = $cpos;
-		    $cpos += $block;
-		    ($c,$cpos) = value_at($cpos);
-		    if($cpos >= $size) {
-			$cpos = $size;
-			last;
-		    }
-		}
-		# $a == $b != $c
-		# Binary search for $b ending between ($bpos,$cpos)
-		($b,$bpos) = binary_search_end($b,$bpos,$cpos);
-	    } else {
-		if($b eq $c) {
-		    # $a != $b == $c
-		    # Binary search for $b starting between ($apos,$bpos)
-		    ($b,$bpos) = binary_search_start($b,$apos,$bpos);
-		} else {
-		    # $a != $b != $c
-		    # Binary search for $b ending between ($bpos,$cpos)
-		    ($b,$bpos) = binary_search_end($b,$bpos,$cpos);
-		}
-	    }
-	    ($a,$apos) = ($b,$bpos);
-	}
-    }
-    if($pos[$#pos] != $size) {
-	# Last splitpoint was not at end of the file: add it
-	push @pos, $size;
-    }
-    return @pos;
-}
-
-sub cat_partial($@) {
-    # Build a shell command that streams a list of byte ranges from a file
-    # to stdout using an embedded Perl one-liner (avoids dd and its
-    # platform-specific block-size quirks).
-    #
-    # The chosen read size is 32767 bytes (2^15-1), which benchmarks well
-    # across multiple architectures (AMD, Intel, ARM).
-    #
-    # Input:
-    #   $file             path to the input file
-    #   @start_end        flat list of (start_byte, end_byte) pairs
-    # Returns:
-    #   shell string      "< file perl -e '...' start1 len1 start2 len2 ... |"
-    my($file, @start_end) = @_;
-    my($start, $i);
-    # Convert (start,end) to (start,len)
-    my @start_len = map {
-	if(++$i % 2) { $start = $_; } else { $_-$start }
-    } @start_end;
-    # The optimal block size differs
-    # It has been measured on:
-    # AMD 6376: n*4k-1; small n
-    # AMD Neo N36L: 44k-200k
-    # Intel i7-3632QM: 55k-
-    # ARM Cortex A53: 4k-28k
-    # Intel i5-2410M: 36k-46k
-    #
-    # I choose 2^15-1 = 32767
-    # q{
-    #	expseq() {
-    #	    perl -E '
-    #		$last = pop @ARGV;
-    #	    $first = shift || 1;
-    #	    $inc = shift || 1.03;
-    #	    for($i=$first; $i<=$last;$i*=$inc) { say int $i }
-    #	    ' "$@"
-    #	}
-    #
-    #	seq 111111111 > big;
-    #	f() { ppar --test $1 -a big --pipepart --block -1 'md5sum > /dev/null'; }
-    #	export -f f;
-    #	expseq 1000 1.001 300000 | shuf | parallel -j1 --jl jl-md5sum f;
-    # };
-    my $script = spacefree
-	(0,
-	 q{
-	     while(@ARGV) {
-		 sysseek(STDIN,shift,0) || die;
-		 $left = shift;
-		 while($read =
-		       sysread(STDIN,$buf, $left > 32767 ? 32767 : $left)){
-		     $left -= $read;
-		     syswrite(STDOUT,$buf);
-		 }
-	     }
-	 });
-    return "<". Q($file) .
-	" perl -e '$script' @start_len |";
-}
-
-sub cat_partial_compressed($@) {
-    # Like cat_partial() but streams byte ranges from a compressed file
-    # using `zextract --range START-END`.  zextract auto-manages indexes.
-    #
-    # Input:
-    #   $file          path to the compressed file
-    #   @start_end     flat list of (start_byte, end_byte) pairs;
-    #                  end_byte is exclusive (same convention as cat_partial).
-    #                  Pairs where end <= start are silently skipped.
-    # Returns:
-    #   shell string   "zextract --range S-E file |"
-    #                  or "{ zextract ...; zextract ...; } |" for multiple parts
-    my ($file, @start_end) = @_;
-    my @parts;
-    my $i = 0;
-    while($i < @start_end) {
-	my $start = $start_end[$i++];
-	my $end   = $start_end[$i++];
-	next if $end <= $start;
-	push @parts,
-	    "zextract --range ${start}-" . ($end-1) . " " . Q($file);
-    }
-    return @parts == 1
-        ? $parts[0] . " |"
-        : "{ " . join("; ", @parts) . "; } |";
-}
 
 sub column_perlexpr($$$) {
     # Parse a combined "column [perlexpr]" string as used by --shard,
@@ -2258,7 +1834,7 @@ sub nindex($$) {
     }
 }
 
-sub index64($$$) {
+sub index64($@) {
     # Wrapper around Perl's index() that works correctly on strings larger than
     # 2 GB.  Perl < 5.22 uses 32-bit signed offsets internally, so index()
     # returns wrong results when the string exceeds 2^31-1 bytes.
@@ -3170,7 +2746,7 @@ sub parse_options(@) {
     ## Shell
     #
     if($opt::fast) {
-	$Global::shell = $ENV{'PARALLEL_SHELL'} || "/bin/sh";
+	$Global::shell = $ENV{'PARALLEL_SHELL'} || ::which("dash") || "/bin/sh";
     } else {
 	$Global::shell = $ENV{'PARALLEL_SHELL'} || parent_shell($$)
 	    || $ENV{'SHELL'} || "/bin/sh";
@@ -7620,7 +7196,7 @@ sub rm(@) {
     unlink @_;
 }
 
-sub size_of_block_dev() {
+sub size_of_block_dev($) {
     # Return the size in bytes of a block device.
     # The -s operator only works for regular files; for block devices we seek
     # to the end and use tell() to get the byte count.
@@ -11778,19 +11354,16 @@ sub wrapped($) {
 	$command = $self->sshlogin_wrap($command);
 	if(@Global::cat_prepends) {
 	    my $prepend = shift @Global::cat_prepends;
-	    my $append  = shift @Global::cat_appends;
 	    if($self->{'sshlogin_pipe_payload'}) {
 		# SSH pipe job: deliver perlcode via 'cat -' reading from stdin,
 		# then job data from data_source. All piped to 'ssh perl'.
-		# pipe_cmd was pre-computed when cat_prepends was populated.
+		# The SSH data-source form is derived from cat_prepend at use time.
 		my $pre  = delete $self->{'tee_pre'};
 		my $post = delete $self->{'tee_post'};
-		my $pipe_cmd = shift @Global::cat_ssh_pipe_cmds;
-		$command = $pre . "$pipe_cmd | $command" . ($post ? ";$post" : "");
+		$command = $pre . "(cat -; $prepend) | $command" . ($post ? ";$post" : "");
 		$self->{'pipe_payload_only'} = 1;
 	    } else {
-		shift @Global::cat_ssh_pipe_cmds;
-		$command = $prepend . "($command)" . $append;
+		$command = "$prepend | ($command)";
 	    }
 	} elsif($opt::pipe and not $opt::roundrobin) {
 	    # Wrap with EOF-detector to avoid starting $command if EOF.
@@ -17390,6 +16963,451 @@ sub unlock($) {
 $opt::x = $Semaphore::timeout = $Semaphore::wait =
 $Job::file_descriptor_warning_printed = $Global::envdef = $opt::session;
 
+package Zextract;
+
+# Object wrapping random access into both compressed and uncompressed files.
+#
+# For compressed files (.gz/.bz2/.zst) random access is provided by spawning
+# a zextract subprocess.  For uncompressed files the normal filehandle seek
+# is used.  Both cases present the same API so callers need not branch on
+# is_compressed_file().
+#
+# State:
+#   name        - file path
+#   lines_mode  - 0 = byte positions, 1 = line positions
+#   compressed  - result of is_compressed_file($name); falsy if uncompressed
+#   fh          - current open filehandle (undef until first use)
+#   pos         - stream position after the last seek() call (undef = unknown)
+#   _fh_dirty   - 1 if fh() has been called since the last seek()
+#   _size       - memoised result of size()
+#   value_cache - memo table for value_at()
+
+sub new {
+    my ($class, $name, $lines_mode) = @_;
+    return bless {
+	name        => $name,
+	lines_mode  => $lines_mode ? 1 : 0,
+	compressed  => ::is_compressed_file($name),
+	fh          => undef,
+	pos         => undef,
+	_fh_dirty   => 0,
+	_size       => undef,
+	value_cache => {},
+    }, $class;
+}
+
+sub filename { return $_[0]->{name}; }
+
+sub size {
+    # Returns total byte count (lines_mode=0) or line count (lines_mode=1).
+    # Result is memoised; block devices are supported via size_of_block_dev().
+    my $self = shift;
+    return $self->{_size} if defined $self->{_size};
+    my $file = $self->{name};
+    my $sz;
+    if($self->{lines_mode}) {
+	my $out = qx{zextract --lines --size @{[ ::Q($file) ]}};
+	my ($lines) = split(/\t/, $out);
+	$sz = int(defined($lines) ? $lines : 0);
+    } elsif($self->{compressed}) {
+	my $out = qx{zextract --size @{[ ::Q($file) ]}};
+	my ($bytes) = split(/\t/, $out);
+	$sz = int(defined($bytes) ? $bytes : 0);
+    } elsif(-b $file) {
+	$sz = ::size_of_block_dev($file);
+    } else {
+	$sz = -s $file;
+    }
+    $self->{_size} = $sz;
+    return $sz;
+}
+
+sub fh {
+    # Returns the current filehandle, opening from position 0 if not yet open.
+    # Marks the handle as "dirty" so that the next seek() will always respawn
+    # for compressed files (because the caller may read an unknown number of
+    # bytes between now and the next seek call).
+    my $self = shift;
+    if(!defined $self->{fh}) {
+	if($self->{compressed}) {
+	    my @cmd = ("zextract");
+	    push @cmd, "--lines" if $self->{lines_mode};
+	    push @cmd, "--range", "0-", $self->{name};
+	    ::debug("zex","fh: @cmd\n");
+	    my $fh;
+	    open($fh, "-|", @cmd)
+		or ::die_bug("Zextract::fh open failed for $self->{name}: $!");
+	    $self->{fh}  = $fh;
+	} else {
+	    $self->{fh} = ::open_or_exit("<", $self->{name});
+	}
+	$self->{pos} = 0;
+    }
+    $self->{_fh_dirty} = 1;
+    return $self->{fh};
+}
+
+sub seek {
+    # Reposition the stream to $pos.
+    #
+    # Uncompressed: plain seek() on the buffered filehandle.
+    #
+    # Compressed: if no external reads have happened since the last seek()
+    # (i.e. fh() has not been called) AND the target is within 1 MB forward,
+    # skip ahead with read() instead of respawning zextract.  Otherwise close
+    # the current handle and spawn a fresh zextract at $pos.
+    my ($self, $pos) = @_;
+    if(!$self->{compressed}) {
+	my $fh = defined($self->{fh}) ? $self->{fh} : do {
+	    $self->{fh} = ::open_or_exit("<", $self->{name});
+	    $self->{fh};
+	};
+	seek($fh, $pos, 0)
+	    or ::die_bug("Zextract::seek failed for $self->{name} at $pos");
+	$self->{pos}       = $pos;
+	$self->{_fh_dirty} = 0;
+	return $fh;
+    }
+    # Compressed path
+    my $can_opt = !$self->{_fh_dirty}
+	&& defined($self->{fh})
+	&& defined($self->{pos})
+	&& $pos >= $self->{pos}
+	&& $pos - $self->{pos} < 1_000_000;
+    if($can_opt) {
+	# It is faster just to read 1MB than to re-open
+	my $skip = $pos - $self->{pos};
+	my $buf;
+	::debug("zex","seek: read more\n");
+	while($skip > 0) {
+	    my $n = read($self->{fh}, $buf, $skip < 65536 ? $skip : 65536);
+	    last if !defined($n) || $n == 0;
+	    $skip -= $n;
+	}
+    } else {
+	close($self->{fh}) if defined $self->{fh};
+	my @cmd = ("zextract");
+	push @cmd, "--lines" if $self->{lines_mode};
+	push @cmd, "--range", "${pos}-", $self->{name};
+	::debug("zex","seek: @cmd\n");
+	my $fh;
+	open($fh, "-|", @cmd)
+	    or ::die_bug("Zextract::seek open failed for $self->{name} at $pos: $!");
+	$self->{fh} = $fh;
+    }
+    $self->{pos}       = $pos;
+    $self->{_fh_dirty} = 0;
+    return $self->{fh};
+}
+
+sub past_end {
+    # Returns true when $pos is at or beyond the end of the file.
+    # For uncompressed files, checks eof() on the persistent handle.
+    # For compressed files, compares against the cached size.
+    my ($self, $pos) = @_;
+    if($self->{compressed}) {
+	return $pos >= $self->size();
+    } else {
+	return eof($self->{fh});
+    }
+}
+
+sub value_at {
+    # Return (key_value, line_start_pos) for the line containing byte $pos.
+    # Results are memoised in value_cache.
+    # For uncompressed files the persistent fh is reused (buffered seek/readline).
+    # For compressed files a fresh zextract pipe is spawned per call; position is
+    # tracked so that consecutive nearby calls can use the seek() optimisation.
+    my ($self, $pos) = @_;
+    my $cache = $self->{value_cache};
+    if(!defined $cache->{$pos}) {
+	my ($linepos, $handle_fh, $close_fh);
+	if($self->{compressed}) {
+	    my $start = $pos > 0 ? $pos - 1 : 0;
+	    # Use seek() so the forward-read optimisation can fire across calls.
+	    $self->seek($start);
+	    $handle_fh = $self->{fh};  # access directly, not via fh(), to avoid dirty flag
+	    $close_fh  = 0;
+	    if($pos > 0) {
+		my $partial = <$handle_fh>;
+		$linepos = $pos - 1 + length($partial);
+		$self->{pos} = $linepos;  # update tracked position after partial read
+	    } else {
+		$linepos = 0;
+	    }
+	} else {
+	    my $fh = $self->fh();
+	    if($pos != 0) {
+		seek($fh, $pos - 1, 0) || die;
+		<$fh>;  # discard partial line
+	    }
+	    $linepos   = tell($fh);
+	    $handle_fh = $fh;
+	    $close_fh  = 0;
+	}
+	if(!defined $cache->{$linepos}) {
+	    $_ = <$handle_fh>;
+	    if($self->{compressed} && defined $_) {
+		$self->{pos} += length($_);  # track position after full-line read
+	    }
+	    if(defined $_) {
+		my @F;
+		if(defined $group_by::col) {
+		    $opt::colsep ||= "\t";
+		    @F = split /$opt::colsep/, $_;
+		    $_ = $F[$group_by::col];
+		}
+		eval $group_by::perlexpr;
+	    }
+	    $cache->{$linepos} = [$_, $linepos];
+	}
+	$cache->{$pos} = $cache->{$linepos};
+    }
+    return @{$cache->{$pos}};
+}
+
+sub cat_partial {
+    # Build a shell command that streams the given ranges from the file to
+    # stdout.  @start_end is a flat list of (start, end) pairs (end exclusive).
+    # Returns the command WITHOUT a trailing " |"; callers append it themselves.
+    # For lines_mode=1 or compressed files, uses zextract; otherwise uses a
+    # lightweight Perl script that sysseeks into the uncompressed file.
+    my ($self, @start_end) = @_;
+    my $file = $self->{name};
+    if($self->{compressed} or $self->{lines_mode}) {
+	my @parts;
+	my $i = 0;
+	while($i < @start_end) {
+	    my $start = $start_end[$i++];
+	    my $end   = $start_end[$i++];
+	    next if $end <= $start;
+	    my $zex_cmd = "zextract";
+	    $zex_cmd .= " --lines" if $self->{lines_mode};
+	    $zex_cmd .= " --range ${start}-" . ($end - 1) . " " . ::Q($file);
+	    push @parts, $zex_cmd;
+	}
+	# More than one part if you have --header
+	return @parts == 1
+	    ? $parts[0]
+	    : "{ " . join("; ", @parts) . "; }";
+    } else {
+	my ($start, $i);
+	my @start_len = map {
+	    if(++$i % 2) { $start = $_; } else { $_ - $start }
+	} @start_end;
+	# Optimal read block: 2^15-1 = 32767 bytes
+	my $script = ::spacefree(0, q{
+	    while(@ARGV) {
+		sysseek(STDIN,shift,0) || die;
+		$left = shift;
+		while($read =
+		      sysread(STDIN,$buf, $left > 32767 ? 32767 : $left)){
+		    $left -= $read;
+		    syswrite(STDOUT,$buf);
+		}
+	    }
+	});
+	return "<" . ::Q($file) . " perl -e '$script' @start_len";
+    }
+}
+
+sub find_split_positions {
+    # Scan the file and return a list of byte offsets at which it can be split
+    # into chunks suitable for --pipepart.  Each offset points to the start
+    # of a new record (just after a recend+recstart boundary).
+    #
+    # The first offset is always $skiplen (past the first-line skip and header).
+    # The last offset is always the file size.
+    # Between them, offsets are spaced roughly $block bytes apart.
+    #
+    # For --groupby the work is delegated to split_positions_for_group_by().
+    my ($self, $block, $header, $firstlinelen) = @_;
+    my $skiplen = $firstlinelen + length $header;
+    my $size = $self->size();
+    $block = int $block;
+    if($opt::groupby) {
+	return $self->split_positions_for_group_by($block,$header,$firstlinelen);
+    }
+    # The optimal dd blocksize for mint, redhat, solaris, openbsd = 2^17..2^20
+    # The optimal dd blocksize for freebsd = 2^15..2^17
+    # The optimal dd blocksize for ubuntu (AMD6376) = 2^16
+    my $dd_block_size = 131072; # 2^17
+    my @pos;
+    my ($recstart,$recend) = ::recstartrecend();
+    my $recendrecstart = $recend.$recstart;
+    push(@pos,$skiplen);
+    for(my $pos = $block+$skiplen; $pos < $size; $pos += $block) {
+	my $buf;
+	if($recendrecstart eq "") {
+	    # records ends anywhere
+	    push(@pos,$pos);
+	} else {
+	    $self->seek($pos);
+	    my $fh = $self->fh();
+	    $buf = "";
+	    while(sysread($fh,$buf,$dd_block_size,length $buf)) {
+		if($opt::regexp) {
+		    # If match /$recend$recstart/ => Record position
+		    if($buf =~ m:^(.*$recend)$recstart:os) {
+			# Start looking for next record _after_ this match
+			$pos += length($1);
+			push(@pos,$pos);
+			last;
+		    }
+		} else {
+		    # If match $recend$recstart => Record position
+		    # TODO optimize to only look at the appended
+		    #	$dd_block_size + len $recendrecstart
+		    # TODO increase $dd_block_size to optimize for longer records
+		    my $i = ::index64(\$buf,$recendrecstart);
+		    if($i != -1) {
+			# Start looking for next record _after_ this match
+			$pos += $i + length($recend);
+			push(@pos,$pos);
+			last;
+		    }
+		}
+	    }
+	}
+    }
+    if($pos[$#pos] != $size) {
+	# Last splitpoint was not at end of the file: add $size as the last
+	push @pos, $size;
+    }
+    close($self->{fh}) if defined $self->{fh};
+    return @pos;
+}
+
+sub split_positions_for_group_by {
+    # Compute byte offsets for splitting the file into chunks where each chunk
+    # contains all consecutive rows that share the same group-by key value.
+    # Used by find_split_positions() when --groupby is active.
+    #
+    # The algorithm uses two nested named subs that close over $self:
+    #   binary_search_end(s,lo,hi)  - find the last byte position where the
+    #                                 key equals $s (starting from $lo where it
+    #                                 equals $s, ending at $hi where it differs).
+    #   binary_search_start(s,lo,hi)- find the first byte position where the
+    #                                 key equals $s (starting from $lo where it
+    #                                 differs, ending at $hi where it equals $s).
+    #
+    # When --max-args is set the file is split into single-value groups which
+    # are then merged N at a time.  Otherwise blocks of approximately $block
+    # bytes are used, extended to the nearest group boundary.
+    my ($self, $block, $header, $firstlinelen) = @_;
+    my $size = $self->size();
+
+    sub binary_search_end($$$) {
+	my ($s,$spos,$epos) = @_;
+	# value_at($spos) == $s
+	# value_at($epos) != $s
+	my $posdif = $epos - $spos;
+	my ($v,$vpos);
+	while($posdif) {
+	    ($v,$vpos) = $self->value_at($spos+$posdif);
+	    if($v eq $s) {
+		$spos = $vpos;
+		$posdif = $epos - $spos;
+	    } else {
+		$epos = $vpos;
+	    }
+	    $posdif = int($posdif/2);
+	}
+	return($v,$vpos);
+    }
+
+    sub binary_search_start($$$) {
+	my ($s,$spos,$epos) = @_;
+	# value_at($spos) != $s
+	# value_at($epos) == $s
+	my $posdif = $epos - $spos;
+	my ($v,$vpos);
+	while($posdif) {
+	    ($v,$vpos) = $self->value_at($spos+$posdif);
+	    if($v eq $s) {
+		$epos = $vpos;
+	    } else {
+		$spos = $vpos;
+		$posdif = $epos - $spos;
+	    }
+	    $posdif = int($posdif/2);
+	}
+	return($v,$vpos);
+    }
+
+    my @pos;
+    $self->seek(0);
+    my $fh = $self->fh();
+    # Set $Global::group_by_column $Global::group_by_perlexpr
+    ::group_by_loop($fh,$opt::recsep);
+    if($opt::max_args) {
+	# Split after n values
+	my ($a,$apos);
+	# $xpos = linestart, $x = value at $xpos
+	$apos = $firstlinelen + length $header;
+	for(($a,$apos) = $self->value_at($apos); $apos < $size;) {
+	    push @pos, $apos;
+	    ($a,$apos) = binary_search_end($a,$apos,$size);
+	    if($self->past_end($apos)) {
+		push @pos, $size; last;
+	    }
+	}
+	# @pos = start of every value
+	# Merge n values
+	# -nX = keep every X'th position
+	my $i = 0;
+	@pos = grep { not ($i++ % $opt::max_args) } @pos;
+    } else {
+	# Split after any value group
+	# Preferable < $blocksize
+	my ($a,$b,$c,$apos,$bpos,$cpos);
+	# $xpos = linestart, $x = value at $xpos, $apos < $bpos < $cpos
+	$apos = $firstlinelen + length $header;
+	for(($a,$apos) = $self->value_at($apos); $apos < $size;) {
+	    push @pos, $apos;
+	    $bpos = $apos + $block;
+	    ($b,$bpos) = $self->value_at($bpos);
+	    if($self->past_end($bpos)) {
+		# EOF is less than 1 block away
+		push @pos, $size; last;
+	    }
+	    $cpos = $bpos + $block;
+	    ($c,$cpos) = $self->value_at($cpos);
+	    if($a eq $b) {
+		while($b eq $c) {
+		    # Move bpos, cpos a block forward until $a == $b != $c
+		    $bpos = $cpos;
+		    $cpos += $block;
+		    ($c,$cpos) = $self->value_at($cpos);
+		    if($cpos >= $size) {
+			$cpos = $size;
+			last;
+		    }
+		}
+		# $a == $b != $c
+		# Binary search for $b ending between ($bpos,$cpos)
+		($b,$bpos) = binary_search_end($b,$bpos,$cpos);
+	    } else {
+		if($b eq $c) {
+		    # $a != $b == $c
+		    # Binary search for $b starting between ($apos,$bpos)
+		    ($b,$bpos) = binary_search_start($b,$apos,$bpos);
+		} else {
+		    # $a != $b != $c
+		    # Binary search for $b ending between ($bpos,$cpos)
+		    ($b,$bpos) = binary_search_end($b,$bpos,$cpos);
+		}
+	    }
+	    ($a,$apos) = ($b,$bpos);
+	}
+    }
+    if($pos[$#pos] != $size) {
+	# Last splitpoint was not at end of the file: add it
+	push @pos, $size;
+    }
+    return @pos;
+}
+
 package main;
 
 
@@ -17554,7 +17572,6 @@ sub main() {
     ::debug("init", "Halt\n");
     halt();
 }
-
 
 main();
 __END__
