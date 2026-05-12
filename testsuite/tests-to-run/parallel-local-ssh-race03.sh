@@ -30,9 +30,9 @@ timeoutpidtree() {
     }
     pids=$(_pidtree $2)
     sleep $1
-    echo $pids | xargs kill 2>/dev/null
+    echo $pids | xargs kill
     sleep 1
-    echo $pids | xargs kill -9 2>/dev/null
+    echo $pids | xargs kill -9
 }
 # Start timeout if this script gets stuck
 timeoutpidtree 200 $$ &
@@ -78,7 +78,6 @@ env_underscore() {
     echo WHY DOES THIS FAIL?
     echo '### --env _'
     echo ignored_var >> ~/.parallel/ignored_vars
-    cat ~/.parallel/ignored_vars
     unset $(compgen -A function | grep par_)
     ignored_var="ERROR IF COPIED"
     export ignored_var

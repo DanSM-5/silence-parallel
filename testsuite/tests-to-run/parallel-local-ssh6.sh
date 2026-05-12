@@ -45,13 +45,7 @@ par_termseq_remote() {
 
 par_nonall_ssh() {
     echo 'bug #59181: --ssh is not propagated to --nonall'
-    myssh() {
-	echo >&2 "myssh called: $@"
-	shift
-	ssh "$@"
-    }
-    export -f myssh
-    stdout parallel --ssh "myssh myarg" -S $SSHLOGIN1 --nonall echo run on all
+    parallel --ssh 'echo OK | ssh' -S $SSHLOGIN1 --nonall cat
 }
 
 par_test_onall() {

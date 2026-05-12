@@ -58,6 +58,109 @@ goal of being able to run on old installations. Currently the target
 is CentOS 3.9 and Perl 5.8.0.
 
 
+=head2 Code structure: packages
+
+GNU B<parallel> is divided into these packages inside the single file:
+
+=over 2
+
+=item B<main>
+
+Parses options, initializes globals, and drives the top-level execution
+loop (B<run_gnu_parallel()>, B<drain_job_queue()>).
+
+=item B<SSHLogin>
+
+Represents one execution target - either a remote host (via SSH) or
+the local machine (the special sshlogin B<:>). Stores the SSH command,
+credentials, host-group membership, number of parallel slots, and
+runtime state (jobs running, load, last-used time). The string format
+it accepts is:
+
+  [@grp+grp/][N/][sshcmd ][[user][:pass]@][host[:port]]
+
+=item B<JobQueue>
+
+A queue of B<Job> objects. Wraps B<CommandLineQueue>, converting
+B<CommandLine> objects into B<Job> objects on demand. Supports
+B<unget()> so that jobs that cannot start yet (e.g. because the load
+is too high) can be pushed back without loss.
+
+=item B<Job>
+
+Represents a single job invocation. Manages the full lifecycle:
+process spawning (via B<IPC::Open3>), stdin pipe writing (B<--pipe>
+mode), stdout/stderr collection and forwarding, file transfer and
+cleanup (B<--transfer>/B<--return>/B<--cleanup>), timeout tracking,
+retry logic, and exit status recording.
+
+=item B<CommandLine>
+
+Represents one fully-instantiated command line: the command template
+with all replacement strings (B<{}>, B<{/}>, B<{#}>, B<{= =}>, etc.)
+resolved against a specific set of input arguments. Constructed by
+B<CommandLineQueue::get()> and consumed by B<Job::new()>.
+
+=item B<CommandLineQueue>
+
+Generates B<CommandLine> objects from the command template and one or
+more input sources (B<:::>, B<::::>, B<:::+>, etc.). Handles
+B<--link>, B<-N>, B<-m>, B<-X>, and all the combinatorics of multiple
+input sources.
+
+=item B<Limits::Command>
+
+Determines the maximum command-line length for the current host (or a
+remote SSH host). Binary-searches B<ARG_MAX>, caches the result on
+disk, and adjusts for B<tmux> title limits. Used by B<CommandLineQueue>
+when packing multiple arguments with B<-m> or B<-X>.
+
+=item B<RecordQueue>
+
+Reads records from one input source, splitting on the record separator.
+
+=item B<RecordColQueue>
+
+Like B<RecordQueue>, but also parses CSV columns (for B<--csv>).
+
+=item B<SQLRecordQueue>
+
+Reads input records from an SQL table (for B<--sqlworker>).
+
+=item B<MultifileQueue>
+
+Multiplexes several B<RecordQueue>s, one per B<:::> or B<::::>
+argument source.
+
+=item B<Arg>
+
+Wraps a single input argument value throughout its lifetime.
+Parses any trailing B<@hostgroup> suffix when B<--hostgroups> is
+active. Provides quoting helpers used by B<CommandLine> to embed
+the value safely in shell commands.
+
+=item B<TimeoutQueue>
+
+Tracks running jobs that have a timeout (B<--timeout>). Implements
+the percentile timeout using a remedian (approximate median) data
+structure so that all run times need not be kept in memory.
+
+=item B<SQL>
+
+Database backend for B<--sqlandworker> / B<--sqlmaster> /
+B<--sqlworker>. Parses a DB URL (B<sqlite:///path>, B<pg://host/db>,
+B<csv:///dir>, ...), connects via B<DBI>, and manages the
+job-tracking table.
+
+=item B<Semaphore>
+
+Implements the semaphore mode (B<sem> / B<parallel --semaphore>).
+Uses a lock file and advisory locking to limit concurrency across
+unrelated processes.
+
+=back
+
+
 =head2 Scalability up and down
 
 The smallest system GNU B<parallel> is tested on is a 32 MB ASUS
@@ -803,6 +906,8 @@ converts this to base64, splits the base64 into 1000 char blocks (so
 B<csh> does not fail), and prepends it with this Perl script that
 decodes, decompresses and B<eval>s the line.
 
+The decoder (B<base64_zip_eval()>) looks like this:
+
     @GNU_Parallel=("use","IPC::Open3;","use","MIME::Base64");
     eval "@GNU_Parallel";
 
@@ -832,6 +937,11 @@ that runs GNU B<parallel>, so this is not a big problem.
 
 The added bonus of this is that much bigger environments can now be
 transferred as they will be below B<bash>'s limit of 131072 chars.
+
+There is also a simpler B<base64_eval()> variant (no bzip2) used when
+the line is between the plain-text limit and the bzip2 threshold, and
+a B<base64_wrap()> function that chooses the right encoding and builds
+the complete shell command with the decoder prepended.
 
 
 =head2 Which shell to use
@@ -1260,6 +1370,23 @@ still use ,, and ,, if they like: B<--parens ,,,,>
 Internally, however, the B<{=> and B<=}> are replaced by \257< and
 \257>. This is to make it simpler to make regular expressions. You
 only need to look one character ahead, and never have to look behind.
+
+
+=head2 Fast mode
+
+B<--fast> / B<-D fast> is an experimental execution path that avoids
+spawning one process per job. Instead jobs are batched into shell
+script chunks separated by the sentinel string C<"\n#\0\n">, and the
+batch is piped to a child C<parallel --pipe> instance for parallel
+execution.
+
+The batch size starts at 100 and grows 3x each round (capped at 100 000)
+to amortise overhead for large queues. Shell helper functions
+(C<error()>, C<_tagger()>, C<_taggerwrap()>) are injected into every
+chunk so that tagging and error counting work without extra processes.
+
+Limitations: B<--group>, B<--halt>, B<--tag>, and B<$PARALLEL_JOBSLOT>
+are not yet supported in fast mode.
 
 
 =head2 Test suite

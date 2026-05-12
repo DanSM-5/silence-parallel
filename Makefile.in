@@ -774,8 +774,8 @@ uninstall-am:
 .PRECIOUS: Makefile
 
 
-SSHLOGIN ?= $(shell [ -f .env ] && . ./.env 2>/dev/null && printf '%s' "$$SSHLOGIN")
-TOR_SSHLOGIN ?= $(shell [ -f .env ] && . ./.env 2>/dev/null && printf '%s' "$$TOR_SSHLOGIN")
+BUILDHOST ?= $(shell [ -f .env ] && . ./.env 2>/dev/null && printf '%s' "$$BUILDHOST")
+TOR_BUILDHOST ?= $(shell [ -f .env ] && . ./.env 2>/dev/null && printf '%s' "$$TOR_BUILDHOST")
 
 sudoinstall:
 	make
@@ -785,46 +785,30 @@ test:
 	cd testsuite; make 1
 
 #torresults:
-#	torsocks rsync -Hazv --progress tortest:privat/parallel/testsuite/actual-results/ testsuite/actual-results/
+#	torsocks rsync -Hazv --progress $(TOR_BUILDHOST):privat/parallel/testsuite/actual-results/ testsuite/actual-results/
 
 check-sshlogin:
-	@if [ -z "$(SSHLOGIN)" ]; then \
-	    if [ -e .env ]; then \
-	        . ./.env && \
-	        if [ -n "$$SSHLOGIN" ]; then \
-	            exec $(MAKE) $(MAKECMDGOALS) SSHLOGIN=$$SSHLOGIN; \
-	        fi; \
-	    fi; \
-	    echo "Error: SSHLOGIN is not set. Run: make SSHLOGIN=[user@]<host> <target>"; exit 1; \
-	fi
+	@test -n "$(BUILDHOST)" || { echo "Error: BUILDHOST is not set. Run: make BUILDHOST=[user@]<host> <target>" >&2; exit 1; }
 
 check-tor-sshlogin:
-	@if [ -z "$(TOR_SSHLOGIN)" ]; then \
-	    if [ -e .env ]; then \
-	        . ./.env && \
-	        if [ -n "$$TOR_SSHLOGIN" ]; then \
-	            exec $(MAKE) $(MAKECMDGOALS) TOR_SSHLOGIN=$$TOR_SSHLOGIN; \
-	        fi; \
-	    fi; \
-	    echo "Error: TOR_SSHLOGIN is not set. Run: make TOR_SSHLOGIN=[user@]<host> <target>"; exit 1; \
-	fi
+	@test -n "$(TOR_BUILDHOST)" || { echo "Error: TOR_BUILDHOST is not set. Run: make TOR_BUILDHOST=[user@]<host> <target>" >&2; exit 1; }
 
 rsync: check-sshlogin
-	rsync -Hazv --exclude='*.{pdf,gz,bz2,html,deb}' --exclude authorized_keys --exclude vagrant.box --exclude .vagrant/ --exclude oracle*box --exclude oracle-database-*.rpm --exclude actual-results --exclude '*hwdep*' --exclude=Makefile --exclude=config.log --exclude=config.status --exclude=stamp-h1 --delete ./ $(SSHLOGIN):privat/parallel/
-	rsync -Haz --no-times --exclude='*.{pdf,gz,bz2,html,deb}' testsuite/tests-to-run/ $(SSHLOGIN):privat/parallel/testsuite/tests-to-run/
+	rsync -Hazv --exclude='*.{pdf,gz,bz2,html,deb}' --exclude authorized_keys --exclude vagrant.box --exclude .vagrant/ --exclude oracle*box --exclude oracle-database-*.rpm --exclude actual-results --exclude '*hwdep*' --exclude=/Makefile --exclude=config.log --exclude=config.status --exclude=stamp-h1 --delete ./ $(BUILDHOST):privat/parallel/
+	rsync -Haz --no-times --exclude='*.{pdf,gz,bz2,html,deb}' testsuite/tests-to-run/ $(BUILDHOST):privat/parallel/testsuite/tests-to-run/
 
 r-%: rsync
-	ssh -t $(SSHLOGIN) 'cd privat/parallel && make $*'
+	ssh -t $(BUILDHOST) 'cd privat/parallel && make $*'
 
 torrsync: check-tor-sshlogin
-	torsocks rsync -Hazv --exclude="*.{pdf,gz,bz2,html,deb}" --exclude authorized_keys --exclude vagrant.box --exclude .vagrant/ --exclude oracle*box --exclude oracle-database-*.rpm --exclude actual-results --exclude "*hwdep*" --exclude="Makefile" --exclude="config.log" --exclude="config.status" --exclude="stamp-h1" --delete ./ '$(TOR_SSHLOGIN)':privat/parallel/
+	torsocks rsync -Hazv --exclude="*.{pdf,gz,bz2,html,deb}" --exclude authorized_keys --exclude vagrant.box --exclude .vagrant/ --exclude oracle*box --exclude oracle-database-*.rpm --exclude actual-results --exclude "*hwdep*" --exclude="Makefile" --exclude="config.log" --exclude="config.status" --exclude="stamp-h1" --delete ./ '$(TOR_BUILDHOST)':privat/parallel/
 
-# Can be called as: make r-tor-test-local
+# make tor-test-local
 tor-%: torrsync
-	torsocks ssh -t -o ServerAliveInterval=60 -o ServerAliveCountMax=60 $(TOR_SSHLOGIN) 'cd privat/parallel && (test -f Makefile || ./configure) && make $*'
+	torsocks ssh -t -o ServerAliveInterval=60 -o ServerAliveCountMax=60 $(TOR_BUILDHOST) 'cd privat/parallel && (test -f Makefile || ./configure) && make $*'
 
 test-%:
-	cd testsuite && make $*
+	cd testsuite && make test-$*
 
 web:
 	cd src; make web
@@ -1000,6 +984,7 @@ pack_unpack_and_test_build:
 	parallel --tag 'if [ -s {} ]; then neno qpdf --check {}; else echo "{} is 0 bytes"; false; fi' ::: src/*.pdf && \
 	parallel ::: true && \
 	sem true
+
 install-data-hook:
 	mkdir -p ${zshcompletiondir} ${bashcompletiondir}
 	$(DESTDIR)$(bindir)/parallel --shell-completion bash > ${bashcompletion}
