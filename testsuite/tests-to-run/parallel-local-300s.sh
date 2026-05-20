@@ -136,10 +136,10 @@ par__mem_leak() {
 	max1000=$(run_measurements 1000 1007 100000 | tail -n1)
 	min30000=$(run_measurements 15000 15004 100000 | head -n1)
 	if [ $max1000 -gt $min30000 ] ; then
-	    echo Probably no leak $max1000 -gt $min30000
+	    echo Probably no leak
 	    return 0
 	else
-	    echo Probably leaks $max1000 not -gt $min30000
+	    echo Probably leak $max1000 not -gt $min30000
 	    # Make sure there are a few sleeps
 	    max1000=$(run_measurements 1001 1007 100 | tail -n1)
 	    min30000=$(run_measurements 30000 30004 100 | head -n1)
@@ -154,7 +154,7 @@ par__mem_leak() {
     }
 
     renice -n 3 $$ 2>/dev/null >/dev/null
-    if no_mem_leak >/dev/null ; then
+    if no_mem_leak ; then
 	echo no mem leak detected
     else
 	echo possible mem leak;

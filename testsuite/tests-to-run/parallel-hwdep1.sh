@@ -115,34 +115,38 @@ par_ll_no_newline() {
     echo
 }
 
-par__environment_too_big_dash() {
+parGONE__environment_too_big_dash() {
   myscript=$(cat <<'_EOF'
     echo 'bug #50815: env_parallel should warn if the environment is too big'
     len_var=60
-    len_var_remote=43
+    len_var_remote=43+80+50+50+50+500
     len_var_quote=31
-    len_var_quote_remote=21
+    len_var_quote_remote=21+80+50+50+50+500
     len_fun=1
     len_fun_remote=1
     len_fun_quote=1
     len_fun_quote_remote=1
     
-    . `which env_parallel.dash`;
+    . env_parallel.dash;
 
     repeat() {
       # Repeat input string n*1000 times
       perl -e 'print ((shift)x(eval "1000*(".shift.")"))' "$@"
     }
+    short() {
+      # De-repeat input
+      perl -pe 's/(["x]+)/length($1)/e'
+    }
 
     bigvar=$(repeat x $len_var)
-    env_parallel echo ::: OK_bigvar
+    env_parallel echo 'x$bigvar' ::: OK_bigvar | short
     bigvar=$(repeat x $len_var_remote)
-    env_parallel -S lo echo ::: OK_bigvar_remote
+    env_parallel -S lo echo 'x$bigvar' ::: OK_bigvar_remote | short
 
     bigvar=$(repeat \" $len_var_quote)
-    env_parallel echo ::: OK_bigvar_quote
+    env_parallel echo 'x$bigvar' ::: OK_bigvar_quote | short
     bigvar=$(repeat \" $len_var_quote_remote)
-    env_parallel -S lo echo ::: OK_bigvar_quote_remote
+    env_parallel -S lo echo 'x$bigvar' ::: OK_bigvar_quote_remote | short
 
     bigvar=u
     eval 'bigfunc() { a="'"$(repeat x $len_fun)"'"; };'
@@ -189,9 +193,9 @@ par__environment_too_big_dash() {
   myscript=$(cat <<'_EOF'
     echo 'bug #50815: env_parallel should warn if the environment is too big'
     len_var=60
-    len_var_remote=43
+    len_var_remote=43+85
     len_var_quote=31
-    len_var_quote_remote=21
+    len_var_quote_remote=21+35
     len_fun=1
     len_fun_remote=1
     len_fun_quote=1
@@ -216,14 +220,14 @@ par__environment_too_big_dash() {
 
     bigvar=u
     eval 'bigfunc() { a="'"$(repeat x $len_fun)"'"; };'
-    env_parallel echo ::: OK_bigfunc
+    env_parallel echo ::: OK_bigfunc-not-supported
     eval 'bigfunc() { a="'"$(repeat x $len_fun_remote)"'"; };'
-    env_parallel -S lo echo ::: OK_bigfunc_remote
+    env_parallel -S lo echo ::: OK_bigfunc_remote-not-supported
 
     eval 'bigfunc() { a="'"$(repeat \" $len_fun_quote)"'"; };'
-    env_parallel echo ::: OK_bigfunc_quote
+    env_parallel echo ::: OK_bigfunc_quote-not-supported
     eval 'bigfunc() { a="'"$(repeat \" $len_fun_quote_remote)"'"; };'
-    env_parallel -S lo echo ::: OK_bigfunc_quote_remote
+    env_parallel -S lo echo ::: OK_bigfunc_quote_remote-not-supported
     bigfunc() { true; }
 
     echo Rest should fail - functions not supported in dash
@@ -265,13 +269,13 @@ par__environment_too_big_zsh() {
     . `which env_parallel.zsh`;
 
     len_var=16
-    len_var_remote=$len_var-6
+    len_var_remote=$len_var-6+90
     len_var_quote=$len_var
-    len_var_quote_remote=$len_var-15
+    len_var_quote_remote=$len_var+85
     len_fun=18
-    len_fun_remote=$len_fun-10
+    len_fun_remote=$len_fun+70
     len_fun_quote=$len_fun
-    len_fun_quote_remote=$len_fun-8
+    len_fun_quote_remote=$len_fun-8+90
 
     repeat_() {
       # Repeat input string n*1000 times

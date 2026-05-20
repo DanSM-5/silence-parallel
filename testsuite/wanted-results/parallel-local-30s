@@ -2155,6 +2155,52 @@ par_exit_code	fdsh parallel --halt-on-error now,done=1 'true;/bin/true' ::: 100	
 par_exit_code	fdsh parallel --halt-on-error now,done=1 'true;exit' ::: 100	100
 par_exit_code	parallel: This job finished:
 par_exit_code	runit
+par_fifo_under_csh	### Test --fifo under csh
+par_fifo_under_csh	1048571
+par_fifo_under_csh	1
+par_fifo_under_csh	1048572
+par_fifo_under_csh	1
+par_fifo_under_csh	1048572
+par_fifo_under_csh	1
+par_fifo_under_csh	1048572
+par_fifo_under_csh	1
+par_fifo_under_csh	1048572
+par_fifo_under_csh	1
+par_fifo_under_csh	1048572
+par_fifo_under_csh	1
+par_fifo_under_csh	1048569
+par_fifo_under_csh	1
+par_fifo_under_csh	1048576
+par_fifo_under_csh	1
+par_fifo_under_csh	1048576
+par_fifo_under_csh	1
+par_fifo_under_csh	1048576
+par_fifo_under_csh	1
+par_fifo_under_csh	1048576
+par_fifo_under_csh	1
+par_fifo_under_csh	1048576
+par_fifo_under_csh	1
+par_fifo_under_csh	1048576
+par_fifo_under_csh	1
+par_fifo_under_csh	1048576
+par_fifo_under_csh	1
+par_fifo_under_csh	1048576
+par_fifo_under_csh	1
+par_fifo_under_csh	1048576
+par_fifo_under_csh	1
+par_fifo_under_csh	1048576
+par_fifo_under_csh	1
+par_fifo_under_csh	1048576
+par_fifo_under_csh	1
+par_fifo_under_csh	1048576
+par_fifo_under_csh	1
+par_fifo_under_csh	1048576
+par_fifo_under_csh	1
+par_fifo_under_csh	1048576
+par_fifo_under_csh	1
+par_fifo_under_csh	868832
+par_fifo_under_csh	1
+par_fifo_under_csh	exit 22
 par_groupby	-N1 3 $_%=2 tsv \t	### test tsv | --colsep \t --groupby 3 $_%=2 -N1
 par_groupby	-N1 3 $_%=2 tsv \t	NewRec
 par_groupby	-N1 3 $_%=2 tsv \t	a1	b1	C1	
@@ -3271,226 +3317,5 @@ par_slow_total_jobs	b
 par_slow_total_jobs	1
 par_slow_total_jobs	2
 par_slow_total_jobs	parallel: Warning: Reading X arguments took longer than XX seconds.
-par_sshlogin_parsing	### Generate sshlogins to test parsing
-par_sshlogin_parsing	lo	22
-par_sshlogin_parsing	lo	username
-par_sshlogin_parsing	lo:22222	22222
-par_sshlogin_parsing	lo:22222	username
-par_sshlogin_parsing	parallel@lo	22
-par_sshlogin_parsing	parallel@lo	parallel
-par_sshlogin_parsing	parallel@lo:22222	22222
-par_sshlogin_parsing	parallel@lo:22222	parallel
-par_sshlogin_parsing	/usr/bin/ssh lo	22
-par_sshlogin_parsing	/usr/bin/ssh lo	username
-par_sshlogin_parsing	/usr/bin/ssh lo:22222	22222
-par_sshlogin_parsing	/usr/bin/ssh lo:22222	username
-par_sshlogin_parsing	/usr/bin/ssh parallel@lo	22
-par_sshlogin_parsing	/usr/bin/ssh parallel@lo	parallel
-par_sshlogin_parsing	/usr/bin/ssh parallel@lo:22222	22222
-par_sshlogin_parsing	/usr/bin/ssh parallel@lo:22222	parallel
-par_sshlogin_parsing	4/lo	22
-par_sshlogin_parsing	4/lo	username
-par_sshlogin_parsing	4/lo:22222	22222
-par_sshlogin_parsing	4/lo:22222	username
-par_sshlogin_parsing	4/parallel@lo	22
-par_sshlogin_parsing	4/parallel@lo	parallel
-par_sshlogin_parsing	4/parallel@lo:22222	22222
-par_sshlogin_parsing	4/parallel@lo:22222	parallel
-par_sshlogin_parsing	4//usr/bin/ssh lo	22
-par_sshlogin_parsing	4//usr/bin/ssh lo	username
-par_sshlogin_parsing	4//usr/bin/ssh lo:22222	22222
-par_sshlogin_parsing	4//usr/bin/ssh lo:22222	username
-par_sshlogin_parsing	4//usr/bin/ssh parallel@lo	22
-par_sshlogin_parsing	4//usr/bin/ssh parallel@lo	parallel
-par_sshlogin_parsing	4//usr/bin/ssh parallel@lo:22222	22222
-par_sshlogin_parsing	4//usr/bin/ssh parallel@lo:22222	parallel
-par_sshlogin_parsing	@grp1+grp2/lo	22
-par_sshlogin_parsing	@grp1+grp2/lo	username
-par_sshlogin_parsing	@grp1+grp2/lo:22222	22222
-par_sshlogin_parsing	@grp1+grp2/lo:22222	username
-par_sshlogin_parsing	@grp1+grp2/parallel@lo	22
-par_sshlogin_parsing	@grp1+grp2/parallel@lo	parallel
-par_sshlogin_parsing	@grp1+grp2/parallel@lo:22222	22222
-par_sshlogin_parsing	@grp1+grp2/parallel@lo:22222	parallel
-par_sshlogin_parsing	@grp1+grp2//usr/bin/ssh lo	22
-par_sshlogin_parsing	@grp1+grp2//usr/bin/ssh lo	username
-par_sshlogin_parsing	@grp1+grp2//usr/bin/ssh lo:22222	22222
-par_sshlogin_parsing	@grp1+grp2//usr/bin/ssh lo:22222	username
-par_sshlogin_parsing	@grp1+grp2//usr/bin/ssh parallel@lo	22
-par_sshlogin_parsing	@grp1+grp2//usr/bin/ssh parallel@lo	parallel
-par_sshlogin_parsing	@grp1+grp2//usr/bin/ssh parallel@lo:22222	22222
-par_sshlogin_parsing	@grp1+grp2//usr/bin/ssh parallel@lo:22222	parallel
-par_sshlogin_parsing	@grp1+grp2/4/lo	22
-par_sshlogin_parsing	@grp1+grp2/4/lo	username
-par_sshlogin_parsing	@grp1+grp2/4/lo:22222	22222
-par_sshlogin_parsing	@grp1+grp2/4/lo:22222	username
-par_sshlogin_parsing	@grp1+grp2/4/parallel@lo	22
-par_sshlogin_parsing	@grp1+grp2/4/parallel@lo	parallel
-par_sshlogin_parsing	@grp1+grp2/4/parallel@lo:22222	22222
-par_sshlogin_parsing	@grp1+grp2/4/parallel@lo:22222	parallel
-par_sshlogin_parsing	@grp1+grp2/4//usr/bin/ssh lo	22
-par_sshlogin_parsing	@grp1+grp2/4//usr/bin/ssh lo	username
-par_sshlogin_parsing	@grp1+grp2/4//usr/bin/ssh lo:22222	22222
-par_sshlogin_parsing	@grp1+grp2/4//usr/bin/ssh lo:22222	username
-par_sshlogin_parsing	@grp1+grp2/4//usr/bin/ssh parallel@lo	22
-par_sshlogin_parsing	@grp1+grp2/4//usr/bin/ssh parallel@lo	parallel
-par_sshlogin_parsing	@grp1+grp2/4//usr/bin/ssh parallel@lo:22222	22222
-par_sshlogin_parsing	@grp1+grp2/4//usr/bin/ssh parallel@lo:22222	parallel
-par_sshlogin_parsing	::;`echo>/tmp/trap`;)(|<*&"'@lo	22
-par_sshlogin_parsing	::;`echo>/tmp/trap`;)(|<*&"'@lo	username
-par_sshlogin_parsing	::;`echo>/tmp/trap`;)(|<*&"'@lo:22222	22222
-par_sshlogin_parsing	::;`echo>/tmp/trap`;)(|<*&"'@lo:22222	username
-par_sshlogin_parsing	withpassword::;`echo>/tmp/trap`;)(|<*&"'@lo	22
-par_sshlogin_parsing	withpassword::;`echo>/tmp/trap`;)(|<*&"'@lo	withpassword
-par_sshlogin_parsing	withpassword::;`echo>/tmp/trap`;)(|<*&"'@lo:22222	22222
-par_sshlogin_parsing	withpassword::;`echo>/tmp/trap`;)(|<*&"'@lo:22222	withpassword
-par_sshlogin_parsing	/usr/bin/ssh ::;`echo>/tmp/trap`;)(|<*&"'@lo	22
-par_sshlogin_parsing	/usr/bin/ssh ::;`echo>/tmp/trap`;)(|<*&"'@lo	username
-par_sshlogin_parsing	/usr/bin/ssh ::;`echo>/tmp/trap`;)(|<*&"'@lo:22222	22222
-par_sshlogin_parsing	/usr/bin/ssh ::;`echo>/tmp/trap`;)(|<*&"'@lo:22222	username
-par_sshlogin_parsing	/usr/bin/ssh withpassword::;`echo>/tmp/trap`;)(|<*&"'@lo	22
-par_sshlogin_parsing	/usr/bin/ssh withpassword::;`echo>/tmp/trap`;)(|<*&"'@lo	withpassword
-par_sshlogin_parsing	/usr/bin/ssh withpassword::;`echo>/tmp/trap`;)(|<*&"'@lo:22222	22222
-par_sshlogin_parsing	/usr/bin/ssh withpassword::;`echo>/tmp/trap`;)(|<*&"'@lo:22222	withpassword
-par_sshlogin_parsing	4/::;`echo>/tmp/trap`;)(|<*&"'@lo	22
-par_sshlogin_parsing	4/::;`echo>/tmp/trap`;)(|<*&"'@lo	username
-par_sshlogin_parsing	4/::;`echo>/tmp/trap`;)(|<*&"'@lo:22222	22222
-par_sshlogin_parsing	4/::;`echo>/tmp/trap`;)(|<*&"'@lo:22222	username
-par_sshlogin_parsing	4/withpassword::;`echo>/tmp/trap`;)(|<*&"'@lo	22
-par_sshlogin_parsing	4/withpassword::;`echo>/tmp/trap`;)(|<*&"'@lo	withpassword
-par_sshlogin_parsing	4/withpassword::;`echo>/tmp/trap`;)(|<*&"'@lo:22222	22222
-par_sshlogin_parsing	4/withpassword::;`echo>/tmp/trap`;)(|<*&"'@lo:22222	withpassword
-par_sshlogin_parsing	4//usr/bin/ssh ::;`echo>/tmp/trap`;)(|<*&"'@lo	22
-par_sshlogin_parsing	4//usr/bin/ssh ::;`echo>/tmp/trap`;)(|<*&"'@lo	username
-par_sshlogin_parsing	4//usr/bin/ssh ::;`echo>/tmp/trap`;)(|<*&"'@lo:22222	22222
-par_sshlogin_parsing	4//usr/bin/ssh ::;`echo>/tmp/trap`;)(|<*&"'@lo:22222	username
-par_sshlogin_parsing	4//usr/bin/ssh withpassword::;`echo>/tmp/trap`;)(|<*&"'@lo	22
-par_sshlogin_parsing	4//usr/bin/ssh withpassword::;`echo>/tmp/trap`;)(|<*&"'@lo	withpassword
-par_sshlogin_parsing	4//usr/bin/ssh withpassword::;`echo>/tmp/trap`;)(|<*&"'@lo:22222	22222
-par_sshlogin_parsing	4//usr/bin/ssh withpassword::;`echo>/tmp/trap`;)(|<*&"'@lo:22222	withpassword
-par_sshlogin_parsing	@grp1+grp2/::;`echo>/tmp/trap`;)(|<*&"'@lo	22
-par_sshlogin_parsing	@grp1+grp2/::;`echo>/tmp/trap`;)(|<*&"'@lo	username
-par_sshlogin_parsing	@grp1+grp2/::;`echo>/tmp/trap`;)(|<*&"'@lo:22222	22222
-par_sshlogin_parsing	@grp1+grp2/::;`echo>/tmp/trap`;)(|<*&"'@lo:22222	username
-par_sshlogin_parsing	@grp1+grp2/withpassword::;`echo>/tmp/trap`;)(|<*&"'@lo	22
-par_sshlogin_parsing	@grp1+grp2/withpassword::;`echo>/tmp/trap`;)(|<*&"'@lo	withpassword
-par_sshlogin_parsing	@grp1+grp2/withpassword::;`echo>/tmp/trap`;)(|<*&"'@lo:22222	22222
-par_sshlogin_parsing	@grp1+grp2/withpassword::;`echo>/tmp/trap`;)(|<*&"'@lo:22222	withpassword
-par_sshlogin_parsing	@grp1+grp2//usr/bin/ssh ::;`echo>/tmp/trap`;)(|<*&"'@lo	22
-par_sshlogin_parsing	@grp1+grp2//usr/bin/ssh ::;`echo>/tmp/trap`;)(|<*&"'@lo	username
-par_sshlogin_parsing	@grp1+grp2//usr/bin/ssh ::;`echo>/tmp/trap`;)(|<*&"'@lo:22222	22222
-par_sshlogin_parsing	@grp1+grp2//usr/bin/ssh ::;`echo>/tmp/trap`;)(|<*&"'@lo:22222	username
-par_sshlogin_parsing	@grp1+grp2//usr/bin/ssh withpassword::;`echo>/tmp/trap`;)(|<*&"'@lo	22
-par_sshlogin_parsing	@grp1+grp2//usr/bin/ssh withpassword::;`echo>/tmp/trap`;)(|<*&"'@lo	withpassword
-par_sshlogin_parsing	@grp1+grp2//usr/bin/ssh withpassword::;`echo>/tmp/trap`;)(|<*&"'@lo:22222	22222
-par_sshlogin_parsing	@grp1+grp2//usr/bin/ssh withpassword::;`echo>/tmp/trap`;)(|<*&"'@lo:22222	withpassword
-par_sshlogin_parsing	@grp1+grp2/4/::;`echo>/tmp/trap`;)(|<*&"'@lo	22
-par_sshlogin_parsing	@grp1+grp2/4/::;`echo>/tmp/trap`;)(|<*&"'@lo	username
-par_sshlogin_parsing	@grp1+grp2/4/::;`echo>/tmp/trap`;)(|<*&"'@lo:22222	22222
-par_sshlogin_parsing	@grp1+grp2/4/::;`echo>/tmp/trap`;)(|<*&"'@lo:22222	username
-par_sshlogin_parsing	@grp1+grp2/4/withpassword::;`echo>/tmp/trap`;)(|<*&"'@lo	22
-par_sshlogin_parsing	@grp1+grp2/4/withpassword::;`echo>/tmp/trap`;)(|<*&"'@lo	withpassword
-par_sshlogin_parsing	@grp1+grp2/4/withpassword::;`echo>/tmp/trap`;)(|<*&"'@lo:22222	22222
-par_sshlogin_parsing	@grp1+grp2/4/withpassword::;`echo>/tmp/trap`;)(|<*&"'@lo:22222	withpassword
-par_sshlogin_parsing	@grp1+grp2/4//usr/bin/ssh ::;`echo>/tmp/trap`;)(|<*&"'@lo	22
-par_sshlogin_parsing	@grp1+grp2/4//usr/bin/ssh ::;`echo>/tmp/trap`;)(|<*&"'@lo	username
-par_sshlogin_parsing	@grp1+grp2/4//usr/bin/ssh ::;`echo>/tmp/trap`;)(|<*&"'@lo:22222	22222
-par_sshlogin_parsing	@grp1+grp2/4//usr/bin/ssh ::;`echo>/tmp/trap`;)(|<*&"'@lo:22222	username
-par_sshlogin_parsing	@grp1+grp2/4//usr/bin/ssh withpassword::;`echo>/tmp/trap`;)(|<*&"'@lo	22
-par_sshlogin_parsing	@grp1+grp2/4//usr/bin/ssh withpassword::;`echo>/tmp/trap`;)(|<*&"'@lo	withpassword
-par_sshlogin_parsing	@grp1+grp2/4//usr/bin/ssh withpassword::;`echo>/tmp/trap`;)(|<*&"'@lo:22222	22222
-par_sshlogin_parsing	@grp1+grp2/4//usr/bin/ssh withpassword::;`echo>/tmp/trap`;)(|<*&"'@lo:22222	withpassword
 par_test_diff_roundrobin_k	### test there is difference on -k
 par_test_diff_roundrobin_k	OK
-par_fifo_under_csh	### Test --fifo under csh
-par_fifo_under_csh	parallel: Warning: --cat/--fifo fails under csh if $TMPDIR contains newline.
-par_fifo_under_csh	Unmatched '"'.
-par_fifo_under_csh	Broken pipe
-par_fifo_under_csh	Unmatched '"'.
-par_fifo_under_csh	Broken pipe
-par_fifo_under_csh	Unmatched '"'.
-par_fifo_under_csh	Broken pipe
-par_fifo_under_csh	Unmatched '"'.
-par_fifo_under_csh	Broken pipe
-par_fifo_under_csh	Unmatched '"'.
-par_fifo_under_csh	Broken pipe
-par_fifo_under_csh	Unmatched '"'.
-par_fifo_under_csh	Broken pipe
-par_fifo_under_csh	Unmatched '"'.
-par_fifo_under_csh	Broken pipe
-par_fifo_under_csh	Unmatched '"'.
-par_fifo_under_csh	Broken pipe
-par_fifo_under_csh	Unmatched '"'.
-par_fifo_under_csh	Broken pipe
-par_fifo_under_csh	Unmatched '"'.
-par_fifo_under_csh	Broken pipe
-par_fifo_under_csh	Unmatched '"'.
-par_fifo_under_csh	Broken pipe
-par_fifo_under_csh	Unmatched '"'.
-par_fifo_under_csh	Broken pipe
-par_fifo_under_csh	Unmatched '"'.
-par_fifo_under_csh	Broken pipe
-par_fifo_under_csh	Unmatched '"'.
-par_fifo_under_csh	Broken pipe
-par_fifo_under_csh	Unmatched '"'.
-par_fifo_under_csh	Broken pipe
-par_fifo_under_csh	Unmatched '"'.
-par_fifo_under_csh	Broken pipe
-par_fifo_under_csh	Unmatched '"'.
-par_fifo_under_csh	Broken pipe
-par_fifo_under_csh	Unmatched '"'.
-par_fifo_under_csh	Broken pipe
-par_fifo_under_csh	Unmatched '"'.
-par_fifo_under_csh	Broken pipe
-par_fifo_under_csh	Unmatched '"'.
-par_fifo_under_csh	Broken pipe
-par_fifo_under_csh	Unmatched '"'.
-par_fifo_under_csh	Broken pipe
-par_fifo_under_csh	Unmatched '"'.
-par_fifo_under_csh	Broken pipe
-par_fifo_under_csh	exit 22
-par_fifo_under_csh	1048571
-par_fifo_under_csh	1
-par_fifo_under_csh	1048572
-par_fifo_under_csh	1
-par_fifo_under_csh	1048572
-par_fifo_under_csh	1
-par_fifo_under_csh	1048572
-par_fifo_under_csh	1
-par_fifo_under_csh	1048572
-par_fifo_under_csh	1
-par_fifo_under_csh	1048572
-par_fifo_under_csh	1
-par_fifo_under_csh	1048569
-par_fifo_under_csh	1
-par_fifo_under_csh	1048576
-par_fifo_under_csh	1
-par_fifo_under_csh	1048576
-par_fifo_under_csh	1
-par_fifo_under_csh	1048576
-par_fifo_under_csh	1
-par_fifo_under_csh	1048576
-par_fifo_under_csh	1
-par_fifo_under_csh	1048576
-par_fifo_under_csh	1
-par_fifo_under_csh	1048576
-par_fifo_under_csh	1
-par_fifo_under_csh	1048576
-par_fifo_under_csh	1
-par_fifo_under_csh	1048576
-par_fifo_under_csh	1
-par_fifo_under_csh	1048576
-par_fifo_under_csh	1
-par_fifo_under_csh	1048576
-par_fifo_under_csh	1
-par_fifo_under_csh	1048576
-par_fifo_under_csh	1
-par_fifo_under_csh	1048576
-par_fifo_under_csh	1
-par_fifo_under_csh	1048576
-par_fifo_under_csh	1
-par_fifo_under_csh	1048576
-par_fifo_under_csh	1
-par_fifo_under_csh	868832
-par_fifo_under_csh	1
-par_fifo_under_csh	exit 22

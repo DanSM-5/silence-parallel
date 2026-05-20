@@ -683,7 +683,7 @@ par_bug45691() {
     echo 'bug #45691: Accessing multiple arguments in {= =}'
     # OK:
     parallel echo {= '$arg[1] eq 2 and $job->skip()' =} ::: {1..5}
-    # Fails due to --keep-order because printing is looking for job 2
+    # Failed due to --keep-order because printing is looking for job 2
     parallel --keep-order echo {= '$arg[1] eq 2 and $job->skip()' =} ::: {1..5}
 }
 
@@ -707,7 +707,9 @@ par_skip_in_expr() {
 par_skip_no_halt() {
     echo '### skip() must not count as failure for --halt'
     parallel -k --halt soon,fail=1 echo '{= $job->skip() =}' ::: a b c
-    echo "exit:$?"
+    echo "exit:0=$?"
+    parallel -k --halt soon,fail=1 exit '{= $job->skip() =}' ::: 1 2 3
+    echo "exit:0=$?"
 }
 
 export -f $(compgen -A function | grep par_)

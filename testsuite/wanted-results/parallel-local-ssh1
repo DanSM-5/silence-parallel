@@ -36,6 +36,15 @@ par_--ssh_ssh_in_ssh	myhostname
 par_--ssh_ssh_in_ssh	OK
 par_--ssh_ssh_in_ssh	myhostname
 par_--ssh_ssh_in_ssh	OK
+par__pipewrap	### pipewrap: hexwrap bootstrap delivery via ssh
+par__pipewrap	a
+par__pipewrap	b
+par__pipewrap	c
+par__pipewrap	1
+par__pipewrap	2
+par__pipewrap	3
+par__pipewrap	hello
+par__pipewrap	/tmp
 par__remote_load	### Test --load remote
 par__remote_load	parallel: Warning: This job was killed because it timed out:
 par__remote_load	parallel: Warning: perl -e 'while(1){ }'
@@ -58,6 +67,17 @@ par__remote_load	parallel: Warning: perl -e 'while(1){ }'
 par__remote_load	parallel: Warning: This job was killed because it timed out:
 par__remote_load	parallel: Warning: perl -e 'while(1){ }'
 par__remote_load	OK
+par__sshlogin_with_comma	### --sshlogin with \,
+par__sshlogin_with_comma	OK
+par__sshlogin_with_comma	### --sshlogin with ,,
+par__sshlogin_with_comma	OK
+par__sshlogin_with_comma	### Both , and ,, in -S
+par__sshlogin_with_comma	freebsd14.localdomain
+par__sshlogin_with_comma	rhel8.localdomain
+par__sshlogin_with_comma	freebsd14.localdomain
+par__sshlogin_with_comma	rhel8.localdomain
+par__sshlogin_with_comma	freebsd14.localdomain
+par__sshlogin_with_comma	rhel8.localdomain
 par__sshpass_with_password	### sshpass
 par__sshpass_with_password	OK
 par__sshpass_with_password	OK
@@ -135,6 +155,13 @@ par_csh_variable_newline	### Can csh propagate a variable containing \n
 par_csh_variable_newline	1
 par_csh_variable_newline	2
 par_csh_variable_newline	3
+par_env_parallel_func_ssh	### env_parallel -S lo with function: function must transfer
+par_env_parallel_func_ssh	func:x
+par_env_parallel_func_ssh	func:y
+par_env_parallel_ssh	### env_parallel -S lo: must produce output (not empty)
+par_env_parallel_ssh	a
+par_env_parallel_ssh	b
+par_env_parallel_ssh	c
 par_filename_colon	### test filename :
 par_filename_colon	remote-:.:
 par_filename_colon	content-of-:
@@ -147,6 +174,18 @@ par_hgrp_agrp_comma	parallel: Warning: Adding hostgroups: csh@lo tcsh@lo
 par_hgrp_agrp_comma	tcsh
 par_joblog_nonall	### bug #40001: --joblog and --nonall seem not to work together:
 par_joblog_nonall	3
+par_pipe_ssh	### --pipe -S lo,: basic pipe to remote
+par_pipe_ssh	165668
+par_pipe_ssh	149796
+par_pipe_ssh	149796
+par_pipe_ssh	149796
+par_pipe_ssh	149796
+par_pipe_ssh	149796
+par_pipe_ssh	85352
+par_pipe_tee_ssh	### --pipe --tee -S lo: data must reach local and remote (not 0 bytes)
+par_pipe_tee_ssh	1000000
+par_pipe_tee_ssh	6888896
+par_pipe_tee_ssh	1000000
 par_pipe_unneeded_spawn	### Test bug #34241: --pipe should not spawn unneeded processes
 par_pipe_unneeded_spawn	1
 par_pipe_unneeded_spawn	2
@@ -164,17 +203,6 @@ par_remote_nice	5
 par_ssh	### use --ssh
 par_ssh	Run through BARSSH?
 par_ssh	BARSSH
-par_sshlogin_with_comma	### --sshlogin with \,
-par_sshlogin_with_comma	OK
-par_sshlogin_with_comma	### --sshlogin with ,,
-par_sshlogin_with_comma	OK
-par_sshlogin_with_comma	### Both , and ,, in -S
-par_sshlogin_with_comma	freebsd14.localdomain
-par_sshlogin_with_comma	rhel8.localdomain
-par_sshlogin_with_comma	freebsd14.localdomain
-par_sshlogin_with_comma	rhel8.localdomain
-par_sshlogin_with_comma	freebsd14.localdomain
-par_sshlogin_with_comma	rhel8.localdomain
 par_stop_if_no_hosts_left	### Stop if all hosts are filtered and there are no hosts left to run on
 par_stop_if_no_hosts_left	parallel: Warning: Removed no-such.host.
 par_stop_if_no_hosts_left	parallel: Error: Cannot run any jobs.

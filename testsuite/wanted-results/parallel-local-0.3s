@@ -547,6 +547,9 @@ par_maxproc	200% proc 7
 par_maxproc	200% proc 8
 par_maxproc	200% proc 9
 par_maxproc	200% proc 10
+par_minimal	### parallel runs basic jobs
+par_minimal	It
+par_minimal	works
 par_negative_replacement	### Negative replacement strings
 par_negative_replacement	correct
 par_negative_replacement	correct

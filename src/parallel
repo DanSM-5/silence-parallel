@@ -7559,7 +7559,10 @@ sub spacefree($$) {
 	local $/ = "\n";
 	if(not $hostname) {
 	    $hostname = `hostname`;
-	    chomp($hostname);
+		# Hostname cannot contain space
+	    $hostname=~s/\s//g;
+		# Hostname is case-insensitive
+	    $hostname= lc($hostname);
 	    $hostname ||= "nohostname";
 	}
 	return $hostname;

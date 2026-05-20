@@ -29,7 +29,7 @@ SSHUSER2=parallel
 export SSHLOGIN2=$SSHUSER2@$SERVER2
 
 start_centos3() {
-    timeout 10 ssh $SSHLOGIN1 echo ssh $SSHLOGIN1 OK || (
+    timeout -k 11 10 ssh $SSHLOGIN1 echo ssh $SSHLOGIN1 OK || (
 	# Vagrant does not set the IP addr
 	# cd to the centos3 dir with the Vagrantfile
 	# Try different "cd"s as the script may be started from another dir
@@ -39,8 +39,8 @@ start_centos3() {
 	cd ../vagrant/FritsHoogland/centos3/ 2>/dev/null
 	vagrantssh() {
 	    port=$(perl -ne '/#/ and next; /config.vm.network.*host:\s*(\d+)/ and print $1' Vagrantfile)
-	    timeout 100 w4it-for-port-open localhost $port &&
-	    timeout 100 ssh -oKexAlgorithms=+diffie-hellman-group1-sha1 \
+	    timeout -k 111 100 w4it-for-port-open localhost $port &&
+	    timeout -k 111 100 ssh -oKexAlgorithms=+diffie-hellman-group1-sha1 \
 		-oHostKeyAlgorithms=+ssh-rsa,ssh-dss \
 		-oPubkeyAcceptedAlgorithms=+ssh-dss -p$port vagrant@localhost "$@" |
 		# Ignore empty ^M line
@@ -49,7 +49,7 @@ start_centos3() {
 	stdout vagrant up >/dev/null &
 	(sleep 10; stdout vagrant up >/dev/null ) &
 	vagrantssh 'sudo /sbin/ifconfig eth1 172.27.27.3; echo centos3: added 172.27.27.3 >&2'
-	timeout 10 ssh $SSHLOGIN1 echo ssh $SSHLOGIN1 OK
+	timeout -k 11 10 ssh $SSHLOGIN1 echo ssh $SSHLOGIN1 OK
     )
 }
 start_centos3 || exit 1
@@ -106,7 +106,7 @@ par_--ssh_lsh() {
 
 export -f $(compgen -A function | grep par_)
 compgen -A function | G par_ "$@" | sort |
-    parallel --timeout 100 -j75% --joblog /tmp/jl-`basename $0` -j3 --tag -k --delay 0.1 --retries 3 '{} 2>&1'
+    parallel --timeout 10 -j75% --joblog /tmp/jl-`basename $0` -j3 --tag -k --delay 0.1 --retries 3 '{} 2>&1'
 
 unset $(compgen -A function | grep par_)
 
@@ -133,7 +133,7 @@ par_shellshock_bug() {
 export LC_ALL=C
 export TMPDIR=/tmp
 unset DISPLAY
-env_parallel --env par_shellshock_bug --env LC_ALL --env SSHLOGIN2 \
+env_parallel --timeout 10 --env par_shellshock_bug --env LC_ALL --env SSHLOGIN2 \
 	     -vj9 -k --joblog /tmp/jl-`basename $0` --retries 3 \
 	     -S $SSHLOGIN1 --tag '{} 2>&1' \
 	     ::: $(compgen -A function | grep par_ | sort) \

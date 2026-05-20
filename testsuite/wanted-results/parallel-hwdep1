@@ -8,15 +8,33 @@ par__environment_too_big_dash	OK_bigvar
 par__environment_too_big_dash	OK_bigvar_remote
 par__environment_too_big_dash	OK_bigvar_quote
 par__environment_too_big_dash	OK_bigvar_quote_remote
-par__environment_too_big_dash	OK_bigfunc
-par__environment_too_big_dash	OK_bigfunc_remote
-par__environment_too_big_dash	OK_bigfunc_quote
-par__environment_too_big_dash	OK_bigfunc_quote_remote
+par__environment_too_big_dash	OK_bigfunc-not-supported
+par__environment_too_big_dash	OK_bigfunc_remote-not-supported
+par__environment_too_big_dash	OK_bigfunc_quote-not-supported
+par__environment_too_big_dash	OK_bigfunc_quote_remote-not-supported
 par__environment_too_big_dash	Rest should fail - functions not supported in dash
 par__environment_too_big_dash	parallel: Error: Command line too long (7XXXX >= 6XXXX) at input 0: fail_bigvar
-par__environment_too_big_dash	parallel: Error: Command line too long (7XXXX >= 6XXXX) at input 0: fail_bigvar_remote
+par__environment_too_big_dash	dash: 381: perl: Argument list too long
+par__environment_too_big_dash	env_parallel: Error: Your environment is too big.
+par__environment_too_big_dash	env_parallel: Error: You can try 3 different approaches:
+par__environment_too_big_dash	env_parallel: Error: 1. Run 'env_parallel --session' before you set
+par__environment_too_big_dash	env_parallel: Error:    variables or define functions.
+par__environment_too_big_dash	env_parallel: Error: 2. Use --env and only mention the names to copy.
+par__environment_too_big_dash	env_parallel: Error: 3. Try running this in a clean environment once:
+par__environment_too_big_dash	env_parallel: Error:      env_parallel --record-env
+par__environment_too_big_dash	env_parallel: Error:    And then use '--env _'
+par__environment_too_big_dash	env_parallel: Error: For details see: man env_parallel
 par__environment_too_big_dash	parallel: Error: Command line too long (8XXXX >= 6XXXX) at input 0: fail_bigvar_quote
-par__environment_too_big_dash	parallel: Error: Command line too long (8XXXX >= 6XXXX) at input 0: fail_bigvar_quote_remote
+par__environment_too_big_dash	dash: 381: perl: Argument list too long
+par__environment_too_big_dash	env_parallel: Error: Your environment is too big.
+par__environment_too_big_dash	env_parallel: Error: You can try 3 different approaches:
+par__environment_too_big_dash	env_parallel: Error: 1. Run 'env_parallel --session' before you set
+par__environment_too_big_dash	env_parallel: Error:    variables or define functions.
+par__environment_too_big_dash	env_parallel: Error: 2. Use --env and only mention the names to copy.
+par__environment_too_big_dash	env_parallel: Error: 3. Try running this in a clean environment once:
+par__environment_too_big_dash	env_parallel: Error:      env_parallel --record-env
+par__environment_too_big_dash	env_parallel: Error:    And then use '--env _'
+par__environment_too_big_dash	env_parallel: Error: For details see: man env_parallel
 par__environment_too_big_dash	fail_bigfunc-not-supported
 par__environment_too_big_dash	fail_bigfunc_remote-not-supported
 par__environment_too_big_dash	fail_bigfunc_quote-not-supported
@@ -32,13 +50,49 @@ par__environment_too_big_zsh	OK_bigfunc_quote
 par__environment_too_big_zsh	OK_bigfunc_quote_remote
 par__environment_too_big_zsh	Rest should fail
 par__environment_too_big_zsh	parallel: Error: Command line too long (6XXXX >= 5XXXX) at input 0: fail_bigvar
-par__environment_too_big_zsh	parallel: Error: Command line too long (6XXXX >= 5XXXX) at input 0: fail_bigvar_remote
+par__environment_too_big_zsh	_which_PAR:13: argument list too long: perl
+par__environment_too_big_zsh	env_parallel: Error: Your environment is too big.
+par__environment_too_big_zsh	env_parallel: Error: You can try 3 different approaches:
+par__environment_too_big_zsh	env_parallel: Error: 1. Run 'env_parallel --session' before you set
+par__environment_too_big_zsh	env_parallel: Error:    variables or define functions.
+par__environment_too_big_zsh	env_parallel: Error: 2. Use --env and only mention the names to copy.
+par__environment_too_big_zsh	env_parallel: Error: 3. Try running this in a clean environment once:
+par__environment_too_big_zsh	env_parallel: Error:      env_parallel --record-env
+par__environment_too_big_zsh	env_parallel: Error:    And then use '--env _'
+par__environment_too_big_zsh	env_parallel: Error: For details see: man env_parallel
 par__environment_too_big_zsh	parallel: Error: Command line too long (6XXXX >= 5XXXX) at input 0: fail_bigvar_quote
-par__environment_too_big_zsh	parallel: Error: Command line too long (6XXXX >= 5XXXX) at input 0: fail_bigvar_quote_remote
+par__environment_too_big_zsh	_which_PAR:13: argument list too long: perl
+par__environment_too_big_zsh	env_parallel: Error: Your environment is too big.
+par__environment_too_big_zsh	env_parallel: Error: You can try 3 different approaches:
+par__environment_too_big_zsh	env_parallel: Error: 1. Run 'env_parallel --session' before you set
+par__environment_too_big_zsh	env_parallel: Error:    variables or define functions.
+par__environment_too_big_zsh	env_parallel: Error: 2. Use --env and only mention the names to copy.
+par__environment_too_big_zsh	env_parallel: Error: 3. Try running this in a clean environment once:
+par__environment_too_big_zsh	env_parallel: Error:      env_parallel --record-env
+par__environment_too_big_zsh	env_parallel: Error:    And then use '--env _'
+par__environment_too_big_zsh	env_parallel: Error: For details see: man env_parallel
 par__environment_too_big_zsh	parallel: Error: Command line too long (6XXXX >= 5XXXX) at input 0: fail_bigfunc
-par__environment_too_big_zsh	parallel: Error: Command line too long (7XXXX >= 5XXXX) at input 0: fail_bigfunc_remote
+par__environment_too_big_zsh	_which_PAR:13: argument list too long: perl
+par__environment_too_big_zsh	env_parallel: Error: Your environment is too big.
+par__environment_too_big_zsh	env_parallel: Error: You can try 3 different approaches:
+par__environment_too_big_zsh	env_parallel: Error: 1. Run 'env_parallel --session' before you set
+par__environment_too_big_zsh	env_parallel: Error:    variables or define functions.
+par__environment_too_big_zsh	env_parallel: Error: 2. Use --env and only mention the names to copy.
+par__environment_too_big_zsh	env_parallel: Error: 3. Try running this in a clean environment once:
+par__environment_too_big_zsh	env_parallel: Error:      env_parallel --record-env
+par__environment_too_big_zsh	env_parallel: Error:    And then use '--env _'
+par__environment_too_big_zsh	env_parallel: Error: For details see: man env_parallel
 par__environment_too_big_zsh	parallel: Error: Command line too long (6XXXX >= 5XXXX) at input 0: fail_bigfunc_quote
-par__environment_too_big_zsh	parallel: Error: Command line too long (6XXXX >= 5XXXX) at input 0: fail_bigfunc_quote_remote
+par__environment_too_big_zsh	_which_PAR:13: argument list too long: perl
+par__environment_too_big_zsh	env_parallel: Error: Your environment is too big.
+par__environment_too_big_zsh	env_parallel: Error: You can try 3 different approaches:
+par__environment_too_big_zsh	env_parallel: Error: 1. Run 'env_parallel --session' before you set
+par__environment_too_big_zsh	env_parallel: Error:    variables or define functions.
+par__environment_too_big_zsh	env_parallel: Error: 2. Use --env and only mention the names to copy.
+par__environment_too_big_zsh	env_parallel: Error: 3. Try running this in a clean environment once:
+par__environment_too_big_zsh	env_parallel: Error:      env_parallel --record-env
+par__environment_too_big_zsh	env_parallel: Error:    And then use '--env _'
+par__environment_too_big_zsh	env_parallel: Error: For details see: man env_parallel
 par__sockets_cores_threads	### Test --number-of-sockets/cores/threads
 par__sockets_cores_threads	1
 par__sockets_cores_threads	6

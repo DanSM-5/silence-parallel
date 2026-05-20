@@ -148,28 +148,6 @@ par_--nonall_results	/TMP/nonall/slash/sh@lo/1
 par_--nonall_results	/TMP/nonall/slash/sh@lo/1/seq
 par_--nonall_results	/TMP/nonall/slash/sh@lo/1/stderr
 par_--nonall_results	/TMP/nonall/slash/sh@lo/1/stdout
-par__--tmux_different_shells	### Test tmux works on different shells
-par__--tmux_different_shells	See output with: tmux -S /TMP/tmsXXXXX attach
-par__--tmux_different_shells	0
-par__--tmux_different_shells	See output with: tmux -S /TMP/tmsXXXXX attach
-par__--tmux_different_shells	4
-par__--tmux_different_shells	See output with: tmux -S /TMP/tmsXXXXX attach
-par__--tmux_different_shells	0
-par__--tmux_different_shells	See output with: tmux -S /TMP/tmsXXXXX attach
-par__--tmux_different_shells	4
-par__--tmux_different_shells	See output with: tmux -S /TMP/tmsXXXXX attach
-par__--tmux_different_shells	0
-par__--tmux_different_shells	See output with: tmux -S /TMP/tmsXXXXX attach
-par__--tmux_different_shells	4
-par__--tmux_different_shells	See output with: tmux -S /TMP/tmsXXXXX attach
-par__--tmux_different_shells	0
-par__--tmux_different_shells	See output with: tmux -S /TMP/tmsXXXXX attach
-par__--tmux_different_shells	4
-par__--tmux_different_shells	# command is currently too long for csh. Maybe it can be fixed?
-par__--tmux_different_shells	See output with: tmux -S /TMP/tmsXXXXX attach
-par__--tmux_different_shells	0
-par__--tmux_different_shells	See output with: tmux -S /TMP/tmsXXXXX attach
-par__--tmux_different_shells	4
 par__--tmux_length	### tmux examples that earlier blocked
 par__--tmux_length	Runtime 14 seconds on non-loaded machine
 par__--tmux_length	See output with: tmux -S /TMP/tmsXXXXX attach

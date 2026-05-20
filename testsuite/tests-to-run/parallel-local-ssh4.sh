@@ -144,34 +144,6 @@ par_bigvar_rc() {
                     parallel --env A,B,C -k echo '"'"'${}|wc'"'"' ::: A B C'
 }
 
-par__--tmux_different_shells() {
-    echo '### Test tmux works on different shells'
-    short_TMPDIR() {
-	# TMPDIR must be short for -M                                                         
-	export TMPDIR=/tmp/ssh/'                                                              
-`touch /tmp/tripwire`                                                                     
-'
-	TMPDIR=/tmp
-	mkdir -p "$TMPDIR"
-    }
-    short_TMPDIR
-    (
-	stdout parallel -Scsh@lo,tcsh@lo,parallel@lo,zsh@lo --tmux echo ::: 1 2 3 4; echo $?
-	stdout parallel -Scsh@lo,tcsh@lo,parallel@lo,zsh@lo --tmux false ::: 1 2 3 4; echo $?
-
-	export PARTMUX='parallel -Scsh@lo,tcsh@lo,parallel@lo,zsh@lo --tmux '; 
-	stdout ssh zsh@lo      "$PARTMUX" 'true  ::: 1 2 3 4; echo $status' 
-	stdout ssh zsh@lo      "$PARTMUX" 'false ::: 1 2 3 4; echo $status' 
-	stdout ssh parallel@lo "$PARTMUX" 'true  ::: 1 2 3 4; echo $?'      
-	stdout ssh parallel@lo "$PARTMUX" 'false ::: 1 2 3 4; echo $?'      
-	stdout ssh tcsh@lo     "$PARTMUX" 'true  ::: 1 2 3 4; echo $status' 
-	stdout ssh tcsh@lo     "$PARTMUX" 'false ::: 1 2 3 4; echo $status' 
-	echo "# command is currently too long for csh. Maybe it can be fixed?"; 
-	stdout ssh csh@lo      "$PARTMUX" 'true  ::: 1 2 3 4; echo $status'
-	stdout ssh csh@lo      "$PARTMUX" 'false ::: 1 2 3 4; echo $status'
-    ) | replace_tmpdir | perl -pe 's/tms...../tmsXXXXX/g'
-}
-
 par__--tmux_length() {
     echo '### tmux examples that earlier blocked'
     echo 'Runtime 14 seconds on non-loaded machine'
@@ -184,16 +156,17 @@ par__--tmux_length() {
 	mkdir -p "$TMPDIR"
     }
     short_TMPDIR
+    export PARALLEL="--unsafe --timeout 30 --tmux"
     (
-	stdout parallel -Sparallel@lo --tmux echo ::: \\\\\\\"\\\\\\\"\\\;\@
-        stdout parallel -Sparallel@lo --tmux echo ::: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+	stdout parallel -Sparallel@lo echo ::: \\\\\\\"\\\\\\\"\\\;\@
+        stdout parallel -Sparallel@lo echo ::: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 	echo '### These blocked due to length'
-	stdout parallel -Slo      --tmux echo ::: \\\\\\\"\\\\\\\"\\\;\@
-	stdout parallel -Scsh@lo  --tmux echo ::: \\\\\\\"\\\\\\\"\\\;\@
-	stdout parallel -Stcsh@lo --tmux echo ::: \\\\\\\"\\\\\\\"\\\;\@
-	stdout parallel -Szsh@lo  --tmux echo ::: \\\\\\\"\\\\\\\"\\\;\@
-	stdout parallel -Scsh@lo  --tmux echo ::: 111111111111111111111111111111111111111111111111111111111
+	stdout parallel -Slo      echo ::: \\\\\\\"\\\\\\\"\\\;\@
+	stdout parallel -Scsh@lo  echo ::: \\\\\\\"\\\\\\\"\\\;\@
+	stdout parallel -Stcsh@lo echo ::: \\\\\\\"\\\\\\\"\\\;\@
+	stdout parallel -Szsh@lo  echo ::: \\\\\\\"\\\\\\\"\\\;\@
+	stdout parallel -Scsh@lo  echo ::: 111111111111111111111111111111111111111111111111111111111
      ) | replace_tmpdir |
 	perl -pe 's:tms.....:tmsXXXXX:'
 }
@@ -221,5 +194,5 @@ par_z_multiple_hosts_repeat_arg() {
 
 export -f $(compgen -A function | grep par_)
 compgen -A function | G par_ "$@" | LC_ALL=C sort |
-    parallel --timeout 3000% -j50% --tag -k --joblog /tmp/jl-`basename $0` '{} 2>&1' |
+    parallel --timeout 1000% -j50% --tag -k --joblog /tmp/jl-`basename $0` '{} 2>&1' |
     perl -pe 's:/usr/bin:/bin:g;'

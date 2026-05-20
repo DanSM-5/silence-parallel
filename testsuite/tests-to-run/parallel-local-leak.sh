@@ -4,11 +4,7 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-# Simple jobs that never fails
-# Each should be taking 30-100s and be possible to run in parallel
-# I.e.: No race conditions, no logins
-
-par__memory_leak() {
+par_memory_leak() {
     a_run() {
 	seq $1 |time -v parallel true 2>&1 |
 	grep 'Maximum resident' |

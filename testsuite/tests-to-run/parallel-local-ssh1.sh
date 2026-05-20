@@ -18,7 +18,7 @@ echo TODO
 
 EOF
 
-par_sshlogin_with_comma() {
+par__sshlogin_with_comma() {
     echo "### --sshlogin with \,"
     parallel -S 'ssh -J lo\,localhost 127.0.0.1' echo ::: OK
     echo "### --sshlogin with ,,"
@@ -420,7 +420,7 @@ _
 )
 }
 
-par_pipewrap() {
+par__pipewrap() {
     echo '### pipewrap: hexwrap bootstrap delivery via ssh'
     parallel --sshlogin lo echo ::: a b c | sort
     parallel -k --sshlogin lo echo ::: 1 2 3

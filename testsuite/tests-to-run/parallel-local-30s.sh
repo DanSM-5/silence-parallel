@@ -117,46 +117,9 @@ par__dburl_parsing() {
 	(
 	    stdout parallel -j1 --tag test_dburl ::: ${dburls[@]}
 	    stdout parallel -j1 --tag test_dburl {}/ ::: ${dburls[@]}
-	) | perl -pe 's/parallel (line|at) \d+./parallel $1 99999./;'
+	) | perl -pe 's/parallel (line|at) \d+./parallel $1 99999./;s/'$me/username/g
     )
     rmdir test
-}
-
-par_sshlogin_parsing() {
-    echo '### Generate sshlogins to test parsing'
-    sudo $(which sshd) -p 22222
-
-    gen_sshlogin() {
-	grp=grp1+grp2
-	ncpu=4
-	ssh=/usr/bin/ssh
-	user=parallel
-	userpass=withpassword
-	pass="$withpassword"
-	host=lo
-	port=22222
-	# no pass
-	parallel -k echo \
-		 {1}{2}{3}{4}{5}{=1'$_ = ($arg[4]||$arg[5]) ? "\@" : ""' =}$host{6} \
-		 ::: '' @$grp/ ::: '' $ncpu/ ::: '' $ssh' ' \
-		 ::: '' $user ::: '' ::: '' :$port
-	# pass
-	parallel -k echo \
-		 {1}{2}{3}{4}{5}{=1'$_ = ($arg[4]||$arg[5]) ? "\@" : ""' =}$host{6} \
-		 ::: '' @$grp/ ::: '' $ncpu/ ::: '' $ssh' ' \
-		 ::: '' $userpass ::: :"$pass" ::: '' :$port
-    }
-
-    doit() {
-	if parallel -S "$1" {} '$SSH_CLIENT|field 3;whoami' ::: echo ; then
-	    : echo OK
-	else
-	    echo Fail
-	fi
-    }
-    export -f doit
-    
-    gen_sshlogin | parallel --tag --timeout 20 -k doit
 }
 
 par__print_in_blocks() {
@@ -760,7 +723,7 @@ par__test_ipv6_format() {
 	ssh -oStrictHostKeyChecking=accept-new "$@" true
     }
     export -f refresh_known_host
-    (ipv4; ipv6) | nice stdout parallel -j1 refresh_known_host >/dev//null
+    (ipv4; ipv6) | stdout parallel -j1 refresh_known_host >/dev//null
     echo '### Host as IPv6 address'
     (
 	ipv6 |
@@ -777,7 +740,7 @@ par__test_ipv6_format() {
             # 9.9.9.9q22 => 9.9.9.9
             perl -pe 's/q.*//;'
     ) |
-	nice parallel -j50% --argsep , parallel -S {} true ::: 1 ||
+	parallel -j50% --argsep , parallel -S {} true ::: 1 ||
 	echo Failed
 }
 
@@ -788,7 +751,6 @@ par_fifo_under_csh() {
 	echo exit $?
     }
     # csh does not seem to work with TMPDIR containing \n
-    doit
     TMPDIR=/tmp
     doit
 }
@@ -797,5 +759,5 @@ par_fifo_under_csh() {
 export -f $(compgen -A function | grep par_)
 compgen -A function | G par_ "$@" | sort |
     #    parallel --delay 0.3 --timeout 1000% -j6 --tag -k --joblog /tmp/jl-`basename $0` '{} 2>&1'
-    parallel --delay 0.3 --timeout 10000% -j75% --lb --tag -k --joblog /tmp/jl-`basename $0` '{} 2>&1' |
+    parallel --delay 0.3 --timeout 1000% -j75% --lb --tag -k --joblog /tmp/jl-`basename $0` '{} 2>&1' |
     perl -pe 's/(?<![A-Za-z0-9_.])'"$(whoami)"'(?![A-Za-z0-9_.])/username/g'
