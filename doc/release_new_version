@@ -281,22 +281,19 @@ from:tange@gnu.org
 to:parallel@gnu.org, bug-parallel@gnu.org
 stable-bcc: Jesse Alama <jessealama@fastmail.fm>
 
-Subject: GNU Parallel 20260422 ('Artemis II') released
+Subject: GNU Parallel 20260522 ('Hantavirus') released
 
-GNU Parallel 20260422 ('Artemis II') has been released. It is available for download at: lbry://@GnuParallel:4
+GNU Parallel 20260522 ('Hantavirus') has been released. It is available for download at: lbry://@GnuParallel:4
 
 Quote of the month:
 
-  It is a fantastic tool for decades!
-    -- Ops_Mechanic@reddit
+  ...and GNU Parallel is fun.
+    -- DJviolin@reddit
 
 New in this release:
 
-* Remote jobs are spawned via pipe to perl, so environment can be bigger. This is a major rewrite.
-
-* --pipe-part -a supports .gz, .bz2, .zst-files if zextract is installed.
-
-* Comments in code is redone.
+* --fast rewritten. 1 million jobs in 10 seconds. Try:
+  seq 1000000 | time parallel --fast echo | wc -l 
 
 * Bug fixes and man page updates.
 

@@ -8,6 +8,37 @@
 # Each should be taking 30-100s and be possible to run in parallel
 # I.e.: No race conditions, no logins
 
+par__--load_from_PARALLEL() {
+    echo "### Test reading load from PARALLEL"
+    export PARALLEL="$PARALLEL --load 600%"
+    # Ignore stderr due to 'Starting processes took > 2 sec'
+    seq 1 1000000 |
+	parallel -kj200 --recend "\n" --spreadstdin gzip -1 2>/dev/null |
+	zcat | sort -n | md5sum
+    seq 1 1000000 |
+	parallel -kj20 --recend "\n" --spreadstdin gzip -1 |
+	zcat | sort -n | md5sum
+}
+
+par_pipepart_lines() {
+    echo "### zextract --lines"
+    zst=$(mktemp)
+    raw=$(mktemp)
+    opt="-j10 --block -1  --pipepart -a"
+    seq 1000000 | zstd -1 > "$zst"
+    seq 1000000 > "$raw"
+    seq 1000000 | parallel --pipe -L30000 wc | sort
+    seq 1000000 | parallel --pipe -N30000 wc | sort
+    seq 1000000 | parallel --pipe -L30000 -N3 wc | sort
+    parallel -L30000      $opt "$zst" wc | sort
+    parallel -N30000      $opt "$zst" wc | sort
+    parallel -L30000 -N3  $opt "$zst" wc | sort
+    parallel -L30000      $opt "$raw" wc | sort
+    parallel -N30000      $opt "$raw" wc | sort
+    parallel -L30000 -N3  $opt "$raw" wc | sort
+    rm "$zst" "$raw"
+}
+
 par__milestone() {
     echo '### Test --milestone'
     echo '# 1..5 cannot mix with a..f'
@@ -188,7 +219,7 @@ par_reload_slf_every_second() {
     rm "$tmp"
 }
 
-par__groupby_big() {
+par_groupby_big() {
     echo "### test --group-by on file bigger than block"
     groupcol() {
 	export groupcol=$1
@@ -480,7 +511,7 @@ par_groupby() {
     # Test --colsep --header : (OK: --header : not needed)
 }
 
-par__groupby_pipepart() {
+par_groupby_pipepart() {
     tsv() {
 	# TSV file
 	printf "%s\t" header_a1 head_b1 c1 d1 e1 f1; echo

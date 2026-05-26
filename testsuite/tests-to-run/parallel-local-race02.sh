@@ -6,8 +6,6 @@
 
 # These fail regularly
 
-
-
 par_totaljob_repl() {
     echo '{##} bug #45841: Replacement string for total no of jobs'
 

@@ -8,7 +8,7 @@
 # Each should be taking 10-30s and be possible to run in parallel
 # I.e.: No race conditions, no logins
 
-par_zextract() {
+par__zextract() {
     # Generate /tmp/zextract.{bz2,gz,zst,raw}
     seq 1000000 |
 	parallel -j0 --pipe --tee '{1} > /tmp/zextract.{2}' \
@@ -23,25 +23,6 @@ par_zextract() {
 	   ::: '' -L100000 "-L100000 -N3"
 }
  
-par_pipepart_lines() {
-    echo "### zextract --lines"
-    zst=$(mktemp)
-    raw=$(mktemp)
-    opt="-j10 --block -1  --pipepart -a"
-    seq 1000000 | zstd -1 > "$zst"
-    seq 1000000 > "$raw"
-    seq 1000000 | parallel --pipe -L30000 wc | sort
-    seq 1000000 | parallel --pipe -N30000 wc | sort
-    seq 1000000 | parallel --pipe -L30000 -N3 wc | sort
-    parallel -L30000      $opt "$zst" wc | sort
-    parallel -N30000      $opt "$zst" wc | sort
-    parallel -L30000 -N3  $opt "$zst" wc | sort
-    parallel -L30000      $opt "$raw" wc | sort
-    parallel -N30000      $opt "$raw" wc | sort
-    parallel -L30000 -N3  $opt "$raw" wc | sort
-    rm "$zst" "$raw"
-}
-
 par_shard() {
     echo '### --shard'
     # Each of the 5 lines should match:
@@ -116,7 +97,7 @@ par_bin() {
 	parallel --pipe --colsep '\t' --bin 2 cat | sort
 }
 
-par_z--round-robin_blocks() {
+par_--round-robin_blocks() {
     echo "bug #49664: --round-robin does not complete"
     seq 20000000 | parallel -j8 --block 10M --round-robin --pipe wc -c | wc -l
 }
@@ -255,18 +236,6 @@ par_seqreplace_long_line() {
     seq 1 1000 |
 	stdout parallel -j1 -s 210 -k --seqreplace I echo IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII \|wc |
 	uniq -c
-}
-
-par__--load_from_PARALLEL() {
-    echo "### Test reading load from PARALLEL"
-    export PARALLEL="$PARALLEL --load 400%"
-    # Ignore stderr due to 'Starting processes took > 2 sec'
-    seq 1 1000000 |
-	parallel -kj200 --recend "\n" --spreadstdin gzip -1 2>/dev/null |
-	zcat | sort -n | md5sum
-    seq 1 1000000 |
-	parallel -kj20 --recend "\n" --spreadstdin gzip -1 |
-	zcat | sort -n | md5sum
 }
 
 par__quote_special_results() {

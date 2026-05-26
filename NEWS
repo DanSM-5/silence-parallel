@@ -1,3 +1,11 @@
+20260522
+
+* --fast rewritten. 1 million jobs in 10 seconds. Try:
+  seq 1000000 | time parallel --fast echo | wc -l 
+
+* Bug fixes and man page updates.
+
+
 20260422
 
 New in this release:

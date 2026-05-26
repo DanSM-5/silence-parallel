@@ -1,5 +1,3 @@
-par__mem_leak	### test for mem leak
-par__mem_leak	no mem leak detected
 par__test_build_and_install	make[0]: Entering directory '~/privat/parallel'
 par__test_build_and_install	make  dist-gzip am__post_remove_distdir='@:'
 par__test_build_and_install	make[0]: Entering directory '~/privat/parallel'

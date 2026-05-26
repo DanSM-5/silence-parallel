@@ -4,6 +4,9 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+echo Retired 2026-05-22
+exit 0
+
 # Check servers up on http://www.polarhome.com/service/status/
 unset TIMEOUT
 . env_parallel.bash
