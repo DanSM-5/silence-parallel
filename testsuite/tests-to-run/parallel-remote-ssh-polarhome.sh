@@ -1,8 +1,11 @@
 #!/bin/bash
 
-# SPDX-FileCopyrightText: 2021-2025 Ole Tange, http://ole.tange.dk and Free Software and Foundation, Inc.
+# SPDX-FileCopyrightText: 2021-2026 Ole Tange, http://ole.tange.dk and Free Software and Foundation, Inc.
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
+
+echo Retired 2026-05-22
+exit 0
 
 # Check servers up on http://www.polarhome.com/service/status/
 unset TIMEOUT

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# SPDX-FileCopyrightText: 2021-2025 Ole Tange, http://ole.tange.dk and Free Software and Foundation, Inc.
+# SPDX-FileCopyrightText: 2021-2026 Ole Tange, http://ole.tange.dk and Free Software and Foundation, Inc.
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -45,7 +45,13 @@ par_termseq_remote() {
 
 par_nonall_ssh() {
     echo 'bug #59181: --ssh is not propagated to --nonall'
-    parallel --ssh 'echo OK | ssh' -S $SSHLOGIN1 --nonall cat
+    myssh() {
+	echo >&2 "myssh called with args: $@"
+	shift
+	ssh "$@"
+    }
+    export -f myssh
+    stdout parallel --ssh "myssh myarg" -S $SSHLOGIN1 --nonall echo run on all
 }
 
 par_test_onall() {

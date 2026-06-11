@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# SPDX-FileCopyrightText: 2021-2025 Ole Tange, http://ole.tange.dk and Free Software and Foundation, Inc.
+# SPDX-FileCopyrightText: 2021-2026 Ole Tange, http://ole.tange.dk and Free Software and Foundation, Inc.
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -1920,14 +1920,6 @@ par_test_delimiter() {
     echo "### Test : as delimiter. This can be confusing for uptime ie. --load";
     export PARALLEL="$PARALLEL --load 300%"
     parallel -k --load 300% -d : echo ::: a:b:c
-}
-
-par_10000_m_X() {
-    echo '### Test -m with 10000 args'
-    seq 10100 | perl -pe 's/$/.gif/' |
-        parallel -j1 -km echo a{}b{.}c{.} |
-        parallel -k --pipe --tee ::: md5sum 'perl -pe "s/(.*)/length \$1/e"' |
-	perl -pe 's/^(\d)\d\d\d\d/${1}9999/'
 }
 
 par__10000_5_rpl_X() {

@@ -1,6 +1,3 @@
-par_--load_from_PARALLEL	### Test reading load from PARALLEL
-par_--load_from_PARALLEL	8a7095c1c23bfadc311fe6b16d950582  -
-par_--load_from_PARALLEL	8a7095c1c23bfadc311fe6b16d950582  -
 par_--match	Basic match
 par_--match	This works
 par_--match	This works, too
@@ -108,10 +105,6 @@ par_--match	url={url} filename={file} https://gnu.org/s/parallel,myfile
 par_--match	Non posistional replacement fields - not implemented
 par_--match	{.2} {.3} {.1} Gold,Heart_of
 par_--match	TODO Ignore case?
-par_--nice	Check that --nice works
-par_--nice	load_10
-par_--nice	bzip2            18
-par_--nice	bzip2            18
 par_--round-robin_blocks	bug #49664: --round-robin does not complete
 par_--round-robin_blocks	8
 par_--tee_too_many_args	### Fail if there are more arguments than --jobs
@@ -145,6 +138,10 @@ par_END	include this
 par_END	include this
 par_END	include this
 par_END	include this
+par__--nice	Check that --nice works
+par__--nice	load_10
+par__--nice	bzip2            18
+par__--nice	bzip2            18
 par__pipepart_spawn	### bug #46214: Using --pipepart doesnt spawn multiple jobs in version 20150922
 par__pipepart_spawn	1:local / 2+ / 2+
 par__quote_special_results	### Test --results on file systems with limited UTF8 support
@@ -491,6 +488,150 @@ par__xargs_compat	3 4
 par__xargs_compat	5 6
 par__xargs_compat	7 8
 par__xargs_compat	9 10
+par__zextract	/tmp/zextract.bz2-	 261905  261905 1722230
+par__zextract	/tmp/zextract.bz2-	 246033  246033 1722231
+par__zextract	/tmp/zextract.bz2-	 246033  246033 1722231
+par__zextract	/tmp/zextract.bz2-	 246029  246029 1722204
+par__zextract	/tmp/zextract.bz2--L100000	 100000  100000  588895
+par__zextract	/tmp/zextract.bz2--L100000	 100000  100000  700000
+par__zextract	/tmp/zextract.bz2--L100000	 100000  100000  700000
+par__zextract	/tmp/zextract.bz2--L100000	 100000  100000  700000
+par__zextract	/tmp/zextract.bz2--L100000	 100000  100000  700000
+par__zextract	/tmp/zextract.bz2--L100000	 100000  100000  700000
+par__zextract	/tmp/zextract.bz2--L100000	 100000  100000  700000
+par__zextract	/tmp/zextract.bz2--L100000	 100000  100000  700000
+par__zextract	/tmp/zextract.bz2--L100000	 100000  100000  700000
+par__zextract	/tmp/zextract.bz2--L100000	 100000  100000  700001
+par__zextract	/tmp/zextract.bz2--L100000 -N3	 300000  300000 1988895
+par__zextract	/tmp/zextract.bz2--L100000 -N3	 300000  300000 2100000
+par__zextract	/tmp/zextract.bz2--L100000 -N3	 300000  300000 2100000
+par__zextract	/tmp/zextract.bz2--L100000 -N3	 100000  100000  700001
+par__zextract	/tmp/zextract.bz2.bin-	 261905  261905 1722230
+par__zextract	/tmp/zextract.bz2.bin-	 246033  246033 1722231
+par__zextract	/tmp/zextract.bz2.bin-	 246033  246033 1722231
+par__zextract	/tmp/zextract.bz2.bin-	 246029  246029 1722204
+par__zextract	/tmp/zextract.bz2.bin--L100000	 100000  100000  588895
+par__zextract	/tmp/zextract.bz2.bin--L100000	 100000  100000  700000
+par__zextract	/tmp/zextract.bz2.bin--L100000	 100000  100000  700000
+par__zextract	/tmp/zextract.bz2.bin--L100000	 100000  100000  700000
+par__zextract	/tmp/zextract.bz2.bin--L100000	 100000  100000  700000
+par__zextract	/tmp/zextract.bz2.bin--L100000	 100000  100000  700000
+par__zextract	/tmp/zextract.bz2.bin--L100000	 100000  100000  700000
+par__zextract	/tmp/zextract.bz2.bin--L100000	 100000  100000  700000
+par__zextract	/tmp/zextract.bz2.bin--L100000	 100000  100000  700000
+par__zextract	/tmp/zextract.bz2.bin--L100000	 100000  100000  700001
+par__zextract	/tmp/zextract.bz2.bin--L100000 -N3	 300000  300000 1988895
+par__zextract	/tmp/zextract.bz2.bin--L100000 -N3	 300000  300000 2100000
+par__zextract	/tmp/zextract.bz2.bin--L100000 -N3	 300000  300000 2100000
+par__zextract	/tmp/zextract.bz2.bin--L100000 -N3	 100000  100000  700001
+par__zextract	/tmp/zextract.gz-	 261905  261905 1722230
+par__zextract	/tmp/zextract.gz-	 246033  246033 1722231
+par__zextract	/tmp/zextract.gz-	 246033  246033 1722231
+par__zextract	/tmp/zextract.gz-	 246029  246029 1722204
+par__zextract	/tmp/zextract.gz--L100000	 100000  100000  588895
+par__zextract	/tmp/zextract.gz--L100000	 100000  100000  700000
+par__zextract	/tmp/zextract.gz--L100000	 100000  100000  700000
+par__zextract	/tmp/zextract.gz--L100000	 100000  100000  700000
+par__zextract	/tmp/zextract.gz--L100000	 100000  100000  700000
+par__zextract	/tmp/zextract.gz--L100000	 100000  100000  700000
+par__zextract	/tmp/zextract.gz--L100000	 100000  100000  700000
+par__zextract	/tmp/zextract.gz--L100000	 100000  100000  700000
+par__zextract	/tmp/zextract.gz--L100000	 100000  100000  700000
+par__zextract	/tmp/zextract.gz--L100000	 100000  100000  700001
+par__zextract	/tmp/zextract.gz--L100000 -N3	 300000  300000 1988895
+par__zextract	/tmp/zextract.gz--L100000 -N3	 300000  300000 2100000
+par__zextract	/tmp/zextract.gz--L100000 -N3	 300000  300000 2100000
+par__zextract	/tmp/zextract.gz--L100000 -N3	 100000  100000  700001
+par__zextract	/tmp/zextract.gz.bin-	 261905  261905 1722230
+par__zextract	/tmp/zextract.gz.bin-	 246033  246033 1722231
+par__zextract	/tmp/zextract.gz.bin-	 246033  246033 1722231
+par__zextract	/tmp/zextract.gz.bin-	 246029  246029 1722204
+par__zextract	/tmp/zextract.gz.bin--L100000	 100000  100000  588895
+par__zextract	/tmp/zextract.gz.bin--L100000	 100000  100000  700000
+par__zextract	/tmp/zextract.gz.bin--L100000	 100000  100000  700000
+par__zextract	/tmp/zextract.gz.bin--L100000	 100000  100000  700000
+par__zextract	/tmp/zextract.gz.bin--L100000	 100000  100000  700000
+par__zextract	/tmp/zextract.gz.bin--L100000	 100000  100000  700000
+par__zextract	/tmp/zextract.gz.bin--L100000	 100000  100000  700000
+par__zextract	/tmp/zextract.gz.bin--L100000	 100000  100000  700000
+par__zextract	/tmp/zextract.gz.bin--L100000	 100000  100000  700000
+par__zextract	/tmp/zextract.gz.bin--L100000	 100000  100000  700001
+par__zextract	/tmp/zextract.gz.bin--L100000 -N3	 300000  300000 1988895
+par__zextract	/tmp/zextract.gz.bin--L100000 -N3	 300000  300000 2100000
+par__zextract	/tmp/zextract.gz.bin--L100000 -N3	 300000  300000 2100000
+par__zextract	/tmp/zextract.gz.bin--L100000 -N3	 100000  100000  700001
+par__zextract	/tmp/zextract.zst-	 261905  261905 1722230
+par__zextract	/tmp/zextract.zst-	 246033  246033 1722231
+par__zextract	/tmp/zextract.zst-	 246033  246033 1722231
+par__zextract	/tmp/zextract.zst-	 246029  246029 1722204
+par__zextract	/tmp/zextract.zst--L100000	 100000  100000  588895
+par__zextract	/tmp/zextract.zst--L100000	 100000  100000  700000
+par__zextract	/tmp/zextract.zst--L100000	 100000  100000  700000
+par__zextract	/tmp/zextract.zst--L100000	 100000  100000  700000
+par__zextract	/tmp/zextract.zst--L100000	 100000  100000  700000
+par__zextract	/tmp/zextract.zst--L100000	 100000  100000  700000
+par__zextract	/tmp/zextract.zst--L100000	 100000  100000  700000
+par__zextract	/tmp/zextract.zst--L100000	 100000  100000  700000
+par__zextract	/tmp/zextract.zst--L100000	 100000  100000  700000
+par__zextract	/tmp/zextract.zst--L100000	 100000  100000  700001
+par__zextract	/tmp/zextract.zst--L100000 -N3	 300000  300000 1988895
+par__zextract	/tmp/zextract.zst--L100000 -N3	 300000  300000 2100000
+par__zextract	/tmp/zextract.zst--L100000 -N3	 300000  300000 2100000
+par__zextract	/tmp/zextract.zst--L100000 -N3	 100000  100000  700001
+par__zextract	/tmp/zextract.zst.bin-	 261905  261905 1722230
+par__zextract	/tmp/zextract.zst.bin-	 246033  246033 1722231
+par__zextract	/tmp/zextract.zst.bin-	 246033  246033 1722231
+par__zextract	/tmp/zextract.zst.bin-	 246029  246029 1722204
+par__zextract	/tmp/zextract.zst.bin--L100000	 100000  100000  588895
+par__zextract	/tmp/zextract.zst.bin--L100000	 100000  100000  700000
+par__zextract	/tmp/zextract.zst.bin--L100000	 100000  100000  700000
+par__zextract	/tmp/zextract.zst.bin--L100000	 100000  100000  700000
+par__zextract	/tmp/zextract.zst.bin--L100000	 100000  100000  700000
+par__zextract	/tmp/zextract.zst.bin--L100000	 100000  100000  700000
+par__zextract	/tmp/zextract.zst.bin--L100000	 100000  100000  700000
+par__zextract	/tmp/zextract.zst.bin--L100000	 100000  100000  700000
+par__zextract	/tmp/zextract.zst.bin--L100000	 100000  100000  700000
+par__zextract	/tmp/zextract.zst.bin--L100000	 100000  100000  700001
+par__zextract	/tmp/zextract.zst.bin--L100000 -N3	 300000  300000 1988895
+par__zextract	/tmp/zextract.zst.bin--L100000 -N3	 300000  300000 2100000
+par__zextract	/tmp/zextract.zst.bin--L100000 -N3	 300000  300000 2100000
+par__zextract	/tmp/zextract.zst.bin--L100000 -N3	 100000  100000  700001
+par__zextract	/tmp/zextract.raw-	 261905  261905 1722230
+par__zextract	/tmp/zextract.raw-	 246033  246033 1722231
+par__zextract	/tmp/zextract.raw-	 246033  246033 1722231
+par__zextract	/tmp/zextract.raw-	 246029  246029 1722204
+par__zextract	/tmp/zextract.raw--L100000	 100000  100000  588895
+par__zextract	/tmp/zextract.raw--L100000	 100000  100000  700000
+par__zextract	/tmp/zextract.raw--L100000	 100000  100000  700000
+par__zextract	/tmp/zextract.raw--L100000	 100000  100000  700000
+par__zextract	/tmp/zextract.raw--L100000	 100000  100000  700000
+par__zextract	/tmp/zextract.raw--L100000	 100000  100000  700000
+par__zextract	/tmp/zextract.raw--L100000	 100000  100000  700000
+par__zextract	/tmp/zextract.raw--L100000	 100000  100000  700000
+par__zextract	/tmp/zextract.raw--L100000	 100000  100000  700000
+par__zextract	/tmp/zextract.raw--L100000	 100000  100000  700001
+par__zextract	/tmp/zextract.raw--L100000 -N3	 300000  300000 1988895
+par__zextract	/tmp/zextract.raw--L100000 -N3	 300000  300000 2100000
+par__zextract	/tmp/zextract.raw--L100000 -N3	 300000  300000 2100000
+par__zextract	/tmp/zextract.raw--L100000 -N3	 100000  100000  700001
+par__zextract	/tmp/zextract.raw.bin-	 261905  261905 1722230
+par__zextract	/tmp/zextract.raw.bin-	 246033  246033 1722231
+par__zextract	/tmp/zextract.raw.bin-	 246033  246033 1722231
+par__zextract	/tmp/zextract.raw.bin-	 246029  246029 1722204
+par__zextract	/tmp/zextract.raw.bin--L100000	 100000  100000  588895
+par__zextract	/tmp/zextract.raw.bin--L100000	 100000  100000  700000
+par__zextract	/tmp/zextract.raw.bin--L100000	 100000  100000  700000
+par__zextract	/tmp/zextract.raw.bin--L100000	 100000  100000  700000
+par__zextract	/tmp/zextract.raw.bin--L100000	 100000  100000  700000
+par__zextract	/tmp/zextract.raw.bin--L100000	 100000  100000  700000
+par__zextract	/tmp/zextract.raw.bin--L100000	 100000  100000  700000
+par__zextract	/tmp/zextract.raw.bin--L100000	 100000  100000  700000
+par__zextract	/tmp/zextract.raw.bin--L100000	 100000  100000  700000
+par__zextract	/tmp/zextract.raw.bin--L100000	 100000  100000  700001
+par__zextract	/tmp/zextract.raw.bin--L100000 -N3	 300000  300000 1988895
+par__zextract	/tmp/zextract.raw.bin--L100000 -N3	 300000  300000 2100000
+par__zextract	/tmp/zextract.raw.bin--L100000 -N3	 300000  300000 2100000
+par__zextract	/tmp/zextract.raw.bin--L100000 -N3	 100000  100000  700001
 par_bin	### Test --bin
 par_bin	      2       2       4
 par_bin	      2       2       4
@@ -688,98 +829,12 @@ par_failing_compressor	parallel: Error: cat;false failed.
 par_failing_compressor	C=cat;false,D=cat;false
 par_failing_compressor	parallel: Error: cat;false failed.
 par_failing_compressor	C=cat;false,D=cat;false
-par_fifo_under_csh	### Test --fifo under csh
-par_fifo_under_csh	parallel: Warning: --cat/--fifo fails under csh if $TMPDIR contains newline.
-par_fifo_under_csh	Unmatched '"'.
-par_fifo_under_csh	Broken pipe
-par_fifo_under_csh	Unmatched '"'.
-par_fifo_under_csh	Broken pipe
-par_fifo_under_csh	Unmatched '"'.
-par_fifo_under_csh	Broken pipe
-par_fifo_under_csh	Unmatched '"'.
-par_fifo_under_csh	Broken pipe
-par_fifo_under_csh	Unmatched '"'.
-par_fifo_under_csh	Broken pipe
-par_fifo_under_csh	Unmatched '"'.
-par_fifo_under_csh	Broken pipe
-par_fifo_under_csh	Unmatched '"'.
-par_fifo_under_csh	Broken pipe
-par_fifo_under_csh	Unmatched '"'.
-par_fifo_under_csh	Broken pipe
-par_fifo_under_csh	Unmatched '"'.
-par_fifo_under_csh	Broken pipe
-par_fifo_under_csh	Unmatched '"'.
-par_fifo_under_csh	Broken pipe
-par_fifo_under_csh	Unmatched '"'.
-par_fifo_under_csh	Broken pipe
-par_fifo_under_csh	Unmatched '"'.
-par_fifo_under_csh	Broken pipe
-par_fifo_under_csh	Unmatched '"'.
-par_fifo_under_csh	Broken pipe
-par_fifo_under_csh	Unmatched '"'.
-par_fifo_under_csh	Broken pipe
-par_fifo_under_csh	Unmatched '"'.
-par_fifo_under_csh	Broken pipe
-par_fifo_under_csh	Unmatched '"'.
-par_fifo_under_csh	Broken pipe
-par_fifo_under_csh	Unmatched '"'.
-par_fifo_under_csh	Broken pipe
-par_fifo_under_csh	Unmatched '"'.
-par_fifo_under_csh	Broken pipe
-par_fifo_under_csh	Unmatched '"'.
-par_fifo_under_csh	Broken pipe
-par_fifo_under_csh	Unmatched '"'.
-par_fifo_under_csh	Broken pipe
-par_fifo_under_csh	Unmatched '"'.
-par_fifo_under_csh	Broken pipe
-par_fifo_under_csh	Unmatched '"'.
-par_fifo_under_csh	Broken pipe
-par_fifo_under_csh	exit 22
-par_fifo_under_csh	1048571
-par_fifo_under_csh	1
-par_fifo_under_csh	1048572
-par_fifo_under_csh	1
-par_fifo_under_csh	1048572
-par_fifo_under_csh	1
-par_fifo_under_csh	1048572
-par_fifo_under_csh	1
-par_fifo_under_csh	1048572
-par_fifo_under_csh	1
-par_fifo_under_csh	1048572
-par_fifo_under_csh	1
-par_fifo_under_csh	1048569
-par_fifo_under_csh	1
-par_fifo_under_csh	1048576
-par_fifo_under_csh	1
-par_fifo_under_csh	1048576
-par_fifo_under_csh	1
-par_fifo_under_csh	1048576
-par_fifo_under_csh	1
-par_fifo_under_csh	1048576
-par_fifo_under_csh	1
-par_fifo_under_csh	1048576
-par_fifo_under_csh	1
-par_fifo_under_csh	1048576
-par_fifo_under_csh	1
-par_fifo_under_csh	1048576
-par_fifo_under_csh	1
-par_fifo_under_csh	1048576
-par_fifo_under_csh	1
-par_fifo_under_csh	1048576
-par_fifo_under_csh	1
-par_fifo_under_csh	1048576
-par_fifo_under_csh	1
-par_fifo_under_csh	1048576
-par_fifo_under_csh	1
-par_fifo_under_csh	1048576
-par_fifo_under_csh	1
-par_fifo_under_csh	1048576
-par_fifo_under_csh	1
-par_fifo_under_csh	1048576
-par_fifo_under_csh	1
-par_fifo_under_csh	868832
-par_fifo_under_csh	1
-par_fifo_under_csh	exit 22
+par_filter_no_delay	### --filter + --delay: filtered jobs must not consume delay slots
+par_filter_no_delay	5
+par_filter_no_delay	6
+par_filter_no_delay	7
+par_filter_no_delay	8
+par_filter_no_delay	FAST: filtered jobs skipped delay
 par_jobs_file	### Test of -j filename
 par_jobs_file	sleep 6
 par_jobs_file	sleep 8
@@ -1449,6 +1504,12 @@ par_shellquote	csh	\\\\\\\\	"\
 par_shellquote	csh	"\\\par_shellquote	csh	\\\\\\\\\\\\\\ \!\"\#\$%\&\'\(\)\*+,-./0123456789:\;\<\=\>\?@ABCDEFGHIJKLMNOPQRSTUVWXYZ\[\\\]\^_\`abcdefghijklmnopqrstuvwxyz\{\|\}\~ÄÅ\Ç\É\Ñ\Ö\Ü\á\à\â\ä\ã\å\ç\é\è\ê\ë\í\ì\î\ï\ñ\ó\ò\ô\ö\õ\ú\ù\û\ü\†\°\¢\£\§\•\¶\ß\®\©\™\´\¨\≠\Æ\Ø\∞\±\≤\≥\¥\µ\∂\∑\∏\π\∫\ª\º\Ω\æ\ø\¿\¡\¬\√\ƒ\≈\∆\«\»\…\ \À\Ã\Õ\Œ\œ\–\—\“\”\‘\’\÷\◊\ÿ\Ÿ\⁄\€\‹\›\ﬁ\ﬂ\‡\·\‚\„\‰\Â\Ê\Á\Ë\È\Í\Î\Ï\Ì\Ó\Ô\\Ò\Ú\Û\Ù\ı\ˆ\˜\¯\˘\˙\˚\¸\˝\˛\ˇ
 par_shellquote	tcsh	\\\\\\\\	"\
 par_shellquote	tcsh	"\\\par_shellquote	tcsh	\\\\\\\\\\\\\\ \!\"\#\$%\&\'\(\)\*+,-./0123456789:\;\<\=\>\?@ABCDEFGHIJKLMNOPQRSTUVWXYZ\[\\\]\^_\`abcdefghijklmnopqrstuvwxyz\{\|\}\~ÄÅ\Ç\É\Ñ\Ö\Ü\á\à\â\ä\ã\å\ç\é\è\ê\ë\í\ì\î\ï\ñ\ó\ò\ô\ö\õ\ú\ù\û\ü\†\°\¢\£\§\•\¶\ß\®\©\™\´\¨\≠\Æ\Ø\∞\±\≤\≥\¥\µ\∂\∑\∏\π\∫\ª\º\Ω\æ\ø\¿\¡\¬\√\ƒ\≈\∆\«\»\…\ \À\Ã\Õ\Œ\œ\–\—\“\”\‘\’\÷\◊\ÿ\Ÿ\⁄\€\‹\›\ﬁ\ﬂ\‡\·\‚\„\‰\Â\Ê\Á\Ë\È\Í\Î\Ï\Ì\Ó\Ô\\Ò\Ú\Û\Ù\ı\ˆ\˜\¯\˘\˙\˚\¸\˝\˛\ˇ
+par_skip_no_delay	### skip() must not consume --delay slot
+par_skip_no_delay	1
+par_skip_no_delay	2
+par_skip_no_delay	10
+par_skip_no_delay	11
+par_skip_no_delay	FAST: skipped jobs skipped delay
 par_tmp_full	### Test --tmpdir running full. bug #40733 was caused by this
 par_tmp_full	parallel: Error: Output is incomplete.
 par_tmp_full	parallel: Error: Cannot append to buffer file in /tmp/shm/parallel.

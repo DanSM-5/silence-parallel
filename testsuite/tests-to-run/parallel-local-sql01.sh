@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# SPDX-FileCopyrightText: 2021-2025 Ole Tange, http://ole.tange.dk and Free Software and Foundation, Inc.
+# SPDX-FileCopyrightText: 2021-2026 Ole Tange, http://ole.tange.dk and Free Software and Foundation, Inc.
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -194,11 +194,14 @@ true > $joblog
 do_dburl() {
     export dbvar=$1
     hostname=`hostname`
+    username=`whoami`
     compgen -A function | G par_ | sort |
 	stdout parallel -vj1 --timeout 200 --tagstring {#}{} --joblog +$joblog p_wrapper {} \$$dbvar |
 	perl -pe 's/tbl\d+/TBL99999/gi;' |
 	perl -pe 's/(from TBL99999 order) .*/$1/g' |
 	perl -pe 's/ *\b'"$hostname"'\b */hostname/g' |
+	perl -pe 's/ *\b'"$username"'\b */username/g' |
+	perl -pe 's{/tmp/parallel-bug49791-[0-9a-f]+}{/tmp/parallel-bug49791-NNN}g' |
 	grep -v -- --------------- |
 	perl -pe 's/ *\bhost\b */host/g' |
 	perl -pe 's/ +/ /g' |

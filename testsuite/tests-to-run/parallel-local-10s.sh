@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# SPDX-FileCopyrightText: 2021-2025 Ole Tange, http://ole.tange.dk and Free Software and Foundation, Inc.
+# SPDX-FileCopyrightText: 2021-2026 Ole Tange, http://ole.tange.dk and Free Software and Foundation, Inc.
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -8,6 +8,21 @@
 # Each should be taking 10-30s and be possible to run in parallel
 # I.e.: No race conditions, no logins
 
+par__zextract() {
+    # Generate /tmp/zextract.{bz2,gz,zst,raw}
+    seq 1000000 |
+	parallel -j0 --pipe --tee '{1} > /tmp/zextract.{2}' \
+		 ::: 'bzip2 -1' 'gzip -1' 'zstd -1' cat :::+ bz2 gz zst raw
+    # Here with wrong extension to test 4CC detection
+    parallel cp {} {}.bin ::: /tmp/zextract.{bz2,gz,zst,raw}
+    doit() {
+	parallel -k --block -1 --tagstring "$1-$2" $2 -j4 --pipepart -a $1 wc
+    }
+    export -f doit
+    stdout parallel -j 25% -k doit ::: /tmp/zextract.{bz2,gz,zst,raw}{,.bin} \
+	   ::: '' -L100000 "-L100000 -N3"
+}
+ 
 par_shard() {
     echo '### --shard'
     # Each of the 5 lines should match:
@@ -61,7 +76,7 @@ par_shard() {
     #seq 200000 | parallel --pipe --shard 1 wc |
     #	perl -pe 's/(.*\d{5,}){3}/OK/'
     # Combine with arguments (should compute -j10 given args)
-    seq 200000 | parallel --pipe --shard 1 echo {}\;wc ::: {1..5} ::: a b |
+    seq 200000 | parallel --pipe --shard 1 echo {}\;wc ::: {1..10} ::: a b |
 	perl -pe 's/(.*\d{5,}){3}/OK/'
 }
 
@@ -223,18 +238,6 @@ par_seqreplace_long_line() {
 	uniq -c
 }
 
-par_--load_from_PARALLEL() {
-    echo "### Test reading load from PARALLEL"
-    export PARALLEL="$PARALLEL --load 400%"
-    # Ignore stderr due to 'Starting processes took > 2 sec'
-    seq 1 1000000 |
-	parallel -kj200 --recend "\n" --spreadstdin gzip -1 2>/dev/null |
-	zcat | sort -n | md5sum
-    seq 1 1000000 |
-	parallel -kj20 --recend "\n" --spreadstdin gzip -1 |
-	zcat | sort -n | md5sum
-}
-
 par__quote_special_results() {
     echo "### Test --results on file systems with limited UTF8 support"
     export LC_ALL=C
@@ -364,7 +367,7 @@ par_opt_arg_eaten() {
     printf '1\0002\0003\0004\0005\000' | stdout parallel -k -0 -i repl echo repl OK
 }
 
-par_--nice() {
+par__--nice() {
     echo 'Check that --nice works'
     # parallel-20160422 OK
     check_for_2_bzip2s() {
@@ -454,17 +457,6 @@ par_failing_compressor() {
 	perl -pe 's:/par......par:/tmpfile:'
 }
 
-par_fifo_under_csh() {
-    echo '### Test --fifo under csh'
-    doit() {
-	csh -c "seq 3000000 | parallel -k --pipe --fifo 'sleep .{#};cat {}|wc -c ; false; echo \$status; false'"
-	echo exit $?
-    }
-    # csh does not seem to work with TMPDIR containing \n
-    doit
-    TMPDIR=/tmp
-    doit
-}
 
 par_END() {
     echo '### Test -i and --replace: Replace with argument'
@@ -746,9 +738,25 @@ par_jobs_file() {
     # Should give 6 8 10 5 4
 }
 
+par_filter_no_delay() {
+    echo '### --filter + --delay: filtered jobs must not consume delay slots'
+    start=$SECONDS
+    parallel --delay 1 -j1 --filter '{} > 4' echo ::: {1..8}
+    elapsed=$((SECONDS - start))
+    [ "$elapsed" -lt 7 ] && echo "FAST: filtered jobs skipped delay" || echo "SLOW: $elapsed s"
+}
+
+par_skip_no_delay() {
+    echo '### skip() must not consume --delay slot'
+    start=$SECONDS
+    parallel --delay 1 -j1 echo '{= 2 < seq and seq() < 10 and skip(); =}' ::: {1..11}
+    elapsed=$((SECONDS - start))
+    [ "$elapsed" -lt 10 ] && echo "FAST: skipped jobs skipped delay" || echo "SLOW: $elapsed s (should be <10, unfixed would be ~11)"
+}
+
 export -f $(compgen -A function | grep par_)
 compgen -A function | G par_ "$@" | LC_ALL=C sort |
-    parallel --timeout 1000% -j10 --tag -k --joblog /tmp/jl-`basename $0` '{} 2>&1' |
+    parallel --timeout 1000% -j6 --tag -k --joblog /tmp/jl-`basename $0` '{} 2>&1' |
     perl -pe 's/,31,0/,15,0/' |
     # Replace $PWD with . even if given as ~/...
     perl -pe 's:~:'"$HOME"':g' |

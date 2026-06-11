@@ -1,12 +1,43 @@
 #!/bin/bash
 
-# SPDX-FileCopyrightText: 2021-2025 Ole Tange, http://ole.tange.dk and Free Software and Foundation, Inc.
+# SPDX-FileCopyrightText: 2021-2026 Ole Tange, http://ole.tange.dk and Free Software and Foundation, Inc.
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 # Simple jobs that never fails
 # Each should be taking 30-100s and be possible to run in parallel
 # I.e.: No race conditions, no logins
+
+par__--load_from_PARALLEL() {
+    echo "### Test reading load from PARALLEL"
+    export PARALLEL="$PARALLEL --load 600%"
+    # Ignore stderr due to 'Starting processes took > 2 sec'
+    seq 1 1000000 |
+	parallel -kj200 --recend "\n" --spreadstdin gzip -1 2>/dev/null |
+	zcat | sort -n | md5sum
+    seq 1 1000000 |
+	parallel -kj20 --recend "\n" --spreadstdin gzip -1 |
+	zcat | sort -n | md5sum
+}
+
+par_pipepart_lines() {
+    echo "### zextract --lines"
+    zst=$(mktemp)
+    raw=$(mktemp)
+    opt="-j10 --block -1  --pipepart -a"
+    seq 1000000 | zstd -1 > "$zst"
+    seq 1000000 > "$raw"
+    seq 1000000 | parallel --pipe -L30000 wc | sort
+    seq 1000000 | parallel --pipe -N30000 wc | sort
+    seq 1000000 | parallel --pipe -L30000 -N3 wc | sort
+    parallel -L30000      $opt "$zst" wc | sort
+    parallel -N30000      $opt "$zst" wc | sort
+    parallel -L30000 -N3  $opt "$zst" wc | sort
+    parallel -L30000      $opt "$raw" wc | sort
+    parallel -N30000      $opt "$raw" wc | sort
+    parallel -L30000 -N3  $opt "$raw" wc | sort
+    rm "$zst" "$raw"
+}
 
 par__milestone() {
     echo '### Test --milestone'
@@ -117,46 +148,9 @@ par__dburl_parsing() {
 	(
 	    stdout parallel -j1 --tag test_dburl ::: ${dburls[@]}
 	    stdout parallel -j1 --tag test_dburl {}/ ::: ${dburls[@]}
-	) | perl -pe 's/parallel (line|at) \d+./parallel $1 99999./;'
+	) | perl -pe 's/parallel (line|at) \d+./parallel $1 99999./;s/'$me/username/g
     )
     rmdir test
-}
-
-par_sshlogin_parsing() {
-    echo '### Generate sshlogins to test parsing'
-    sudo $(which sshd) -p 22222
-
-    gen_sshlogin() {
-	grp=grp1+grp2
-	ncpu=4
-	ssh=/usr/bin/ssh
-	user=parallel
-	userpass=withpassword
-	pass="$withpassword"
-	host=lo
-	port=22222
-	# no pass
-	parallel -k echo \
-		 {1}{2}{3}{4}{5}{=1'$_ = ($arg[4]||$arg[5]) ? "\@" : ""' =}$host{6} \
-		 ::: '' @$grp/ ::: '' $ncpu/ ::: '' $ssh' ' \
-		 ::: '' $user ::: '' ::: '' :$port
-	# pass
-	parallel -k echo \
-		 {1}{2}{3}{4}{5}{=1'$_ = ($arg[4]||$arg[5]) ? "\@" : ""' =}$host{6} \
-		 ::: '' @$grp/ ::: '' $ncpu/ ::: '' $ssh' ' \
-		 ::: '' $userpass ::: :"$pass" ::: '' :$port
-    }
-
-    doit() {
-	if parallel -S "$1" {} '$SSH_CLIENT|field 3;whoami' ::: echo ; then
-	    : echo OK
-	else
-	    echo Fail
-	fi
-    }
-    export -f doit
-    
-    gen_sshlogin | parallel --tag --timeout 20 -k doit
 }
 
 par__print_in_blocks() {
@@ -225,7 +219,7 @@ par_reload_slf_every_second() {
     rm "$tmp"
 }
 
-par__groupby_big() {
+par_groupby_big() {
     echo "### test --group-by on file bigger than block"
     groupcol() {
 	export groupcol=$1
@@ -517,7 +511,7 @@ par_groupby() {
     # Test --colsep --header : (OK: --header : not needed)
 }
 
-par__groupby_pipepart() {
+par_groupby_pipepart() {
     tsv() {
 	# TSV file
 	printf "%s\t" header_a1 head_b1 c1 d1 e1 f1; echo
@@ -652,7 +646,7 @@ par_max_length_len_128k() {
 
 par__plus_dyn_repl() {
     echo "Dynamic replacement strings defined by --plus"
-    pp="nice parallel --plus"
+    pp="nice parallel --plus -j1"
     
     unset myvar
     echo ${myvar:-myval}
@@ -760,7 +754,7 @@ par__test_ipv6_format() {
 	ssh -oStrictHostKeyChecking=accept-new "$@" true
     }
     export -f refresh_known_host
-    (ipv4; ipv6) | nice stdout parallel -j1 refresh_known_host >/dev//null
+    (ipv4; ipv6) | stdout parallel -j1 refresh_known_host >/dev//null
     echo '### Host as IPv6 address'
     (
 	ipv6 |
@@ -777,12 +771,24 @@ par__test_ipv6_format() {
             # 9.9.9.9q22 => 9.9.9.9
             perl -pe 's/q.*//;'
     ) |
-	nice parallel -j200% --argsep , parallel -S {} true ::: 1 ||
+	parallel -j50% --argsep , parallel -S {} true ::: 1 ||
 	echo Failed
+}
+
+par_fifo_under_csh() {
+    echo '### Test --fifo under csh'
+    doit() {
+	csh -c "seq 3000000 | parallel -k --pipe --fifo 'sleep .{#};cat {}|wc -c ; false; echo \$status; false'"
+	echo exit $?
+    }
+    # csh does not seem to work with TMPDIR containing \n
+    TMPDIR=/tmp
+    doit
 }
 
 # was -j6 before segfault circus
 export -f $(compgen -A function | grep par_)
 compgen -A function | G par_ "$@" | sort |
     #    parallel --delay 0.3 --timeout 1000% -j6 --tag -k --joblog /tmp/jl-`basename $0` '{} 2>&1'
-    parallel --delay 0.3 --timeout 10000% -j75% --lb --tag -k --joblog /tmp/jl-`basename $0` '{} 2>&1'
+    parallel --delay 0.3 --timeout 1000% -j75% --lb --tag -k --joblog /tmp/jl-`basename $0` '{} 2>&1' |
+    perl -pe 's/(?<![A-Za-z0-9_.])'"$(whoami)"'(?![A-Za-z0-9_.])/username/g'

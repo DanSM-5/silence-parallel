@@ -548,6 +548,27 @@ par_--shellquote_command_len		' 10 8	parallel: Error: Command line too long (65x
 par_--shellquote_command_len		' 10 9	parallel: Error: Command line too long (196xxxx >= 6xxxx) at input 0: ''''''''''
 par_--shellquote_command_len		' 10 10	parallel: Error: Command line too long (590xxxx >= 6xxxx) at input 0: ''''''''''
 par_bug57364	### bug #57364: Race condition creating len cache file.
+par_groupby_compressed	### --groupby --pipepart on plain and gzip files give same line counts
+par_groupby_compressed	2
+par_groupby_compressed	2
+par_groupby_compressed	2
+par_groupby_compressed	2
+par_groupby_compressed	2
+par_groupby_compressed	2
+par_groupby_compressed	2
+par_groupby_compressed	2
+par_groupby_compressed	2
+par_groupby_compressed	2
+par_groupby_compressed	2
+par_groupby_compressed	2
+par_groupby_compressed	2
+par_groupby_compressed	2
+par_groupby_compressed	2
+par_groupby_compressed	2
+par_groupby_compressed	2
+par_groupby_compressed	2
+par_groupby_compressed	2
+par_groupby_compressed	2
 par_linebuffer_files	bug #48658: --linebuffer --files
 par_linebuffer_files	zstd	normal
 par_linebuffer_files	zstd	100000
@@ -591,13 +612,14 @@ par_linebuffer_files	pigz	4
 par_linebuffer_files	pigz	--results
 par_linebuffer_files	pigz	1
 par_linebuffer_files	pigz	parallel: Warning: Use --files0 when $TMPDIR contains newline.
-par_linebuffer_files	pxz	normal
-par_linebuffer_files	pxz	100000
-par_linebuffer_files	pxz	--files
-par_linebuffer_files	pxz	4
-par_linebuffer_files	pxz	--results
-par_linebuffer_files	pxz	1
-par_linebuffer_files	pxz	parallel: Warning: Use --files0 when $TMPDIR contains newline.
+par_linebuffer_files	pixz	normal
+par_linebuffer_files	pixz	100000
+par_linebuffer_files	pixz	--files
+par_linebuffer_files	pixz	4
+par_linebuffer_files	pixz	--results
+par_linebuffer_files	pixz	1
+par_linebuffer_files	pixz	can not seek in input: Illegal seek
+par_linebuffer_files	pixz	parallel: Warning: Use --files0 when $TMPDIR contains newline.
 par_linebuffer_files	gzip	normal
 par_linebuffer_files	gzip	100000
 par_linebuffer_files	gzip	--files
@@ -686,3 +708,5 @@ par_squared	1c0f34fee7176dc367bead8f96cba6bc  -
 par_timeout	### test --timeout
 par_timeout	OK
 par_timeout	OK
+par_z_roundrobin_blocks	bug #49664: --round-robin does not complete
+par_z_roundrobin_blocks	8

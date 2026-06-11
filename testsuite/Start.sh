@@ -1,6 +1,6 @@
 #!/bin/bash -x
 
-# SPDX-FileCopyrightText: 2021-2025 Ole Tange, http://ole.tange.dk and Free Software and Foundation, Inc.
+# SPDX-FileCopyrightText: 2021-2026 Ole Tange, http://ole.tange.dk and Free Software and Foundation, Inc.
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -122,7 +122,8 @@ log_rotate
 printf "\033[48;5;78;38;5;0m     `date`     \033[00m\n"
 mkdir -p actual-results
 ls -t tests-to-run/*${1}*.sh | egrep -v "${2}" |
-    parallel --bar --timeout 3000 --tty -tj1 run_test | tee testsuite.log
+    # parallel --bar --timeout 3000 --tty -tj1 run_test | tee testsuite.log
+    parallel --timeout 3000 --tty -tj1 run_test | tee testsuite.log
 # If testsuite.log contains @@ then there is a diff
 if grep -q '@@' testsuite.log ; then
     false

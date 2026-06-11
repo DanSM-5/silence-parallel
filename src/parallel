@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 
-# Copyright (C) 2007-2025 Ole Tange, http://ole.tange.dk and Free
+# Copyright (C) 2007-2026 Ole Tange, http://ole.tange.dk and Free
 # Software Foundation, Inc.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -18,7 +18,7 @@
 # or write to the Free Software Foundation, Inc., 51 Franklin St,
 # Fifth Floor, Boston, MA 02110-1301 USA
 #
-# SPDX-FileCopyrightText: 2007-2025 Ole Tange, http://ole.tange.dk and Free Software and Foundation, Inc.
+# SPDX-FileCopyrightText: 2007-2026 Ole Tange, http://ole.tange.dk and Free Software and Foundation, Inc.
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 # open3 used in Job::start
@@ -37,10 +37,27 @@ use strict;
 use File::Basename;
 
 sub set_input_source_header($$) {
+    # Replace named column placeholders in command/option strings with
+    # positional equivalents, e.g. {filename} -> {1}, {=filename =} -> {=1 =}.
+    #
+    # When --header is active (and not --pipe), the first line of each input
+    # source is consumed as a header row.  Column names found there are mapped
+    # to 1-based numeric ids so the rest of the code only needs to handle
+    # numeric replacement strings.
+    #
+    # When --header 0 is given, no header row is consumed; instead the
+    # filenames passed via -a/:::: are used as column names.
+    #
+    # Inputs:
+    #   $command_ref           - ref to array of command strings to rewrite
+    #   $input_source_fh_ref   - ref to array of open filehandles (one per
+    #                            input source); consumed when header != "0"
+    # Side effects:
+    #   Modifies strings in $command_ref and several @Global / $opt variables
+    #   in-place.  Populates %Global::input_source_header{id => name}.
     my ($command_ref,$input_source_fh_ref) = @_;
     if(defined $opt::header and not $opt::pipe) {
-	# split with colsep or \t
-	# $header force $colsep = \t if undef?
+	# Use --colsep as field delimiter, fall back to tab.
 	my $delimiter = defined $opt::colsep ? $opt::colsep : "\t";
 	# regexp for {=
 	my $left = "\Q$Global::parensleft\E";
@@ -109,10 +126,16 @@ sub set_input_source_header($$) {
 }
 
 sub max_jobs_running() {
-    # Compute $Global::max_jobs_running as the max number of jobs
-    # running on each sshlogin.
+    # Ensure $Global::max_jobs_running is set to the total number of job
+    # slots available across all SSH login targets.  If no slots are
+    # available (e.g. all remote hosts are unreachable) the program exits
+    # with status 255.
+    #
+    # Side effects:
+    #   Calls SSHLogin::max_jobs_running() for each entry in %Global::host,
+    #   which in turn updates $Global::max_jobs_running.
     # Returns:
-    #   $Global::max_jobs_running
+    #   $Global::max_jobs_running (integer >= 1)
     if(not $Global::max_jobs_running) {
 	for my $sshlogin (values %Global::host) {
 	    $sshlogin->max_jobs_running();
@@ -126,9 +149,15 @@ sub max_jobs_running() {
 }
 
 sub halt() {
-    # Compute exit value,
-    # wait for children to complete
-    # and exit
+    # Determine the final exit status, wait for all child processes to finish,
+    # and then exit the program.
+    #
+    # Exit-status rules:
+    #   --halt with percentage threshold: exit = ceil(failed/started * 100)
+    #   --halt with count threshold:      exit = min(failed, 101)
+    #   --semaphore mode:                 exit = exit status of the one job
+    #   default:                          exit = min(total failures, 101)
+    #     (0 = all succeeded, 1-100 = that many failed, 101 = >100 failed)
     if($opt::halt and $Global::halt_when ne "never") {
 	if(not defined $Global::halt_exitstatus) {
 	    if($Global::halt_pct) {
@@ -158,106 +187,367 @@ sub halt() {
 
 sub __FAST_MODE__() {}
 
+sub tokenize($) {
+    # Tokenize a command-token array into alternating fixed strings and undef
+    # replacement slots, suitable for the fast path in fast().
+    #
+    # Uses the same tokenization logic as replace_placeholders() but runs once
+    # at setup time.  Returns a list: [fixed_str, undef, fixed_str, ...]
+    # where undef marks a simple {} replacement slot.
+    my $cmd_ref = shift;
+    my $spacer = 0;
+    my @tokens = grep { length $_ > 0 } map {
+	if(/^\177<|^ $/) { $_ }
+	else { split /(?=\s)|(?<=\s)/ }
+    }
+    map { split /(?=\177<)|(?<=\177>)/ }
+    map { $spacer++ ? ("\0spc",$_) : $_ }
+    map { $_ eq "" ? "\0empty" : $_ }
+    @$cmd_ref;
+    my @tpl;
+    my $acc = "";
+    for my $t (@tokens) {
+	if($t =~ /^\177<\177>$/) {
+	    push @tpl, $acc, undef;
+	    $acc = "";
+	} elsif($t eq "\0spc") {
+	    $acc .= " ";
+	} elsif($t eq "\0empty") {
+	    # skip
+	} else {
+	    $acc .= $t;
+	}
+    }
+    push @tpl, $acc;
+    return @tpl;
+}
 
 sub fast() {
+    # Fast-mode execution: bundle jobs into shell scripts and pipe them to a
+    # child `parallel --pipe` instance for parallel execution.
+    # Side effects: drains $Global::JobQueue completely, then exits.
     my $jobslots = $Global::host{':'}->user_requested_processes($opt::jobs);
-    my $i;
-    my $jobs_per_chunk;
-    my $buffer_len = 100;
-    my $splitstring = ("\n#\0\n");
-    # n = jobslots
-    # Read 100 jobs
-    # Split into n chunks
-    # Read 3*100 jobs
-    # Split into n chunks
-    # Read 3*3*100 jobs (up to at most 300K jobs)
-    # Split into n chunks
-    # Receiver: parallel --block 1k --pipe -N1 --recend '\n#\0\n' dash
-    # TODO --group? --halt? --tag? $PARALLEL_JOBSLOT
-    # _PARALLEL_TAG="foo"
-    # | tagger
-    # _PARALLEL_EXIT
-    # maybe_exit
-    my $executer_fh;
-    if($opt::D eq "fast") {
-	open($executer_fh, "|-", "cat") || die;
-    } else {
-	open($executer_fh, "|-", "parallel --plain -j $jobslots  --block 1k --pipe -N1 --recend '\\n#\\0\\n' $Global::shell") || die;
+    my ($buffer_len, $buf_growth, $buf_cap, $pipe_block) = fast_buffer_params();
+    my (undef, $count_file) = ::tempfile(DIR=>$ENV{'TMPDIR'}, TEMPLATE=>'parXXXXX', UNLINK=>1);
+    my $executer_fh = fast_open_executer($jobslots, $pipe_block);
+
+    my $needs_tag  = $opt::tag || $opt::tagstring;
+    my $needs_exit = defined $opt::halt;
+    my $tagmark    = "^^^^".join "", map { (0..9,"a".."z","A".."Z")[rand(62)] } (1..12);
+    my $jl_path    = defined($opt::joblog) ? Q($opt::joblog) : undef;
+
+    my ($block_start, $block_end) =
+	fast_chunk_scripts($needs_exit, $needs_tag, $tagmark, $count_file, $jl_path);
+    my ($fh, $build, $tag) = fast_setup($needs_tag);
+    my $build_run = fast_make_runner($needs_exit, $jl_path);
+
+    while(1) {
+	my @chunk = fast_fill_chunk($fh, $build, $tag, $tagmark,
+				     $build_run, $needs_tag, $buffer_len);
+	last unless @chunk;
+	::debug("fast", $block_start, @chunk, $block_end);
+	print $executer_fh $block_start;
+	print $executer_fh @chunk;
+	print $executer_fh $block_end;
+	$buffer_len *= $buf_growth if $buffer_len < $buf_cap;
     }
-    # Do some testing of a stuck job - dns = 5 sec
-    my $block_start = q{
-	error() {
-	    _exit=$((_exit+1))
- 	    # --halt-on-error stuff
-	    if [ $_exit -gt 40 ]; then
-	        echo "ERROR: More than 40"
-	        exit 1
-	    fi
-        }
-        
-        _tagger() {
-          {
-            rm -f "$1"
-            # This will fail for either /1 or /2
-            rmdir "$2" 2>/dev/null
-	    # TODO use awk (see fasttag)
-            perl -pe 's{^}{$ENV{PARALLEL_TAGSTRING}}'
-          } < "$1"
-        }
-        
-        _taggerwrap() {
-            _dir=`mktemp -d`
-            mkfifo "$_dir"/1 "$_dir"/2
-            _tagger "$_dir"/1 "$_dir" >&1 &
-            _tagger "$_dir"/2 "$_dir" >&2 &
-            # ( ... ) is needed to deal correctly with 'exit 1'
-            ( eval $@ ; ) >"$_dir"/1 2>"$_dir"/2 || error
-            wait
-        }
-	PARALLEL_TAGSTRING=dummy
-	export PARALLEL_TAGSTRING
+
+    if($opt::dryrun) { wait_and_exit(0); }
+    close $executer_fh;
+    wait_and_exit(_fast_sum_exit($count_file));
+}
+
+sub fast_buffer_params() {
+    # Returns the four buffer/block parameters, honouring internal CLI overrides.
+    my $buffer_len = defined($opt::_buf_start)  ? $opt::_buf_start  : 300;
+    my $buf_growth = defined($opt::_buf_growth) ? $opt::_buf_growth : 1.5;
+    my $buf_cap    = defined($opt::_buf_cap)    ? $opt::_buf_cap    : 1000;
+    my $pipe_block = defined($opt::_pipe_block) ? $opt::_pipe_block : 512000;
+    return ($buffer_len, $buf_growth, $buf_cap, $pipe_block);
+}
+
+sub fast_open_executer($$) {
+    # Opens the pipe to the inner `parallel --pipe` (or stdout for --dryrun).
+    my ($jobslots, $pipe_block) = @_;
+    my $inner_opts = "-j $jobslots --block $pipe_block --pipe -N1 --recend '\\n#\\0\\n' --_no_blocksize_warning";
+    $inner_opts .= " --keeporder"        if $opt::keeporder;
+    $inner_opts .= " --ungroup"          if $opt::ungroup;
+    $inner_opts .= " --compress"         if $opt::compress;
+    $inner_opts .= " --nice $opt::nice"  if $opt::nice;
+    my $executer_fh;
+    if($opt::dryrun) {
+	open($executer_fh, ">&", \*STDOUT) || die;
+    } else {
+	open($executer_fh, "|-", " parallel --plain $inner_opts $Global::shell") || die;
+    }
+    return $executer_fh;
+}
+
+sub fast_chunk_scripts($$$$$) {
+    # Builds the shell-script header ($block_start) and footer ($block_end)
+    # injected into every chunk sent to the inner parallel.
+    #
+    # $block_start sets up:
+    #   _error()   - failure counter (when --halt is active)
+    #   _tagger()  - per-fd awk tagger via two named fifos (when --tag/--tagstring)
+    #   joblog preamble vars (when --joblog is active)
+    #
+    # $block_end tears down the tagger fifos, writes $_exit to $count_file,
+    # and emits the "\n#\0\n" chunk sentinel for the inner parallel --pipe.
+    #
+    # Tagging design: one persistent awk process per fd reads a fifo.  Before
+    # each job a marker line switches the tag; all other lines are prefixed.
+    # The marker prefix is 4 carets (^^^^): printable and very unlikely in output.
+    my ($needs_exit, $needs_tag, $tagmark, $count_file, $jl_path) = @_;
+    my $splitstring = "\n#\0\n";
+    my $block_start = "";
+    if($needs_exit) {
+	$block_start .= "_error() { _exit=\$((_exit+1)); }\n";
+    }
+    if($needs_tag) {
+	$block_start .= q{
+_awk=$(command -v mawk 2>/dev/null || command -v nawk 2>/dev/null || command -v gawk 2>/dev/null || command -v awk)
+_marker='}.$tagmark.q{'
+_tagger() {
+    "$_awk" -v m="$_marker" '{if(n=index($0,m)){if(n>1)print TAG substr($0,1,n-1);TAG=substr($0,n+16)}else{print TAG $0}}'
+}
+_d=$(mktemp -d)
+mkfifo "$_d/1" "$_d/2"
+_tagger <"$_d/1" &
+_awk1pid=$!
+_tagger <"$_d/2" >&2 &
+_awk2pid=$!
+exec 1>"$_d/1" 2>"$_d/2"
+rm "$_d/1" "$_d/2"
+rmdir "$_d"
+};
+    }
+    if($jl_path) {
+	$block_start .= "_fast_epoch=\$(date +%s)\n_fast_secs=\$SECONDS\n";
+    }
+    my $block_end = ($needs_tag
+	? "\nexec 1>&- 2>&-\nwait \$_awk1pid\nwait \$_awk2pid\nrm -rf \"\$_d\"\n"
+	: "")
+    ."\necho \$_exit >> ".Q($count_file)."\nexit \$_exit\n"
+    .$splitstring."\n";
+    if($opt::dryrun and $Global::verbose < 2) {
+	$block_start = "";
+	$block_end   = "";
+    }
+    return ($block_start, $block_end);
+}
+
+sub fast_setup($) {
+    # Checks whether the fast path (bypass Job/CommandLine/Arg machinery) is
+    # eligible for this invocation.  Eligible means: single stdin source, only
+    # simple {} replacements, no special input modes.
+    #
+    # Returns ($fp_fh, $fp_build, $fp_tag):
+    #   $fp_fh    - input filehandle to read lines from (undef = use job queue)
+    #   $fp_build - closure: $line -> command string
+    #   $fp_tag   - closure: $line -> tag string with trailing tab (undef if no tagging)
+    my ($needs_tag) = @_;
+    my ($fp_fh, $fp_build, $fp_tag);
+    my $clq = $Global::JobQueue->{'commandlinequeue'};
+    my $arg_sub_q = $clq->{'arg_queue'}{'arg_sub_queue'};
+    if(ref($arg_sub_q) eq 'MultifileQueue'
+       and @{$arg_sub_q->{'fhs'}} == 1
+       and not @Global::unget_argv
+       and not $opt::colsep
+       and not $opt::csv
+       and not $opt::link
+       and not $opt::sqlworker
+       and not $opt::null
+       and not defined($opt::d)
+       and not $opt::header
+       and not defined($opt::filter[0])
+       and not $Global::end_of_file_string
+       and not $Global::max_lines
+       and not $Global::ignore_empty
+       and (not $Global::trim or $Global::trim eq 'n')
+       and (not defined($Global::max_number_of_args)
+	    or $Global::max_number_of_args == 0
+	    or $Global::max_number_of_args == 1)
+       and not $opt::m and not $opt::X) {
+	my @cmd = @{$clq->{'command'}};
+	my $all_simple = not grep { /\177<([^\177]+)\177>/ } @cmd;
+	if($needs_tag and defined $opt::tagstring) {
+	    $all_simple = 0 if $opt::tagstring =~ /\177<([^\177]+)\177>/;
+	}
+	if($all_simple) {
+	    $fp_fh = $arg_sub_q->{'fhs'}[0];
+	    my $quote_arg = ($Global::quote_replace and not $Global::quoting);
+	    my @tpl = tokenize(\@cmd);
+	    if(defined $Global::max_number_of_args
+	       and $Global::max_number_of_args == 0) {
+		my $const_cmd = join "", map { defined($_) ? $_ : "" } @tpl;
+		$fp_build = sub { $const_cmd };
+	    } else {
+		$fp_build = sub {
+		    my $q = $quote_arg ? Q($_[0]) : $_[0];
+		    return join "", map { defined($_) ? $_ : $q } @tpl;
+		};
+	    }
+	    if($needs_tag) {
+		my @ttpl = tokenize([$opt::tagstring]);
+		if(defined $Global::max_number_of_args
+		   and $Global::max_number_of_args == 0) {
+		    my $const_tag = join("", map { defined($_) ? $_ : "" } @ttpl)."\t";
+		    $fp_tag = sub { $const_tag };
+		} else {
+		    $fp_tag = sub {
+			my $q = $_[0];
+			return join("", map { defined($_) ? $_ : $q } @ttpl)."\t";
+		    };
+		}
+	    }
+	}
+    }
+    return ($fp_fh, $fp_build, $fp_tag);
+}
+
+sub fast_make_runner($$) {
+    # Returns a closure that wraps a command string for execution inside a chunk.
+    # Without --joblog: wraps with _error on failure (if --halt) or runs bare.
+    # With --joblog: adds timing shell code and appends a log line per job.
+    my ($needs_exit, $jl_path) = @_;
+    my $jl_seq = 0;
+    return sub {
+	my ($cmd) = @_;
+	if($jl_path) {
+	    $jl_seq++;
+	    my $cmd_for_log = $cmd;
+	    $cmd_for_log =~ s/\n/\000/g;
+	    my $q_cmd = Q($cmd_for_log);
+	    my $seq = $jl_seq;
+	    my $jl_write = "_jl_s1=\$SECONDS\n"
+		. "printf '%d\\t:\\t%d\\t%10.3f\\t0\\t0\\t%d\\t0\\t%s\\n' "
+		. "$seq \"\$((_fast_epoch+_jl_s0-_fast_secs))\" \"\$((_jl_s1-_jl_s0))\" \"\$_jl_rv\" $q_cmd >> $jl_path\n";
+	    if($needs_exit) {
+		return "_jl_s0=\$SECONDS\n( $cmd )\n_jl_rv=\$?\n[ \$_jl_rv -ne 0 ] && _error\n".$jl_write;
+	    } else {
+		return "_jl_s0=\$SECONDS\n$cmd\n_jl_rv=\$?\n".$jl_write;
+	    }
+	} else {
+	    return $needs_exit ? "( $cmd ) || _error\n" : $cmd."\n";
+	}
     };
-    my $block_end = "\n# Define get exit value\ntrue EXIT=\$_exit\n".$splitstring."\n";
-    do {
-	$i = 0;
-	my @jobbuffer;
-	while(my $job = $Global::JobQueue->get()) {
-	    push (@jobbuffer, "PARALLEL_TAGSTRING=".Q($job->tag()).
-	    	 "\n_taggerwrap ". Q($job->replaced()));
+}
+
+sub fast_fill_chunk($$$$$$$) {
+    # Fills one chunk: reads up to $buffer_len jobs from either the fast-path
+    # filehandle or the job queue, returning the list of per-job script entries.
+    # An empty return means the input is exhausted and the loop should stop.
+    my ($fp_fh, $fp_build, $fp_tag, $tagmark, $build_run, $needs_tag, $buffer_len) = @_;
+    my @jobbuffer;
+    my $i = 0;
+    if($fp_fh) {
+	# When the tag doesn't vary by line (e.g. -N0, or tagstring with no {}),
+	# precompute the tagmarker once rather than calling Q() per job.
+	my $const_tagmarker;
+	if($needs_tag) {
+	    my $t0 = $fp_tag->("\x00");
+	    $const_tagmarker = Q($tagmark.$t0) if $t0 eq $fp_tag->("\x01");
+	}
+	while(defined(my $line = <$fp_fh>)) {
+	    chomp $line;
+	    my $cmd = $fp_build->($line);
+	    my $run = $build_run->($cmd);
+	    my $entry;
+	    if($needs_tag) {
+		my $tm = defined($const_tagmarker) ? $const_tagmarker
+		                                   : Q($tagmark.$fp_tag->($line));
+		$entry = "printf '%s\\n' $tm\nprintf '%s\\n' $tm >&2\n$run";
+	    } else {
+		$entry = $run;
+	    }
+	    push(@jobbuffer, $entry);
 	    ($i++ < $buffer_len) or last;
 	}
-	my $jobs_per_chunk = 1 + ($i / $jobslots);
-	my $j = 0;
-	print $executer_fh $block_start;
-	for(@jobbuffer) {
-	    print $executer_fh $_,"\n";
-	    (++$j % $jobs_per_chunk) or print $executer_fh $block_end,$block_start;
+    } else {
+	while(my $job = $Global::JobQueue->get()) {
+	    my $cmd = $job->replaced();
+	    my $run = $build_run->($cmd);
+	    my $entry;
+	    if($needs_tag) {
+		my $tagmarker = Q($tagmark.$job->tag());
+		$entry = "printf '%s\\n' $tagmarker\nprintf '%s\\n' $tagmarker >&2\n$run";
+	    } else {
+		$entry = $run;
+	    }
+	    push(@jobbuffer, $entry);
+	    ($i++ < $buffer_len) or last;
 	}
-	print $executer_fh $block_end;
-	if($buffer_len < 100000) { $buffer_len *= 3; }
-    } while ($i);
-    close $executer_fh;
-    exit(0);
+    }
+    return @jobbuffer;
+}
+
+sub _fast_sum_exit($) {
+    # Sums per-chunk failure counts written to $count_file and returns the
+    # exit code, capped at 101 (parallel's maximum exit value).
+    my ($count_file) = @_;
+    my $total_failed = 0;
+    if(open(my $cf, "<", $count_file)) {
+	while(<$cf>) { chomp; $total_failed += int($_) }
+	close $cf;
+    }
+    return $total_failed > 101 ? 101 : $total_failed;
 }
 
 
 sub __PIPE_MODE__() {}
 
+{
+    my %is_compressed;
+    sub is_compressed_file($) {
+	# Returns the extension (gz/bz2/zst) if $file is a supported compressed
+	# format that zextract can handle; 0 otherwise.
+	my ($file) = @_;
+	if(defined($is_compressed{$file})) {
+	    return $is_compressed{$file};
+	}
+	$is_compressed{$file} = 0;
+	if($file =~ /\.(gz|bz2|zst)$/i) {
+	    $is_compressed{$file} = $1;
+	}
+	# FOURCC magic-byte test
+	if(!$is_compressed{$file} && -f $file) {
+	    if(open(my $fh, "<:raw", $file)) {
+		my $header;
+		read($fh, $header, 4);
+		close($fh);
+		if(defined $header) {
+		    if   ($header =~ /^\x1f\x8b/)         { $is_compressed{$file} = 'gz'  }
+		    elsif($header =~ /^BZh/)               { $is_compressed{$file} = 'bz2' }
+		    elsif($header =~ /^\x28\xb5\x2f\xfd/) { $is_compressed{$file} = 'zst' }
+		}
+	    }
+	}
+	return $is_compressed{$file}
+    }
+}
+
 
 sub pipepart_setup() {
-    # Compute the blocksize
-    # Generate the commands to extract the blocks
-    # Push the commands on queue
-    # Changes:
-    #   @Global::cat_prepends
-    #   $Global::JobQueue
+    # Prepare the job queue for --pipepart mode, where each job receives a
+    # contiguous slice of the input file(s) rather than reading from stdin.
+    #
+    # When --tee is active, every job gets a redirect from the same file
+    # (broadcast semantics).  Otherwise the file(s) are split into blocks:
+    #   - If --blocksize is negative it is treated as a multiplier on the
+    #     number of job slots: blocksize = filesize / slots / |blocksize|.
+    #   - Explicit positive --blocksize is used as-is.
+    #   - --roundrobin forces one block per job slot.
+    #
+    # Side effects:
+    #   @Global::cat_prepends  - shell fragments prepended to each job command
+    #   $Global::JobQueue      - re-populated with one entry per file block
     if($opt::tee) {
 	# Prepend each command with
-	#   < file
-	my $cat_string = "< ".Q($opt::a[0]);
+	#   cat file |
+	my $qfile = Q($opt::a[0]);
 	for(1..$Global::JobQueue->total_jobs()) {
-	    push @Global::cat_appends, $cat_string;
-	    push @Global::cat_prepends, "";
+	    push @Global::cat_prepends, "cat $qfile";
 	}
     } else {
 	if(not $opt::blocksize) {
@@ -268,14 +558,14 @@ sub pipepart_setup() {
 	    # --blocksize with 1 job per jobslot
 	    $opt::blocksize = -1;
 	}
+	my %zex_for;
 	if($opt::blocksize < 0) {
 	    my $size = 0;
 	    # Compute size of -a
 	    for(@opt::a) {
-		if(-f $_) {
-		    $size += -s $_;
-		} elsif(-b $_) {
-		    $size += size_of_block_dev($_);
+		$zex_for{$_} = Zextract->new($_, 0);
+		if(-f $_ or -b $_) {
+		    $size += $zex_for{$_}->size();
 		} elsif(-e $_) {
 		    ::error("$_ is neither a file nor a block device");
 		    wait_and_exit(255);
@@ -291,10 +581,11 @@ sub pipepart_setup() {
 		int($size / max_jobs_running() /
 		    -multiply_binary_prefix($opt::blocksize));
 	}
-	@Global::cat_prepends = (map { pipe_part_files($_) }
-				 # ::: are put into files and given a filehandle
-				 # ignore these and only keep the filenames.
-				 grep { ! fileno $_ } @opt::a);
+	for my $file (grep { ! fileno $_ } @opt::a) {
+	    $zex_for{$file} = Zextract->new($file, 0) unless defined $zex_for{$file};
+	    my $prepends = pipe_part_files($zex_for{$file});
+	    push @Global::cat_prepends, @$prepends;
+	}
 	# Unget the empty arg as many times as there are parts
 	$Global::JobQueue->{'commandlinequeue'}{'arg_queue'}->unget(
 	    map { [Arg->new("\0noarg")] } @Global::cat_prepends
@@ -303,19 +594,26 @@ sub pipepart_setup() {
 }
 
 sub pipe_tee_setup() {
-    # Create temporary fifos
-    # Run 'tee fifo1 fifo2 fifo3 ... fifoN' in the background
-    # This will spread the input to fifos
-    # Generate commands that reads from fifo1..N:
-    #	cat fifo | user_command
-    # Changes:
-    #	@Global::cat_prepends
+    # Set up broadcast piping via named fifos and tee(1).
+    #
+    # Creates one temporary fifo per job.  Forks a child that runs
+    #   tee fifo1 fifo2 ... fifoN > /dev/null
+    # so that stdin is broadcast to all fifos simultaneously.  Each job then
+    # reads from its own fifo.
+    #
+    # If tee(1) supports --output-error=warn-nopipe, that flag is added to
+    # suppress errors when a consumer exits before all input is consumed.
+    #
+    # Side effects:
+    #   @Global::cat_prepends  - "(rm fifoN; cat) < fifoN" for each job
     my @fifos;
     for(1..$Global::JobQueue->total_jobs()) {
 	push @fifos, tmpfifo();
     }
     # cat foo | tee fifo1 fifo2 fifo3 fifo4 fifo5 > /dev/null
-    if(not fork()){
+    my $tee_pid = fork();
+    defined($tee_pid) or ::die_bug("fork failed in pipe_tee_setup: $!");
+    if(not $tee_pid){
 	# Test if tee supports --output-error=warn-nopipe
 	`echo | tee --output-error=warn-nopipe /dev/null >/dev/null 2>/dev/null`;
 	my $opt = $? ? "" : "--output-error=warn-nopipe";
@@ -336,18 +634,34 @@ sub pipe_tee_setup() {
 	}
 	exit(0);
     }
-    # For each fifo
-    #	(rm fifo1; grep 1) < fifo1
-    #	(rm fifo2; grep 2) < fifo2
-    #	(rm fifo3; grep 3) < fifo3
+    # For each fifo, stream its content to the job via a pipe:
+    #   (rm fifo1; cat) < fifo1 | CMD
     # Remove the tmpfifo as soon as it is open
-    @Global::cat_prepends = map { "(rm $_;" } shell_quote(@fifos);
-    @Global::cat_appends = map { ") < $_" } shell_quote(@fifos);
+    @Global::cat_prepends = map { "(rm $_; cat) < $_" } shell_quote(@fifos);
 }
 
 
 sub parcat_script() {
-    # TODO if script fails: Use parallel -j0 --plain --lb cat ::: fifos
+    # Return the source code of the embedded 'parcat' helper program as a
+    # string ready to pass to `perl -e`.
+    #
+    # parcat reads concurrently from multiple files/fifos and writes their
+    # contents to stdout (or a chosen fd) in a line-oriented, non-blocking
+    # fashion.  It uses threads: one "producer" thread per input file opens
+    # the file and passes its fd to the main thread via a queue; the main
+    # thread uses IO::Select to multiplex reads and syswrite to emit full
+    # lines as soon as they arrive.
+    #
+    # Arguments (when the generated script is invoked):
+    #   --rm          remove each file as soon as it has been opened
+    #   -N            direct output to file descriptor N instead of stdout
+    #   <filenames>   files/fifos to read from
+    #
+    # Returns:
+    #   scalar string - whitespace-compacted Perl source (via spacefree(3,...))
+    #
+    # TODO: if the script fails, fall back to:
+    #   parallel -j0 --plain --lb cat ::: fifos
     my $script = q'{
 	use POSIX qw(:errno_h);
 	use IO::Select;
@@ -520,9 +834,28 @@ sub parcat_script() {
 }
 
 sub sharder_script() {
+    # Return the source code of the embedded 'sharder' helper program as a
+    # string ready to pass to `perl -e`.
+    #
+    # The sharder reads tab/sep-delimited lines from stdin and routes each
+    # line to one of N output fifos based on a hash of a chosen column value.
+    # This implements consistent hashing so all rows with the same key always
+    # go to the same worker (unlike round-robin).
+    #
+    # Arguments (when the generated script is invoked):
+    #   $sep       field separator regex
+    #   $col       1-based column index to hash on
+    #   $perlexpr  optional Perl expression that transforms $_ (the column
+    #              value) before hashing; evaluated with no strict/warnings
+    #   @ARGV      paths to the N output fifos
+    #
+    # Hashing: hex(B::hash(value)) % N  (Perl's internal hash function)
+    #
+    # Returns:
+    #   scalar string - whitespace-compacted Perl source (via spacefree(1,...))
     my $script = q{
 	use B;
-	# Column separator
+	# Field separator (regex)
 	my $sep = shift;
 	# Which columns to shard on (count from 1)
 	my $col = shift;
@@ -567,9 +900,31 @@ sub sharder_script() {
 }
 
 sub binner_script() {
+    # Return the source code of the embedded 'binner' helper program as a
+    # string ready to pass to `perl -e`.
+    #
+    # The binner is similar to the sharder but uses modulo arithmetic on the
+    # numeric column value instead of hashing.  This is suitable when the
+    # column already contains a numeric bin id (e.g. 0..N-1).
+    #
+    # One fifo is treated specially: the last element of @ARGV becomes bin 0,
+    # while the remaining elements become bins 1..N-1.  This is so the first
+    # fifo listed gets the overflow bucket and bin value 1 goes to fifo 1.
+    #
+    # Arguments (when the generated script is invoked):
+    #   $sep       field separator regex
+    #   $col       1-based column index to bin on
+    #   $perlexpr  optional Perl expression that transforms $_ (the column
+    #              value) before applying modulo; evaluated with no strict/warnings
+    #   @ARGV      paths to the N output fifos
+    #
+    # Binning: value % N  (numeric modulo, not hash-based)
+    #
+    # Returns:
+    #   scalar string - whitespace-compacted Perl source (via spacefree(1,...))
     my $script = q{
 	use B;
-	# Column separator
+	# Field separator (regex)
 	my $sep = shift;
 	# Which columns to shard on (count from 1)
 	my $col = shift;
@@ -616,13 +971,25 @@ sub binner_script() {
 }
 
 sub pipe_shard_setup() {
-    # Create temporary fifos
-    # Run 'shard.pl sep col fifo1 fifo2 fifo3 ... fifoN' in the background
-    # This will spread the input to fifos
-    # Generate commands that reads from fifo1..N:
-    #	cat fifo | user_command
-    # Changes:
-    #	@Global::cat_prepends
+    # Set up consistent-hash sharding (--shard) or numeric binning (--bin).
+    #
+    # Creates an NxN fifo grid where N = max_jobs_running.  A sharder/binner
+    # child process reads stdin and distributes lines to N "shard" fifos based
+    # on a column hash or value.  Each worker then reads from N "parcat" fifos
+    # (one from each shard slot) so every worker receives all rows whose key
+    # maps to that worker's bucket.
+    #
+    # Layout:
+    #   stdin -> sharder -> shardfifos[worker][shard]
+    #                      -> parcatfifos[shard][worker]
+    #                         -> parcat -> worker command
+    #
+    # When --shard/--bin references a column name, the first line of stdin is
+    # consumed as a header and stored in $Global::header so it can be prepended
+    # to each worker's input.
+    #
+    # Side effects:
+    #   @Global::cat_prepends  - "perl -e <parcat> fifo..." for each job
     my @shardfifos;
     my @parcatfifos;
     # TODO $opt::jobs should be evaluated (100%)
@@ -682,26 +1049,59 @@ sub pipe_shard_setup() {
     }
     @Global::cat_prepends =
 	map { "perl -e $parcat ".
-		  join(" ",shell_quote(@$_))." | "} @parcatfifos;
+		  join(" ",shell_quote(@$_))} @parcatfifos;
+}
+
+sub pipe_part_files_by_lines($) {
+    # Like pipe_part_files() but splits at line boundaries instead of byte
+    # boundaries, for use when --pipepart is combined with -L or -N.
+    # Uses `zextract --lines --range START-END` which works for both
+    # compressed and uncompressed files.
+    my ($zex) = @_;
+    # Use the explicit options directly: $Global::max_number_of_args may have
+    # been auto-set from max_lines (for non-pipe mode), so we read $opt:: vars.
+    my $n = (defined $opt::max_replace_args) ? $opt::max_replace_args : 1;
+    my $l = (defined $opt::L)         ? $opt::L
+          : (defined $opt::max_lines) ? $opt::max_lines
+          : 1;
+    my $lines_per_job = $n * $l;
+    my $total = $zex->size();
+    my @cat_prepends;
+    for(my $start = 1; $start <= $total; $start += $lines_per_job) {
+        my $end = $start + $lines_per_job - 1;
+        $end = $total if $end > $total;
+        my $cmd = $zex->cat_partial($start, $end + 1);
+        push @cat_prepends, $cmd;
+    }
+    return \@cat_prepends;
 }
 
 sub pipe_part_files(@) {
-    # Given the bigfile:
-    # - find header and split positions
-    # - make commands that 'cat's the partial file
+    # Build the list of shell commands needed to stream each block of a file
+    # to a worker when using --pipepart.
+    #
+    # Steps:
+    #   1. Optionally skip the first line (--skip-first-line).
+    #   2. Read and capture any header (--header) from the file.
+    #   3. Compute split positions (byte offsets of record boundaries).
+    #   4. Return one Zextract->cat_partial() command per consecutive pair of positions.
+    #
     # Input:
-    #	$file = the file to read
+    #   $file   path to a regular file or block device (streams not supported)
     # Returns:
-    #	@commands that will cat_partial each part
-    my ($file) = @_;
+    #   @commands  shell strings, each of which streams one block to stdout
+    my ($zex) = @_;
+    my $file = $zex->filename();
+    if(defined $opt::L or defined $opt::max_lines or defined $opt::max_replace_args) {
+        return pipe_part_files_by_lines(Zextract->new($zex->filename(), 1));
+    }
     my $buf = "";
     if(not -f $file and not -b $file) {
 	::error("--pipepart only works on seekable files, not streams/pipes.",
 		"$file is not a seekable file.");
 	::wait_and_exit(255);
     }
-
-    my $fh = open_or_exit("<",$file);
+    my $fh = $zex->fh();
     my $firstlinelen = 0;
     if($opt::skip_first_line) {
 	my $newline;
@@ -711,30 +1111,36 @@ sub pipe_part_files(@) {
 	}
     }
     my $header = find_header(\$buf,$fh);
+    close $fh if $zex->{compressed};
     # find positions
-    my @pos = find_split_positions($file,int($Global::blocksize),
-				   $header,$firstlinelen);
-    # Make @cat_prepends
-    my @cat_prepends = ();
+    my @pos = $zex->find_split_positions(int($Global::blocksize),
+					  $header,$firstlinelen);
+    my @cat_prepends;
     for(my $i=0; $i<$#pos; $i++) {
-	push(@cat_prepends,
-	     cat_partial($file, $firstlinelen, $firstlinelen+length($header),
-			 $pos[$i], $pos[$i+1]));
+	my $cmd = $zex->cat_partial($firstlinelen, $firstlinelen+length($header),
+				    $pos[$i], $pos[$i+1]);
+	push @cat_prepends, $cmd;
     }
-    return @cat_prepends;
+    return \@cat_prepends;
 }
 
 sub find_header($$) {
-    # Compute the header based on $opt::header
+    # Read and return the header portion of a file for --pipepart / --groupby.
+    #
+    # If $Global::header is already set (e.g. by pipe_shard_setup reading the
+    # first line of stdin) that value is returned immediately without touching
+    # the filehandle.
+    #
+    # Otherwise the header is extracted according to $opt::header:
+    #   ":"      - one line  (equivalent to the regex "(.*\n)")
+    #   N        - N lines   (N repetitions of "(.*\n)")
+    #   /regex/  - matched portion of the file content
+    #
     # Input:
-    #	$buf_ref = reference to read-in buffer
-    #	$fh = filehandle to read from
-    # Uses:
-    #	$opt::header
-    #	$Global::blocksize
-    #	$Global::header
+    #   $buf_ref   ref to scalar buffer (may be extended by sysread)
+    #   $fh        open filehandle positioned at the start of file data
     # Returns:
-    #	$header string
+    #   $header    string (may be empty if --header was not set)
     my ($buf_ref, $fh) = @_;
     my $header = "";
     # $Global::header may be set in group_by_loop()
@@ -753,298 +1159,32 @@ sub find_header($$) {
     return $header;
 }
 
-sub find_split_positions($$$) {
-    # Find positions in bigfile where recend is followed by recstart
-    # Input:
-    #	$file = the file to read
-    #	$block = (minimal) --block-size of each chunk
-    #	$header = header to be skipped
-    # Uses:
-    #	$opt::recstart
-    #	$opt::recend
-    # Returns:
-    #	@positions of block start/end
-    my($file, $block, $header, $firstlinelen) = @_;
-    my $skiplen = $firstlinelen + length $header;
-    # TODO size of gz - binary search?
-    #  gztool -l -I 18g.gzi  18g.gz 
-    #  Size of uncompressed file: 18.00 GiB (19327352832 Bytes)
-    #  Number of lines          : 1391156 (1.39 M)
-    my $size = -s $file;
-    if(-b $file) {
-	# $file is a blockdevice
-	$size = size_of_block_dev($file);
-    }
-    $block = int $block;
-    if($opt::groupby) {
-	return split_positions_for_group_by($file,$size,$block,
-					    $header,$firstlinelen);
-    }
-    # The optimal dd blocksize for mint, redhat, solaris, openbsd = 2^17..2^20
-    # The optimal dd blocksize for freebsd = 2^15..2^17
-    # The optimal dd blocksize for ubuntu (AMD6376) = 2^16
-    my $dd_block_size = 131072; # 2^17
-    my @pos;
-    my ($recstart,$recend) = recstartrecend();
-    my $recendrecstart = $recend.$recstart;
-    my $fh = ::open_or_exit("<",$file);
-    push(@pos,$skiplen);
-    for(my $pos = $block+$skiplen; $pos < $size; $pos += $block) {
-	my $buf;
-	if($recendrecstart eq "") {
-	    # records ends anywhere
-	    push(@pos,$pos);
-	} else {
-	    # Seek the the block start
-	    # TODO uncompress open($fh,"-|","gztool",$file,$pos,"..");
-	    if(not sysseek($fh, $pos, 0)) {
-		::error("Cannot seek to $pos in $file");
-		edit(255);
-	    }
-	    while(sysread($fh,$buf,$dd_block_size,length $buf)) {
-		if($opt::regexp) {
-		    # If match /$recend$recstart/ => Record position
-		    if($buf =~ m:^(.*$recend)$recstart:os) {
-			# Start looking for next record _after_ this match
-			$pos += length($1);
-			push(@pos,$pos);
-			last;
-		    }
-		} else {
-		    # If match $recend$recstart => Record position
-		    # TODO optimize to only look at the appended
-		    #	$dd_block_size + len $recendrecstart
-		    # TODO increase $dd_block_size to optimize for longer records
-		    my $i = index64(\$buf,$recendrecstart);
-		    if($i != -1) {
-			# Start looking for next record _after_ this match
-			$pos += $i + length($recend);
-			push(@pos,$pos);
-			last;
-		    }
-		}
-	    }
-	}
-    }
-    if($pos[$#pos] != $size) {
-	# Last splitpoint was not at end of the file: add $size as the last
-	push @pos, $size;
-    }
-    close $fh;
-    return @pos;
-}
 
-sub split_positions_for_group_by($$$$) {
-    my($fh);
-    my %value;
-    sub value_at($) {
-	my $pos = shift;
-	if(not defined $value{$pos}) {
-	    if($pos != 0) {
-		# TODO uncompress open($fh,"-|","gztool",$file,$pos,"..");
-		seek($fh, $pos-1, 0) || die;
-		# Read half line
-		<$fh>;
-	    }
-	    # Read full line
-	    # TODO compressed input cannot tell():
-	    #   instead use $pos + length halfline
-	    my $linepos = tell($fh);
-	    if(not defined $value{$linepos}) {
-		$_ = <$fh>;
-		if(defined $_) {
-		    # Not end of file
-		    my @F;
-		    if(defined $group_by::col) {
-			$opt::colsep ||= "\t";
-			@F = split /$opt::colsep/, $_;
-			$_ = $F[$group_by::col];
-		    }
-		    eval $group_by::perlexpr;
-		}
-		$value{$linepos} = [$_,$linepos];
-	    }
-	    $value{$pos} = $value{$linepos};
-	}
-	return (@{$value{$pos}});
-    }
-
-    sub binary_search_end($$$) {
-	my ($s,$spos,$epos) = @_;
-	# value_at($spos) == $s
-	# value_at($epos) != $s
-	my $posdif = $epos - $spos;
-	my ($v,$vpos);
-	while($posdif) {
-	    ($v,$vpos) = value_at($spos+$posdif);
-	    if($v eq $s) {
-		$spos = $vpos;
-		$posdif = $epos - $spos;
-	    } else {
-		$epos = $vpos;
-	    }
-	    $posdif = int($posdif/2);
-	}
-	return($v,$vpos);
-    }
-
-    sub binary_search_start($$$) {
-	my ($s,$spos,$epos) = @_;
-	# value_at($spos) != $s
-	# value_at($epos) == $s
-	my $posdif = $epos - $spos;
-	my ($v,$vpos);
-	while($posdif) {
-	    ($v,$vpos) = value_at($spos+$posdif);
-	    if($v eq $s) {
-		$epos = $vpos;
-	    } else {
-		$spos = $vpos;
-		$posdif = $epos - $spos;
-	    }
-	    $posdif = int($posdif/2);
-	}
-	return($v,$vpos);
-    }
-
-    my ($file,$size,$block,$header,$firstlinelen) = @_;
-    my @pos;
-    $fh = open_or_exit("<",$file);
-    # Set $Global::group_by_column $Global::group_by_perlexpr
-    group_by_loop($fh,$opt::recsep);
-    if($opt::max_args) {
-	# Split after n values
-	my ($a,$apos);
-	# $xpos = linestart, $x = value at $xpos
-	$apos = $firstlinelen + length $header;
-	for(($a,$apos) = value_at($apos); $apos < $size;) {
-	    push @pos, $apos;
-	    ($a,$apos) = binary_search_end($a,$apos,$size);
-	    if(eof($fh)) {
-		push @pos, $size; last;
-	    }
-	}
-	# @pos = start of every value
-	# Merge n values
-	# -nX = keep every X'th position
-	my $i = 0;
-	@pos = grep { not ($i++ % $opt::max_args) } @pos;
-    } else {
-	# Split after any value group
-	# Preferable < $blocksize
-	my ($a,$b,$c,$apos,$bpos,$cpos);
-	# $xpos = linestart, $x = value at $xpos, $apos < $bpos < $cpos
-	$apos = $firstlinelen + length $header;
-	for(($a,$apos) = value_at($apos); $apos < $size;) {
-	    push @pos, $apos;
-	    $bpos = $apos + $block;
-	    ($b,$bpos) = value_at($bpos);
-	    if(eof($fh)) {
-		# EOF is less than 1 block away
-		push @pos, $size; last;
-	    }
-	    $cpos = $bpos + $block;
-	    ($c,$cpos) = value_at($cpos);
-	    if($a eq $b) {
-		while($b eq $c) {
-		    # Move bpos, cpos a block forward until $a == $b != $c
-		    $bpos = $cpos;
-		    $cpos += $block;
-		    ($c,$cpos) = value_at($cpos);
-		    if($cpos >= $size) {
-			$cpos = $size;
-			last;
-		    }
-		}
-		# $a == $b != $c
-		# Binary search for $b ending between ($bpos,$cpos)
-		($b,$bpos) = binary_search_end($b,$bpos,$cpos);
-	    } else {
-		if($b eq $c) {
-		    # $a != $b == $c
-		    # Binary search for $b starting between ($apos,$bpos)
-		    ($b,$bpos) = binary_search_start($b,$apos,$bpos);
-		} else {
-		    # $a != $b != $c
-		    # Binary search for $b ending between ($bpos,$cpos)
-		    ($b,$bpos) = binary_search_end($b,$bpos,$cpos);
-		}
-	    }
-	    ($a,$apos) = ($b,$bpos);
-	}
-    }
-    if($pos[$#pos] != $size) {
-	# Last splitpoint was not at end of the file: add it
-	push @pos, $size;
-    }
-    return @pos;
-}
-
-sub cat_partial($@) {
-    # Efficient command to copy from byte X to byte Y
-    # Input:
-    #	$file = the file to read
-    #	($start, $end, [$start2, $end2, ...]) = start byte, end byte
-    # Returns:
-    #	Efficient command to copy $start..$end, $start2..$end2, ... to stdout
-    my($file, @start_end) = @_;
-    my($start, $i);
-    # Convert (start,end) to (start,len)
-    my @start_len = map {
-	if(++$i % 2) { $start = $_; } else { $_-$start }
-    } @start_end;
-    # The optimal block size differs
-    # It has been measured on:
-    # AMD 6376: n*4k-1; small n
-    # AMD Neo N36L: 44k-200k
-    # Intel i7-3632QM: 55k-
-    # ARM Cortex A53: 4k-28k
-    # Intel i5-2410M: 36k-46k
-    #
-    # I choose 2^15-1 = 32767
-    # q{
-    #	expseq() {
-    #	    perl -E '
-    #		$last = pop @ARGV;
-    #	    $first = shift || 1;
-    #	    $inc = shift || 1.03;
-    #	    for($i=$first; $i<=$last;$i*=$inc) { say int $i }
-    #	    ' "$@"
-    #	}
-    #
-    #	seq 111111111 > big;
-    #	f() { ppar --test $1 -a big --pipepart --block -1 'md5sum > /dev/null'; }
-    #	export -f f;
-    #	expseq 1000 1.001 300000 | shuf | parallel -j1 --jl jl-md5sum f;
-    # };
-    my $script = spacefree
-	(0,
-	 q{
-	     while(@ARGV) {
-		 sysseek(STDIN,shift,0) || die;
-		 $left = shift;
-		 while($read =
-		       sysread(STDIN,$buf, $left > 32767 ? 32767 : $left)){
-		     $left -= $read;
-		     syswrite(STDOUT,$buf);
-		 }
-	     }
-	 });
-    return "<". Q($file) .
-	" perl -e '$script' @start_len |";
-}
 
 sub column_perlexpr($$$) {
-    # Compute the column number (if any), perlexpression from combined
-    # string (such as --shard key, --groupby key, {=n perlexpr=}
+    # Parse a combined "column [perlexpr]" string as used by --shard,
+    # --groupby, and {=N perlexpr=} replacement strings.
+    #
+    # Formats accepted:
+    #   "colname [expr]"  - column name looked up in $header
+    #   "N [expr]"        - 1-based column number
+    #   "expr"            - no column; pure Perl expression applied to $_
+    #
+    # When a column name is given and $header is provided, the name is
+    # resolved to a 0-based index via --colsep splitting.
+    #
+    # The Perl expression (if any) is compiled into a sub reference with
+    # 'no strict; no warnings' to allow shorter perl expression that would warn
+    #
     # Input:
-    #	$column_perlexpr = string with column and perl expression
-    #	$header = header from input file (if column is column name)
-    #	$colsep = column separator regexp
+    #   $column_perlexpr  combined "col [expr]" string
+    #   $header           header line (used to map names to column indices)
+    #   $colsep           column separator regexp (default: tab)
     # Returns:
-    #	$col = column number
-    #	$perlexpr = perl expression
-    #	$subref = compiled perl expression as sub reference
+    #   ($col, $perlexpr, $subref)
+    #     $col       0-based column index (undef if no column specified)
+    #     $perlexpr  Perl expression string (empty string if none)
+    #     $subref    compiled sub ref (undef if no perlexpr)
     my ($column_perlexpr, $header, $colsep) = @_;
     my ($col, $perlexpr, $subref);
     if($column_perlexpr =~ /^[-a-z0-9_]+(\s|$)/i) {
@@ -1055,7 +1195,7 @@ sub column_perlexpr($$$) {
 	} elsif($column_perlexpr =~ s/^([a-z0-9_]+)(\s+|$)//i) {
 	    # Column name (possibly prefix)
 	    my $colname = $1;
-	    # Split on --copsep pattern
+	    # Split on --colsep pattern
 	    my @headers = split /$colsep/, $header;
 	    my %headers;
 	    @headers{@headers} = (1..($#headers+1));
@@ -1073,9 +1213,28 @@ sub column_perlexpr($$$) {
 }
 
 sub group_by_loop($$) {
-    # Generate perl code for group-by loop
-    # Insert a $recsep when the column value changes
-    # The column value can be computed with $perlexpr
+    # Generate the Perl one-liner loop code used to insert record separators
+    # between groups in --groupby mode.
+    #
+    # The returned code tracks the previous group-by column value ($last) and
+    # prints $recsep whenever the value changes.  This transformed stdin is
+    # then fed to spreadstdin() which splits on $recstart/$recend.
+    #
+    # When the groupby key looks like a column name or number (e.g. "price" or
+    # "3"), the first line of $fh is consumed as a header and stored in
+    # $Global::header.  Otherwise the entire $_ is used as the key.
+    #
+    # The generated code uses a string template with three placeholders:
+    #   COLVALUE   replaced with $F[N] or $_ depending on whether a column
+    #              was specified
+    #   PERLEXPR   replaced with the user's transformation expression
+    #   RECSEP     replaced with the random record-separator string
+    #
+    # Input:
+    #   $fh       filehandle to read the header line from (stdin)
+    #   $recsep   record separator string (random, set by pipe_group_by_setup)
+    # Returns:
+    #   $loop     Perl source string for use with `perl -pe '...'`
     my($fh,$recsep) = @_;
     my $groupby = $opt::groupby;
     if($groupby =~ /^[a-z_][a-z_0-9]*(\s|$)/i) {
@@ -1119,6 +1278,24 @@ sub group_by_loop($$) {
 }
 
 sub pipe_group_by_setup() {
+    # Configure stdin filtering for --groupby mode.
+    #
+    # Wraps stdin with a `perl -pe` filter (generated by group_by_loop()) that
+    # inserts a random record separator string at every group boundary.
+    # spreadstdin() then splits the stream on that separator so each job
+    # receives one complete group.
+    #
+    # The record separator is a 20-character random alphanumeric string
+    # (approx 119 bits of entropy) chosen to be unique enough that it will
+    # not appear in real input.
+    #
+    # If mbuffer is available, stdin is additionally passed through it for a
+    # ~30% throughput improvement.
+    #
+    # Side effects:
+    #   $opt::recend, $opt::recstart  set to "" and the random separator
+    #   $opt::remove_rec_sep          set to 1
+    #   STDIN                         reopened as a pipe through the filter
     # Record separator with 119 bit random value
     $opt::recend = '';
     $opt::recstart =
@@ -1150,19 +1327,32 @@ sub pipe_group_by_setup() {
 }
 
 sub spreadstdin() {
-    # read a record
-    # Spawn a job and print the record to it.
+    # Read records from stdin and distribute them to worker jobs via --pipe.
+    #
+    # Reads stdin in blocks of --blocksize bytes (adjusted for record
+    # boundaries), then writes a chunk of records to a worker's stdin pipe.
+    # The next available worker is obtained from get_job_with_sshlogin().
+    #
+    # Chunks are split using (tried in order):
+    #   --max-lines    accumulate until N newlines seen
+    #   --csv          pass full CSV records
+    #   --regexp       split on $recend/$recstart as regular expressions
+    #     with --max-args N   accumulate N records
+    #   default        split on literal $recend.$recstart byte sequence
+    #     with --max-args N   accumulate N records
+    #
+    # Each chunk is passed to a new worker unless using --roundrobin is used.
+    # --roundrobin will re-use existing workers when they are ready or
+    # with --keep-order in strict round robin order.
+    #
+    # Blocks already seen are tracked in $Global::job_already_run (a bit
+    # vector indexed by chunk_number) to allow --resume-failed to skip them.
+    #
     # Uses:
-    #	$Global::blocksize
-    #	STDIN
-    #	$opt::r
-    #	$Global::max_lines
-    #	$Global::max_number_of_args
-    #	$opt::regexp
-    #	$Global::start_no_new_jobs
-    #	$opt::roundrobin
-    #	%Global::running
-    # Returns: N/A
+    #   $Global::blocksize, STDIN, $opt::r, $Global::max_lines,
+    #   $Global::max_number_of_args, $opt::regexp,
+    #   $Global::start_no_new_jobs, $opt::roundrobin, %Global::running
+    # Returns: N/A (loops until stdin is exhausted)
 
     my $buf = "";
     my ($recstart,$recend) = recstartrecend();
@@ -1203,14 +1393,16 @@ sub spreadstdin() {
 	    if($] >= 5.026) {
 		do {
 		    $nread = sysread $in, $buf, $readsize, length $buf;
-		    if(not $read_everything) { $readsize -= $nread; }
-		} while($readsize and $nread);
+		    # undef means EINTR: do not update $readsize, retry
+		    if(defined($nread) and not $read_everything) { $readsize -= $nread; }
+		} while($readsize and (!defined($nread) or $nread));
 	    } else {
 		# Less efficient reading, but 32-bit sysread compatible
 		do {
 		    $nread = sysread($in,substr($buf,length $buf,0),$readsize,0);
-		    if(not $read_everything) { $readsize -= $nread; }
-		} while($readsize and $nread);
+		    # undef means EINTR: do not update $readsize, retry
+		    if(defined($nread) and not $read_everything) { $readsize -= $nread; }
+		} while($readsize and (!defined($nread) or $nread));
 	    }
 	    alarm 0;
 	};
@@ -1346,8 +1538,8 @@ sub spreadstdin() {
 	}
     }
 
-    sub pass_csv_record() {
-	# Pass CVS record
+    sub pass_csv_records() {
+	# Pass CSV records
 	# We define a CSV record as an even number of " + end of line
 	# This works if you use " as quoting character
 	my $last_newline_pos = length $buf;
@@ -1383,7 +1575,7 @@ sub spreadstdin() {
 	    }
     }
 
-    sub pass() {
+    sub pass_any() {
 	# Pass records of --recend/--recstart
 	# Split record at fixed string
 	# Find the last recend+recstart in $buf
@@ -1407,12 +1599,37 @@ sub spreadstdin() {
 	    if($blocksize < $two_gb) {
 		my $old_blocksize = $blocksize;
 		$blocksize = ::min(ceil($blocksize * 1.3 + 1), $two_gb);
-		::warning("A record was longer than $old_blocksize. " .
-			  "Increasing to --blocksize $blocksize.");
+		if(not $opt::_no_blocksize_warning) {
+		    ::warning("A record was longer than $old_blocksize. " .
+			      "Increasing to --blocksize $blocksize.");
+		}
 	    }
 	}
     }
-
+    
+    no warnings 'redefine';
+    if($Global::max_lines and not $Global::max_number_of_args) {
+	# Pass n-line records
+	*pass = \&pass_n_line_records;
+    } elsif($opt::csv) {
+	# Pass a full CSV record
+	*pass = \&pass_csv_records;
+    } elsif($opt::regexp) {
+	# Split record at regexp
+	if($Global::max_number_of_args) {
+	    *pass = \&pass_n_regexps;
+	} else {
+	    *pass = \&pass_regexp;
+	}
+    } else {
+	# Pass normal --recend/--recstart record
+	if($Global::max_number_of_args) {
+	    *pass = \&pass_n;
+	} else {
+	    *pass = \&pass_any;
+	}
+    }
+    
     while(1) {
 	$anything_written = 0;
 	read_block();
@@ -1432,27 +1649,7 @@ sub spreadstdin() {
 		}
 	    }
 	}
-	if($Global::max_lines and not $Global::max_number_of_args) {
-	    # Pass n-line records
-	    pass_n_line_records();
-	} elsif($opt::csv) {
-	    # Pass a full CSV record
-	    pass_csv_record();
-	} elsif($opt::regexp) {
-	    # Split record at regexp
-	    if($Global::max_number_of_args) {
-		pass_n_regexps();
-	    } else {
-		pass_regexp();
-	    }
-	} else {
-	    # Pass normal --recend/--recstart record
-	    if($Global::max_number_of_args) {
-		pass_n();
-	    } else {
-		pass();
-	    }
-	}
+	pass();
 	$eof and last;
 	increase_blocksize_maybe();
 	::debug("init", "Round\n");
@@ -1503,11 +1700,29 @@ sub spreadstdin() {
 }
 
 sub recstartrecend() {
+    # Resolve and normalise the --recstart / --recend option values.
+    #
+    # Rules:
+    #   both set        - both must match (start of record AND end of record)
+    #   only --recstart - $recend becomes ""  (split at start-of-record only)
+    #   only --recend   - $recstart becomes "" (split at end-of-record only)
+    #
+    # When --regexp is active:
+    #   Each string is wrapped in (?-x:...) to disable /x whitespace comments,
+    #   then in (?:...) keep a | to only apply to this regexp - the regexp
+    #   may be part of a bigger regexp later.
+    #
+    #   Special case: --regexp --recend '' is converted to (?s:.) so that
+    #   every character acts as a record delimiter.
+    #
+    # When --regexp is NOT active:
+    #   Escape sequences (\n, \t, \r, \0, \', \", \\) in the strings are
+    #   converted like printf
+    #
     # Uses:
-    #	$opt::recstart
-    #	$opt::recend
+    #   $opt::recstart, $opt::recend, $opt::regexp
     # Returns:
-    #	$recstart,$recend with default values and regexp conversion
+    #   ($recstart, $recend)  both as ready-to-use strings or regexps
     my($recstart,$recend);
     if(defined($opt::recstart) and defined($opt::recend)) {
 	# If both --recstart and --recend is given then both must match
@@ -1544,9 +1759,18 @@ sub recstartrecend() {
 }
 
 sub nindex($$) {
-    # See if string is in buffer N times
+    # Find the byte position of the Nth occurrence of $str within $$buf_ref.
+    #
+    # Implemented as N sequential calls to index64() starting from position 0,
+    # advancing past each match.  Stops early and returns -1 if the string
+    # appears fewer than N times.
+    #
+    # Input:
+    #   $buf_ref   ref to the string to search in
+    #   $str       substring to search for
+    #   $n         which occurrence to find (1-based)
     # Returns:
-    #	the position where the Nth copy is found
+    #   byte offset of the Nth occurrence, or -1 if fewer than N exist
     my ($buf_ref, $str, $n) = @_;
     my $i = 0;
     for(1..$n) {
@@ -1610,9 +1834,18 @@ sub nindex($$) {
     }
 }
 
-sub index64($$$) {
-    # Do index on strings > 2GB.
-    # index in Perl < v5.22 does not work for > 2GB
+sub index64($@) {
+    # Wrapper around Perl's index() that works correctly on strings larger than
+    # 2 GB.  Perl < 5.22 uses 32-bit signed offsets internally, so index()
+    # returns wrong results when the string exceeds 2^31-1 bytes.
+    #
+    # On Perl >= 5.22 or strings smaller than 2 GB, falls through directly to
+    # the built-in index() for performance.
+    #
+    # For larger strings on older Perl, the string is scanned in overlapping
+    # 2 GB windows.  The windows overlap by matchlen+1 bytes to prevent a
+    # match that straddles a window boundary from being missed.
+    #
     # Input:
     #	as index except STR which must be passed as a reference
     # Output:
@@ -1643,12 +1876,22 @@ sub index64($$$) {
 }
 
 sub rindex64($@) {
-    # Do rindex on strings > 2GB.
-    # rindex in Perl < v5.22 does not work for > 2GB
+    # Wrapper around Perl's rindex() that works correctly on strings larger
+    # than 2 GB.  Mirrors index64() but scans from right to left.
+    #
+    # On Perl >= 5.22 or strings smaller than 2 GB, falls through directly to
+    # the built-in rindex() for performance.
+    #
+    # For larger strings the string is scanned in overlapping 2 GB windows
+    # moving right-to-left.  Windows overlap by matchlen+1 bytes so a match
+    # at a boundary is not missed.
+    #
     # Input:
-    #	as rindex except STR which must be passed as a reference
-    # Output:
-    #	as rindex
+    #   $ref      reference to the string to search in
+    #   $match    substring to find
+    #   $pos      search no further right than this offset (default: end)
+    # Returns:
+    #   byte offset of rightmost match at or before $pos, or -1 if not found
     my $ref = shift;
     my $match = shift;
     my $pos = shift;
@@ -1684,11 +1927,14 @@ sub rindex64($@) {
 }
 
 sub shorten($$) {
-    # Do: substr($buf,0,$i) = "";
-    # Some Perl versions do not support $i > 2GB, so do this in 2GB chunks
+    # Remove the first $i bytes from $$buf_ref (equivalent to substr($$buf,0,$i)="").
+    #
+    # Perl < 5.22 cannot handle a substr() offset greater than 2 GB, so when
+    # $i exceeds 2^31-1 the removal is done in 2 GB chunks.
+    #
     # Input:
-    #	$buf_ref = \$buf
-    #	$i = position to shorten to
+    #   $buf_ref   ref to the buffer scalar to modify in-place
+    #   $i         number of bytes to remove from the front
     # Returns: N/A
     my ($buf_ref, $i) = @_;
     my $two_gb = 2**31-1;
@@ -1700,21 +1946,30 @@ sub shorten($$) {
 }
 
 sub write_record_to_pipe($$$$$$) {
-    # Fork then
-    # Write record from pos 0 .. $endpos to pipe
+    # Send one chunk of stdin data to a worker job's pipe.
+    #
+    # Skips chunks that have already been sent (tracked via a bit vector in
+    # $Global::job_already_run indexed by $chunk_number) to support
+    # --resume-failed.
+    #
+    # In --roundrobin mode, distributes the block across already-running jobs
+    # via round_robin_write() instead of starting a new job.
+    #
+    # Otherwise, waits (with exponential back-off) for a "virgin" (not yet
+    # started) job slot to become available, then delivers the block to it.
+    #
     # Input:
-    #	$chunk_number = sequence number - to see if already run
-    #	$header_ref = reference to header string to prepend
-    #	$buffer_ref = reference to record to write
-    #	$recstart = start string of record
-    #	$recend = end string of record
-    #	$endpos = position in $buffer_ref where record ends
+    #   $chunk_number  1-based sequence number of this record (for dedup)
+    #   $header_ref    ref to header string to prepend to each block
+    #   $buffer_ref    ref to the full read buffer
+    #   $recstart      record start delimiter string
+    #   $recend        record end delimiter string
+    #   $endpos        byte position in $buffer_ref where this record ends
     # Uses:
-    #	$Global::job_already_run
-    #	$opt::roundrobin
-    #	@Global::virgin_jobs
+    #   $Global::job_already_run, $opt::roundrobin, @Global::virgin_jobs
     # Returns:
-    #	Number of chunks written (0 or 1)
+    #   0 if nothing was written (empty record or already done)
+    #   1 if the chunk was successfully dispatched
     my ($chunk_number, $header_ref, $buffer_ref,
 	$recstart, $recend, $endpos) = @_;
     if($endpos == 0) { return 0; }
@@ -1771,19 +2026,28 @@ sub acquire_semaphore() {
 sub __PARSE_OPTIONS__() {}
 
 sub shell_completion() {
+    # Dispatch to the appropriate shell-specific completion generator based on
+    # $opt::shellcompletion.
+    #
+    # Supported values:
+    #   "bash"  - emit bash completion script (complete -F ...)
+    #   "zsh"   - emit zsh completion script (compdef ...)
+    #   "auto"  - detect from $Global::shell path and dispatch accordingly
+    #
+    # Exits with status 255 on unsupported shells.
     if($opt::shellcompletion eq "zsh") {
 	# if shell == zsh
-	zsh_competion();
+	zsh_completion();
     } elsif($opt::shellcompletion eq "bash") {
 	# if shell == bash
-	bash_competion();
+	bash_completion();
     } elsif($opt::shellcompletion eq "auto") {
 	if($Global::shell =~ m:/zsh$|^zsh$:) {
 	    # if shell == zsh
-	    zsh_competion();
+	    zsh_completion();
 	} elsif($Global::shell =~ m:/bash$|^bash$:) {
 	    # if shell == bash
-	    bash_competion();
+	    bash_completion();
 	} else {
 	    ::error("--shellcompletion is not implemented for ".
 		    "'$Global::shell'.");
@@ -1796,11 +2060,18 @@ sub shell_completion() {
     }
 }
 
-sub bash_competion() {
-    # Print:
+sub bash_completion() {
+    # Print a bash completion script for 'parallel' to stdout.
+    #
+    # Iterates over options_completion_hash() and extracts option names
+    # (stripping type suffixes like =s, :s).  Single-character options get a
+    # single dash prefix; longer options get double-dash.  Options starting
+    # with '_' are internal and are excluded.
+    #
+    # Output format:
     #   complete -F _comp_parallel parallel;
     #   _comp_parallel() {
-    #     COMPREPLY=($(compgen -W "--options" --
+    #     COMPREPLY=($(compgen -W "--opt1 --opt2 ..." --
     #                    "${COMP_WORDS[$COMP_CWORD]}"));
     #   };
     my @bash_completion =
@@ -1833,8 +2104,17 @@ sub bash_competion() {
     print @bash_completion;
 }
 
-sub zsh_competion() {
-    # Print code used for completion in zsh
+sub zsh_completion() {
+    # Print a zsh completion script for 'parallel' to stdout.
+    #
+    # Iterates over options_completion_hash() and builds _arguments specs.
+    # Options with aliases are grouped as {-a,--alias}.
+    # Single-quotes inside descriptions are escaped with '"'"'.
+    # Options starting with '_' are internal and excluded.
+    #
+    # Output format:
+    #   compdef _comp_parallel parallel;
+    #   _comp_parallel() { _arguments '(--opt)[desc]' ... }
     my @zsh_completion =
 	("compdef _comp_parallel parallel; ",
 	 "setopt localoptions extended_glob; ",
@@ -1877,8 +2157,12 @@ sub zsh_competion() {
 }
 
 sub options_hash() {
+    # Build the options hash for Getopt::Long::GetOptions() by stripping the
+    # shell-completion description suffixes (e.g. "[Description text]") from
+    # options_completion_hash().
+    #
     # Returns:
-    #	%hash = for GetOptions
+    #   %hash  suitable for passing directly to GetOptions()
     my %och = options_completion_hash();
     my %oh;
     my ($k,$v);
@@ -1891,8 +2175,18 @@ sub options_hash() {
 }
 
 sub options_completion_hash() {
+    # Master options table used by both GetOptions (via options_hash()) and the
+    # shell-completion generators (bash_completion(), zsh_completion()).
+    #
+    # Each key is a Getopt::Long option spec, optionally followed by a
+    # shell-completion annotation in the form:
+    #   "[Description text]:argname:completion_function"
+    #
+    # Example key:
+    #   "joblog|jl=s[Logfile for executed jobs]:logfile:_files"
+    #
     # Returns:
-    #	%hash = for GetOptions and shell completion
+    #   flat list (key => \$var, ...) representing the combined hash
     return
 	("debug|D=s" => \$opt::D,
 	 "xargs[Insert as many arguments as the command line length permits]"
@@ -2298,25 +2592,36 @@ sub options_completion_hash() {
 	  => \@opt::filter),
 	 "fast[Run commands fast]" => \$opt::fast,
 	 "_parset=s[Internal: Generate shell code for parset]" => \$opt::_parset,
+	 "_pipe_block=i[Internal: --block size for inner parallel in --fast]" => \$opt::_pipe_block,
+	 "_buf_start=i[Internal: initial buffer_len for --fast]" => \$opt::_buf_start,
+	 "_buf_growth=f[Internal: buffer_len growth factor for --fast]" => \$opt::_buf_growth,
+	 "_buf_cap=i[Internal: buffer_len cap for --fast]" => \$opt::_buf_cap,
+	 "_no_blocksize_warning[Internal: suppress blocksize auto-expand warning]" => \$opt::_no_blocksize_warning,
 	 ("shell-completion|shellcompletion=s".
 	  "[Generate shell code for shell completion]:shell:(bash zsh)"
 	  => \$opt::shellcompletion),
-	 # Parameter for testing optimal values
-	 "_test=s" => \$opt::_test,
 	);
 }
 
 sub get_options_from_array($@) {
-    # Run GetOptions on @array
+    # Parse a Getopt::Long option set from an arbitrary array reference.
+    #
+    # Getopt::Long does not natively support parsing from an array other than
+    # @ARGV, so this function temporarily swaps the target array into @ARGV,
+    # calls GetOptions(), then restores @ARGV.
+    #
+    # When @keep_only is given, all option destinations except those listed are
+    # redirected to a throwaway @dummy array - this lets the caller extract
+    # only the options it cares about (e.g. --profile) without polluting the
+    # global $opt:: variables.
+    #
     # Input:
-    #	$array_ref = ref to @ARGV to parse
-    #	@keep_only = Keep only these options (e.g. --profile)
-    # Uses:
-    #	@ARGV
+    #   $array_ref    ref to the option array to parse (modified in-place)
+    #   @keep_only    if non-empty, only populate $opt:: vars for these keys
     # Returns:
-    #	true if parsing worked
-    #	false if parsing failed
-    #	@$array_ref is changed
+    #   true  if GetOptions succeeded
+    #   false if GetOptions encountered an unrecognised option
+    #   @$array_ref is updated: options are removed, non-option args remain
     my ($array_ref, @keep_only) = @_;
     if(not @$array_ref) {
 	# Empty array: No need to look more at that
@@ -2349,6 +2654,24 @@ sub get_options_from_array($@) {
 }
 
 sub parse_parset() {
+    # Configure parallel for parset mode (internal, invoked via --_parset).
+    #
+    # parset is a shell function that collects job outputs into shell variables
+    # or associative arrays.  The --_parset flag carries a comma/space-
+    # separated spec:
+    #
+    #   "assoc varname"        - store outputs as an associative array
+    #   "var varname [...]"    - store each output in a separate scalar variable
+    #   "var varname"          - store all outputs in a single array variable
+    #
+    # Variable names are validated against /^[a-zA-Z_][a-zA-Z_0-9]*(\[\d+\])?$/
+    # to prevent injection.
+    #
+    # Side effects:
+    #   $Global::progname        set to "parset"
+    #   @Global::parset_vars     list of target variable names
+    #   $Global::parset          "assoc" | "var" | "array"
+    #   $Global::parset_endstring closing shell fragment printed after all jobs
     $Global::progname = "parset";
     @Global::parset_vars = split /[ ,]/, $opt::_parset;
     my $var_or_assoc = shift @Global::parset_vars;
@@ -2383,7 +2706,22 @@ sub parse_parset() {
 }
 
 sub parse_options(@) {
-    # Returns: N/A
+    # Master option-processing entry point.  Reads and processes all options
+    # from @ARGV (including profile files and env vars via read_options()),
+    # then populates all $opt:: and $Global:: settings.
+    #
+    # Processing order:
+    #   1. init_globals()      - zero/default all globals
+    #   2. read_options()      - expand profiles, PARALLEL env var, @ARGV
+    #   3. citation check      - print notice and exit if --citation
+    #   4. option cross-wiring - e.g. --no-keep-order overrides --keep-order
+    #   5. shell detection     - set $Global::shell from PARALLEL_SHELL / parent
+    #   6. replacement strings - parse --rpl, --parens, --plus, etc.
+    #   7. feature flags       - set $Global:: booleans from $opt:: scalars
+    #   8. input/output setup  - --results dir, --joblog, --sshloginfile, etc.
+    #   9. validity checks     - check_invalid_option_combinations()
+    #
+    # Returns: N/A (all results stored in $opt:: / $Global:: variables)
     init_globals();
     my @argv_before = @ARGV;
     @ARGV = read_options();
@@ -2398,7 +2736,7 @@ sub parse_options(@) {
     ## Shell
     #
     if($opt::fast) {
-	$Global::shell = $ENV{'PARALLEL_SHELL'} || which("dash") || "/bin/sh";
+	$Global::shell = $ENV{'PARALLEL_SHELL'} || ::which("dash") || "/bin/sh";
     } else {
 	$Global::shell = $ENV{'PARALLEL_SHELL'} || parent_shell($$)
 	    || $ENV{'SHELL'} || "/bin/sh";
@@ -2836,6 +3174,15 @@ sub parse_options(@) {
 }
 
 sub check_invalid_option_combinations() {
+    # Validate that the active combination of options is coherent.
+    # Emits an error message and exits with status 255 on the first conflict
+    # found.  Checks include:
+    #   --timeout format validity
+    #   mutually exclusive output modes (--group, --ungroup, --line-buffer)
+    #   pipe modes that conflict with argument-count options
+    #   --retries with --roundrobin
+    #   remote-only options used without --sshlogin
+    #   and more (see implementation for complete list)
     if(defined $opt::timeout and
        $opt::timeout !~ /^\d+(\.\d+)?%?$|^(\d+(\.\d+)?[dhms])+$/i) {
 	::error("--timeout must be seconds or percentage.");
@@ -2849,12 +3196,9 @@ sub check_invalid_option_combinations() {
 	::error("--retries cannot be combined with --roundrobin.");
 	::wait_and_exit(255);
     }
-    if(defined $opt::pipepart and
-       (defined $opt::L or defined $opt::max_lines
-	or defined $opt::max_replace_args)) {
-	::error("--pipepart is incompatible with --max-replace-args, ".
-		"--max-lines, and -L.");
-	wait_and_exit(255);
+    if(defined $opt::retries and defined $opt::tee) {
+	::error("--retries cannot be combined with --tee.");
+	::wait_and_exit(255);
     }
     if(defined $opt::group and defined $opt::ungroup) {
 	::error("--group cannot be combined with --ungroup.");
@@ -2964,8 +3308,21 @@ sub test_safe_env_vars {
 }
 
 sub init_globals() {
+    # Initialise all $Global:: and $opt:: variables to their default values.
+    # Called once at the start of parse_options() before any options are read.
+    #
+    # Covers:
+    #   Version string, program name, numeric constants (infinity, blocksize)
+    #   Default replacement strings (%Global::replace)
+    #   Delimiter defaults (parensleft/parensright for {= =})
+    #   Output and buffering defaults
+    #   SSH / remote host data structures
+    #   Job counters and state flags
     # Defaults:
-    $Global::version = 20251022;
+    $Global::version = 20260522;
+    # Deliver perl bootstrap source via stdin pipe (ssh host -- exec perl).
+    # Set to 0 to use an alternative delivery mechanism (future option).
+    $Global::command_via_pipe = 1;
     $Global::progname = 'parallel';
     $::name = "GNU Parallel";
     $Global::infinity = 2**31;
@@ -3232,6 +3589,12 @@ sub parse_replacement_string_options() {
     if(defined $opt::dirnamereplace) { rpl('{//}',$opt::dirnamereplace); }
     if(defined $opt::seqreplace) { rpl('{#}',$opt::seqreplace); }
     if(defined $opt::slotreplace) { rpl('{%}',$opt::slotreplace); }
+    elsif($opt::fast) {
+	# In fast mode, slots are never freed so the Perl slot counter grows
+	# monotonically.  The inner parallel --pipe sets $PARALLEL_JOBSLOT to
+	# the real slot number for each chunk; emit that shell variable instead.
+	$Global::rpl{'{%}'} = 'uq;$_="\${PARALLEL_JOBSLOT}"';
+    }
     if(defined $opt::basenameextensionreplace) {
        rpl('{/.}',$opt::basenameextensionreplace);
     }
@@ -3812,6 +4175,12 @@ sub read_args_from_command_line() {
 }
 
 sub cleanup() {
+    # Remove temporary files and fifos created during the run, then kill any
+    # ssh ControlMaster processes that were started with -M.
+    #
+    # Files/dirs to remove are registered in %Global::unlink (keys = paths).
+    # Base files (--basefile) are cleaned up remotely if --cleanup was given.
+    #
     # Returns: N/A
     unlink keys %Global::unlink;
     map { rmdir $_ } keys %Global::unlink;
@@ -3826,14 +4195,24 @@ sub cleanup() {
 sub __QUOTING_ARGUMENTS_FOR_SHELL__() {}
 
 sub shell_quote(@) {
+    # Shell-quote a list of strings, using the current shell's quoting rules.
+    #
+    # In list context returns a list of individually quoted strings.
+    # In scalar context returns a single space-joined string.
+    #
     # Input:
-    #	@strings = strings to be quoted
+    #   @strings  one or more strings to quote
     # Returns:
-    #	@shell_quoted_strings = string quoted as needed by the shell
+    #   list context:   (@quoted_strings)
+    #   scalar context: "quoted1 quoted2 ..."
     return wantarray ? (map { Q($_) } @_) : (join" ",map { Q($_) } @_);
 }
 
 sub shell_quote_scalar_rc($) {
+    # Shell-quote a string for the rc shell.
+    # Single quotes are doubled (' -> ''), then the whole string is wrapped in
+    # single quotes if it contains any special characters.
+    # Empty string becomes ''.  NUL byte becomes empty string.
     # Quote for the rc-shell
     my $a = $_[0];
     if(defined $a) {
@@ -3852,6 +4231,10 @@ sub shell_quote_scalar_rc($) {
 }
 
 sub shell_quote_scalar_csh($) {
+    # Shell-quote a string for (t)csh.
+    # Special characters are backslash-escaped.  Newlines are quoted as \\\n
+    # (csh does not support single-quote multi-line strings).
+    # Empty string becomes ''.  NUL byte becomes empty string.
     # Quote for (t)csh
     my $a = $_[0];
     if(defined $a) {
@@ -3894,14 +4277,19 @@ sub shell_quote_scalar_default($) {
 }
 
 sub shell_quote_scalar($) {
-    # Quote the string so the shell will not expand any special chars
+    # Shell-quote a single string using the current shell's rules.
+    # Dispatches to the appropriate shell-specific implementation
+    # (shell_quote_scalar_csh, shell_quote_scalar_rc, or
+    # shell_quote_scalar_default) and then redefines itself as a direct alias
+    # to that function so future calls incur no dispatch overhead.
+    #
     # Inputs:
-    #	$string = string to be quoted
+    #   $string  string to be quoted
     # Returns:
-    #	$shell_quoted = string quoted as needed by the shell
+    #   $shell_quoted  string quoted as needed by the current shell
 
-    # Speed optimization: Choose the correct shell_quote_scalar_*
-    # and call that directly from now on
+    # First-call optimisation: pick the right implementation and redefine
+    # this sub as a direct alias so subsequent calls pay no dispatch cost.
     no warnings 'redefine';
     if($Global::cshell) {
 	# (t)csh
@@ -3918,7 +4306,9 @@ sub shell_quote_scalar($) {
 }
 
 sub Q($) {
-    # Q alias for ::shell_quote_scalar
+    # Short alias for shell_quote_scalar().  Used throughout the codebase for
+    # brevity.  Like shell_quote_scalar(), redefines itself on first call so
+    # subsequent calls go directly to the chosen implementation.
     my $ret = shell_quote_scalar($_[0]);
     no warnings 'redefine';
     *Q = \&::shell_quote_scalar;
@@ -3926,12 +4316,17 @@ sub Q($) {
 }
 
 sub shell_quote_file($) {
-    # Quote the string so shell will not expand any special chars
-    # and prepend ./ if needed
+    # Shell-quote a filename, also prepending "./" if the path is relative and
+    # does not already start with "./" or "/".
+    #
+    # The "./" prefix ensures the shell always treats the argument as a file
+    # path rather than a flag (e.g. "-f" would be misinterpreted by some
+    # commands without the prefix).
+    #
     # Input:
-    #	$filename = filename to be shell quoted
+    #   $filename  filename to be shell quoted
     # Returns:
-    #	$quoted_filename = filename quoted with \ and ./ if needed
+    #   $quoted_filename  shell-safe filename, with "./" prefix if needed
     my $a = shift;
     if(defined $a) {
 	if($a =~ m:^/: or $a =~ m:^\./:) {
@@ -3945,20 +4340,26 @@ sub shell_quote_file($) {
 }
 
 sub shell_words(@) {
+    # Split a shell command line string into a list of words using the same
+    # rules the shell would apply (handles quoting, escaping, etc.).
+    # Delegates to Text::ParseWords::shellwords().
+    #
     # Input:
-    #	$string = shell line
+    #   @strings  one or more shell-line strings to split
     # Returns:
-    #	@shell_words = $string split into words as shell would do
+    #	@shell_words  $string split into word tokens as shell would do
     $Global::use{"Text::ParseWords"} ||= eval "use Text::ParseWords; 1;";
     return Text::ParseWords::shellwords(@_);
 }
 
 sub perl_quote_scalar($) {
-    # Quote the string so perl's eval will not expand any special chars
+    # Escape a string so it is safe to embed inside a Perl double-quoted string
+    # or pass to eval.  Escapes backslash, double-quote, dollar sign, and @.
+    #
     # Inputs:
-    #	$string = string to be quoted
+    #   $string  string to be quoted
     # Returns:
-    #	$perl_quoted = string quoted with \ as needed by perl's eval
+    #   $perl_quoted  string with \, ", $, @ backslash-escaped
     my $a = $_[0];
     if(defined $a) {
 	$a =~ s/[\\\"\$\@]/\\$&/go;
@@ -3975,11 +4376,20 @@ sub pQ($) {
 }
 
 sub unquote_printf() {
-    # Convert \t \n \r \xFF \000 \0
+    # Expand printf-style escape sequences in a string.
+    #
+    # Supported escapes (in order of processing):
+    #   \\t  -> TAB
+    #   \\n  -> NEWLINE
+    #   \\r  -> CR
+    #   \\xNN -> character with hex code NN
+    #   \\DDD -> character with octal code DDD (3 digits)
+    #   \\D   -> character with octal code D  (1 digit)
+    #
     # Inputs:
-    #	$string = string with \t \n \r \num \0
+    #   $string  string possibly containing escape sequences
     # Returns:
-    #	$replaced = string with TAB NEWLINE CR <ascii-num> NUL
+    #   $replaced  string with escapes expanded to their character values
     $_ = shift;
     s/\\t/\t/g;
     s/\\n/\n/g;
@@ -3998,12 +4408,21 @@ sub __FILEHANDLES__() {}
 
 
 sub save_stdin_stdout_stderr() {
-    # Remember the original STDIN, STDOUT and STDERR
-    # and file descriptors opened by the shell (e.g. 3>/tmp/foo)
-    # Uses:
-    #	%Global::fh
-    #	$Global::original_stderr
-    #	$Global::original_stdin
+    # Duplicate the original STDIN, STDOUT, and STDERR before parallel
+    # potentially redirects or closes them, so they can be accessed later
+    # (e.g. to write error messages after STDERR is redirected).
+    #
+    # Also saves fd 1 and 2 in %Global::fh so they can be passed through to
+    # worker processes.  The 2-argument open form is used for Perl 5.8.0
+    # compatibility (bug #43570: newer open created 61 extra files).
+    #
+    # TODO: Extend to save fds 3-61 once open3 supports multiple fds.
+    #
+    # Side effects:
+    #   %Global::fh{1,2}          duplicated stdout/stderr handles
+    #   $Global::original_stderr  dup of STDERR for error output
+    #   $Global::status_fd        second dup of STDERR for status messages
+    #   $Global::original_stdin   dup of STDIN for reading input files
     # Returns: N/A
 
     # TODO Disabled until we have an open3 that will take n filehandles
@@ -4028,15 +4447,21 @@ sub save_stdin_stdout_stderr() {
 }
 
 sub enough_file_handles() {
-    # Check that we have enough filehandles available for starting
-    # another job
+    # Probe whether the system has enough free file descriptors to start
+    # another job.
+    #
+    # Each grouped job needs: 7 (Perl internal) + 2 (open3 temporary) +
+    # N (one per output fd in %Global::fh, normally 2 for stdout+stderr).
+    # We test by actually opening that many /dev/null fds, then closing them.
+    #
+    # --ungroup skips this check because ungrouped jobs do not hold extra fds.
+    #
     # Uses:
-    #	$opt::ungroup
-    #	%Global::fh
+    #   $opt::ungroup, %Global::fh
     # Returns:
-    #	1 if ungrouped (thus not needing extra filehandles)
-    #	0 if too few filehandles
-    #	1 if enough filehandles
+    #   1 if --ungroup (file handles not needed)
+    #   1 if enough file handles are available
+    #   0 if too few file handles remain
     if(not $opt::ungroup) {
 	my %fh;
 	my $enough_filehandles = 1;
@@ -4056,14 +4481,20 @@ sub enough_file_handles() {
 }
 
 sub open_or_exit($$) {
-    # Open a file name or exit if the file cannot be opened
+    # Open a file for reading or writing; exit with status 255 on failure.
+    #
+    # Special cases:
+    #   "-" in read mode   -> $Global::original_stdin (or STDIN)
+    #   "-" in write mode  -> $Global::original_stderr (or STDERR)
+    #   GLOB ref           -> returned as-is (already-open filehandle)
+    #
     # Inputs:
-    #	$mode = read:"<" write:">"
-    #	$file = filehandle or filename to open
+    #   $mode   "<" for read, ">" for write (passed to open())
+    #   $file   filename string or GLOB ref
     # Uses:
-    #	$Global::original_stdin
+    #   $Global::original_stdin
     # Returns:
-    #	$fh = file handle to opened file
+    #   $fh  open filehandle
     my $mode = shift;
     my $file = shift;
     if($file eq "-") {
@@ -4117,11 +4548,11 @@ sub write_or_exit(@) {
 }
 
 sub set_fh_blocking($) {
-    # Set filehandle as blocking
+    # Remove the O_NONBLOCK flag from a filehandle, making it blocking.
+    # Used to restore blocking mode on a pipe after non-blocking I/O is done.
     # Inputs:
-    #	$fh = filehandle to be blocking
-    # Returns:
-    #	N/A
+    #   $fh  filehandle to switch to blocking mode
+    # Returns: N/A
     my $fh = shift;
     $Global::use{"Fcntl"} ||= eval "use Fcntl qw(:DEFAULT :flock); 1;";
     my $flags;
@@ -4134,11 +4565,11 @@ sub set_fh_blocking($) {
 }
 
 sub set_fh_non_blocking($) {
-    # Set filehandle as non-blocking
+    # Set the O_NONBLOCK flag on a filehandle so reads/writes return immediately
+    # instead of blocking when no data is available / the pipe is full.
     # Inputs:
-    #	$fh = filehandle to be blocking
-    # Returns:
-    #	N/A
+    #   $fh  filehandle to switch to non-blocking mode
+    # Returns: N/A
     my $fh = shift;
     $Global::use{"Fcntl"} ||= eval "use Fcntl qw(:DEFAULT :flock); 1;";
     my $flags;
@@ -4177,8 +4608,15 @@ sub __RUNNING_THE_JOBS_AND_PRINTING_PROGRESS__() {}
 #    $Global::quoting = quote the command to run
 
 sub init_run_jobs() {
-    # Set Global variables and progress signal handlers
-    # Do the copying of basefiles
+    # Initialise the job-running subsystem.
+    #
+    # Resets job counters, installs signal handlers, and copies base files to
+    # remote hosts if --basefile was specified.
+    #
+    # Signal handlers installed:
+    #   USR1 -> list_running_jobs()   (print currently running jobs to stderr)
+    #   USR2 -> toggle_progress()     (enable/disable progress bar at runtime)
+    #
     # Returns: N/A
     $Global::total_running = 0;
     $Global::total_started = 0;
@@ -4379,10 +4817,13 @@ sub init_run_jobs() {
 		debug("start", "Not starting: JobQueue empty\n");
 		return 0;
 	    } else {
-		my $job;
+		my ($job,$skip);
 		# Skip jobs already in job log
+		# Skip jobs that called skip()
 		# Skip jobs already in results
+		# Skip jobs rejected by --filter
 		do {
+		    $skip = 0;
 		    $job = get_job_with_sshlogin($sshlogin);
 		    if(not defined $job) {
 			# No command available for that sshlogin
@@ -4390,13 +4831,23 @@ sub init_run_jobs() {
 			      $sshlogin->string(), "\n");
 			return 0;
 		    }
-		    if($job->is_already_in_joblog()) {
+		    if($job->is_already_in_joblog()
+		       or
+		       $job->{'commandline'}{'skip'}
+		       or
+		       not $job->filter()) {
+			# Already in joblog
+			# {= $job->skip() =} called,
+			# or --filter false:
+			# silently discard, no delay/retry/halt
 			$job->free_slot();
+			# Mark seq so --keep-order can advance past this gap
+			$job->set_job_in_joblog();
+			$skip = 1;
 		    }
-		} while ($job->is_already_in_joblog()
-			 or
-			 ($opt::results and $opt::resume
-			  and $job->is_already_in_results()));
+		} while ($skip
+			 or ($opt::results and $opt::resume
+			     and $job->is_already_in_results()));
 		debug("start", "Command to run on '",
 		      $job->sshlogin()->string(), "': '",
 		      $job->replaced(),"'\n");
@@ -4459,10 +4910,17 @@ sub init_run_jobs() {
 }
 
 sub init_progress() {
+    # Enable unbuffered stdout and return the initial progress header strings.
+    #
+    # When --bar is active the header is suppressed (returns empty strings)
+    # because the bar renderer handles its own output.  Otherwise returns a
+    # multi-line header listing the workers, their CPU counts, and job limits.
+    #
     # Uses:
-    #	$opt::bar
+    #   $opt::bar, $opt::use_sockets_instead_of_threads,
+    #   $opt::use_cores_instead_of_threads
     # Returns:
-    #	list of computers for progress output
+    #   list of strings to print as the progress header
     $|=1;
     if($opt::bar) {
 	return("","");
@@ -4475,14 +4933,25 @@ sub init_progress() {
 }
 
 sub drain_job_queue(@) {
+    # Main event loop: keep starting and reaping jobs until the queue is empty
+    # and all running jobs have finished.
+    #
+    # Uses an exponential back-off sleep (starting at 0.2 s, halved on
+    # progress, capped in reap_usleep) to avoid busy-waiting while still
+    # responding quickly when jobs finish.
+    #
+    # Every ~1 second checks whether the --jobs file or --sshloginfile have
+    # changed and reloads them if so.
+    #
+    # In --sql-master mode also waits for the SQL job table to be drained and
+    # starts the --sql-worker subprocess on first work arrival.
+    #
+    # Input:
+    #   @command  the command template (used only when forking an --sqlworker)
     # Uses:
-    #	$opt::progress
-    #	$Global::total_running
-    #	$Global::max_jobs_running
-    #	%Global::running
-    #	$Global::JobQueue
-    #	%Global::host
-    #	$Global::start_no_new_jobs
+    #   $opt::progress, $Global::total_running, $Global::max_jobs_running,
+    #   %Global::running, $Global::JobQueue, %Global::host,
+    #   $Global::start_no_new_jobs
     # Returns: N/A
     my @command = @_;
     my $sleep = 0.2;
@@ -4568,9 +5037,10 @@ sub drain_job_queue(@) {
 }
 
 sub toggle_progress() {
-    # Turn on/off progress view
+    # Toggle progress display on/off (called by SIGUSR2 handler).
+    # When turned on, immediately prints the progress header via init_progress().
     # Uses:
-    #	$opt::progress
+    #   $opt::progress
     # Returns: N/A
     $opt::progress = not $opt::progress;
     if($opt::progress) {
@@ -4780,18 +5250,15 @@ sub toggle_progress() {
 	my $bar_text =
 	    sprintf("%d%% %d:%d=%s %s",
 		    $pctcomplete*100, $completed, $left, $eta_dhms, $arg);
-	my $terminal_width = terminal_columns();
-	my $s = sprintf("%-${terminal_width}s",
-			substr($bar_text." "x$terminal_width,
-			       0,$terminal_width));
-	my $width = int($terminal_width * $pctcomplete);
-	substr($s,$width,0) = $reset;
-	my $zenity = sprintf("%-${terminal_width}s",
-			     substr("#   $eta sec $arg",
-				    0,$terminal_width));
-	# Prefix with zenity header
-	$s = "\r" . $zenity . "\r" . $pctcomplete*100 .
-	    "\r" . $rev . $s . $reset;
+        my $terminal_width = terminal_columns();
+	my $s = ::mbtrunc($bar_text." "x$terminal_width,$terminal_width);
+	my $width = int(length($s) * $pctcomplete);
+	# End of bar (end of reverse output)
+        substr($s,$width,0) = $reset;
+	my $zenity = ::mbtrunc("#   $eta sec $arg", $terminal_width);
+        # Prefix with zenity header
+        $s = "\r" . $zenity . "\r" . $pctcomplete*100 .
+            "\r" . $rev . $s . $reset;
 	return $s;
     }
 }
@@ -4858,6 +5325,13 @@ sub toggle_progress() {
 }
 
 sub untabify($) {
+    # Expand tab characters to spaces using 8-column tab stops.
+    # Handles multi-byte (wide) characters by measuring display width with
+    # mbswidth() instead of byte length.
+    # Input:
+    #   $string  string possibly containing tabs
+    # Returns:
+    #   $expanded  string with tabs replaced by appropriate spaces
     # Convert \t into spaces
     my @out;
     my ($src);
@@ -4868,16 +5342,55 @@ sub untabify($) {
     return join "",@out;
 }
 
+sub mbtrunc($$) {
+    # Truncate a string to at most $len display columns, correctly handling
+    # multi-byte wide characters (e.g. CJK characters that are 2 columns wide).
+    # Avoids the Text::WideChar::Util dependency.
+    #
+    # For pure ASCII strings, uses a fast substr().  For strings containing
+    # wide chars, iteratively trims from the right until the display width fits.
+    #
+    # Input:
+    #   $str  string to truncate
+    #   $len  maximum display column width
+    # Returns:
+    #   $truncated  string that fits within $len display columns
+    # Simple mbtrunc to avoid using Text::WideChar::Util
+    my $str = shift;
+    my $len = shift;
+    if(::mbswidth($str) == length($str)) {
+	$str = substr($str,0,$len);
+    } else {
+	# mb chars (ヌー平行) are wider than 1 char on screen
+	# We need at most $len chars - they may be wide
+	$str =~ s/(.{$len}).*/$1/;
+	my $rlen = int((::mbswidth($str) - $len)/2+0.5);
+	do {
+	    $str =~ s/.{$rlen}$//;
+	    $rlen = int((::mbswidth($str) - $len)/2+0.5);
+	} while($rlen >= 1);
+    }
+    return $str;
+}
+
 # Prototype forwarding
+
 sub get_job_with_sshlogin($);
 sub get_job_with_sshlogin($) {
+    # Dequeue the next job that is eligible to run on the given SSH login host.
+    #
+    # Without --hostgroups: returns the next job unconditionally.
+    #
+    # With --hostgroups: scans the queue for the first job whose hostgroup
+    # list includes a group that $sshlogin belongs to.  Jobs belonging to
+    # other hostgroups are put back on the queue via unget().
+    #
     # Input:
-    #	$sshlogin = which host should the job be run on?
+    #   $sshlogin  SSHLogin object for the target host
     # Uses:
-    #	$opt::hostgroups
-    #	$Global::JobQueue
+    #   $opt::hostgroups, $Global::JobQueue
     # Returns:
-    #	$job = next job object for $sshlogin if any available
+    #   $job  next Job object eligible for $sshlogin, or undef if none
     my $sshlogin = shift;
     my $job;
 
@@ -4941,9 +5454,13 @@ sub __REMOTE_SSH__() {}
 
 
 sub read_sshloginfiles(@) {
-    # Read a list of --slf's
+    # Load one or more --sshloginfile entries into @Global::sshlogin.
+    # Each element of @files may be a literal filename, "-" for stdin, ".."
+    # for ~/.parallel/sshloginfile, or "." for /etc/parallel/sshloginfile.
+    # Expands shorthands via expand_slf_shorthand() then delegates to
+    # read_sshloginfile() for each resolved path.
     # Input:
-    #	@files = files or symbolic file names to read
+    #   @files  list of file paths or shorthands
     # Returns: N/A
     for my $s (@_) {
 	read_sshloginfile(expand_slf_shorthand($s));
@@ -4951,11 +5468,19 @@ sub read_sshloginfiles(@) {
 }
 
 sub expand_slf_shorthand($) {
-    # Expand --slf shorthand into a read file name
+    # Resolve an --sshloginfile shorthand to an actual file path.
+    #
+    # Shorthands:
+    #   "-"   stdin (returned as-is)
+    #   ".."  ~/.parallel/sshloginfile
+    #   "."   /etc/parallel/sshloginfile
+    #   other existing path  returned as-is
+    #   other non-existing   searched in @Global::config_dirs; error if not found
+    #
     # Input:
-    #	$file = file or symbolic file name to read
+    #   $file  path or shorthand
     # Returns:
-    #	$file = actual file name to read
+    #   $file  resolved absolute or relative file path
     my $file = shift;
     if($file eq "-") {
 	# skip: It is stdin
@@ -4979,11 +5504,14 @@ sub expand_slf_shorthand($) {
 }
 
 sub read_sshloginfile($) {
-    # Read sshloginfile into @Global::sshlogin
+    # Read an sshloginfile and append its entries to @Global::sshlogin.
+    # Blank lines and lines starting with '#' are ignored.
+    # "-" reads from STDIN (without closing it afterwards).
+    #
     # Input:
-    #	$file = file to read
+    #   $file  path to sshloginfile, or "-" for stdin
     # Uses:
-    #	@Global::sshlogin
+    #   @Global::sshlogin
     # Returns: N/A
     local $/ = "\n";
     my $file = shift;
@@ -5008,17 +5536,23 @@ sub read_sshloginfile($) {
 }
 
 sub parse_sshlogin() {
-    # Parse @Global::sshlogin into %Global::host.
-    # Keep only hosts that are in one of the given ssh hostgroups.
+    # Parse the raw @Global::sshlogin strings into SSHLogin objects stored in
+    # %Global::host.
+    #
+    # Each entry may be:
+    #   "user@host"          - simple SSH login
+    #   "N/user@host"        - N parallel jobs on that host
+    #   "host[1-3,5]"        - range expansion (see expand_range())
+    #   ":"                  - local execution (no SSH)
+    #
+    # Entries belonging to host groups not matching --hostgroups are discarded.
+    # Also sets $Global::minimal_command_line_length based on the most
+    # restrictive host.
+    #
     # Uses:
-    #	@Global::sshlogin
-    #	$Global::minimal_command_line_length
-    #	%Global::host
-    #	$opt::transfer
-    #	@opt::return
-    #	$opt::cleanup
-    #	@opt::basefile
-    #	@opt::trc
+    #   @Global::sshlogin, $Global::minimal_command_line_length,
+    #   %Global::host, $opt::transfer, @opt::return, $opt::cleanup,
+    #   @opt::basefile, @opt::trc
     # Returns: N/A
     sub expand_range($) {
 	# Expand host[9-11,15]a[09-11]b
@@ -5461,14 +5995,22 @@ sub parallelized_host_filtering() {
 	# Return $default_value if command fails
 	my $sshlogin = shift;
 	my $command = shift;
-	# wrapper that returns output "0\n" if the command fails
+	# If --env PATH is requested, propagate it so the remote finds
+	# the correct parallel (e.g. when parallel is in a non-default dir).
+	my @env_vars = map { split /,/ } @opt::env;
+	my $path_set = (grep { $_ eq "PATH" } @env_vars)
+	    ? '$ENV{PATH}="'.::perl_quote_scalar($ENV{PATH}).'";'
+	    : '';
+	# Perl source: run $command via backticks; print "0\n" if it fails.
 	# E.g. parallel not installed => "0\n"
-	my $wcmd = q(perl -e '$a=`).$command.q(`; print $? ? "0".v010 : $a');
-	my $commandline = CommandLine->new(1,[$wcmd],{},0,0,[],[],[],[],{},{});
-	my $job = Job->new($commandline);
-	$job->set_sshlogin($sshlogin);
-	$job->wrapped();
-	return($job->{'wrapped'});
+	my $perl_source = $path_set.'$a=`'.$command.'`; print $? ? "0".v010 : $a';
+	# Use hexwrap+wrap: hexwrap() encodes the Perl source as a hex
+	# literal on the command line so no pipe payload is needed.
+	# The new pipe-payload mechanism stores its source in the Job object
+	# and writes it in start(); sshwrapped() discards the Job, so the
+	# payload would be lost and remote perl would get EOF → exit 0 →
+	# produce no output.
+	return $sshlogin->wrap($sshlogin->hexwrap($perl_source));
     }
 
     my(@sockets, @cores, @threads, @maxline, @echo);
@@ -5704,26 +6246,32 @@ sub __SIGNAL_HANDLING__() {}
 
 
 sub sigtstp() {
-    # Send TSTP signal (Ctrl-Z) to all children process groups
+    # Handle Ctrl-Z (SIGTSTP): forward TSTP to all child process groups so
+    # worker processes are suspended together with the parent.
     # Uses:
-    #	%SIG
+    #   %SIG  (reset inside signal_children via $SIG{TSTP}=undef)
     # Returns: N/A
     signal_children("TSTP");
 }
 
 sub sigpipe() {
-    # Send SIGPIPE signal to all children process groups
+    # Handle SIGPIPE: forward the signal to all child process groups so that
+    # workers can react to a broken pipe without being silently killed.
     # Uses:
-    #	%SIG
+    #   %SIG
     # Returns: N/A
     signal_children("PIPE");
 }
 
 sub signal_children() {
-    # Send signal to all children process groups
-    # and GNU	Parallel itself
+    # Broadcast a signal to every running child process group (negative PID
+    # kills the entire process group) and then deliver the same signal to
+    # GNU Parallel itself using the default OS handler.
+    #
+    # Input:
+    #   $signal  signal name (e.g. "TSTP", "PIPE", "TERM")
     # Uses:
-    #	%SIG
+    #   %Global::running  (keys are PIDs of running jobs)
     # Returns: N/A
     my $signal = shift;
     debug("run", "Sending $signal ");
@@ -5734,9 +6282,21 @@ sub signal_children() {
 }
 
 sub save_original_signal_handler() {
-    # Remember the original signal handler
+    # Install GNU Parallel's signal handlers and save the originals.
+    #
+    # Handlers installed:
+    #   INT / TERM  -> kill tmux session (if --tmux) then wait_and_exit(255)
+    #   TSTP        -> sigtstp() (forward Ctrl-Z to all children)
+    #   PIPE        -> sigpipe() (forward broken-pipe to all children)
+    #   CONT        -> re-install TSTP handler; resume or re-suspend each job
+    #                 depending on whether it was explicitly suspended
+    #   ALRM        -> ignored (used internally for timeouts via alarm())
+    #
+    # The original INT/TERM handlers are saved in %Global::original_sig before
+    # TERM is overridden with a no-op (jobs haven't started yet).
+    #
     # Uses:
-    #	%Global::original_sig
+    #   %Global::original_sig, $opt::tmux
     # Returns: N/A
     $SIG{INT} = sub {
 	if($opt::tmux) { ::qqx("tmux kill-session -t p$$"); }
@@ -5770,9 +6330,10 @@ sub save_original_signal_handler() {
 }
 
 sub list_running_jobs() {
-    # Print running jobs on tty
+    # Print all currently running job commands to $Global::original_stderr.
+    # Called by the SIGUSR1 handler so the user can inspect in-flight jobs.
     # Uses:
-    #	%Global::running
+    #   %Global::running
     # Returns: N/A
     for my $job (values %Global::running) {
 	::status("$Global::progname: ".$job->replaced());
@@ -5998,6 +6559,8 @@ sub wait_and_exit($) {
 	# Make the shell script return $error
 	print "$Global::parset_endstring\nreturn $error";
     }
+    # Flush stdout before exit to avoid losing last lines when piped
+    STDOUT->flush();
     exit($error);
 }
 
@@ -6042,8 +6605,8 @@ sub usage() {
 	 "If you use programs that use GNU Parallel to process data for an article in a",
 	 "scientific publication, please cite:",
 	 "",
-	 "  Tange, O. (2025, October 22). GNU Parallel 20251022 ('Goodall').",
-	 "  Zenodo. https://doi.org/10.5281/zenodo.17488917",
+	 "  Tange, O. (2026, May 22). GNU Parallel 20260522 ('Hantavirus').",
+	 "  Zenodo. https://doi.org/10.5281/zenodo.20402000",
 	 "",
 
 	 # Before changing these lines, please read
@@ -6058,10 +6621,6 @@ sub usage() {
 }
 
 sub citation_notice() {
-    # if --will-cite or --plain: do nothing
-    # if stderr redirected: do nothing
-    # if $PARALLEL_HOME/will-cite: do nothing
-    # else: print citation notice to stderr
 }
 
 sub status(@) {
@@ -6122,7 +6681,7 @@ sub version() {
     print join
 	("\n",
 	 "GNU $Global::progname $Global::version",
-	 "Copyright (C) 2007-2025 Ole Tange, http://ole.tange.dk and Free Software",
+	 "Copyright (C) 2007-2026 Ole Tange, http://ole.tange.dk and Free Software",
 	 "Foundation, Inc.",
 	 "License GPLv3+: GNU GPL version 3 or later <https://gnu.org/licenses/gpl.html>",
 	 "This is free software: you are free to change and redistribute it.",
@@ -6173,7 +6732,7 @@ sub embed() {
     }
     print "#!$Global::shell
 
-# Copyright (C) 2007-2025 $user, Ole Tange, http://ole.tange.dk
+# Copyright (C) 2007-2026 $user, Ole Tange, http://ole.tange.dk
 # and Free Software Foundation, Inc.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -6276,7 +6835,7 @@ sub pack_combined_executable {
     # Read the source of GNU Parallel and the executable
     my $parallel = slurp_or_exit($0);
     # Remove possibly __END__ from GNU Parallel
-    $parallel =~ s/^__END__.*//s;
+    $parallel =~ s/^__END__.*//sm;
     if(-t $Global::original_stderr) {
 	::status(
 	      "Please be aware that combining GNU Parallel and '$execname'",
@@ -6387,7 +6946,11 @@ sub __GENERIC_COMMON_FUNCTION__() {}
 
 
 sub mkdir_or_die($) {
-    # If dir is not executable: die
+    # Create a directory (and all parents) via File::Path::mkpath.
+    # Dies with an error message if the directory is not executable afterwards
+    # (i.e. cannot be entered).
+    # Input:
+    #   $dir  path to create
     my $dir = shift;
     # The eval is needed to catch exception from mkdir
     eval { File::Path::mkpath($dir); };
@@ -6398,10 +6961,19 @@ sub mkdir_or_die($) {
 }
 
 sub tmpfile(@) {
-    # Create tempfile as $TMPDIR/parXXXXX
+    # Create a temporary file under $TMPDIR with template 'parXXXXX'.
+    #
+    # In list context returns ($fh, $filename).
+    # In scalar context unlinks the file immediately (anonymous temp file
+    # pattern) and returns just $fh.  The immediate unlink avoids
+    # cleanup in case of a crash.
+    #
+    # Additional options (e.g. SUFFIX => ".arg") are forwarded to
+    # File::Temp::tempfile().
+    #
     # Returns:
-    #	$filehandle = opened file handle
-    #	$filename = file name created
+    #   ($fh, $filename)  in list context
+    #   $fh               in scalar context (file already unlinked)
     my($filehandle,$filename) =
 	::tempfile(DIR=>$ENV{'TMPDIR'}, TEMPLATE => 'parXXXXX', @_);
     if(wantarray) {
@@ -6414,9 +6986,17 @@ sub tmpfile(@) {
 }
 
 sub tmpname($) {
-    # Select a name that does not exist
-    # Do not create the file as it may be used for creating a socket (by tmux)
-    # Remember the name in $Global::unlink to avoid hitting the same name twice
+    # Generate a unique temporary file/socket name under $TMPDIR without
+    # creating the file.  The name is registered in %Global::unlink so that
+    # cleanup() removes it and so the same name is never returned twice.
+    #
+    # Unlike tmpfile(), this does NOT create the file - it is intended for
+    # paths that will be created by another process (e.g. tmux sockets, fifos).
+    #
+    # Input:
+    #   $name  short prefix used in the generated name (e.g. "fif", "par")
+    # Returns:
+    #   $tmpname  unique path under $TMPDIR that did not exist at call time
     my $name = shift;
     my($tmpname);
     if(not -w $ENV{'TMPDIR'}) {
@@ -6436,26 +7016,33 @@ sub tmpname($) {
 }
 
 sub tmpfifo() {
-    # Find an unused name and mkfifo on it
+    # Create a named pipe (fifo) with a unique name under $TMPDIR.
+    # Combines tmpname("fif") with POSIX::mkfifo(path, 0600).
+    # Returns:
+    #   $tmpfifo  path to the newly created fifo
     my $tmpfifo = tmpname("fif");
     mkfifo($tmpfifo,0600);
     return $tmpfifo;
 }
 
 sub rm(@) {
-    # Remove file and remove it from %Global::unlink
+    # Unlink files and remove them from %Global::unlink so cleanup() does not
+    # try to unlink them a second time.
     # Uses:
-    #	%Global::unlink
+    #   %Global::unlink
     delete @Global::unlink{@_};
     unlink @_;
 }
 
-sub size_of_block_dev() {
-    # Like -s but for block devices
+sub size_of_block_dev($) {
+    # Return the size in bytes of a block device.
+    # The -s operator only works for regular files; for block devices we seek
+    # to the end and use tell() to get the byte count.
+    #
     # Input:
-    #	$blockdev = file name of block device
+    #   $blockdev  path to a block device (e.g. /dev/sda)
     # Returns:
-    #	$size = in bytes, undef if error
+    #   $size  size in bytes
     my $blockdev = shift;
     my $fh = open_or_exit("<", $blockdev);
     seek($fh,0,2) || ::die_bug("cannot seek $blockdev");
@@ -6465,10 +7052,25 @@ sub size_of_block_dev() {
 }
 
 sub qqx(@) {
-    # Like qx but with clean environment (except for @keep)
-    # and STDERR ignored
-    # This is needed if the environment contains functions
-    # that /bin/sh does not understand
+    # Run a shell command and capture stdout, similar to qx(), but with a
+    # sanitised environment and stderr suppressed.
+    #
+    # A minimal environment is constructed keeping only the variables required
+    # by common SSH / auth / terminal tools (see @keep).  This prevents shell
+    # functions exported to the environment (common with bash) from confusing
+    # /bin/sh and causing spurious errors.
+    #
+    # STDERR is discarded via open3() redirection to /dev/null.  CygWin's
+    # 2>/dev/null is unreliable, hence the open3 approach.
+    #
+    # In debug mode ($Global::debug), falls back to plain qx{} so that
+    # commands and their stderr are visible.
+    #
+    # Input:
+    #   @_  command (passed as a single shell string via "@_")
+    # Returns:
+    #   list context:   lines of stdout output
+    #   scalar context: stdout output as a single string
     my %env;
     # ssh with ssh-agent needs PATH SSH_AUTH_SOCK SSH_AGENT_PID
     # ssh with Kerberos needs KRB5CCNAME
@@ -6515,11 +7117,15 @@ sub qqx(@) {
 }
 
 sub uniq(@) {
-    # Remove duplicates and return unique values
+    # Return the unique elements of a list (order not guaranteed).
+    # Input:  @list
+    # Returns: list of distinct values
     return keys %{{ map { $_ => 1 } @_ }};
 }
 
 sub min(@) {
+    # Return the smallest defined value in @_, skipping undefs.
+    # Returns undef if all elements are undef.
     # Returns:
     #	Minimum value of array
     my $min;
@@ -6533,6 +7139,8 @@ sub min(@) {
 }
 
 sub max(@) {
+    # Return the largest defined value in @_, skipping undefs.
+    # Returns undef if all elements are undef.
     # Returns:
     #	Maximum value of array
     my $max;
@@ -6546,6 +7154,8 @@ sub max(@) {
 }
 
 sub sum(@) {
+    # Return the sum of all defined, non-zero elements in @_.
+    # Undefs and zeros are skipped silently.
     # Returns:
     #	Sum of values of array
     my @args = @_;
@@ -6558,16 +7168,23 @@ sub sum(@) {
 }
 
 sub undef_as_zero($) {
+    # Return $a if defined and truthy, otherwise 0.
+    # Useful for accumulating counters that may be undef on first use.
     my $a = shift;
     return $a ? $a : 0;
 }
 
 sub undef_as_empty($) {
+    # Return $a if defined and truthy, otherwise "".
+    # Useful for string concatenation where undef would cause warnings.
     my $a = shift;
     return $a ? $a : "";
 }
 
 sub undef_if_empty($) {
+    # Return undef if the string is empty (""), otherwise return the value.
+    # Converts empty strings from GetOptions back to undef so that
+    # defined() checks work as expected.
     if(defined($_[0]) and $_[0] eq "") {
 	return undef;
     }
@@ -6575,16 +7192,27 @@ sub undef_if_empty($) {
 }
 
 sub multiply_binary_prefix(@) {
-    # Evalualte numbers with binary prefix
-    # Ki=2^10, Mi=2^20, Gi=2^30, Ti=2^40, Pi=2^50, Ei=2^70, Zi=2^80, Yi=2^80
-    # ki=2^10, mi=2^20, gi=2^30, ti=2^40, pi=2^50, ei=2^70, zi=2^80, yi=2^80
-    # K =2^10, M =2^20, G =2^30, T =2^40, P =2^50, E =2^70, Z =2^80, Y =2^80
+    # Evaluate size strings with SI / IEC binary prefixes and return the
+    # numeric values.  Each element of @v is modified in-place by substituting
+    # the prefix letters with their numeric equivalents and then eval-ing the
+    # resulting expression.
+    #
+    # Prefix table:
+    # Ki=2^10, Mi=2^20, Gi=2^30, Ti=2^40, Pi=2^50, Ei=2^60, Zi=2^70, Yi=2^80
+    # ki=2^10, mi=2^20, gi=2^30, ti=2^40, pi=2^50, ei=2^60, zi=2^70, yi=2^80
+    # K =2^10, M =2^20, G =2^30, T =2^40, P =2^50, E =2^60, Z =2^70, Y =2^80
     # k =10^3, m =10^6, g =10^9, t=10^12, p=10^15, e=10^18, z=10^21, y=10^24
-    # 13G = 13*1024*1024*1024 = 13958643712
+    #
+    # Examples:
+    #   "13G"  -> 13*1024*1024*1024 = 13958643712
+    #   "1Ki"  -> 1024
+    #   "1k"   -> 1000
+    #
     # Input:
-    #	$s = string with prefixes
+    #   @v  list of strings with optional prefix suffixes
     # Returns:
-    #	$value = int with prefixes multiplied
+    #   list context:   list of expanded integers
+    #   scalar context: single expanded integer
     my @v = @_;
     for(@v) {
 	defined $_ or next;
@@ -6624,12 +7252,16 @@ sub multiply_binary_prefix(@) {
 }
 
 sub multiply_time_units($) {
-    # Evalualte numbers with time units
-    # s=1, m=60, h=3600, d=86400
+    # Parse a time duration string and convert it to seconds.
+    # Supports combinations like "1h30m", "2d12h", "90s", plain integers
+    # (treated as seconds).
+    #
+    # Unit multipliers: s=1, m=60, h=3600, d=86400 (case-insensitive)
+    #
     # Input:
-    #	$s = string time units
+    #   $s  time string (e.g. "1h30m", "90s", "2d")
     # Returns:
-    #	$value = int in seconds
+    #   $value  integer number of seconds
     my @v = @_;
     for(@v) {
 	defined $_ or next;
@@ -6647,12 +7279,13 @@ sub multiply_time_units($) {
 }
 
 sub seconds_to_time_units() {
-    # Convert seconds into ??d??h??m??s
-    # s=1, m=60, h=3600, d=86400
+    # Format an integer number of seconds as a human-readable duration string.
+    # Omits leading zero components (e.g. "5m30s" not "0d0h5m30s").
+    #
     # Input:
-    #	$s = int in seconds
+    #   $s  integer seconds
     # Returns:
-    #	$str = string time units
+    #   $str  formatted string e.g. "1d02h03m04s", "5m30s", "45s"
     my $s = shift;
     my $str;
     my $d = int($s/86400);
@@ -6720,12 +7353,25 @@ sub seconds_to_time_units() {
 }
 
 sub spacefree($$) {
-    # Remove comments and spaces
+    # Compact a multi-line string (typically embedded Perl/shell code) by
+    # stripping comments and reducing whitespace.  Used to shrink the inline
+    # scripts passed via `perl -e '...'` so they fit on a command line.
+    #
+    # $spaces controls how aggressively whitespace is removed:
+    #   0  remove ALL whitespace
+    #   1  collapse runs of whitespace to a single space
+    #   2  keep newlines; collapse other whitespace; remove blank lines
+    #   3  remove whitespace only where it is safe for Perl:
+    #        - after non-alphanumeric/non-slash chars
+    #        - between alphanumeric/slash and non-colon non-alpha chars
+    #
+    # In all modes, # ... comments are stripped first.
+    #
     # Inputs:
-    #	$spaces = keep 1 space?
-    #	$s = string to remove spaces from
+    #   $spaces  compaction level (0-3)
+    #   $s       string to compact
     # Returns:
-    #	$s = with spaces removed
+    #   $s  compacted string
     my $spaces = shift;
     my $s = shift;
     $s =~ s/#.*//mg;
@@ -6751,7 +7397,10 @@ sub spacefree($$) {
 	local $/ = "\n";
 	if(not $hostname) {
 	    $hostname = `hostname`;
-	    chomp($hostname);
+		# Hostname cannot contain space
+	    $hostname=~s/\s//g;
+		# Hostname is case-insensitive
+	    $hostname= lc($hostname);
 	    $hostname ||= "nohostname";
 	}
 	return $hostname;
@@ -6759,10 +7408,13 @@ sub spacefree($$) {
 }
 
 sub which(@) {
+    # Locate executables in $PATH, similar to the shell's `which` command.
+    # For programs containing a "/" the full path is tested directly as well.
+    #
     # Input:
-    #	@programs = programs to find the path to
+    #   @programs  program names to search for
     # Returns:
-    #	@full_path = full paths to @programs. Nothing if not found
+    #   @full_paths  list of absolute paths found (empty if not found)
     my @which;
     for my $prg (@_) {
 	push(@which, grep { not -d $_ and -x $_ }
@@ -7323,6 +7975,25 @@ sub __OBJECT_ORIENTED_PARTS__() {}
 
 package SSHLogin;
 
+# Represents one remote (or local) execution target.
+#
+# An SSHLogin encapsulates everything needed to run a job on a particular host:
+# the SSH command, user, password, hostname, port, host-group membership,
+# the number of parallel job slots, and runtime state (jobs running, load, etc).
+#
+# The ":" sshlogin is special and means "run locally without SSH".
+#
+# String formats accepted by new():
+#   [@grp+grp/][N/][sshcmd ][[user][:pass]@][host[:port]]
+#
+# Examples:
+#   "host"                simple SSH
+#   "user@host:2222"      custom port
+#   "4/host"              4 parallel slots
+#   "@grp1+grp2/host"     host in groups grp1 and grp2
+#   "/usr/bin/ssh host"   custom SSH binary
+#   ":"                   local execution
+
 sub new($$) {
     my $class = shift;
     my $s = shift;
@@ -7627,14 +8298,63 @@ sub sshcmd($) {
 }
 
 sub wrap($@) {
+    # Run command through ssh. Do not read from stdin ( </dev/null )
     # Input:
     #	@cmd = shell command to run on remote
     # Returns:
-    #	$sshwrapped = ssh remote @cmd
+    #	$sshwrapped = ssh remote "@cmd" < /dev/null
     my $self = shift;
     my @remote = @_;
     return(join " ",
-	   $self->sshcmd(), $self->{'host'}, "--", "exec", @remote);
+	   $self->sshcmd(), $self->{'host'}, "--", "exec", @remote, "< /dev/null");
+}
+
+sub ssh_perl_cmd($) {
+    # Returns SSH command that invokes "perl" reading its source from stdin.
+    # The caller writes program source + __END__ + padding to the process's stdin.
+    # Input:
+    #	(none beyond $self)
+    # Returns:
+    #	$cmd = "ssh [opts] host -- exec perl"
+    my $self = shift;
+    return(join " ",
+           $self->sshcmd(), $self->{'host'}, "--",
+	   "exec", "perl", "-", '$PARALLEL_SEQ');
+}
+
+sub generate_padding() {
+    # Generate self-describing countdown padding for piped stdin delivery.
+    # Each line is 64 bytes: 63 decimal digits + "\n".
+    # Each line's value N = exact number of bytes that follow it to end of padding.
+    # Self-consistent from ANY byte offset: wherever perl's PerlIO block-read
+    # leaves off inside the padding, sysread(128) always captures at least one
+    # complete 64-byte line. That line's value gives the exact remaining skip.
+    # Total size 16K bytes (256 lines x 64) > 2 * perl's ~8KB block read,
+    # so unread padding always remains in the kernel pipe buffer for sysread.
+    # Returns:
+    #	$padding = 16K-byte self-describing countdown string
+    my $total_lines = 256;   # first line value = 256*64 = 16384
+    return join("", map { sprintf("%063d\n", ($total_lines-1-$_)*64) }
+		0..$total_lines-1);
+}
+
+sub pipewrap($) {
+    # Wrap Perl source for piped stdin delivery to "perl".
+    # Appends "\n__END__\n" so that perl stops parsing source there.
+    # After __END__, perl's PerlIO reads some bytes of the countdown padding
+    # into its internal buffer; the rest stay in the kernel pipe buffer.
+    # The remote script uses sysread(STDIN,...) — which reads the raw fd 0,
+    # bypassing PerlIO — to skip the remaining countdown padding and reach
+    # the first byte of job stdin. sysread is required (not buffered read)
+    # so the exec'd job inherits a clean fd 0 with no bytes stolen.
+    # Input:
+    #	$perl_source = Perl program text
+    # Returns:
+    #	$pipe_source = $perl_source . "\n__END__\n"
+    #	  (caller must append generate_padding() before job stdin)
+    my $self = shift;
+    my $perl_source = shift;
+    return $perl_source . "\n__END__\n";
 }
 
 sub hexwrap($@) {
@@ -9398,6 +10118,18 @@ sub cleanup_cmd($$$) {
 
 package JobQueue;
 
+# A queue of Job objects to be executed.
+#
+# Acts as a thin wrapper around CommandLineQueue, converting CommandLine
+# objects into Job objects on demand.  Supports "unget" (push back) so that
+# jobs that cannot start yet can be re-queued without loss.
+#
+# Key fields:
+#   unget            \@array of Job objects pushed back for later
+#   commandlinequeue CommandLineQueue that generates new jobs
+#   this_job_no      sequence number of the last job returned by get()
+#   total_jobs       total number of jobs (undef until fully enumerated)
+
 sub new($) {
     my $class = shift;
     my $commandref = shift;
@@ -9527,6 +10259,28 @@ sub quote_args($) {
 
 
 package Job;
+
+# Represents a single job instance - one invocation of the user's command
+# with a particular set of arguments.
+#
+# A Job wraps a CommandLine (which holds the substituted command string and
+# argument list) and manages the full lifecycle of the invocation:
+#   - process spawning (start / open3)
+#   - stdin pipe writing (--pipe / --block)
+#   - stdout/stderr collection and forwarding
+#   - file transfer and cleanup (--transfer / --return / --cleanup)
+#   - timeout tracking
+#   - retry logic
+#   - exit status recording
+#
+# Key fields (all accessed via accessor methods, not directly):
+#   commandline     CommandLine object
+#   pid             OS PID while running, undef otherwise
+#   sshlogin        SSHLogin object this job was dispatched to
+#   virgin          true until the first stdin write (--pipe mode)
+#   exitstatus      raw $? after the process exits
+#   failed          hash{ sshlogin => failure_count }
+#   output          captured stdout (fd 1) and stderr (fd 2) lines
 
 sub new($) {
     my $class = shift;
@@ -9960,14 +10714,24 @@ sub write_block($) {
 	# If writing is to a closed pipe:
 	#   Do not call signal handler, but let nothing be written
 	local $SIG{PIPE} = undef;
-
-	for my $part (
-	    grep { defined $_ }
-	    $self->{'header'},$self->{'block'}) {
+	my @parts = grep { defined $_ } $self->{'header'},$self->{'block'};
+	my $has_data = grep { length($$_) > 0 } @parts;
+	if($has_data and my $payload = delete $self->{'deferred_payload'}) {
+	    # SSH --pipe non-tee: write bootstrap payload only when actual
+	    # data follows so empty_input_wrapper exits 0 on empty slots.
+	    while(length $payload) {
+		my $n = syswrite($stdin_fh, $payload);
+		next unless defined $n;
+		substr($payload, 0, $n) = "";
+	    }
+	}
+	for my $part (@parts) {
 	    # syswrite may not write all in one go,
 	    # so make sure everything is written.
 	    my $written;
-	    while($written = syswrite($stdin_fh,$$part)) {
+	    while(length $$part) {
+		$written = syswrite($stdin_fh,$$part);
+		next unless defined $written;
 		substr($$part,0,$written) = "";
 	    }
 	}
@@ -9989,7 +10753,9 @@ sub write($) {
     # If writing is to a closed pipe:
     #	Do not call signal handler, but let nothing be written
     local $SIG{PIPE} = undef;
-    while($written = syswrite($stdin_fh,$$remaining_ref)){
+    while(length $$remaining_ref) {
+	$written = syswrite($stdin_fh,$$remaining_ref);
+	next unless defined $written;
 	substr($$remaining_ref,0,$written) = "";
     }
 }
@@ -10428,24 +11194,18 @@ sub wrapped($) {
 	# Wrap with ssh + tranferring of files
 	$command = $self->sshlogin_wrap($command);
 	if(@Global::cat_prepends) {
-	    # --pipepart: prepend:
-	    # < /tmp/foo perl -e 'while(@ARGV) {
-	    #	sysseek(STDIN,shift,0) || die; $left = shift;
-	    #	while($read = sysread(STDIN,$buf, ($left > 60800 ? 60800 : $left))){
-	    #	  $left -= $read; syswrite(STDOUT,$buf);
-	    #	}
-	    # }'  0 0 0 11 |
-	    #
-	    # --pipepart --tee: prepend:
-	    #	< dash-a-file
-	    #
-	    # --pipe --tee: wrap:
-	    #	(rm fifo; ... ) < fifo
-	    #
-	    # --pipe --shard X:
-	    #	(rm fifo; ... ) < fifo
-	    $command = (shift @Global::cat_prepends). "($command)".
-		(shift @Global::cat_appends);
+	    my $prepend = shift @Global::cat_prepends;
+	    if($self->{'sshlogin_pipe_payload'}) {
+		# SSH pipe job: deliver perlcode via 'cat -' reading from stdin,
+		# then job data from data_source. All piped to 'ssh perl'.
+		# The SSH data-source form is derived from cat_prepend at use time.
+		my $pre  = delete $self->{'tee_pre'};
+		my $post = delete $self->{'tee_post'};
+		$command = $pre . "(cat -; $prepend) | $command" . ($post ? ";$post" : "");
+		$self->{'pipe_payload_only'} = 1;
+	    } else {
+		$command = "$prepend | ($command)";
+	    }
 	} elsif($opt::pipe and not $opt::roundrobin) {
 	    # Wrap with EOF-detector to avoid starting $command if EOF.
 	    $command = empty_input_wrapper($command);
@@ -10475,6 +11235,10 @@ sub set_sshlogin($$) {
     $self->{'sshlogin'} = $sshlogin;
     delete $self->{'sshlogin_wrap'}; # If sshlogin is changed the wrap is wrong
     delete $self->{'wrapped'};
+    delete $self->{'sshlogin_pipe_payload'};
+    delete $self->{'pipe_payload_only'};
+    delete $self->{'tee_pre'};
+    delete $self->{'tee_post'};
 
     if($opt::sqlworker) {
 	# Identify worker as --sqlworker often runs on different machines
@@ -10631,6 +11395,19 @@ sub sshlogin_wrap($) {
 			    '$termseq = "'.$opt::termseq.'";'.
 			    # }
 			    q{
+		if(!defined$_use_stdin_payload||$_use_stdin_payload){
+		    my($buf,$rd)=("","");
+		    sysread(STDIN,$rd,128)||die("EOF\040in\040padding");
+		    $buf.=$rd;
+		    $buf=~/(\d{63})\n/||die("No\040padding\040line");
+		    my$skip=$1+0;
+		    $buf=substr($buf,$-[0]+64);
+		    $skip-=length($buf);
+		    while($skip>0){
+			my$n=sysread(STDIN,$rd,$skip);
+			$n||last;$skip-=$n;
+		    }
+		}
 		# Check that $tmpdir is writable
 		-w $tmpdir ||
 		    die("$tmpdir\040is\040not\040writable.".
@@ -10648,10 +11425,19 @@ sub sshlogin_wrap($) {
 		# Create a script from the hex code
 		# that removes itself and runs the commands
 		open($fh,">",$script) || die;
+		my $qscript = $script;
+		$qscript =~ s/'+/'"$&"'/g;
 		# \040 = space - but we remove spaces in the script
 		# ' needed due to rc-shell
-		print($fh("rm\040\'$script\'\n",$bashfunc.$cmd));
+		print($fh("rm\040\'$qscript\'\n",$bashfunc.$cmd));
 		close $fh;
+		if($ENV{PARALLEL_SSHHOST}eq':'){
+		    # Local job: exec directly into script.
+		    # No new process group: CTRL-Z suspends job with master.
+		    # No sshd to monitor.
+		    exec($shell,$script);
+		    die("exec\040failed:$!");
+		}
 		my $parent = getppid;
 		my $done = 0;
 		$SIG{CHLD} = sub { $done = 1; };
@@ -10812,7 +11598,25 @@ sub sshlogin_wrap($) {
 		$command = "cd ".::Q($wd)." || exit 255; " .
 		    $command . $post;;
 	    }
-	    if(@opt::env) {
+	    if($opt::pipe and not @Global::cat_prepends) {
+		# Use Perl pipe for local --pipe so sshlogin_pipe_payload is always
+		# refreshed on SSH->local retry.  monitor_parent_sshd_script() will
+		# exec the script directly for local jobs (no fork, no new process
+		# group, so CTRL-Z propagates correctly).
+		# Skip when @Global::cat_prepends is set (--tee or --pipepart):
+		# those cases redirect job stdin via shell '<' which overrides the
+		# pipe payload delivery, so fall through to --env or plain command.
+		my ($csh_friendly,$envset,$bashfuncset) = env_as_eval();
+		my $cmd = $command;
+		$cmd =~ s/\\/\\\\/g;
+		my $perl_source =
+		    $envset.$bashfuncset.'$cmd='."q\0".$cmd."\0;".
+		    monitor_parent_sshd_script();
+		my $pipe_payload =
+		    $sshlogin->pipewrap($perl_source) . SSHLogin::generate_padding();
+		$self->{'sshlogin_pipe_payload'} = $pipe_payload;
+		$self->{'sshlogin_wrap'}{$command} = 'perl - $PARALLEL_SEQ';
+	    } elsif(@opt::env) {
 		# Prepend with environment setter, which sets functions in zsh
 		my ($csh_friendly,$envset,$bashfuncset) = env_as_eval();
 		my $perl_code = $envset.$bashfuncset.
@@ -10846,9 +11650,9 @@ sub sshlogin_wrap($) {
 	    # q// does not quote \, so we must do that
 	    $cmd =~ s/\\/\\\\/g;
 
-	    my $remote_command = $sshlogin->hexwrap
-		($pwd.$envset.$bashfuncset.'$cmd='."q\0".$cmd."\0;".
-		 monitor_parent_sshd_script());
+	    my $perl_source =
+		$pwd.$envset.$bashfuncset.'$cmd='."q\0".$cmd."\0;".
+		monitor_parent_sshd_script();
 	    my ($pre,$post,$cleanup)=("","","");
 	    # --transfer
 	    $pre .= $self->sshtransfer();
@@ -10860,11 +11664,35 @@ sub sshlogin_wrap($) {
 		# We need to save the exit status of the job
 		$post = exitstatuswrapper($post);
 	    }
-	    $self->{'sshlogin_wrap'}{$command} =
-		($pre
-		 . $sshlogin->wrap($remote_command)
-		 . ";"
-		 . $post);
+	    if($Global::command_via_pipe and not $opt::tmux) {
+		# Deliver perlcode via stdin pipe ('ssh host -- exec perl').
+		# Not used with --tmux: tmux windows have no stdin connection
+		# to parallel's pipe, so perl would hang waiting for source.
+		$self->{'sshlogin_pipe_payload'} =
+		    $sshlogin->pipewrap($perl_source) .
+		    SSHLogin::generate_padding();
+		if(@Global::cat_prepends) {
+		    # --pipe --tee / --pipepart: wrapped() builds
+		    # (cat -; data_source) | ssh perl around this command.
+		    # Store pre/post so wrapped() can apply them outside.
+		    $self->{'tee_pre'}  = $pre;
+		    $self->{'tee_post'} = $post;
+		    $self->{'sshlogin_wrap'}{$command} = $sshlogin->ssh_perl_cmd();
+		} else {
+		    $self->{'sshlogin_wrap'}{$command} =
+			($pre . $sshlogin->ssh_perl_cmd() . ";" . $post);
+		}
+	    } else {
+		# --tmux (or future alternative): encode perl source as hex on
+		# the command line so no stdin pipe is needed.  Signal the
+		# remote script not to read stdin padding (stdin is /dev/null).
+		my $remote_command = $sshlogin->hexwrap('$_use_stdin_payload=0;'.$perl_source);
+		$self->{'sshlogin_wrap'}{$command} =
+		    ($pre
+		     . $sshlogin->wrap($remote_command)
+		     . ";"
+		     . $post);
+	    }
 	}
     }
     return $self->{'sshlogin_wrap'}{$command};
@@ -11043,7 +11871,7 @@ sub sshcleanup($) {
 	$cleancmd .= $sshlogin->cleanup_cmd($file,$workdir).";";
     }
     if(defined $opt::workdir and $opt::workdir eq "...") {
-	$cleancmd .= $sshlogin->wrap("rm -rf " . ::Q($workdir).';');
+	$cleancmd .= $sshlogin->wrap("rm -rf " . ::Q($workdir)) . ";";
     }
     return $cleancmd;
 }
@@ -11310,9 +12138,36 @@ sub start($) {
     if($opt::pipe) {
 	my ($stdin_fh) = ::gensym();
 	$pid = open3_setpgrp($stdin_fh,$stdout_fh,$stderr_fh,$command);
-	if($opt::roundrobin and not $opt::keeporder) {
-	    # --keep-order will make sure the order will be reproducible
-	    ::set_fh_non_blocking($stdin_fh);
+	if (my $payload = $job->{'sshlogin_pipe_payload'}) {
+	    if($job->{'pipe_payload_only'}) {
+		# --pipe --tee / --pipepart SSH: data comes from the fifo/file
+		# redirect in the command, not from $stdin_fh.  Write payload
+		# synchronously (fits in 64K pipe buffer) then close so the
+		# leading 'cat -' in the wrapped command gets EOF.
+		local $SIG{PIPE} = undef;
+		while (length $payload) {
+		    my $n = syswrite($stdin_fh, $payload) or last;
+		    substr($payload, 0, $n) = "";
+		}
+		close($stdin_fh);
+		# Still store the (closed) fh so write_block() doesn't crash;
+		# syswrite to a closed fd fails silently (SIG{PIPE}=undef loop).
+	    } elsif($opt::roundrobin) {
+		# Round-robin: all running slots receive data, so no empty slots.
+		# Write payload synchronously now (fits in 64K pipe buffer).
+		# Then make fd non-blocking for data writes.
+		local $SIG{PIPE} = undef;
+		while (length $payload) {
+		    my $n = syswrite($stdin_fh, $payload) or last;
+		    substr($payload, 0, $n) = "";
+		}
+		::set_fh_non_blocking($stdin_fh) unless $opt::keeporder;
+	    } else {
+		# --pipe (no --tee) SSH job: defer payload to write_block() so
+		# that empty_input_wrapper sees empty stdin for slots that get
+		# no data and exits 0 without starting the remote command.
+		$job->{'deferred_payload'} = $payload;
+	    }
 	}
 	$job->set_fh(0,"w",$stdin_fh);
 	if($opt::tee or $opt::shard or $opt::bin) { $job->set_virgin(0); }
@@ -11340,7 +12195,23 @@ sub start($) {
 	$pid = open3_setpgrp("<&STDIN",$stdout_fh,$stderr_fh,$command);
 	$job->set_virgin(0);
     } else {
-	$pid = open3_setpgrp(::gensym(),$stdout_fh,$stderr_fh,$command);
+	if (my $payload = $job->{'sshlogin_pipe_payload'}) {
+	    # Remote pipe-delivery job: write program source + padding, then close stdin
+	    my ($stdin_fh) = ::gensym();
+	    $pid = open3_setpgrp($stdin_fh,$stdout_fh,$stderr_fh,$command);
+	    if (fork() == 0) {
+		local $SIG{PIPE} = undef;
+		while (length $payload) {
+		    my $n = syswrite($stdin_fh, $payload) or last;
+		    substr($payload, 0, $n) = "";
+		}
+		close $stdin_fh;
+		exit 0;
+	    }
+	    close $stdin_fh;
+	} else {
+	    $pid = open3_setpgrp(::gensym(),$stdout_fh,$stderr_fh,$command);
+	}
 	$job->set_virgin(0);
     }
     if($pid) {
@@ -11586,6 +12457,9 @@ sub should_be_retried($) {
 		# Job finished - look at the next
 		delete $print_later{$job_seq_to_print};
 		$job_seq_to_print++;
+		# Advance past skipped jobs before next iteration
+		for(;vec($Global::job_already_run,$job_seq_to_print,1);
+		    $job_seq_to_print++) {}
 		next;
 	    } else {
 		# Job not finished yet - look at it again next round
@@ -11911,25 +12785,6 @@ sub print_files($) {
 	}
     }
 
-    sub mbtrunc($$) {
-	# Simple mbtrunc to avoid using Text::WideChar::Util
-	my $str = shift;
-	my $len = shift;
-	if(::mbswidth($str) == length($str)) {
-	    $str = substr($str,0,$len);
-	} else {
-	    # mb chars (ヌー平行) are wider than 1 char on screen
-	    # We need at most $len chars - they may be wide
-	    $str =~ s/(.{$len}).*/$1/;
-	    my $rlen = int((::mbswidth($str) - $len)/2+0.5);
-	    do {
-		$str =~ s/.{$rlen}$//;
-		$rlen = int((::mbswidth($str) - $len)/2+0.5);
-	    } while($rlen >= 1);
-	}
-	return $str;
-    }
-
     sub print_latest_line($) {
 	my $self = shift;
 	my $out_fh = shift;
@@ -11952,10 +12807,10 @@ sub print_files($) {
 	    ::untabify(::decode_utf8($self->{$out_fh,'latestline'}));
 	# -1 to make space for $truncated_str
 	my $maxtaglen = $termcol - 1;
-	$untabify_tag = mbtrunc($untabify_tag,$maxtaglen);
+	$untabify_tag = ::mbtrunc($untabify_tag,$maxtaglen);
 	my $taglen = ::mbswidth($untabify_tag);
 	my $maxstrlen = $termcol - $taglen - 1;
-	$untabify_str = mbtrunc($untabify_str,$maxstrlen);
+	$untabify_str = ::mbtrunc($untabify_str,$maxstrlen);
 	my $strlen = ::mbswidth($untabify_str);
 	my $truncated_tag = "";
 	my $truncated_str = "";
@@ -11992,7 +12847,10 @@ sub print_files($) {
 		    $self->set_exitstatus(255);
 		}
 		# Blocked reading in final round
-		for my $fdno (1,2) { ::set_fh_blocking($self->fh($fdno,'r')); }
+		for my $fdno (1,2) {
+		    my $fh = $self->fh($fdno,'r');
+		    $fh and ::set_fh_blocking($fh);
+		}
 	    }
 	    if($opt::latestline) { $print_later{$self->row()} = $self; }
 	}
@@ -12167,7 +13025,9 @@ sub print_files($) {
 		} else {
 		    # decompress done: close fh
 		    close $in_fh;
-		    if($? and $opt::compress) {
+		    my $close_q = $?;
+		    $self->set_fh($fdno,'r', undef);
+		    if($close_q and $opt::compress) {
 			::error($opt::decompress_program." failed.");
 			$self->set_exitstatus(255);
 		    }
@@ -12625,6 +13485,22 @@ sub set_exitsignal($$) {
 
 package CommandLine;
 
+# Represents one fully-instantiated command line: the command template with
+# all replacement strings ({}, {/}, {#}, {=...=}, etc.) resolved against a
+# specific set of input arguments.
+#
+# A CommandLine is constructed by CommandLineQueue::get() and consumed by
+# Job::new().  It holds:
+#   command         ref to the command template tokens
+#   seq             1-based job sequence number
+#   arg_list        list of Arg-object records (one record per input source)
+#   arg_list_flat   flattened arg list for {}-style replacements
+#   replacecount    how many times each replacement string appears
+#   len             accumulated length of replacements (for command-line-length
+#                   limiting)
+#   transfer_files, return_files, template_names, template_contents
+#               -- from --transfer / --return / --template options
+
 sub new($) {
     my $class = shift;
     my $seq = shift;
@@ -12695,21 +13571,25 @@ sub set_milestone($) {
     $self->{'milestone'} = shift;
 }
 
-sub slot($) {
-    # Find the number of a free job slot and return it
-    # Uses:
-    #	@Global::slots - list with free jobslots
-    # Returns:
-    #	$jobslot = number of jobslot
-    my $self = shift;
-    if(not $self->{'slot'}) {
-	if(not @Global::slots) {
-	    # $max_slot_number will typically be $Global::max_jobs_running
-	    push @Global::slots, ++$Global::max_slot_number;
+{
+    my $max_slot_number;
+    
+    sub slot($) {
+	# Find the number of a free job slot and return it
+	# Uses:
+	#	@Global::slots - list with free jobslots
+	# Returns:
+	#	$jobslot = number of jobslot
+	my $self = shift;
+	if(not $self->{'slot'}) {
+	    if(not @Global::slots) {
+		# $max_slot_number will typically be $Global::max_jobs_running
+		push @Global::slots, ++$max_slot_number;
+	    }
+	    $self->{'slot'} = shift @Global::slots;
 	}
-	$self->{'slot'} = shift @Global::slots;
+	return $self->{'slot'};
     }
-    return $self->{'slot'};
 }
 
 {
@@ -13220,8 +14100,10 @@ sub len($) {
 	}
     }
     if(defined $Global::parallel_env) {
-	# If we are using --env, add the prefix for that, too.
-	$len += length $Global::parallel_env;
+	# For remote SSH, PARALLEL_ENV is delivered via the Perl pipe and
+	# never appears on the command line; don't count it against ARG_MAX.
+	my $remote_only = @opt::sshlogin && !grep { $_ eq ':' } @opt::sshlogin;
+	$len += length $Global::parallel_env unless $remote_only;
     }
     if($Global::quoting) {
 	# Pessimistic length if -q is set
@@ -13477,6 +14359,25 @@ sub skip($) {
 
 
 package CommandLineQueue;
+
+# Generates CommandLine objects by iterating over the Cartesian product of
+# all input sources.
+#
+# CommandLineQueue sits between the raw argument queues (RecordQueue /
+# MultifileQueue / etc.) and the JobQueue.  It:
+#   1. Dequeues argument records from the input queue(s).
+#   2. Substitutes replacement strings into the command template.
+#   3. Enforces --max-args (-n) and --max-replace-args (-N) limits.
+#   4. Handles --context-replace (-X) and --xargs (-m) packing.
+#   5. Tracks total command-line length for Limits::Command.
+#
+# Key fields:
+#   commandref            ref to command template tokens
+#   context_replace       true when -X is active
+#   max_number_of_args    maximum args per job (-n / -N value)
+#   arg_queue             MultifileQueue or similar that supplies arguments
+#   replacecount          how many times each replacement tag appears in cmd
+#   len                   accumulated per-tag byte lengths
 
 sub new($) {
     sub merge_rpl_parts(@) {
@@ -13982,7 +14883,12 @@ sub get($) {
 	$cmd_line->populate();
 	::debug("run","cmd_line->number_of_args ",
 		$cmd_line->number_of_args(), "\n");
-	if(not $Global::no_more_input and ($opt::pipe or $opt::pipepart)) {
+	if(not $Global::no_more_input and ($opt::pipe or $opt::pipepart)
+	   and not $opt::tee) {
+	    # --pipe / --pipepart (without --tee): allow zero-arg job lines
+	    # so that job slots are pre-started before stdin data arrives.
+	    # With --tee the arg list drives the job count, so stop normally
+	    # when args run out.
 	    if($cmd_line->replaced() eq "") {
 		# Empty command - pipe requires a command
 		::error("--pipe/--pipepart must have a command to pipe into ".
@@ -14035,6 +14941,14 @@ sub quote_args($) {
 
 package Limits::Command;
 
+# Utilities for determining the maximum command-line length supported by the
+# current system (or a remote SSH host).
+#
+# The limit is needed by CommandLineQueue when packing multiple arguments onto
+# a single invocation with -m or -X.  The value is discovered once (by binary-
+# searching getconf ARG_MAX or by probing with a test command), then cached on
+# disk under $Global::cache_dir so repeat invocations are fast.
+#
 # Maximal command line length (for -m and -X)
 sub max_length($) {
     # Find the max_length of a command line and cache it
@@ -14139,7 +15053,9 @@ sub binary_find_max($$$) {
 	my $len = shift;
 	my $string = shift;
 	if($Global::parallel_env) {
-	    $len += length $Global::parallel_env;
+	    # Pipe-delivered env does not consume command-line space on remote SSH.
+	    my $remote_only = @opt::sshlogin && !grep { $_ eq ':' } @opt::sshlogin;
+	    $len += length $Global::parallel_env unless $remote_only;
 	}
 	# Force using non-built-in command
 	$prg ||= ::which("echo");
@@ -14197,6 +15113,17 @@ sub tmux_length($) {
 
 
 package RecordQueue;
+
+# Unified input-record dispatcher.  Selects the appropriate sub-queue based
+# on the active input mode and exposes a consistent get()/unget()/empty()
+# interface to CommandLineQueue.
+#
+# Sub-queue selection:
+#   --sqlworker     -> SQLRecordQueue (reads from SQL table)
+#   --colsep / CSV  -> RecordColQueue (splits each line into columns)
+#   default         -> MultifileQueue (reads one arg per line from file(s))
+#
+# Each get() returns a reference to an array of Arg objects (one record).
 
 sub new($) {
     my $class = shift;
@@ -14296,6 +15223,12 @@ sub arg_number($) {
 
 package RecordColQueue;
 
+# Input queue that reads column-separated records (--colsep or --csv).
+# Each line is split into multiple Arg objects - one per column - so that
+# named ({colname}) and positional ({1}, {2}) replacement strings work.
+#
+# Wraps a MultifileQueue to handle multi-file column data.
+
 sub new($) {
     my $class = shift;
     my $fhs = shift;
@@ -14375,6 +15308,10 @@ sub flush_cache($) {
 
 package SQLRecordQueue;
 
+# Input queue backed by a SQL table (--sqlworker mode).
+# get() delegates to $Global::sql->get_record() which reads one row from the
+# job table and returns it as an array-ref of Arg objects.
+
 sub new($) {
     my $class = shift;
     my @unget = ();
@@ -14422,6 +15359,21 @@ sub flush_cache($) {
 
 
 package MultifileQueue;
+
+# Reads arguments from one or more input sources (-a / ::: / ::::).
+#
+# Supports two iteration modes selectable at runtime:
+#   get()       - dispatches to nest_get() or link_get() based on --link
+#   nest_get()  - Cartesian product of all sources (default)
+#   link_get()  - parallel/zipped iteration (--link / :::+ / ::::+)
+#
+# The unget buffer (@Global::unget_argv) allows a single argument to be
+# "pushed back" so that look-ahead and retry logic can re-read it.
+#
+# Key fields:
+#   unget       ref to @Global::unget_argv push-back buffer
+#   fhs         array of open filehandles for the argument sources
+#   arg_matrix  2-D array built lazily for Cartesian-product iteration
 
 @Global::unget_argv=();
 
@@ -14749,6 +15701,17 @@ sub expand_combinations(@) {
 
 package Arg;
 
+# Wraps a single input argument value throughout its lifetime.
+#
+# At construction, parses any trailing @hostgroup suffix (when --hostgroups is
+# active) and resolves or registers the named hostgroup in %Global::hostgroups.
+# Provides quoting helpers used by CommandLine to embed the value safely in
+# shell commands.
+#
+# Key fields:
+#   orig        the raw string as read from the input source
+#   hostgroups  array of hostgroup names the argument is pinned to (may be empty)
+
 sub new($) {
     my $class = shift;
     my $orig = shift;
@@ -14974,6 +15937,21 @@ sub trim_of($) {
 
 package TimeoutQueue;
 
+# Priority queue that tracks per-job wall-clock deadlines for --timeout.
+#
+# Timeout values may be absolute seconds or a percentage of the rolling median
+# observed runtime (e.g. "200%").  The median is maintained with the Remedian
+# algorithm (Rousseeuw & Bassett, 1990) using a fixed-depth array-of-arrays so
+# memory stays O(log n).
+#
+# Key fields:
+#   queue         array of [deadline, Job] pairs, sorted ascending by deadline
+#   delta_time    base timeout in seconds
+#   pct           fractional multiplier when timeout was given as a percentage
+#   remedian_idx  current insertion index into the first remedian row
+#   remedian_arr  2-D accumulator array for the Remedian estimator
+#   remedian      current median estimate (undef until enough samples)
+
 sub new($) {
     my $class = shift;
     my $delta_time = shift;
@@ -15070,6 +16048,22 @@ sub insert($) {
 
 
 package SQL;
+
+# Database backend for --sqlandworker / --sqlmaster / --sqlworker.
+#
+# Parses a DB URL (sqlite:///path, pg://host/db, csv:///dir, ...), connects via
+# DBI, and manages the job-tracking table that records each argument set, its
+# completion status, and stdout/stderr output.
+#
+# The '+DBURL' prefix means "append new rows to an existing table" rather than
+# creating a fresh one.
+#
+# Supported drivers (via %driveralias): SQLite, PostgreSQL (Pg), CSV, Oracle.
+#
+# Key fields:
+#   dbh         active DBI database handle
+#   table       name of the job-tracking table in the database
+#   append      true when the table must not be (re)created
 
 sub new($) {
     my $class = shift;
@@ -15808,8 +16802,452 @@ sub unlock($) {
 # Keep perl -w happy
 
 $opt::x = $Semaphore::timeout = $Semaphore::wait =
-$Job::file_descriptor_warning_printed = $Global::envdef = @Arg::arg =
-$Global::max_slot_number = $opt::session;
+$Job::file_descriptor_warning_printed = $Global::envdef = $opt::session;
+
+package Zextract;
+
+# Object wrapping random access into both compressed and uncompressed files.
+#
+# For compressed files (.gz/.bz2/.zst) random access is provided by spawning
+# a zextract subprocess.  For uncompressed files the normal filehandle seek
+# is used.  Both cases present the same API so callers need not branch on
+# is_compressed_file().
+#
+# State:
+#   name        - file path
+#   lines_mode  - 0 = byte positions, 1 = line positions
+#   compressed  - result of is_compressed_file($name); falsy if uncompressed
+#   fh          - current open filehandle (undef until first use)
+#   pos         - stream position after the last seek() call (undef = unknown)
+#   _fh_dirty   - 1 if fh() has been called since the last seek()
+#   _size       - memoised result of size()
+#   value_cache - memo table for value_at()
+
+sub new {
+    my ($class, $name, $lines_mode) = @_;
+    return bless {
+	name        => $name,
+	lines_mode  => $lines_mode ? 1 : 0,
+	compressed  => ::is_compressed_file($name),
+	fh          => undef,
+	pos         => undef,
+	_fh_dirty   => 0,
+	_size       => undef,
+	value_cache => {},
+    }, $class;
+}
+
+sub filename { return $_[0]->{name}; }
+
+sub size {
+    # Returns total byte count (lines_mode=0) or line count (lines_mode=1).
+    # Result is memoised; block devices are supported via size_of_block_dev().
+    my $self = shift;
+    return $self->{_size} if defined $self->{_size};
+    my $file = $self->{name};
+    my $sz;
+    if($self->{lines_mode}) {
+	my $out = qx{zextract --lines --size @{[ ::Q($file) ]}};
+	my ($lines) = split(/\t/, $out);
+	$sz = int(defined($lines) ? $lines : 0);
+    } elsif($self->{compressed}) {
+	my $out = qx{zextract --size @{[ ::Q($file) ]}};
+	my ($bytes) = split(/\t/, $out);
+	$sz = int(defined($bytes) ? $bytes : 0);
+    } elsif(-b $file) {
+	$sz = ::size_of_block_dev($file);
+    } else {
+	$sz = -s $file;
+    }
+    $self->{_size} = $sz;
+    return $sz;
+}
+
+sub fh {
+    # Returns the current filehandle, opening from position 0 if not yet open.
+    # Marks the handle as "dirty" so that the next seek() will always respawn
+    # for compressed files (because the caller may read an unknown number of
+    # bytes between now and the next seek call).
+    my $self = shift;
+    if(!defined $self->{fh}) {
+	if($self->{compressed}) {
+	    my @cmd = ("zextract");
+	    push @cmd, "--lines" if $self->{lines_mode};
+	    push @cmd, "--range", "0-", $self->{name};
+	    ::debug("zex","fh: @cmd\n");
+	    my $fh;
+	    open($fh, "-|", @cmd)
+		or ::die_bug("Zextract::fh open failed for $self->{name}: $!");
+	    $self->{fh}  = $fh;
+	} else {
+	    $self->{fh} = ::open_or_exit("<", $self->{name});
+	}
+	$self->{pos} = 0;
+    }
+    $self->{_fh_dirty} = 1;
+    return $self->{fh};
+}
+
+sub seek {
+    # Reposition the stream to $pos.
+    #
+    # Uncompressed: plain seek() on the buffered filehandle.
+    #
+    # Compressed: if no external reads have happened since the last seek()
+    # (i.e. fh() has not been called) AND the target is within 1 MB forward,
+    # skip ahead with read() instead of respawning zextract.  Otherwise close
+    # the current handle and spawn a fresh zextract at $pos.
+    my ($self, $pos) = @_;
+    if(!$self->{compressed}) {
+	my $fh = defined($self->{fh}) ? $self->{fh} : do {
+	    $self->{fh} = ::open_or_exit("<", $self->{name});
+	    $self->{fh};
+	};
+	seek($fh, $pos, 0)
+	    or ::die_bug("Zextract::seek failed for $self->{name} at $pos");
+	$self->{pos}       = $pos;
+	$self->{_fh_dirty} = 0;
+	return $fh;
+    }
+    # Compressed path
+    my $can_opt = !$self->{_fh_dirty}
+	&& defined($self->{fh})
+	&& defined($self->{pos})
+	&& $pos >= $self->{pos}
+	&& $pos - $self->{pos} < 1_000_000;
+    if($can_opt) {
+	# It is faster just to read 1MB than to re-open
+	my $skip = $pos - $self->{pos};
+	my $buf;
+	::debug("zex","seek: read more\n");
+	while($skip > 0) {
+	    my $n = read($self->{fh}, $buf, $skip < 65536 ? $skip : 65536);
+	    last if !defined($n) || $n == 0;
+	    $skip -= $n;
+	}
+    } else {
+	close($self->{fh}) if defined $self->{fh};
+	my @cmd = ("zextract");
+	push @cmd, "--lines" if $self->{lines_mode};
+	push @cmd, "--range", "${pos}-", $self->{name};
+	::debug("zex","seek: @cmd\n");
+	my $fh;
+	open($fh, "-|", @cmd)
+	    or ::die_bug("Zextract::seek open failed for $self->{name} at $pos: $!");
+	$self->{fh} = $fh;
+    }
+    $self->{pos}       = $pos;
+    $self->{_fh_dirty} = 0;
+    return $self->{fh};
+}
+
+sub past_end {
+    # Returns true when $pos is at or beyond the end of the file.
+    # For uncompressed files, checks eof() on the persistent handle.
+    # For compressed files, compares against the cached size.
+    my ($self, $pos) = @_;
+    if($self->{compressed}) {
+	return $pos >= $self->size();
+    } else {
+	return eof($self->{fh});
+    }
+}
+
+sub value_at {
+    # Return (key_value, line_start_pos) for the line containing byte $pos.
+    # Results are memoised in value_cache.
+    # For uncompressed files the persistent fh is reused (buffered seek/readline).
+    # For compressed files a fresh zextract pipe is spawned per call; position is
+    # tracked so that consecutive nearby calls can use the seek() optimisation.
+    my ($self, $pos) = @_;
+    my $cache = $self->{value_cache};
+    if(!defined $cache->{$pos}) {
+	my ($linepos, $handle_fh, $close_fh);
+	if($self->{compressed}) {
+	    my $start = $pos > 0 ? $pos - 1 : 0;
+	    # Use seek() so the forward-read optimisation can fire across calls.
+	    $self->seek($start);
+	    $handle_fh = $self->{fh};  # access directly, not via fh(), to avoid dirty flag
+	    $close_fh  = 0;
+	    if($pos > 0) {
+		my $partial = <$handle_fh>;
+		$linepos = $pos - 1 + length($partial);
+		$self->{pos} = $linepos;  # update tracked position after partial read
+	    } else {
+		$linepos = 0;
+	    }
+	} else {
+	    my $fh = $self->fh();
+	    if($pos != 0) {
+		seek($fh, $pos - 1, 0) || die;
+		<$fh>;  # discard partial line
+	    }
+	    $linepos   = tell($fh);
+	    $handle_fh = $fh;
+	    $close_fh  = 0;
+	}
+	if(!defined $cache->{$linepos}) {
+	    $_ = <$handle_fh>;
+	    if($self->{compressed} && defined $_) {
+		$self->{pos} += length($_);  # track position after full-line read
+	    }
+	    if(defined $_) {
+		my @F;
+		if(defined $group_by::col) {
+		    $opt::colsep ||= "\t";
+		    @F = split /$opt::colsep/, $_;
+		    $_ = $F[$group_by::col];
+		}
+		eval $group_by::perlexpr;
+	    }
+	    $cache->{$linepos} = [$_, $linepos];
+	}
+	$cache->{$pos} = $cache->{$linepos};
+    }
+    return @{$cache->{$pos}};
+}
+
+sub cat_partial {
+    # Build a shell command that streams the given ranges from the file to
+    # stdout.  @start_end is a flat list of (start, end) pairs (end exclusive).
+    # Returns the command WITHOUT a trailing " |"; callers append it themselves.
+    # For lines_mode=1 or compressed files, uses zextract; otherwise uses a
+    # lightweight Perl script that sysseeks into the uncompressed file.
+    my ($self, @start_end) = @_;
+    my $file = $self->{name};
+    if($self->{compressed} or $self->{lines_mode}) {
+	my @parts;
+	my $i = 0;
+	while($i < @start_end) {
+	    my $start = $start_end[$i++];
+	    my $end   = $start_end[$i++];
+	    next if $end <= $start;
+	    my $zex_cmd = "zextract";
+	    $zex_cmd .= " --lines" if $self->{lines_mode};
+	    $zex_cmd .= " --range ${start}-" . ($end - 1) . " " . ::Q($file);
+	    push @parts, $zex_cmd;
+	}
+	# More than one part if you have --header
+	return @parts == 1
+	    ? $parts[0]
+	    : "{ " . join("; ", @parts) . "; }";
+    } else {
+	my ($start, $i);
+	my @start_len = map {
+	    if(++$i % 2) { $start = $_; } else { $_ - $start }
+	} @start_end;
+	# Optimal read block: 2^15-1 = 32767 bytes
+	my $script = ::spacefree(0, q{
+	    while(@ARGV) {
+		sysseek(STDIN,shift,0) || die;
+		$left = shift;
+		while($read =
+		      sysread(STDIN,$buf, $left > 32767 ? 32767 : $left)){
+		    $left -= $read;
+		    syswrite(STDOUT,$buf);
+		}
+	    }
+	});
+	return "<" . ::Q($file) . " perl -e '$script' @start_len";
+    }
+}
+
+sub find_split_positions {
+    # Scan the file and return a list of byte offsets at which it can be split
+    # into chunks suitable for --pipepart.  Each offset points to the start
+    # of a new record (just after a recend+recstart boundary).
+    #
+    # The first offset is always $skiplen (past the first-line skip and header).
+    # The last offset is always the file size.
+    # Between them, offsets are spaced roughly $block bytes apart.
+    #
+    # For --groupby the work is delegated to split_positions_for_group_by().
+    my ($self, $block, $header, $firstlinelen) = @_;
+    my $skiplen = $firstlinelen + length $header;
+    my $size = $self->size();
+    $block = int $block;
+    if($opt::groupby) {
+	return $self->split_positions_for_group_by($block,$header,$firstlinelen);
+    }
+    # The optimal dd blocksize for mint, redhat, solaris, openbsd = 2^17..2^20
+    # The optimal dd blocksize for freebsd = 2^15..2^17
+    # The optimal dd blocksize for ubuntu (AMD6376) = 2^16
+    my $dd_block_size = 131072; # 2^17
+    my @pos;
+    my ($recstart,$recend) = ::recstartrecend();
+    my $recendrecstart = $recend.$recstart;
+    push(@pos,$skiplen);
+    for(my $pos = $block+$skiplen; $pos < $size; $pos += $block) {
+	my $buf;
+	if($recendrecstart eq "") {
+	    # records ends anywhere
+	    push(@pos,$pos);
+	} else {
+	    $self->seek($pos);
+	    my $fh = $self->fh();
+	    $buf = "";
+	    while(sysread($fh,$buf,$dd_block_size,length $buf)) {
+		if($opt::regexp) {
+		    # If match /$recend$recstart/ => Record position
+		    if($buf =~ m:^(.*$recend)$recstart:os) {
+			# Start looking for next record _after_ this match
+			$pos += length($1);
+			push(@pos,$pos);
+			last;
+		    }
+		} else {
+		    # If match $recend$recstart => Record position
+		    # TODO optimize to only look at the appended
+		    #	$dd_block_size + len $recendrecstart
+		    # TODO increase $dd_block_size to optimize for longer records
+		    my $i = ::index64(\$buf,$recendrecstart);
+		    if($i != -1) {
+			# Start looking for next record _after_ this match
+			$pos += $i + length($recend);
+			push(@pos,$pos);
+			last;
+		    }
+		}
+	    }
+	}
+    }
+    if($pos[$#pos] != $size) {
+	# Last splitpoint was not at end of the file: add $size as the last
+	push @pos, $size;
+    }
+    close($self->{fh}) if defined $self->{fh};
+    return @pos;
+}
+
+sub split_positions_for_group_by {
+    # Compute byte offsets for splitting the file into chunks where each chunk
+    # contains all consecutive rows that share the same group-by key value.
+    # Used by find_split_positions() when --groupby is active.
+    #
+    # The algorithm uses two nested named subs that close over $self:
+    #   binary_search_end(s,lo,hi)  - find the last byte position where the
+    #                                 key equals $s (starting from $lo where it
+    #                                 equals $s, ending at $hi where it differs).
+    #   binary_search_start(s,lo,hi)- find the first byte position where the
+    #                                 key equals $s (starting from $lo where it
+    #                                 differs, ending at $hi where it equals $s).
+    #
+    # When --max-args is set the file is split into single-value groups which
+    # are then merged N at a time.  Otherwise blocks of approximately $block
+    # bytes are used, extended to the nearest group boundary.
+    my ($self, $block, $header, $firstlinelen) = @_;
+    my $size = $self->size();
+
+    sub binary_search_end($$$) {
+	my ($s,$spos,$epos) = @_;
+	# value_at($spos) == $s
+	# value_at($epos) != $s
+	my $posdif = $epos - $spos;
+	my ($v,$vpos);
+	while($posdif) {
+	    ($v,$vpos) = $self->value_at($spos+$posdif);
+	    if($v eq $s) {
+		$spos = $vpos;
+		$posdif = $epos - $spos;
+	    } else {
+		$epos = $vpos;
+	    }
+	    $posdif = int($posdif/2);
+	}
+	return($v,$vpos);
+    }
+
+    sub binary_search_start($$$) {
+	my ($s,$spos,$epos) = @_;
+	# value_at($spos) != $s
+	# value_at($epos) == $s
+	my $posdif = $epos - $spos;
+	my ($v,$vpos);
+	while($posdif) {
+	    ($v,$vpos) = $self->value_at($spos+$posdif);
+	    if($v eq $s) {
+		$epos = $vpos;
+	    } else {
+		$spos = $vpos;
+		$posdif = $epos - $spos;
+	    }
+	    $posdif = int($posdif/2);
+	}
+	return($v,$vpos);
+    }
+
+    my @pos;
+    $self->seek(0);
+    my $fh = $self->fh();
+    # Set $Global::group_by_column $Global::group_by_perlexpr
+    ::group_by_loop($fh,$opt::recsep);
+    if($opt::max_args) {
+	# Split after n values
+	my ($a,$apos);
+	# $xpos = linestart, $x = value at $xpos
+	$apos = $firstlinelen + length $header;
+	for(($a,$apos) = $self->value_at($apos); $apos < $size;) {
+	    push @pos, $apos;
+	    ($a,$apos) = binary_search_end($a,$apos,$size);
+	    if($self->past_end($apos)) {
+		push @pos, $size; last;
+	    }
+	}
+	# @pos = start of every value
+	# Merge n values
+	# -nX = keep every X'th position
+	my $i = 0;
+	@pos = grep { not ($i++ % $opt::max_args) } @pos;
+    } else {
+	# Split after any value group
+	# Preferable < $blocksize
+	my ($a,$b,$c,$apos,$bpos,$cpos);
+	# $xpos = linestart, $x = value at $xpos, $apos < $bpos < $cpos
+	$apos = $firstlinelen + length $header;
+	for(($a,$apos) = $self->value_at($apos); $apos < $size;) {
+	    push @pos, $apos;
+	    $bpos = $apos + $block;
+	    ($b,$bpos) = $self->value_at($bpos);
+	    if($self->past_end($bpos)) {
+		# EOF is less than 1 block away
+		push @pos, $size; last;
+	    }
+	    $cpos = $bpos + $block;
+	    ($c,$cpos) = $self->value_at($cpos);
+	    if($a eq $b) {
+		while($b eq $c) {
+		    # Move bpos, cpos a block forward until $a == $b != $c
+		    $bpos = $cpos;
+		    $cpos += $block;
+		    ($c,$cpos) = $self->value_at($cpos);
+		    if($cpos >= $size) {
+			$cpos = $size;
+			last;
+		    }
+		}
+		# $a == $b != $c
+		# Binary search for $b ending between ($bpos,$cpos)
+		($b,$bpos) = binary_search_end($b,$bpos,$cpos);
+	    } else {
+		if($b eq $c) {
+		    # $a != $b == $c
+		    # Binary search for $b starting between ($apos,$bpos)
+		    ($b,$bpos) = binary_search_start($b,$apos,$bpos);
+		} else {
+		    # $a != $b != $c
+		    # Binary search for $b ending between ($bpos,$cpos)
+		    ($b,$bpos) = binary_search_end($b,$bpos,$cpos);
+		}
+	    }
+	    ($a,$apos) = ($b,$bpos);
+	}
+    }
+    if($pos[$#pos] != $size) {
+	# Last splitpoint was not at end of the file: add it
+	push @pos, $size;
+    }
+    return @pos;
+}
 
 package main;
 
@@ -15821,7 +17259,12 @@ sub main() {
     parse_options();
     ::debug("init", "Open file descriptors: ", join(" ",keys %Global::fh), "\n");
     my $number_of_args;
-    if($Global::max_number_of_args) {
+    if($opt::pipepart and (defined $opt::L or defined $opt::max_lines
+			      or defined $opt::max_replace_args)) {
+	# Line-based pipepart (-L/-N): pipe_part_files_by_lines already computed
+	# the chunk sizes; each queue entry maps to exactly one job invocation.
+	$number_of_args = 1;
+    } elsif($Global::max_number_of_args) {
 	$number_of_args = $Global::max_number_of_args;
     } elsif ($opt::X or $opt::m or $opt::xargs) {
 	$number_of_args = undef;
@@ -15946,8 +17389,13 @@ sub main() {
 	    ::wait_and_exit(255);
 	}
     } elsif($opt::pipe and not $opt::pipepart and not $opt::semaphore) {
-	# Fill all jobslots
-	while(start_more_jobs()) {}
+	# Fill all jobslots, but not when -r: with --no-run-if-empty
+	# stdin may be entirely empty, and pre-starting jobs would
+	# cause them to run with empty stdin.  write_record_to_pipe()
+	# starts jobs on demand when actual data arrives.
+	if(not $Global::ignore_empty) {
+	    while(start_more_jobs()) {}
+	}
 	spreadstdin();
     } elsif($opt::fast) {
 	fast();
@@ -15967,3 +17415,4 @@ sub main() {
 }
 
 main();
+__END__

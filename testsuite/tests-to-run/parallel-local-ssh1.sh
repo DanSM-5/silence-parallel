@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# SPDX-FileCopyrightText: 2021-2025 Ole Tange, http://ole.tange.dk and Free Software and Foundation, Inc.
+# SPDX-FileCopyrightText: 2021-2026 Ole Tange, http://ole.tange.dk and Free Software and Foundation, Inc.
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -18,7 +18,7 @@ echo TODO
 
 EOF
 
-par_sshlogin_with_comma() {
+par__sshlogin_with_comma() {
     echo "### --sshlogin with \,"
     parallel -S 'ssh -J lo\,localhost 127.0.0.1' echo ::: OK
     echo "### --sshlogin with ,,"
@@ -420,9 +420,40 @@ _
 )
 }
 
+par__pipewrap() {
+    echo '### pipewrap: hexwrap bootstrap delivery via ssh'
+    parallel --sshlogin lo echo ::: a b c | sort
+    parallel -k --sshlogin lo echo ::: 1 2 3
+    MYVAR=hello parallel --nonall --env MYVAR --sshlogin lo 'echo $MYVAR'
+    parallel --workdir /tmp --sshlogin lo pwd ::: dummy
+}
+
+par_pipe_ssh() {
+    echo '### --pipe -S lo,: basic pipe to remote'
+    seq 1000000 | parallel --pipe -k -S lo,: wc -l
+}
+
+par_pipe_tee_ssh() {
+    echo '### --pipe --tee -S lo: data must reach local and remote (not 0 bytes)'
+    seq 1000000 | parallel -j3 --pipe --tee -k -S lo,: 'wc {}' ::: -l -c -w
+}
+
+par_env_parallel_ssh() {
+    echo '### env_parallel -S lo: must produce output (not empty)'
+    . $(which env_parallel.bash)
+    env_parallel -k -S lo,: echo ::: a b c
+}
+
+par_env_parallel_func_ssh() {
+    echo '### env_parallel -S lo with function: function must transfer'
+    . $(which env_parallel.bash)
+    myfunc() { echo "func:$1"; }
+    env_parallel -k -S lo,: myfunc ::: x y
+}
+
 export -f $(compgen -A function | grep par_)
 compgen -A function | G "$@" par_ | LC_ALL=C sort |
-    parallel --timeout 1000% -j75% --tag -k --joblog /tmp/jl-`basename $0` '{} 2>&1'
+    parallel --timeout 1000% -j50% --tag -k --joblog /tmp/jl-`basename $0` '{} 2>&1'
 
 cd ..
 rm -rf tmp

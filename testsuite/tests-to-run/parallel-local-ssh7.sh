@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# SPDX-FileCopyrightText: 2021-2025 Ole Tange, http://ole.tange.dk and Free Software and Foundation, Inc.
+# SPDX-FileCopyrightText: 2021-2026 Ole Tange, http://ole.tange.dk and Free Software and Foundation, Inc.
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -1344,13 +1344,13 @@ par_environment_too_big_bash() {
     echo 'bug #50815: env_parallel should warn if the environment is too big'
     len_overhead=-27-$( (shopt;alias;typeset -f;typeset -p) | wc -c)/1000
     len_var=$len_overhead+56
-    len_var_remote=$len_overhead+40
+    len_var_remote=$len_overhead+120
     len_var_quote=$len_overhead+41
-    len_var_quote_remote=$len_overhead+32
+    len_var_quote_remote=$len_overhead+77
     len_fun=$len_overhead+56
-    len_fun_remote=$len_overhead+40
+    len_fun_remote=$len_overhead+130
     len_fun_quote=$len_overhead+56
-    len_fun_quote_remote=$len_overhead+40
+    len_fun_quote_remote=$len_overhead+120
     
     . `which env_parallel.bash`;
 
@@ -1429,13 +1429,13 @@ par_environment_too_big_ksh() {
     len_functions=-20-$(functions|wc -c)/1000
     len_variables=-20-$(typeset -p | wc -c)/1000
     len_var=$len_variables+40
-    len_var_remote=$len_variables+30
+    len_var_remote=$len_variables+120
     len_var_quote=$len_variables+43
-    len_var_quote_remote=$len_variables+30
+    len_var_quote_remote=$len_variables+110
     len_fun=$len_functions+43
-    len_fun_remote=$len_functions+29
+    len_fun_remote=$len_functions+110
     len_fun_quote=$len_functions+43
-    len_fun_quote_remote=$len_functions+29
+    len_fun_quote_remote=$len_functions+110
 
     . `which env_parallel.ksh`;
 
@@ -1499,13 +1499,13 @@ par_environment_too_big_mksh() {
     myscript=$(cat <<'_EOF'
     echo 'bug #50815: env_parallel should warn if the environment is too big'
     len_var=46-15
-    len_var_remote=$len_var-15
+    len_var_remote=$len_var-15+90
     len_var_quote=$len_var
-    len_var_quote_remote=$len_var-15
+    len_var_quote_remote=$len_var-15+90
     len_fun=28
-    len_fun_remote=13
+    len_fun_remote=13+80
     len_fun_quote=28
-    len_fun_quote_remote=18
+    len_fun_quote_remote=18+90
 
     . `which env_parallel.mksh`;
 
@@ -1570,9 +1570,9 @@ par_environment_too_big_sh() {
     myscript=$(cat <<'_EOF'
     echo 'bug #50815: env_parallel should warn if the environment is too big'
     len_var=58
-    len_var_remote=42
+    len_var_remote=42+80
     len_var_quote=31
-    len_var_quote_remote=21
+    len_var_quote_remote=21+50-10
     len_fun=1 # unsupported
     len_fun_remote=1 # unsupported
     len_fun_quote=1 # unsupported

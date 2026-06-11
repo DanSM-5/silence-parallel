@@ -1,35 +1,47 @@
-# SPDX-FileCopyrightText: 2002-2025 Ole Tange, http://ole.tange.dk and Free Software and Foundation, Inc.
+# SPDX-FileCopyrightText: 2002-2026 Ole Tange, http://ole.tange.dk and Free Software and Foundation, Inc.
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+AUTOMAKE_OPTIONS = -Wno-portability
 SUBDIRS = src
+SHELL = /bin/bash
+
+BUILDHOST ?= $(shell [ -f .env ] && . ./.env 2>/dev/null && printf '%s' "$$BUILDHOST")
+TOR_BUILDHOST ?= $(shell [ -f .env ] && . ./.env 2>/dev/null && printf '%s' "$$TOR_BUILDHOST")
+
+sudoinstall:
+	make
+	sudo make install
 
 test:
 	cd testsuite; make 1
 
-torall:
-	make torsync
-	make tortest
-	make torresults
+#torresults:
+#	torsocks rsync -Hazv --progress $(TOR_BUILDHOST):privat/parallel/testsuite/actual-results/ testsuite/actual-results/
 
-tortest:
-	torsocks ssh -t tortest 'export SSH_AUTH_SOCK=`cat ~/.ssh/SSH_AUTH_SOCK`;\
-                                 export SSH_AGENT_PID=`cat ~/.ssh/SSH_AGENT_PID`;\
-                                 cd privat/parallel/testsuite/ &&\
-                                   make short && make long && make mem'
+check-sshlogin:
+	@test -n "$(BUILDHOST)" || { echo "Error: BUILDHOST is not set. Run: make BUILDHOST=[user@]<host> <target>" >&2; exit 1; }
 
-torresults:
-	torsocks rsync -Hazv --progress tortest:privat/parallel/testsuite/actual-results/ testsuite/actual-results/
+check-tor-sshlogin:
+	@test -n "$(TOR_BUILDHOST)" || { echo "Error: TOR_BUILDHOST is not set. Run: make TOR_BUILDHOST=[user@]<host> <target>" >&2; exit 1; }
 
-torpush:
-	torsocks git push tortest:privat/parallel
+rsync: check-sshlogin
+	rsync -Hazv --exclude='*.{pdf,gz,bz2,html,deb}' --exclude authorized_keys --exclude vagrant.box --exclude .vagrant/ --exclude oracle*box --exclude oracle-database-*.rpm --exclude actual-results --exclude '*hwdep*' --exclude=/Makefile --exclude=config.log --exclude=config.status --exclude=stamp-h1 --delete ./ $(BUILDHOST):privat/parallel/
+	rsync -Haz --no-times --exclude='*.{pdf,gz,bz2,html,deb}' testsuite/tests-to-run/ $(BUILDHOST):privat/parallel/testsuite/tests-to-run/
 
-torpull:
-	torsocks git pull tortest:privat/parallel
+r-%: rsync
+	ssh -t $(BUILDHOST) 'cd privat/parallel && make $*'
 
-torsync:
-	torsocks rsync -Hazv --exclude='*.{pdf,gz,bz2,html,deb}' --exclude authorized_keys --exclude vagrant.box --exclude .vagrant/ --exclude oracle*box --exclude oracle-database-*.rpm --exclude actual-results --exclude '*hwdep*' --delete ./ tortest:privat/parallel/
-	make tortest
+torrsync: check-tor-sshlogin
+	torsocks rsync -Hazv --exclude="*.{pdf,gz,bz2,html,deb}" --exclude authorized_keys --exclude vagrant.box --exclude .vagrant/ --exclude oracle*box --exclude oracle-database-*.rpm --exclude actual-results --exclude "*hwdep*" --exclude="Makefile" --exclude="config.log" --exclude="config.status" --exclude="stamp-h1" --delete ./ '$(TOR_BUILDHOST)':privat/parallel/
+
+# make tor-test-local
+tor-%: torrsync
+	torsocks ssh -t -o ServerAliveInterval=60 -o ServerAliveCountMax=60 $(TOR_BUILDHOST) 'cd privat/parallel && (test -f Makefile || ./configure) && make $*'
+
+
+test-%:
+	cd testsuite && make test-$*
 
 web:
 	cd src; make web
@@ -199,7 +211,12 @@ pack_unpack_and_test_build:
 	cd /tmp && \
 	tar xjf parallel-$(YYYYMMDD).tar.bz2 && \
 	cd parallel-$(YYYYMMDD) && \
-	./configure && make -j && sudo make -j install
+	parallel --tag 'if [ -s {} ]; then neno qpdf --check {}; else echo "{} is 0 bytes"; false; fi' ::: src/*.pdf && \
+	rm src/*pdf && \
+	./configure && make -j && sudo make -j install && \
+	parallel --tag 'if [ -s {} ]; then neno qpdf --check {}; else echo "{} is 0 bytes"; false; fi' ::: src/*.pdf && \
+	parallel ::: true && \
+	sem true
 
 # This ought to be correct, but fails on Centos
 # bashcompletiondir=$(DESTDIR)${datarootdir}/bash-completion/completions
@@ -208,6 +225,7 @@ bashcompletiondir=$(DESTDIR)${prefix}/share/bash-completion/completions
 zshcompletiondir=$(DESTDIR)${prefix}/share/zsh/site-functions
 bashcompletion=${bashcompletiondir}/parallel
 zshcompletion=${zshcompletiondir}/_parallel
+
 install-data-hook:
 	mkdir -p ${zshcompletiondir} ${bashcompletiondir}
 	$(DESTDIR)$(bindir)/parallel --shell-completion bash > ${bashcompletion}

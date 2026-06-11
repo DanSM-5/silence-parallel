@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: 2021-2025 Ole Tange, http://ole.tange.dk and Free Software and Foundation, Inc.
+# SPDX-FileCopyrightText: 2021-2026 Ole Tange, http://ole.tange.dk and Free Software and Foundation, Inc.
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -51,13 +51,35 @@ polar: ../src/parallel tests-to-run/*polar* wanted-results/*polar* prereqlocal
 	time bash Start.sh polar NONE || true
 	touch ~/.parallel/will-cite
 
+test-recent: ../src/parallel tests-to-run/recent.sh wanted-results/recent prereqlocal installparallel
+	TRIES=1 time bash Start.sh recent NONE
+
+# Generic test runner: make test-local-fast -> bash Start.sh local-fast NONE
+test-%:	../src/parallel prereqlocal installparallel
+	TRIES=1 time bash Start.sh $* NONE
+
 # *local* only
 local:	../src/parallel tests-to-run/*local* wanted-results/*local* prereqlocal installparallel
-	time bash Start.sh local mem
+	time bash Start.sh local 'mem|ssh'
 
 # short
 short:	 ../src/parallel tests-to-run/* wanted-results/* prereqlocal installparallel
 	TRIES=1 time bash Start.sh '' 'polar|mem|100s|300s|manual'
+
+# Tests using SSH to localhost/lo only
+local-ssh: ../src/parallel tests-to-run/*local-ssh* wanted-results/*local-ssh* prereqlocal installparallel
+	TRIES=1 time bash Start.sh local-ssh NONE || true
+	touch ~/.parallel/will-cite
+
+# Tests using SSH to remote servers
+remote-ssh: ../src/parallel tests-to-run/*remote-ssh* wanted-results/*remote-ssh* prereqlocal prereqremote installparallel
+	TRIES=1 time bash Start.sh remote-ssh NONE || true
+	touch ~/.parallel/will-cite
+
+# Tests not requiring SSH (includes timing/load tests)
+default: ../src/parallel tests-to-run/* wanted-results/* prereqlocal installparallel
+	TRIES=1 time bash Start.sh '' 'local-ssh|remote-ssh|mem|manual|polar|install' || true
+	touch ~/.parallel/will-cite
 
 # long
 long:	 ../src/parallel tests-to-run/* wanted-results/* prereqlocal installparallel
@@ -83,13 +105,10 @@ REQUIRE=bash -c '\
     eval $$2 >/dev/null 2>/dev/null || (echo "$$1" is required for testsuite; /bin/false); \
   }; \
   export -f is_installed; \
-  parallel -n2 --tag is_installed ::: \
+  PARALLEL_SHELL=bash parallel -n2 --tag is_installed ::: \
 	script		"echo | script -c echo -q /dev/null"			\
-	"ssh sh@lo"	"timeout 20 ssh sh@lo true"				\
-	"ssh csh@lo"	"timeout 15 ssh csh@lo true"				\
 	niceload	"niceload echo niceload is installed"			\
 	expect	"expect -c \"spawn cat; puts \\\"expect is installed\\\"\"" 	\
-	autossh		"autossh -V"						\
 	tcsh		"tcsh -c echo tcsh installed"				\
 	seq		"seq 1 2"						\
 	stdout		"stdout echo stdout is installed"			\
@@ -98,42 +117,22 @@ REQUIRE=bash -c '\
 	gawk		"echo | gawk \"{print \\\"gawk is installed\\\"}\""	\
 	pv		"echo | pv -qL 10"					\
 	timeout		"timeout 1 echo timeout is installed"			\
-	sshpass		"sshpass echo sshpass is installed"			\
 '
-#	lsh	"lsh lo echo lsh is installed"					\
 
-prereqlocal: installparallel startvm
+prereqlocal: installparallel
 	${REQUIRE}
 	# Bug that causes systemd-logind to go into 100%
 	sudo modprobe -r ucsi_acpi
-	(parallel 'ssh -oStrictHostKeyChecking=accept-new vagrant@parallel-server{} mkdir -p bin; scp `which parallel` vagrant@parallel-server{}:bin/' ::: 1 2 3 4)&
 
 prereqremote: installparallel startvm
+# TODO Check these are installed and work
+#	autossh		"autossh -V"						\
+#	lsh	"lsh lo echo lsh is installed"					\
+#	"ssh sh@lo"	"timeout 20 ssh sh@lo true"				\
+#	sshpass		"sshpass echo sshpass is installed"			\
+#	"ssh csh@lo"	"timeout 15 ssh csh@lo true"				
 	parallel -j0 --timeout 10 --tag ssh -oStrictHostKeyChecking=accept-new vagrant@parallel-server{} parallel --minversion 20121021 ::: 1 2 || (echo parallel on remote required for testsuite; /bin/true)
 
-ignore=bytes.of.data|ping.statistics|packets.transmitted|64.bytes.from|\
-  min/avg/max/mdev|default|known.hosts|Host.*found
-
-restoresnapshot=(stdout ping -w 1 -c 1 {} >/dev/null && \
-  ssh vagrant@{} echo ssh vagrant@{} OK ) || \
-  (cd vagrant/*/{} && \
-   vagrant snapshot restore $$(vagrant snapshot list | tail -1) && \
-   ssh vagrant@{} echo ssh vagrant@{} OK )
-
-start=(stdout ping -w 1 -c 1 {} && ssh vagrant@{} echo ssh {} works || \
-  (cd vagrant/*/{} 2>/dev/null && vagrant up ; \
-   echo {} | grep -q centos3 && \
-    (cat ../../authorized_keys | vagrant ssh -c "cat >>.ssh/authorized_keys"; \
-     vagrant ssh -c "sudo /sbin/ifconfig eth1 172.27.27.3"); \
-   ssh-keygen -R {}; \
-   stdout wssh -oStrictHostKeyChecking=accept-new vagrant@{} echo ssh {} started and works) ) | \
-  grep -Ev "${ignore}"
-
-stop=(stdout ping -w 1 -c 1 {} && \
-  (cd vagrant/*/{} && vagrant suspend) ) | \
-  grep -Ev "${ignore}"
-
-# parallel --rpl '{s} s:/setup.sh::;s:.*/::' echo {s} ::: vagrant/*/*/setup.sh
 namedservers=centos3 centos8 centos9 freebsd13 freebsd14 openindiana rhel8
 
 servers=parallel-server1 parallel-server2 parallel-server3 parallel-server4 ${namedservers}
@@ -142,22 +141,28 @@ snapstart: startsnap
 	true
 
 startsnap:
+	# Restore last snapshot
 	touch vagrant/authorized_keys
 	sort -u ~/.ssh/*.pub vagrant/authorized_keys > vagrant/authorized_keys.
 	mv vagrant/authorized_keys. vagrant/authorized_keys
-	parallel -j0 --tagstring {#}-{} -k --timeout 300 '${restoresnapshot}' ::: ${servers} &
+	parallel -j0 --tagstring {#}-{} -k --timeout 300 bin/vm restoresnapshot ::: ${servers} &
 
 startvm:
 	touch vagrant/authorized_keys
 	sort -u ~/.ssh/*.pub vagrant/authorized_keys > vagrant/authorized_keys.
 	mv vagrant/authorized_keys. vagrant/authorized_keys
-	parallel -j0 --tag -k --timeout 200 '${start}' ::: ${servers} &
+	parallel -j0 --tagstring '/|\ {}' --lb --timeout 400 bin/vm start ::: ${servers} &
+
 stopvm:
-	parallel -j0 --tag -k '${stop}' ::: ${namedservers} || true
+	parallel -vj0 --tag -k bin/vm stop ::: ${namedservers} || true
+
+haltvm:
+	parallel -vj0 --tag -k bin/vm halt ::: ${namedservers} || true
 
 snapshot:
-	# Make snapshots of the running vms
-	VBoxManage list runningvms|parallel --tagstring {1} --colsep ' ' eval VBoxManage snapshot {1} take running-$$$$
+	# Make snapshots of the working, running vms
+	parallel -j0 ssh vagrant@{} echo {} ::: ${namedservers} | parallel --tagstring {1} --colsep ' ' bin/vm snapshot
+	sql oracle://SYSTEM:$$VM_ORACLE_PWD@/FREE "select 'Oracle is running' from dual;" && bin/vm snapshot 23.7.0-Free
 
 snapshotclean:
 	# Keep 2 snapshots of the running vms
@@ -166,10 +171,12 @@ snapshotclean:
 
 startdb:
 	sql oracle://SYSTEM:$$VM_ORACLE_PWD@/FREE "select 'Oracle is running' from dual;" || \
-	  (cd vagrant-projects/OracleDatabase/23.7.0-Free && vagrant up && \
+	  (cd vagrant-projects/OracleDatabase/26ai-Free && vagrant up && \
 	   sql oracle://SYSTEM:$$VM_ORACLE_PWD@/FREE "select 'Oracle is running' from dual;")
 stopdb:
-	cd vagrant-projects/OracleDatabase/23.7.0-Free; vagrant suspend
+	cd vagrant-projects/OracleDatabase/26ai-Free; vagrant suspend
+haltdb:
+	cd vagrant-projects/OracleDatabase/26ai-Free; vagrant halt
 
 ### Distribution
 installparallel: ../src/parallel

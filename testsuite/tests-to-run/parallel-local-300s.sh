@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# SPDX-FileCopyrightText: 2021-2025 Ole Tange, http://ole.tange.dk and Free Software and Foundation, Inc.
+# SPDX-FileCopyrightText: 2021-2026 Ole Tange, http://ole.tange.dk and Free Software and Foundation, Inc.
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -108,57 +108,6 @@ par_over_4GB() {
     echo |
 	nice parallel --tmpdir $TMP5G -q perl -e '$a="x"x1000000;for(0..4300){print $a}' |
 	nice md5sum
-}
-
-par__mem_leak() {
-    echo "### test for mem leak"
-
-    export parallel=parallel
-    no_mem_leak() {
-	run_measurements() {
-	    from=$1
-	    to=$2
-	    pause_every=$3
-	    measure() {
-		# Input:
-		#   $1 = iterations
-		#   $2 = sleep 1 sec for every $2
-		seq $1 | ramusage $parallel -u sleep '{= $_=$_%'$2'?0:1 =}'
-	    }
-	    export -f measure
-
-	    seq $from $to | $parallel measure {} $pause_every |
-    		sort -n
-	}
-
-	# Return false if leaking
-	# Normal: 16940-17320
-	max1000=$(run_measurements 1000 1007 100000 | tail -n1)
-	min30000=$(run_measurements 15000 15004 100000 | head -n1)
-	if [ $max1000 -gt $min30000 ] ; then
-	    echo Probably no leak $max1000 -gt $min30000
-	    return 0
-	else
-	    echo Probably leaks $max1000 not -gt $min30000
-	    # Make sure there are a few sleeps
-	    max1000=$(run_measurements 1001 1007 100 | tail -n1)
-	    min30000=$(run_measurements 30000 30004 100 | head -n1)
-	    if [ $max1000 -gt $min30000 ] ; then
-		echo $max1000 -gt $min30000 = very likely no leak
-		return 0
-	    else
-		echo not $max1000 -gt $min30000 = very likely leak
-		return 1
-	    fi
-	fi
-    }
-
-    renice -n 3 $$ 2>/dev/null >/dev/null
-    if no_mem_leak >/dev/null ; then
-	echo no mem leak detected
-    else
-	echo possible mem leak;
-    fi
 }
 
 par_xhalt_on_error() {

@@ -1,3 +1,76 @@
+20260522
+
+* --fast rewritten. 1 million jobs in 10 seconds. Try:
+  seq 1000000 | time parallel --fast echo | wc -l 
+
+* Bug fixes and man page updates.
+
+
+20260422
+
+New in this release:
+
+* Remote jobs are spawned via pipe to perl, so environment can be bigger.
+
+* --pipe-part -a supports -L/-N if zextract is installed.
+
+* --pipe-part -a supports .gz, .bz2, .zst-files if zextract is installed.
+
+* Comments in code is redone.
+
+* Bug fixes and man page updates.
+
+
+20260322
+
+New in this release:
+
+* No new features.
+
+* Bug fixes.
+
+News about GNU Parallel:
+
+* GNU Parallel for Real-Time Log Prefixing in Docker
+  https://blog.daryledesilva.com/gnu-parallel-for-real-time-log-prefixing-in-docker/
+
+
+20260222
+
+New in this release:
+
+* No new features.
+
+* Bug fixes.
+
+
+20260122
+
+New in this release:
+
+* No new features.
+
+* Bug fixes.
+
+
+20251222
+
+New in this release:
+
+* No new features.
+
+* Bug fixes.
+
+
+20251122
+
+New in this release:
+
+* No new features.
+
+* Bug fixes.
+
+
 20251022
 
 New in this release:

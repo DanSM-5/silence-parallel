@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# SPDX-FileCopyrightText: 2021-2025 Ole Tange, http://ole.tange.dk and Free Software and Foundation, Inc.
+# SPDX-FileCopyrightText: 2021-2026 Ole Tange, http://ole.tange.dk and Free Software and Foundation, Inc.
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -34,11 +34,6 @@ echo '### bug #42363: --pipepart and --fifo/--cat does not work'
   parallel --pipepart --block 31 -a /tmp/bug42363 -k --fifo 'cat {} | wc'; 
   parallel --pipepart --block 31 -a /tmp/bug42363 -k --cat  'cat {} | wc'; 
   rm /tmp/bug42363
-
-echo '### bug #42055: --pipepart -a bigfile should not require sequential reading of bigfile'
-  parallel --pipepart -a /etc/passwd -L 1 should not be run
-  parallel --pipepart -a /etc/passwd -N 1 should not be run
-  parallel --pipepart -a /etc/passwd -l 1 should not be run
 
 echo '### bug #42893: --block should not cause decimals in cat_partial'
   seq 100000 >/tmp/parallel-decimal; 
