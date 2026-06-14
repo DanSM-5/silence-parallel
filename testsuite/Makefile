@@ -133,7 +133,7 @@ prereqremote: installparallel startvm
 #	"ssh csh@lo"	"timeout 15 ssh csh@lo true"				
 	parallel -j0 --timeout 10 --tag ssh -oStrictHostKeyChecking=accept-new vagrant@parallel-server{} parallel --minversion 20121021 ::: 1 2 || (echo parallel on remote required for testsuite; /bin/true)
 
-namedservers=centos3 centos8 centos9 freebsd13 freebsd14 openindiana rhel8
+namedservers=centos3 centos8 centos9 freebsd13 freebsd14 openindiana rhel8 opensuse15
 
 servers=parallel-server1 parallel-server2 parallel-server3 parallel-server4 ${namedservers}
 
@@ -162,7 +162,7 @@ haltvm:
 snapshot:
 	# Make snapshots of the working, running vms
 	parallel -j0 ssh vagrant@{} echo {} ::: ${namedservers} | parallel --tagstring {1} --colsep ' ' bin/vm snapshot
-	sql oracle://SYSTEM:$$VM_ORACLE_PWD@/FREE "select 'Oracle is running' from dual;" && bin/vm snapshot 23.7.0-Free
+	. ~/.passwords && sql oracle://SYSTEM:$$VM_ORACLE_PWD@172.27.27.2:1521/FREE "select 'Oracle is running' from dual;" && bin/vm snapshot 26ai-Free
 
 snapshotclean:
 	# Keep 2 snapshots of the running vms
@@ -170,9 +170,9 @@ snapshotclean:
 	VBoxManage list runningvms | parallel --colsep ' ' --tagstring {2} -k VBoxManage snapshot {2} list
 
 startdb:
-	sql oracle://SYSTEM:$$VM_ORACLE_PWD@/FREE "select 'Oracle is running' from dual;" || \
+	. ~/.passwords && sql oracle://SYSTEM:$$VM_ORACLE_PWD@172.27.27.2:1521/FREE "select 'Oracle is running' from dual;" || \
 	  (cd vagrant-projects/OracleDatabase/26ai-Free && vagrant up && \
-	   sql oracle://SYSTEM:$$VM_ORACLE_PWD@/FREE "select 'Oracle is running' from dual;")
+	   . ~/.passwords && sql oracle://SYSTEM:$$VM_ORACLE_PWD@172.27.27.2:1521/FREE "select 'Oracle is running' from dual;")
 stopdb:
 	cd vagrant-projects/OracleDatabase/26ai-Free; vagrant suspend
 haltdb:

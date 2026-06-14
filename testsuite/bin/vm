@@ -96,7 +96,7 @@ cleanping() {
 
 sshok() {
     host=$1
-    ssh vagrant@$host echo ssh vagrant@$host OK
+    ssh -oStrictHostKeyChecking=accept-new vagrant@$host echo ssh vagrant@$host OK
 }
 
 pingsshok() {
