@@ -346,7 +346,7 @@ vagrant_up() {
 	vm=$1
 	echo Testing $vm
 	# If "ssh" works, then "vagrant ssh" probably also works
-	timeout 10 ssh vagrant@$vm echo ssh vagrant@$vm OK && return 0
+	timeout 10 ssh -n vagrant@$vm echo ssh vagrant@$vm OK && return 0
 	cd "$2" || return 1
 	vagrant ssh -c "echo 'vagrant ssh $vm OK'" && return 0
 	# Fetch .box and do any special config
@@ -524,7 +524,7 @@ create_shell_logins() {
 	fi
 	sudo adduser --shell $loginshell --disabled-password --gecos "$shell for parallel,,," $shell &&
 	    echo "$shell:$SSHPASS" | sudo chpasswd &&
-	    sshpass -e ssh-copy-id $shell@lo &&
+	    sshpass -e ssh-copy-id -o StrictHostKeyChecking=accept-new $shell@lo &&
 	    echo "$shell created"
     }
     export -f del_add_user
@@ -537,7 +537,7 @@ create_shell_logins() {
 
     echo '# (Re-)create user'
     # Racecondition: if multiple adds a group it will the same group ID
-    (shellsplus; echo withpassword) | parallel -j200% grep_not_OK |
+    (shellsplus; echo withpassword) | parallel -j200% grep_not_OK | sort |
 	parallel --lb --halt soon,fail=1 --timeout 1000% --retries 5 --tag -j1 del_add_user ||
 	(echo Creation failed: $?; false)
     # Homedir must be readable by others

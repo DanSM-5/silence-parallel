@@ -147,6 +147,9 @@ startsnap:
 	mv vagrant/authorized_keys. vagrant/authorized_keys
 	parallel -j0 --tagstring {#}-{} -k --timeout 300 bin/vm restoresnapshot ::: ${servers} &
 
+checkvm:
+	parallel -j0 --delay 0.2 --plus --tagstring '/|\ {0#} {}' --lb --timeout 400 bin/vm check ::: ${servers}
+
 startvm:
 	touch vagrant/authorized_keys
 	sort -u ~/.ssh/*.pub vagrant/authorized_keys > vagrant/authorized_keys.

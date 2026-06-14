@@ -7,36 +7,95 @@
 # Usage:
 #   vm start freebsd14
 
+vbox_preflight() {
+    # Ensure all VirtualBox kernel modules are loaded
+    lsmod | grep -q vboxdrv    || sudo modprobe vboxdrv
+    lsmod | grep -q vboxnetflt || sudo modprobe vboxnetflt
+    lsmod | grep -q vboxnetadp || sudo modprobe vboxnetadp
+    # Kill duplicate VBoxSVC processes; multiple instances cause VBoxManage to hang
+    local lockpid
+    lockpid=$(cat /tmp/.vbox-"$USER"-ipc/lock 2>/dev/null)
+    [ -n "$lockpid" ] && pgrep -x VBoxSVC | grep -v "^$lockpid$" | xargs -r kill
+}
+
 start() {
+    vbox_preflight
     vm=$1
     is_centos3() {
 	echo $vm | grep -q centos3
     }
     centos3_configure_eth1() {
 	cat ../../authorized_keys | vagrant ssh -c "cat >>.ssh/authorized_keys"
+	test -f ~/.lsh/identity.pub && lsh-export-key --openssh < ~/.lsh/identity.pub | vagrant ssh -c "cat >>.ssh/authorized_keys"
 	vagrant ssh -c "sudo /sbin/ifconfig eth1 172.27.27.3"
     }
-    if pingsshok $vm ; then
-	ssh -oStrictHostKeyChecking=accept-new vagrant@$vm mkdir -p bin
-	scp `which parallel` vagrant@$vm:bin/
-	true
-    else
-	# Server does not respond to ping or ssh: vagrant up
-	if cdvm $vm ; then
-	    echo vagrant up $vm
-	    vagrant up
-	    if is_centos3 ; then
-		centos3_configure_eth1
+    push_authorized_keys() {
+	# VM is up but SSH auth fails - push keys via vagrant's built-in key.
+	# Try vagrant ssh-config first (gives port + identity file); fall back
+	# to sshpass vagrant/vagrant for boxes where vagrant metadata is missing
+	# or out of sync with the running VM.
+	local tmpcfg
+	tmpcfg=$(mktemp)
+	DISPLAY= timeout 30 vagrant ssh-config 2>/dev/null > "$tmpcfg"
+	if [ -s "$tmpcfg" ]; then
+	    cat ../../authorized_keys |
+		timeout 30 ssh -F "$tmpcfg" default "cat >> .ssh/authorized_keys" 2>&1
+	else
+	    local port
+	    port=$(DISPLAY= timeout 30 vagrant port --guest 22 2>/dev/null | tail -1)
+	    cat ../../authorized_keys |
+		sshpass -p vagrant timeout 30 ssh -p "$port" -oStrictHostKeyChecking=no vagrant@127.0.0.1 "cat >> .ssh/authorized_keys" 2>&1
+	fi
+	rm -f "$tmpcfg"
+	stdout ssh-keygen -R $vm
+    }
+    if cleanping $vm ; then
+	if sshok $vm 2>/dev/null ; then
+	    timeout 30 ssh -oStrictHostKeyChecking=accept-new vagrant@$vm mkdir -p bin
+	    timeout 120 scp `which parallel` vagrant@$vm:bin/
+	    true
+	else
+	    # VM is up but SSH auth fails: push authorized_keys via vagrant
+	    if cdvm $vm ; then
+		push_authorized_keys
+		sshok $vm
+	    else
+		echo $vm dir not found
 	    fi
-	    # Remove host from known_hosts
+	fi
+    else
+	# Server does not respond to ping
+	if cdvm $vm ; then
+	    if DISPLAY= timeout 60 vagrant ssh -- true 2>/dev/null; then
+		# VM is running but has wrong network IP - fix it
+		if is_centos3; then
+		    centos3_configure_eth1
+		else
+		    ip=$(getent hosts "$vm" | awk '{print $1}')
+		    DISPLAY= timeout 60 vagrant ssh -- "iface=\$(ifconfig -l 2>/dev/null | tr ' ' '\\n' | grep -v '^lo' | sed -n '2p'); [ -z \"\$iface\" ] && iface=\$(ip -o link show 2>/dev/null | awk -F'[ :]+' '\$2!=\"lo\"{a[++n]=\$2}END{print a[2]}'); sudo ifconfig \$iface $ip netmask 255.255.255.0 2>/dev/null || (sudo ip addr flush dev \$iface 2>/dev/null; sudo ip addr add $ip/24 dev \$iface)" 2>/dev/null
+		fi
+	    else
+		echo vagrant up $vm
+		DISPLAY= timeout 300 vagrant up
+		if is_centos3 ; then
+		    centos3_configure_eth1
+		fi
+	    fi
+	    # If still unreachable (e.g. VirtualBox host-only ARP broken on first up), do a clean restart
+	    if ! cleanping $vm; then
+		DISPLAY= timeout 60 vagrant halt
+		DISPLAY= timeout 300 vagrant up
+		if is_centos3 ; then
+		    centos3_configure_eth1
+		fi
+	    fi
 	    stdout ssh-keygen -R $vm
-	    # Trust on first use ssh
-	    stdout wssh -oStrictHostKeyChecking=accept-new vagrant@$vm echo ssh $vm started and works
+	    sshok $vm
 	else
 	    echo $vm dir not found
 	fi
     fi |
-	grep -Ev "^$|bytes.of.data|ping.statistics|packets.transmitted|64.bytes.from|min/avg/max/mdev|default|known.hosts|Host.*found"
+	grep -Ev "^$|bytes.of.data|ping.statistics|packets.transmitted|64.bytes.from|min/avg/max/mdev|default|known.hosts|Host.*found|qt\.qpa\.|xcb-cursor|Qt xcb|Qt platform|no Qt platform|Reinstalling the|Available platform plugins"
 }
 
 stop() {
@@ -79,9 +138,25 @@ helperfunctions() {
     true
 }
 
+sync_vagrant_id() {
+    # If vagrant has lost the UUID for this VM (e.g. after a host reboot or
+    # a snapshot restore done outside vagrant), find it in VBoxManage and
+    # write it back so vagrant commands work again.
+    local vm=$1
+    local idfile=".vagrant/machines/default/virtualbox/id"
+    DISPLAY= timeout 30 vagrant status 2>/dev/null | grep -q "running" && return 0
+    local uuid
+    uuid=$(timeout 10 VBoxManage list runningvms 2>/dev/null |
+	perl -ne '/^"'"$vm"'_default_[^"]*" \{([^}]+)\}/ and print $1')
+    [ -n "$uuid" ] || return 0
+    mkdir -p "$(dirname "$idfile")"
+    printf '%s' "$uuid" > "$idfile"
+}
+
 cdvm() {
     vm=$1
     if cd vagrant*/*/$vm ; then
+	sync_vagrant_id $vm
 	true
     else
 	echo $vm dir not found
@@ -91,12 +166,19 @@ cdvm() {
 
 cleanping() {
     host=$1
-    ping -w 1 -c 1 "$host" >/dev/null 2>&1
+    ping -w 1 -c 1 "$host"
+}
+
+check() {
+    host=$1
+    sshok $host 2>&1 | G --v 'Permanently added'
 }
 
 sshok() {
     host=$1
-    ssh -oStrictHostKeyChecking=accept-new vagrant@$host echo ssh vagrant@$host OK
+    # Trust on first use ssh
+    ssh-keygen -f '/home/tange/.ssh/known_hosts' -R $host >/dev/null
+    timeout 30 ssh -oStrictHostKeyChecking=accept-new vagrant@$host echo ssh vagrant@$host OK
 }
 
 pingsshok() {
