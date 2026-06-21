@@ -7,6 +7,24 @@
 # /tmp/parallel-local-ssh2 will by default be owned by me and should be writable by *@localhost
 chmod 777 "$TMPDIR" 2>/dev/null
 
+par__more_than_9_relative_sshlogin() {
+    echo '### Check more than 9(relative) simultaneous sshlogins'
+    seq 1 11 | stdout parallel -k -j10000% -S lo 'sleep 5.987654321; true' |
+	grep -v 'parallel: Warning:' &
+    for ((i=0; i<30; i++)); do
+	count=$(pgrep -f '5\.9876543[1-3]1' | wc -l)
+	# 13 = 11 + stdout and parallel
+	if (( count == 13 )); then
+            echo "$count"
+            exit 0
+	fi
+
+	sleep 1
+    done
+
+    echo "timeout"
+}
+
 par__obey_servers_capacity_slf_reload() {
     echo "### bug #43518: GNU Parallel doesn't obey servers' jobs capacity when an ssh login file is reloaded"
     # Pre-20141106 Would reset the number of jobs run on all sshlogin if --slf changed
@@ -25,15 +43,17 @@ par_z_filter_hosts_slf() {
 }
 
 par_wd_no_such_dir() {
-    echo '### --wd no-such-dir - csh'
-    stdout parallel --wd /no-such-dir -S csh@localhost echo ::: "ERROR IF PRINTED"
-    echo Exit code $?
-    echo '### --wd no-such-dir - tcsh'
-    stdout parallel --wd /no-such-dir -S tcsh@localhost echo ::: "ERROR IF PRINTED"
-    echo Exit code $?
-    echo '### --wd no-such-dir - bash'
-    stdout parallel --wd /no-such-dir -S parallel@localhost echo ::: "ERROR IF PRINTED"
-    echo Exit code $?
+    (
+	echo '### --wd no-such-dir - csh'
+	stdout parallel --wd /no-such-dir -S csh@localhost echo ::: "ERROR IF PRINTED"
+	echo Exit code $?
+	echo '### --wd no-such-dir - tcsh'
+	stdout parallel --wd /no-such-dir -S tcsh@localhost echo ::: "ERROR IF PRINTED"
+	echo Exit code $?
+	echo '### --wd no-such-dir - bash'
+	stdout parallel --wd /no-such-dir -S parallel@localhost echo ::: "ERROR IF PRINTED"
+	echo Exit code $?
+    ) | perl -pe 's/cannot create directory ..no-such-dir.: //'
 }
 
 par_csh_newline_var() {

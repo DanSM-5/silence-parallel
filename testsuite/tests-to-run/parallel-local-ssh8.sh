@@ -6,6 +6,35 @@
 
 # Each test should at most run 1 ssh against parallel@lo or lo
 
+par__test_different_rsync_versions() {
+    echo '### different versions of rsync need fixups'
+    echo '### no output is good'
+    doit() {
+	full=$1
+	short=$2
+	rm -f 'a`b`c\<d\$e\{#\}g\"h\ i'$short 'a`b`c\<d\$e\{#\}g\"h\ i'$short.out
+	touch 'a`b`c\<d\$e\{#\}g\"h\ i'$short
+	TMPDIR=/tmp tmp=$(mktemp -d)
+	(
+	    echo '#!/bin/bash'
+	    echo $full' "$@"'
+	) > "$tmp"/rsync
+	chmod +x "$tmp"/rsync
+	PATH="$tmp":"$PATH"
+	# Test basic rsync
+	if stdout rsync "$tmp"/rsync sh@lo:rsync.$short >/dev/null ; then
+	   echo Basic use works: $2
+	   stdout parallel -j50% --trc {}.out -S sh@lo cp {} {}.out ::: 'a`b`c\<d\$e\{#\}g\"h\ i'$short
+	   stdout rm 'a`b`c\<d\$e\{#\}g\"h\ i'$short 'a`b`c\<d\$e\{#\}g\"h\ i'$short.out
+	else
+	    echo Basic use failed - not tested: $short
+	fi
+	rm -rf "$tmp"
+    }
+    export -f doit
+    stdout parallel --tagstring {/} -k doit {} {/} ::: /usr/local/bin/rsync-v*
+}
+
 par_transfer_special_char_names() {
     echo '### Test --return of weirdly named file'
     ssh parallel@lo rm -f 'aa*b'
@@ -48,7 +77,8 @@ par_path_remote_csh() {
   cat <<'_EOS' |
   echo StArT
   echo CSH Path before: $PATH with no parallel
-  which parallel >& /dev/stdout
+  # This should fail:
+  parallel --version >& /dev/stdout
   echo '^^^^^^^^ Not found is OK'
   alias parallel=/tmp/parallel
   # Exporting a big variable should not fail

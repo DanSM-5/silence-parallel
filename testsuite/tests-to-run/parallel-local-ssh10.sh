@@ -127,7 +127,7 @@ par_controlmaster_is_faster() {
 par_hostgroup() {
     echo '### --hostgroup force ncpu - 2x parallel, 6x me'
     parallel --delay 0.1 --hgrp -S @g1/1/parallel@lo -S @g2/3/lo \
-	     'whoami;sleep 0.4{}' ::: {1..8} | sort
+	     'whoami;sleep 0.6{}' ::: {1..8} | sort
 
     echo '### --hostgroup two group arg - 2x parallel, 6x me'
     parallel -k --sshdelay 0.1 --hgrp -S @g1/1/parallel@lo -S @g2/3/lo \
@@ -210,5 +210,5 @@ par_retries_bug_from_2010() {
 
 export -f $(compgen -A function | grep par_)
 #compgen -A function | grep par_ | sort | parallel --delay $D -j$P --tag -k '{} 2>&1'
-compgen -A function | grep par_ | sort |
+compgen -A function | G par_ "$@" | sort |
     parallel --joblog /tmp/jl-`basename $0` --retries 3 -j2 --tag -k '{} 2>&1'

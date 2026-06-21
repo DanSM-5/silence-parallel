@@ -8,57 +8,6 @@ par_--env_underscore_fish	variables in aliases and arrays in functions work
 par_--env_underscore_fish	variables in aliases and arrays in functions work
 par_--env_underscore_fish	variables in aliases and arrays in functions work
 par_--env_underscore_fish	variables in aliases and arrays in functions work
-par__man_fish	### fish
-par__man_fish	### From man env_parallel
-par__man_fish	aliases with = & " ! ' work
-par__man_fish	aliases with = & " ! ' work
-par__man_fish	aliases with = & " ! ' work
-par__man_fish	aliases with = & " ! ' work
-par__man_fish	aliases with = & " ! ' work
-par__man_fish	functions with  = & " ! ' work
-par__man_fish	functions with  = & " ! ' work
-par__man_fish	functions with  = & " ! ' work
-par__man_fish	functions with  = & " ! ' work
-par__man_fish	functions with  = & " ! ' work
-par__man_fish	variables with  = & " ! ' work
-par__man_fish	variables with  = & " ! ' work
-par__man_fish	variables with  = & " ! ' work
-par__man_fish	variables with  = & " ! ' work
-par__man_fish	variables with  = & " ! ' work
-par__man_fish	multiline
-par__man_fish	    variables with  = & " ! ' work
-par__man_fish	multiline
-par__man_fish	    variables with  = & " ! ' work
-par__man_fish	multiline
-par__man_fish	    variables with  = & " ! ' work
-par__man_fish	multiline
-par__man_fish	    variables with  = & " ! ' work
-par__man_fish	multiline
-par__man_fish	    variables with  = & " ! ' work
-par__man_fish	arrays with  = & " ! ' work, too
-par__man_fish	# these 4 fail often. Race condition?
-par__man_fish	arrays
-par__man_fish	with  = & " ! '
-par__man_fish	work,
-par__man_fish	too
-par__man_fish	arrays
-par__man_fish	with  = & " ! '
-par__man_fish	work,
-par__man_fish	too
-par__man_fish	arrays
-par__man_fish	with  = & " ! '
-par__man_fish	work,
-par__man_fish	too
-par__man_fish	arrays
-par__man_fish	with  = & " ! '
-par__man_fish	work,
-par__man_fish	too
-par__man_fish	multi
-par__man_fish	level
-par__man_fish	env_parallel
-par__man_fish	exit value 2 should be 2
-par__man_fish	Unknown option: no-such-option
-par__man_fish	exit value 255 should be 255 `sleep 1`
 par_env_parallel_--session_fish	### Test env_parallel --session
 par_env_parallel_--session_fish	fish: Unknown command: aliasbefore
 par_env_parallel_--session_fish	fish: 

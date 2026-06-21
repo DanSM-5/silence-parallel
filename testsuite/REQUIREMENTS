@@ -15,13 +15,13 @@ install_packages() {
     test_pkgs="$test_pkgs libpod-simple-perl libtext-csv-perl"
     test_pkgs="$test_pkgs libtest-nowarnings-perl pod2pdf"
     test_pkgs="$test_pkgs xemacs21 csvkit"
-    test_pkgs="$test_pkgs gawk lua5.3 clisp php-cli nodejs guile-3.0" # missing fsharp
+    test_pkgs="$test_pkgs gawk lua5.3 clisp php-cli nodejs guile-3.0"
     test_pkgs="$test_pkgs mono-csharp-shell octave openjdk-11-jdk-headless tcl"
     test_pkgs="$test_pkgs racket libevent-dev python-is-python3"
     test_pkgs="$test_pkgs xterm libc6-i386 libcrypt1:i386 virtualbox"
     test_pkgs="$test_pkgs torsocks net-tools"
     test_pkgs="$test_pkgs btrfs-progs exfatprogs f2fs-tools" # missing reiserfsprogs
-    test_pkgs="$test_pkgs xfsprogs"
+    test_pkgs="$test_pkgs xfsprogs util-linux-extra"
 
     test_snap_pkgs="groovy julia"
     
@@ -255,8 +255,15 @@ setup_databases() {
 	sudo sql "$dburl" "GRANT ALL PRIVILEGES ON $me.* TO '$me'@'localhost';"
 	sudo sql "$dburl" "FLUSH PRIVILEGES;"	
     }
+    add_to_aliases() {
+	(cat ~/.sql/aliases; echo :mysqlunittest mysql:///) |
+	    puniq > ~/.sql/aliases.new
+	mv ~/.sql/aliases.new ~/.sql/aliases
+	chmod 600 ~/.sql/aliases
+    }
     (test_postgres || (setup_postgres && test_postgres) ) &&
-    (test_mysql || (setup_mysql && test_mysql) )
+	(test_mysql || (setup_mysql && test_mysql) ) &&
+	add_to_aliases
 }
 
 setup_virtual_box_network() {
@@ -381,6 +388,11 @@ vagrant_centos3() {
 	echo '  HostKeyAlgorithms +ssh-rsa'
 	echo '  PubkeyAcceptedKeyTypes +ssh-rsa'
 
+	# user vagrant required; ssh-dss omitted: removed in OpenSSH 10.2+
+	echo
+	echo 'Host centos3'
+	echo '  user vagrant'
+	echo '  HostKeyAlgorithms +ssh-rsa'
     ) >> ~/.ssh/config
     (
 	echo KexAlgorithms +diffie-hellman-group1-sha1,curve25519-sha256@libssh.org,ecdh-sha2-nistp256,ecdh-sha2-nistp384,ecdh-sha2-nistp521,diffie-hellman-group-exchange-sha256,diffie-hellman-group14-sha1
@@ -651,6 +663,7 @@ lsh_setup() {
 	    --capture-to ~/.lsh/host-acls -l $user $server echo Added host-auth
 	rm -f .lsh/identity .lsh/identity.pub
 	lsh-keygen | lsh-writekey -c none
+	lsh-export-key --openssh < ~/.lsh/identity.pub > ~/.ssh/lsh.pub
 	export_key_to_local_users() {
 	    lsh-export-key --openssh < ~/.lsh/identity.pub |
 		ssh -l $1 $2 'cat >>.ssh/authorized_keys'
@@ -830,6 +843,23 @@ rsync_versions() {
     )
 }
 
+install_fsharpi() {
+    fsharpi --version >/dev/null 2>&1 && return 0
+    sudo apt -y install dotnet-sdk-10.0
+    sudo tee /usr/bin/fsharpi >/dev/null << 'WRAPPER'
+#!/bin/bash
+if [[ -n "$1" && -f "$1" && "$1" != *.fsx && "$1" != *.fsscript && "$1" != *.fs && "$1" != *.fsi ]]; then
+    tmp=$(mktemp /tmp/fsharpi-XXXXXX.fsx)
+    trap "rm -f $tmp" EXIT
+    cp "$1" "$tmp"
+    shift
+    exec dotnet fsi --exec "$tmp" "$@"
+fi
+exec dotnet fsi "$@"
+WRAPPER
+    sudo chmod +x /usr/bin/fsharpi
+}
+
 install_tangetools() {
     stdout echo "tangetools installed OK" && return 0
     (
@@ -853,7 +883,6 @@ misc() {
     echo "export withpassword=$p" >> ~/.passwords
 
     echo TODO
-    echo 'set $withpassword'
     echo 'set $mysqlrootpassword in .passwords'
     echo '~/.sql/aliases'
     echo 'python install python-is-python3'
@@ -861,6 +890,8 @@ misc() {
 
 run() {
     install_packages &&
+	# fast
+	install_fsharpi &&
 	# fast
 	install_tangetools &&
 	# fast
@@ -904,7 +935,8 @@ run() {
 
 run2() {
     install_packages 
-	install_tangetools 
+	install_fsharpi
+	install_tangetools
 	install_sqlite2 
 	install_oracle_client 
 	install_oracle_server 

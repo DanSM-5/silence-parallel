@@ -1,0 +1,3200 @@
+par__--load_from_PARALLEL	### Test reading load from PARALLEL
+par__--load_from_PARALLEL	8a7095c1c23bfadc311fe6b16d950582  -
+par__--load_from_PARALLEL	8a7095c1c23bfadc311fe6b16d950582  -
+par__groupby_pipepart	tsv \t 3 $_%=2	### test tsv | --colsep \t --groupby 3 $_%=2
+par__groupby_pipepart	tsv \t 3 $_%=2	NewRec
+par__groupby_pipepart	tsv \t 3 $_%=2	  90001  540006 1170031
+par__groupby_pipepart	tsv \t 3 $_%=2	NewRec
+par__groupby_pipepart	tsv \t 3 $_%=2	  90001  540006 1170031
+par__groupby_pipepart	tsv \t 3 $_%=2	NewRec
+par__groupby_pipepart	tsv \t 3 $_%=2	  90001  540006 1170031
+par__groupby_pipepart	tsv \t 3 $_%=2	NewRec
+par__groupby_pipepart	tsv \t 3 $_%=2	  90001  540006 1170031
+par__groupby_pipepart	tsv \t 3 $_%=2	NewRec
+par__groupby_pipepart	tsv \t 3 $_%=2	  90001  540006 1170031
+par__groupby_pipepart	tsv \t 3 $_%=2	NewRec
+par__groupby_pipepart	tsv \t 3 $_%=2	  90001  540006 1170031
+par__groupby_pipepart	tsv \t 3 $_%=2	NewRec
+par__groupby_pipepart	tsv \t 3 $_%=2	  90001  540006 1170031
+par__groupby_pipepart	tsv \t 3 $_%=2	NewRec
+par__groupby_pipepart	tsv \t 3 $_%=2	  90001  540006 1170031
+par__groupby_pipepart	tsv \t 3 $_%=2	NewRec
+par__groupby_pipepart	tsv \t 3 $_%=2	  90001  540006 1170031
+par__groupby_pipepart	tsv \t 3 $_%=2	NewRec
+par__groupby_pipepart	tsv \t 3 $_%=2	  90001  540006 1170031
+par__groupby_pipepart	tsv \t 3	### test tsv | --colsep \t --groupby 3
+par__groupby_pipepart	tsv \t 3	NewRec
+par__groupby_pipepart	tsv \t 3	  90001  540006 1170031
+par__groupby_pipepart	tsv \t 3	NewRec
+par__groupby_pipepart	tsv \t 3	  90001  540006 1170031
+par__groupby_pipepart	tsv \t 3	NewRec
+par__groupby_pipepart	tsv \t 3	  90001  540006 1170031
+par__groupby_pipepart	tsv \t 3	NewRec
+par__groupby_pipepart	tsv \t 3	  90001  540006 1170031
+par__groupby_pipepart	tsv \t 3	NewRec
+par__groupby_pipepart	tsv \t 3	  90001  540006 1170031
+par__groupby_pipepart	tsv \t 3	NewRec
+par__groupby_pipepart	tsv \t 3	  90001  540006 1170031
+par__groupby_pipepart	tsv \t 3	NewRec
+par__groupby_pipepart	tsv \t 3	  90001  540006 1170031
+par__groupby_pipepart	tsv \t 3	NewRec
+par__groupby_pipepart	tsv \t 3	  90001  540006 1170031
+par__groupby_pipepart	tsv \t 3	NewRec
+par__groupby_pipepart	tsv \t 3	  90001  540006 1170031
+par__groupby_pipepart	tsv \t 3	NewRec
+par__groupby_pipepart	tsv \t 3	  90001  540006 1170031
+par__groupby_pipepart	tsv \t c1	### test tsv | --colsep \t --groupby c1
+par__groupby_pipepart	tsv \t c1	NewRec
+par__groupby_pipepart	tsv \t c1	  90001  540006 1170031
+par__groupby_pipepart	tsv \t c1	NewRec
+par__groupby_pipepart	tsv \t c1	  90001  540006 1170031
+par__groupby_pipepart	tsv \t c1	NewRec
+par__groupby_pipepart	tsv \t c1	  90001  540006 1170031
+par__groupby_pipepart	tsv \t c1	NewRec
+par__groupby_pipepart	tsv \t c1	  90001  540006 1170031
+par__groupby_pipepart	tsv \t c1	NewRec
+par__groupby_pipepart	tsv \t c1	  90001  540006 1170031
+par__groupby_pipepart	tsv \t c1	NewRec
+par__groupby_pipepart	tsv \t c1	  90001  540006 1170031
+par__groupby_pipepart	tsv \t c1	NewRec
+par__groupby_pipepart	tsv \t c1	  90001  540006 1170031
+par__groupby_pipepart	tsv \t c1	NewRec
+par__groupby_pipepart	tsv \t c1	  90001  540006 1170031
+par__groupby_pipepart	tsv \t c1	NewRec
+par__groupby_pipepart	tsv \t c1	  90001  540006 1170031
+par__groupby_pipepart	tsv \t c1	NewRec
+par__groupby_pipepart	tsv \t c1	  90001  540006 1170031
+par__groupby_pipepart	tsv \t c1 $_%=2	### test tsv | --colsep \t --groupby c1 $_%=2
+par__groupby_pipepart	tsv \t c1 $_%=2	NewRec
+par__groupby_pipepart	tsv \t c1 $_%=2	  90001  540006 1170031
+par__groupby_pipepart	tsv \t c1 $_%=2	NewRec
+par__groupby_pipepart	tsv \t c1 $_%=2	  90001  540006 1170031
+par__groupby_pipepart	tsv \t c1 $_%=2	NewRec
+par__groupby_pipepart	tsv \t c1 $_%=2	  90001  540006 1170031
+par__groupby_pipepart	tsv \t c1 $_%=2	NewRec
+par__groupby_pipepart	tsv \t c1 $_%=2	  90001  540006 1170031
+par__groupby_pipepart	tsv \t c1 $_%=2	NewRec
+par__groupby_pipepart	tsv \t c1 $_%=2	  90001  540006 1170031
+par__groupby_pipepart	tsv \t c1 $_%=2	NewRec
+par__groupby_pipepart	tsv \t c1 $_%=2	  90001  540006 1170031
+par__groupby_pipepart	tsv \t c1 $_%=2	NewRec
+par__groupby_pipepart	tsv \t c1 $_%=2	  90001  540006 1170031
+par__groupby_pipepart	tsv \t c1 $_%=2	NewRec
+par__groupby_pipepart	tsv \t c1 $_%=2	  90001  540006 1170031
+par__groupby_pipepart	tsv \t c1 $_%=2	NewRec
+par__groupby_pipepart	tsv \t c1 $_%=2	  90001  540006 1170031
+par__groupby_pipepart	tsv \t c1 $_%=2	NewRec
+par__groupby_pipepart	tsv \t c1 $_%=2	  90001  540006 1170031
+par__groupby_pipepart	tsv \t s/^(\d+[\t ,]+){2}(\d+).*/$2/	### test tsv | --colsep \t --groupby s/^(\d+[\t ,]+){2}(\d+).*/$2/
+par__groupby_pipepart	tsv \t s/^(\d+[\t ,]+){2}(\d+).*/$2/	NewRec
+par__groupby_pipepart	tsv \t s/^(\d+[\t ,]+){2}(\d+).*/$2/	  90001  540006 1170031
+par__groupby_pipepart	tsv \t s/^(\d+[\t ,]+){2}(\d+).*/$2/	NewRec
+par__groupby_pipepart	tsv \t s/^(\d+[\t ,]+){2}(\d+).*/$2/	  90001  540006 1170031
+par__groupby_pipepart	tsv \t s/^(\d+[\t ,]+){2}(\d+).*/$2/	NewRec
+par__groupby_pipepart	tsv \t s/^(\d+[\t ,]+){2}(\d+).*/$2/	  90001  540006 1170031
+par__groupby_pipepart	tsv \t s/^(\d+[\t ,]+){2}(\d+).*/$2/	NewRec
+par__groupby_pipepart	tsv \t s/^(\d+[\t ,]+){2}(\d+).*/$2/	  90001  540006 1170031
+par__groupby_pipepart	tsv \t s/^(\d+[\t ,]+){2}(\d+).*/$2/	NewRec
+par__groupby_pipepart	tsv \t s/^(\d+[\t ,]+){2}(\d+).*/$2/	  90001  540006 1170031
+par__groupby_pipepart	tsv \t s/^(\d+[\t ,]+){2}(\d+).*/$2/	NewRec
+par__groupby_pipepart	tsv \t s/^(\d+[\t ,]+){2}(\d+).*/$2/	  90001  540006 1170031
+par__groupby_pipepart	tsv \t s/^(\d+[\t ,]+){2}(\d+).*/$2/	NewRec
+par__groupby_pipepart	tsv \t s/^(\d+[\t ,]+){2}(\d+).*/$2/	  90001  540006 1170031
+par__groupby_pipepart	tsv \t s/^(\d+[\t ,]+){2}(\d+).*/$2/	NewRec
+par__groupby_pipepart	tsv \t s/^(\d+[\t ,]+){2}(\d+).*/$2/	  90001  540006 1170031
+par__groupby_pipepart	tsv \t s/^(\d+[\t ,]+){2}(\d+).*/$2/	NewRec
+par__groupby_pipepart	tsv \t s/^(\d+[\t ,]+){2}(\d+).*/$2/	  90001  540006 1170031
+par__groupby_pipepart	tsv \t s/^(\d+[\t ,]+){2}(\d+).*/$2/	NewRec
+par__groupby_pipepart	tsv \t s/^(\d+[\t ,]+){2}(\d+).*/$2/	  90001  540006 1170031
+par__groupby_pipepart	ssv \s+ 3 $_%=2	### test ssv | --colsep \s+ --groupby 3 $_%=2
+par__groupby_pipepart	ssv \s+ 3 $_%=2	NewRec
+par__groupby_pipepart	ssv \s+ 3 $_%=2	  90001  540006 1170031
+par__groupby_pipepart	ssv \s+ 3 $_%=2	NewRec
+par__groupby_pipepart	ssv \s+ 3 $_%=2	  90001  540006 1170031
+par__groupby_pipepart	ssv \s+ 3 $_%=2	NewRec
+par__groupby_pipepart	ssv \s+ 3 $_%=2	  90001  540006 1170031
+par__groupby_pipepart	ssv \s+ 3 $_%=2	NewRec
+par__groupby_pipepart	ssv \s+ 3 $_%=2	  90001  540006 1170031
+par__groupby_pipepart	ssv \s+ 3 $_%=2	NewRec
+par__groupby_pipepart	ssv \s+ 3 $_%=2	  90001  540006 1170031
+par__groupby_pipepart	ssv \s+ 3 $_%=2	NewRec
+par__groupby_pipepart	ssv \s+ 3 $_%=2	  90001  540006 1170031
+par__groupby_pipepart	ssv \s+ 3 $_%=2	NewRec
+par__groupby_pipepart	ssv \s+ 3 $_%=2	  90001  540006 1170031
+par__groupby_pipepart	ssv \s+ 3 $_%=2	NewRec
+par__groupby_pipepart	ssv \s+ 3 $_%=2	  90001  540006 1170031
+par__groupby_pipepart	ssv \s+ 3 $_%=2	NewRec
+par__groupby_pipepart	ssv \s+ 3 $_%=2	  90001  540006 1170031
+par__groupby_pipepart	ssv \s+ 3 $_%=2	NewRec
+par__groupby_pipepart	ssv \s+ 3 $_%=2	  90001  540006 1170031
+par__groupby_pipepart	ssv \s+ 3	### test ssv | --colsep \s+ --groupby 3
+par__groupby_pipepart	ssv \s+ 3	NewRec
+par__groupby_pipepart	ssv \s+ 3	  90001  540006 1170031
+par__groupby_pipepart	ssv \s+ 3	NewRec
+par__groupby_pipepart	ssv \s+ 3	  90001  540006 1170031
+par__groupby_pipepart	ssv \s+ 3	NewRec
+par__groupby_pipepart	ssv \s+ 3	  90001  540006 1170031
+par__groupby_pipepart	ssv \s+ 3	NewRec
+par__groupby_pipepart	ssv \s+ 3	  90001  540006 1170031
+par__groupby_pipepart	ssv \s+ 3	NewRec
+par__groupby_pipepart	ssv \s+ 3	  90001  540006 1170031
+par__groupby_pipepart	ssv \s+ 3	NewRec
+par__groupby_pipepart	ssv \s+ 3	  90001  540006 1170031
+par__groupby_pipepart	ssv \s+ 3	NewRec
+par__groupby_pipepart	ssv \s+ 3	  90001  540006 1170031
+par__groupby_pipepart	ssv \s+ 3	NewRec
+par__groupby_pipepart	ssv \s+ 3	  90001  540006 1170031
+par__groupby_pipepart	ssv \s+ 3	NewRec
+par__groupby_pipepart	ssv \s+ 3	  90001  540006 1170031
+par__groupby_pipepart	ssv \s+ 3	NewRec
+par__groupby_pipepart	ssv \s+ 3	  90001  540006 1170031
+par__groupby_pipepart	ssv \s+ c1	### test ssv | --colsep \s+ --groupby c1
+par__groupby_pipepart	ssv \s+ c1	NewRec
+par__groupby_pipepart	ssv \s+ c1	  90001  540006 1170031
+par__groupby_pipepart	ssv \s+ c1	NewRec
+par__groupby_pipepart	ssv \s+ c1	  90001  540006 1170031
+par__groupby_pipepart	ssv \s+ c1	NewRec
+par__groupby_pipepart	ssv \s+ c1	  90001  540006 1170031
+par__groupby_pipepart	ssv \s+ c1	NewRec
+par__groupby_pipepart	ssv \s+ c1	  90001  540006 1170031
+par__groupby_pipepart	ssv \s+ c1	NewRec
+par__groupby_pipepart	ssv \s+ c1	  90001  540006 1170031
+par__groupby_pipepart	ssv \s+ c1	NewRec
+par__groupby_pipepart	ssv \s+ c1	  90001  540006 1170031
+par__groupby_pipepart	ssv \s+ c1	NewRec
+par__groupby_pipepart	ssv \s+ c1	  90001  540006 1170031
+par__groupby_pipepart	ssv \s+ c1	NewRec
+par__groupby_pipepart	ssv \s+ c1	  90001  540006 1170031
+par__groupby_pipepart	ssv \s+ c1	NewRec
+par__groupby_pipepart	ssv \s+ c1	  90001  540006 1170031
+par__groupby_pipepart	ssv \s+ c1	NewRec
+par__groupby_pipepart	ssv \s+ c1	  90001  540006 1170031
+par__groupby_pipepart	ssv \s+ c1 $_%=2	### test ssv | --colsep \s+ --groupby c1 $_%=2
+par__groupby_pipepart	ssv \s+ c1 $_%=2	NewRec
+par__groupby_pipepart	ssv \s+ c1 $_%=2	  90001  540006 1170031
+par__groupby_pipepart	ssv \s+ c1 $_%=2	NewRec
+par__groupby_pipepart	ssv \s+ c1 $_%=2	  90001  540006 1170031
+par__groupby_pipepart	ssv \s+ c1 $_%=2	NewRec
+par__groupby_pipepart	ssv \s+ c1 $_%=2	  90001  540006 1170031
+par__groupby_pipepart	ssv \s+ c1 $_%=2	NewRec
+par__groupby_pipepart	ssv \s+ c1 $_%=2	  90001  540006 1170031
+par__groupby_pipepart	ssv \s+ c1 $_%=2	NewRec
+par__groupby_pipepart	ssv \s+ c1 $_%=2	  90001  540006 1170031
+par__groupby_pipepart	ssv \s+ c1 $_%=2	NewRec
+par__groupby_pipepart	ssv \s+ c1 $_%=2	  90001  540006 1170031
+par__groupby_pipepart	ssv \s+ c1 $_%=2	NewRec
+par__groupby_pipepart	ssv \s+ c1 $_%=2	  90001  540006 1170031
+par__groupby_pipepart	ssv \s+ c1 $_%=2	NewRec
+par__groupby_pipepart	ssv \s+ c1 $_%=2	  90001  540006 1170031
+par__groupby_pipepart	ssv \s+ c1 $_%=2	NewRec
+par__groupby_pipepart	ssv \s+ c1 $_%=2	  90001  540006 1170031
+par__groupby_pipepart	ssv \s+ c1 $_%=2	NewRec
+par__groupby_pipepart	ssv \s+ c1 $_%=2	  90001  540006 1170031
+par__groupby_pipepart	ssv \s+ s/^(\d+[\t ,]+){2}(\d+).*/$2/	### test ssv | --colsep \s+ --groupby s/^(\d+[\t ,]+){2}(\d+).*/$2/
+par__groupby_pipepart	ssv \s+ s/^(\d+[\t ,]+){2}(\d+).*/$2/	NewRec
+par__groupby_pipepart	ssv \s+ s/^(\d+[\t ,]+){2}(\d+).*/$2/	  90001  540006 1170031
+par__groupby_pipepart	ssv \s+ s/^(\d+[\t ,]+){2}(\d+).*/$2/	NewRec
+par__groupby_pipepart	ssv \s+ s/^(\d+[\t ,]+){2}(\d+).*/$2/	  90001  540006 1170031
+par__groupby_pipepart	ssv \s+ s/^(\d+[\t ,]+){2}(\d+).*/$2/	NewRec
+par__groupby_pipepart	ssv \s+ s/^(\d+[\t ,]+){2}(\d+).*/$2/	  90001  540006 1170031
+par__groupby_pipepart	ssv \s+ s/^(\d+[\t ,]+){2}(\d+).*/$2/	NewRec
+par__groupby_pipepart	ssv \s+ s/^(\d+[\t ,]+){2}(\d+).*/$2/	  90001  540006 1170031
+par__groupby_pipepart	ssv \s+ s/^(\d+[\t ,]+){2}(\d+).*/$2/	NewRec
+par__groupby_pipepart	ssv \s+ s/^(\d+[\t ,]+){2}(\d+).*/$2/	  90001  540006 1170031
+par__groupby_pipepart	ssv \s+ s/^(\d+[\t ,]+){2}(\d+).*/$2/	NewRec
+par__groupby_pipepart	ssv \s+ s/^(\d+[\t ,]+){2}(\d+).*/$2/	  90001  540006 1170031
+par__groupby_pipepart	ssv \s+ s/^(\d+[\t ,]+){2}(\d+).*/$2/	NewRec
+par__groupby_pipepart	ssv \s+ s/^(\d+[\t ,]+){2}(\d+).*/$2/	  90001  540006 1170031
+par__groupby_pipepart	ssv \s+ s/^(\d+[\t ,]+){2}(\d+).*/$2/	NewRec
+par__groupby_pipepart	ssv \s+ s/^(\d+[\t ,]+){2}(\d+).*/$2/	  90001  540006 1170031
+par__groupby_pipepart	ssv \s+ s/^(\d+[\t ,]+){2}(\d+).*/$2/	NewRec
+par__groupby_pipepart	ssv \s+ s/^(\d+[\t ,]+){2}(\d+).*/$2/	  90001  540006 1170031
+par__groupby_pipepart	ssv \s+ s/^(\d+[\t ,]+){2}(\d+).*/$2/	NewRec
+par__groupby_pipepart	ssv \s+ s/^(\d+[\t ,]+){2}(\d+).*/$2/	  90001  540006 1170031
+par__groupby_pipepart	cssv [\s,]+ 3 $_%=2	### test cssv | --colsep [\s,]+ --groupby 3 $_%=2
+par__groupby_pipepart	cssv [\s,]+ 3 $_%=2	NewRec
+par__groupby_pipepart	cssv [\s,]+ 3 $_%=2	  90001  540006 1710037
+par__groupby_pipepart	cssv [\s,]+ 3 $_%=2	NewRec
+par__groupby_pipepart	cssv [\s,]+ 3 $_%=2	  90001  540006 1710037
+par__groupby_pipepart	cssv [\s,]+ 3 $_%=2	NewRec
+par__groupby_pipepart	cssv [\s,]+ 3 $_%=2	  90001  540006 1710037
+par__groupby_pipepart	cssv [\s,]+ 3 $_%=2	NewRec
+par__groupby_pipepart	cssv [\s,]+ 3 $_%=2	  90001  540006 1710037
+par__groupby_pipepart	cssv [\s,]+ 3 $_%=2	NewRec
+par__groupby_pipepart	cssv [\s,]+ 3 $_%=2	  90001  540006 1710037
+par__groupby_pipepart	cssv [\s,]+ 3 $_%=2	NewRec
+par__groupby_pipepart	cssv [\s,]+ 3 $_%=2	  90001  540006 1710037
+par__groupby_pipepart	cssv [\s,]+ 3 $_%=2	NewRec
+par__groupby_pipepart	cssv [\s,]+ 3 $_%=2	  90001  540006 1710037
+par__groupby_pipepart	cssv [\s,]+ 3 $_%=2	NewRec
+par__groupby_pipepart	cssv [\s,]+ 3 $_%=2	  90001  540006 1710037
+par__groupby_pipepart	cssv [\s,]+ 3 $_%=2	NewRec
+par__groupby_pipepart	cssv [\s,]+ 3 $_%=2	  90001  540006 1710037
+par__groupby_pipepart	cssv [\s,]+ 3 $_%=2	NewRec
+par__groupby_pipepart	cssv [\s,]+ 3 $_%=2	  90001  540006 1710037
+par__groupby_pipepart	cssv [\s,]+ 3	### test cssv | --colsep [\s,]+ --groupby 3
+par__groupby_pipepart	cssv [\s,]+ 3	NewRec
+par__groupby_pipepart	cssv [\s,]+ 3	  90001  540006 1710037
+par__groupby_pipepart	cssv [\s,]+ 3	NewRec
+par__groupby_pipepart	cssv [\s,]+ 3	  90001  540006 1710037
+par__groupby_pipepart	cssv [\s,]+ 3	NewRec
+par__groupby_pipepart	cssv [\s,]+ 3	  90001  540006 1710037
+par__groupby_pipepart	cssv [\s,]+ 3	NewRec
+par__groupby_pipepart	cssv [\s,]+ 3	  90001  540006 1710037
+par__groupby_pipepart	cssv [\s,]+ 3	NewRec
+par__groupby_pipepart	cssv [\s,]+ 3	  90001  540006 1710037
+par__groupby_pipepart	cssv [\s,]+ 3	NewRec
+par__groupby_pipepart	cssv [\s,]+ 3	  90001  540006 1710037
+par__groupby_pipepart	cssv [\s,]+ 3	NewRec
+par__groupby_pipepart	cssv [\s,]+ 3	  90001  540006 1710037
+par__groupby_pipepart	cssv [\s,]+ 3	NewRec
+par__groupby_pipepart	cssv [\s,]+ 3	  90001  540006 1710037
+par__groupby_pipepart	cssv [\s,]+ 3	NewRec
+par__groupby_pipepart	cssv [\s,]+ 3	  90001  540006 1710037
+par__groupby_pipepart	cssv [\s,]+ 3	NewRec
+par__groupby_pipepart	cssv [\s,]+ 3	  90001  540006 1710037
+par__groupby_pipepart	cssv [\s,]+ c1	### test cssv | --colsep [\s,]+ --groupby c1
+par__groupby_pipepart	cssv [\s,]+ c1	NewRec
+par__groupby_pipepart	cssv [\s,]+ c1	  90001  540006 1710037
+par__groupby_pipepart	cssv [\s,]+ c1	NewRec
+par__groupby_pipepart	cssv [\s,]+ c1	  90001  540006 1710037
+par__groupby_pipepart	cssv [\s,]+ c1	NewRec
+par__groupby_pipepart	cssv [\s,]+ c1	  90001  540006 1710037
+par__groupby_pipepart	cssv [\s,]+ c1	NewRec
+par__groupby_pipepart	cssv [\s,]+ c1	  90001  540006 1710037
+par__groupby_pipepart	cssv [\s,]+ c1	NewRec
+par__groupby_pipepart	cssv [\s,]+ c1	  90001  540006 1710037
+par__groupby_pipepart	cssv [\s,]+ c1	NewRec
+par__groupby_pipepart	cssv [\s,]+ c1	  90001  540006 1710037
+par__groupby_pipepart	cssv [\s,]+ c1	NewRec
+par__groupby_pipepart	cssv [\s,]+ c1	  90001  540006 1710037
+par__groupby_pipepart	cssv [\s,]+ c1	NewRec
+par__groupby_pipepart	cssv [\s,]+ c1	  90001  540006 1710037
+par__groupby_pipepart	cssv [\s,]+ c1	NewRec
+par__groupby_pipepart	cssv [\s,]+ c1	  90001  540006 1710037
+par__groupby_pipepart	cssv [\s,]+ c1	NewRec
+par__groupby_pipepart	cssv [\s,]+ c1	  90001  540006 1710037
+par__groupby_pipepart	cssv [\s,]+ c1 $_%=2	### test cssv | --colsep [\s,]+ --groupby c1 $_%=2
+par__groupby_pipepart	cssv [\s,]+ c1 $_%=2	NewRec
+par__groupby_pipepart	cssv [\s,]+ c1 $_%=2	  90001  540006 1710037
+par__groupby_pipepart	cssv [\s,]+ c1 $_%=2	NewRec
+par__groupby_pipepart	cssv [\s,]+ c1 $_%=2	  90001  540006 1710037
+par__groupby_pipepart	cssv [\s,]+ c1 $_%=2	NewRec
+par__groupby_pipepart	cssv [\s,]+ c1 $_%=2	  90001  540006 1710037
+par__groupby_pipepart	cssv [\s,]+ c1 $_%=2	NewRec
+par__groupby_pipepart	cssv [\s,]+ c1 $_%=2	  90001  540006 1710037
+par__groupby_pipepart	cssv [\s,]+ c1 $_%=2	NewRec
+par__groupby_pipepart	cssv [\s,]+ c1 $_%=2	  90001  540006 1710037
+par__groupby_pipepart	cssv [\s,]+ c1 $_%=2	NewRec
+par__groupby_pipepart	cssv [\s,]+ c1 $_%=2	  90001  540006 1710037
+par__groupby_pipepart	cssv [\s,]+ c1 $_%=2	NewRec
+par__groupby_pipepart	cssv [\s,]+ c1 $_%=2	  90001  540006 1710037
+par__groupby_pipepart	cssv [\s,]+ c1 $_%=2	NewRec
+par__groupby_pipepart	cssv [\s,]+ c1 $_%=2	  90001  540006 1710037
+par__groupby_pipepart	cssv [\s,]+ c1 $_%=2	NewRec
+par__groupby_pipepart	cssv [\s,]+ c1 $_%=2	  90001  540006 1710037
+par__groupby_pipepart	cssv [\s,]+ c1 $_%=2	NewRec
+par__groupby_pipepart	cssv [\s,]+ c1 $_%=2	  90001  540006 1710037
+par__groupby_pipepart	cssv [\s,]+ s/^(\d+[\t ,]+){2}(\d+).*/$2/	### test cssv | --colsep [\s,]+ --groupby s/^(\d+[\t ,]+){2}(\d+).*/$2/
+par__groupby_pipepart	cssv [\s,]+ s/^(\d+[\t ,]+){2}(\d+).*/$2/	NewRec
+par__groupby_pipepart	cssv [\s,]+ s/^(\d+[\t ,]+){2}(\d+).*/$2/	  90001  540006 1710037
+par__groupby_pipepart	cssv [\s,]+ s/^(\d+[\t ,]+){2}(\d+).*/$2/	NewRec
+par__groupby_pipepart	cssv [\s,]+ s/^(\d+[\t ,]+){2}(\d+).*/$2/	  90001  540006 1710037
+par__groupby_pipepart	cssv [\s,]+ s/^(\d+[\t ,]+){2}(\d+).*/$2/	NewRec
+par__groupby_pipepart	cssv [\s,]+ s/^(\d+[\t ,]+){2}(\d+).*/$2/	  90001  540006 1710037
+par__groupby_pipepart	cssv [\s,]+ s/^(\d+[\t ,]+){2}(\d+).*/$2/	NewRec
+par__groupby_pipepart	cssv [\s,]+ s/^(\d+[\t ,]+){2}(\d+).*/$2/	  90001  540006 1710037
+par__groupby_pipepart	cssv [\s,]+ s/^(\d+[\t ,]+){2}(\d+).*/$2/	NewRec
+par__groupby_pipepart	cssv [\s,]+ s/^(\d+[\t ,]+){2}(\d+).*/$2/	  90001  540006 1710037
+par__groupby_pipepart	cssv [\s,]+ s/^(\d+[\t ,]+){2}(\d+).*/$2/	NewRec
+par__groupby_pipepart	cssv [\s,]+ s/^(\d+[\t ,]+){2}(\d+).*/$2/	  90001  540006 1710037
+par__groupby_pipepart	cssv [\s,]+ s/^(\d+[\t ,]+){2}(\d+).*/$2/	NewRec
+par__groupby_pipepart	cssv [\s,]+ s/^(\d+[\t ,]+){2}(\d+).*/$2/	  90001  540006 1710037
+par__groupby_pipepart	cssv [\s,]+ s/^(\d+[\t ,]+){2}(\d+).*/$2/	NewRec
+par__groupby_pipepart	cssv [\s,]+ s/^(\d+[\t ,]+){2}(\d+).*/$2/	  90001  540006 1710037
+par__groupby_pipepart	cssv [\s,]+ s/^(\d+[\t ,]+){2}(\d+).*/$2/	NewRec
+par__groupby_pipepart	cssv [\s,]+ s/^(\d+[\t ,]+){2}(\d+).*/$2/	  90001  540006 1710037
+par__groupby_pipepart	cssv [\s,]+ s/^(\d+[\t ,]+){2}(\d+).*/$2/	NewRec
+par__groupby_pipepart	cssv [\s,]+ s/^(\d+[\t ,]+){2}(\d+).*/$2/	  90001  540006 1710037
+par__groupby_pipepart	csv , 3 $_%=2	### test csv | --colsep , --groupby 3 $_%=2
+par__groupby_pipepart	csv , 3 $_%=2	NewRec
+par__groupby_pipepart	csv , 3 $_%=2	  90001   90001 1170031
+par__groupby_pipepart	csv , 3 $_%=2	NewRec
+par__groupby_pipepart	csv , 3 $_%=2	  90001   90001 1170031
+par__groupby_pipepart	csv , 3 $_%=2	NewRec
+par__groupby_pipepart	csv , 3 $_%=2	  90001   90001 1170031
+par__groupby_pipepart	csv , 3 $_%=2	NewRec
+par__groupby_pipepart	csv , 3 $_%=2	  90001   90001 1170031
+par__groupby_pipepart	csv , 3 $_%=2	NewRec
+par__groupby_pipepart	csv , 3 $_%=2	  90001   90001 1170031
+par__groupby_pipepart	csv , 3 $_%=2	NewRec
+par__groupby_pipepart	csv , 3 $_%=2	  90001   90001 1170031
+par__groupby_pipepart	csv , 3 $_%=2	NewRec
+par__groupby_pipepart	csv , 3 $_%=2	  90001   90001 1170031
+par__groupby_pipepart	csv , 3 $_%=2	NewRec
+par__groupby_pipepart	csv , 3 $_%=2	  90001   90001 1170031
+par__groupby_pipepart	csv , 3 $_%=2	NewRec
+par__groupby_pipepart	csv , 3 $_%=2	  90001   90001 1170031
+par__groupby_pipepart	csv , 3 $_%=2	NewRec
+par__groupby_pipepart	csv , 3 $_%=2	  90001   90001 1170031
+par__groupby_pipepart	csv , 3	### test csv | --colsep , --groupby 3
+par__groupby_pipepart	csv , 3	NewRec
+par__groupby_pipepart	csv , 3	  90001   90001 1170031
+par__groupby_pipepart	csv , 3	NewRec
+par__groupby_pipepart	csv , 3	  90001   90001 1170031
+par__groupby_pipepart	csv , 3	NewRec
+par__groupby_pipepart	csv , 3	  90001   90001 1170031
+par__groupby_pipepart	csv , 3	NewRec
+par__groupby_pipepart	csv , 3	  90001   90001 1170031
+par__groupby_pipepart	csv , 3	NewRec
+par__groupby_pipepart	csv , 3	  90001   90001 1170031
+par__groupby_pipepart	csv , 3	NewRec
+par__groupby_pipepart	csv , 3	  90001   90001 1170031
+par__groupby_pipepart	csv , 3	NewRec
+par__groupby_pipepart	csv , 3	  90001   90001 1170031
+par__groupby_pipepart	csv , 3	NewRec
+par__groupby_pipepart	csv , 3	  90001   90001 1170031
+par__groupby_pipepart	csv , 3	NewRec
+par__groupby_pipepart	csv , 3	  90001   90001 1170031
+par__groupby_pipepart	csv , 3	NewRec
+par__groupby_pipepart	csv , 3	  90001   90001 1170031
+par__groupby_pipepart	csv , c1	### test csv | --colsep , --groupby c1
+par__groupby_pipepart	csv , c1	NewRec
+par__groupby_pipepart	csv , c1	  90001   90001 1170031
+par__groupby_pipepart	csv , c1	NewRec
+par__groupby_pipepart	csv , c1	  90001   90001 1170031
+par__groupby_pipepart	csv , c1	NewRec
+par__groupby_pipepart	csv , c1	  90001   90001 1170031
+par__groupby_pipepart	csv , c1	NewRec
+par__groupby_pipepart	csv , c1	  90001   90001 1170031
+par__groupby_pipepart	csv , c1	NewRec
+par__groupby_pipepart	csv , c1	  90001   90001 1170031
+par__groupby_pipepart	csv , c1	NewRec
+par__groupby_pipepart	csv , c1	  90001   90001 1170031
+par__groupby_pipepart	csv , c1	NewRec
+par__groupby_pipepart	csv , c1	  90001   90001 1170031
+par__groupby_pipepart	csv , c1	NewRec
+par__groupby_pipepart	csv , c1	  90001   90001 1170031
+par__groupby_pipepart	csv , c1	NewRec
+par__groupby_pipepart	csv , c1	  90001   90001 1170031
+par__groupby_pipepart	csv , c1	NewRec
+par__groupby_pipepart	csv , c1	  90001   90001 1170031
+par__groupby_pipepart	csv , c1 $_%=2	### test csv | --colsep , --groupby c1 $_%=2
+par__groupby_pipepart	csv , c1 $_%=2	NewRec
+par__groupby_pipepart	csv , c1 $_%=2	  90001   90001 1170031
+par__groupby_pipepart	csv , c1 $_%=2	NewRec
+par__groupby_pipepart	csv , c1 $_%=2	  90001   90001 1170031
+par__groupby_pipepart	csv , c1 $_%=2	NewRec
+par__groupby_pipepart	csv , c1 $_%=2	  90001   90001 1170031
+par__groupby_pipepart	csv , c1 $_%=2	NewRec
+par__groupby_pipepart	csv , c1 $_%=2	  90001   90001 1170031
+par__groupby_pipepart	csv , c1 $_%=2	NewRec
+par__groupby_pipepart	csv , c1 $_%=2	  90001   90001 1170031
+par__groupby_pipepart	csv , c1 $_%=2	NewRec
+par__groupby_pipepart	csv , c1 $_%=2	  90001   90001 1170031
+par__groupby_pipepart	csv , c1 $_%=2	NewRec
+par__groupby_pipepart	csv , c1 $_%=2	  90001   90001 1170031
+par__groupby_pipepart	csv , c1 $_%=2	NewRec
+par__groupby_pipepart	csv , c1 $_%=2	  90001   90001 1170031
+par__groupby_pipepart	csv , c1 $_%=2	NewRec
+par__groupby_pipepart	csv , c1 $_%=2	  90001   90001 1170031
+par__groupby_pipepart	csv , c1 $_%=2	NewRec
+par__groupby_pipepart	csv , c1 $_%=2	  90001   90001 1170031
+par__groupby_pipepart	csv , s/^(\d+[\t ,]+){2}(\d+).*/$2/	### test csv | --colsep , --groupby s/^(\d+[\t ,]+){2}(\d+).*/$2/
+par__groupby_pipepart	csv , s/^(\d+[\t ,]+){2}(\d+).*/$2/	NewRec
+par__groupby_pipepart	csv , s/^(\d+[\t ,]+){2}(\d+).*/$2/	  90001   90001 1170031
+par__groupby_pipepart	csv , s/^(\d+[\t ,]+){2}(\d+).*/$2/	NewRec
+par__groupby_pipepart	csv , s/^(\d+[\t ,]+){2}(\d+).*/$2/	  90001   90001 1170031
+par__groupby_pipepart	csv , s/^(\d+[\t ,]+){2}(\d+).*/$2/	NewRec
+par__groupby_pipepart	csv , s/^(\d+[\t ,]+){2}(\d+).*/$2/	  90001   90001 1170031
+par__groupby_pipepart	csv , s/^(\d+[\t ,]+){2}(\d+).*/$2/	NewRec
+par__groupby_pipepart	csv , s/^(\d+[\t ,]+){2}(\d+).*/$2/	  90001   90001 1170031
+par__groupby_pipepart	csv , s/^(\d+[\t ,]+){2}(\d+).*/$2/	NewRec
+par__groupby_pipepart	csv , s/^(\d+[\t ,]+){2}(\d+).*/$2/	  90001   90001 1170031
+par__groupby_pipepart	csv , s/^(\d+[\t ,]+){2}(\d+).*/$2/	NewRec
+par__groupby_pipepart	csv , s/^(\d+[\t ,]+){2}(\d+).*/$2/	  90001   90001 1170031
+par__groupby_pipepart	csv , s/^(\d+[\t ,]+){2}(\d+).*/$2/	NewRec
+par__groupby_pipepart	csv , s/^(\d+[\t ,]+){2}(\d+).*/$2/	  90001   90001 1170031
+par__groupby_pipepart	csv , s/^(\d+[\t ,]+){2}(\d+).*/$2/	NewRec
+par__groupby_pipepart	csv , s/^(\d+[\t ,]+){2}(\d+).*/$2/	  90001   90001 1170031
+par__groupby_pipepart	csv , s/^(\d+[\t ,]+){2}(\d+).*/$2/	NewRec
+par__groupby_pipepart	csv , s/^(\d+[\t ,]+){2}(\d+).*/$2/	  90001   90001 1170031
+par__groupby_pipepart	csv , s/^(\d+[\t ,]+){2}(\d+).*/$2/	NewRec
+par__groupby_pipepart	csv , s/^(\d+[\t ,]+){2}(\d+).*/$2/	  90001   90001 1170031
+par__internal_quote_char	### See if \257\256 \257<\257> is replaced correctly
+par__internal_quote_char	### See if \177\176 \177<\177> is replaced correctly
+par__internal_quote_char	Ø -X	Ø
+par__internal_quote_char	Ø -X	Ø
+par__internal_quote_char	Ø -X	Ø Ø
+par__internal_quote_char	Ø -X	Ø Ø
+par__internal_quote_char	Ø -X	ØØ
+par__internal_quote_char	Ø -X	ØØ
+par__internal_quote_char	Ø -q	Ø
+par__internal_quote_char	Ø -q	Ø Ø
+par__internal_quote_char	Ø -q	"Ø" Ø
+par__internal_quote_char	Ø -q	ØØ
+par__internal_quote_char	Ø -q	"Ø"Ø
+par__internal_quote_char	Ø -q	/usr/bin/bash: line 1: $'echo \257': command not found
+par__internal_quote_char	Ø -Xq	Ø
+par__internal_quote_char	Ø -Xq	Ø Ø
+par__internal_quote_char	Ø -Xq	"Ø" Ø
+par__internal_quote_char	Ø -Xq	ØØ
+par__internal_quote_char	Ø -Xq	"Ø"Ø
+par__internal_quote_char	Ø -Xq	/usr/bin/bash: line 1: $'echo \257': command not found
+par__internal_quote_char	Ø -k	Ø
+par__internal_quote_char	Ø -k	Ø
+par__internal_quote_char	Ø -k	Ø Ø
+par__internal_quote_char	Ø -k	Ø Ø
+par__internal_quote_char	Ø -k	ØØ
+par__internal_quote_char	Ø -k	ØØ
+par__internal_quote_char	 -X	
+par__internal_quote_char	 -X	
+par__internal_quote_char	 -X	~ 
+par__internal_quote_char	 -X	~ 
+par__internal_quote_char	 -X	
+par__internal_quote_char	 -X	
+par__internal_quote_char	 -q	
+par__internal_quote_char	 -q	 
+par__internal_quote_char	 -q	"" 
+par__internal_quote_char	 -q	
+par__internal_quote_char	 -q	""
+par__internal_quote_char	 -q	/usr/bin/bash: line 1: $'echo \177': command not found
+par__internal_quote_char	 -Xq	
+par__internal_quote_char	 -Xq	~ 
+par__internal_quote_char	 -Xq	"~" 
+par__internal_quote_char	 -Xq	
+par__internal_quote_char	 -Xq	""
+par__internal_quote_char	 -Xq	/usr/bin/bash: line 1: $'echo \177': command not found
+par__internal_quote_char	 -k	
+par__internal_quote_char	 -k	
+par__internal_quote_char	 -k	 
+par__internal_quote_char	 -k	 
+par__internal_quote_char	 -k	
+par__internal_quote_char	 -k	
+par__internal_quote_char	ØÆ -X	ØÆ
+par__internal_quote_char	ØÆ -X	ØÆ
+par__internal_quote_char	ØÆ -X	ØÆ ØÆ
+par__internal_quote_char	ØÆ -X	ØÆ ØÆ
+par__internal_quote_char	ØÆ -X	ØÆØÆ
+par__internal_quote_char	ØÆ -X	ØÆØÆ
+par__internal_quote_char	ØÆ -q	ØÆ
+par__internal_quote_char	ØÆ -q	ØÆ ØÆ
+par__internal_quote_char	ØÆ -q	"ØÆ" ØÆ
+par__internal_quote_char	ØÆ -q	ØÆØÆ
+par__internal_quote_char	ØÆ -q	"ØÆ"ØÆ
+par__internal_quote_char	ØÆ -q	/usr/bin/bash: line 1: $'echo \257\256': command not found
+par__internal_quote_char	ØÆ -Xq	ØÆ
+par__internal_quote_char	ØÆ -Xq	ØÆ ØÆ
+par__internal_quote_char	ØÆ -Xq	"ØÆ" ØÆ
+par__internal_quote_char	ØÆ -Xq	ØÆØÆ
+par__internal_quote_char	ØÆ -Xq	"ØÆ"ØÆ
+par__internal_quote_char	ØÆ -Xq	/usr/bin/bash: line 1: $'echo \257\256': command not found
+par__internal_quote_char	ØÆ -k	ØÆ
+par__internal_quote_char	ØÆ -k	ØÆ
+par__internal_quote_char	ØÆ -k	ØÆ ØÆ
+par__internal_quote_char	ØÆ -k	ØÆ ØÆ
+par__internal_quote_char	ØÆ -k	ØÆØÆ
+par__internal_quote_char	ØÆ -k	ØÆØÆ
+par__internal_quote_char	~ -X	~
+par__internal_quote_char	~ -X	~
+par__internal_quote_char	~ -X	~~ ~
+par__internal_quote_char	~ -X	~~ ~
+par__internal_quote_char	~ -X	~~
+par__internal_quote_char	~ -X	~~
+par__internal_quote_char	~ -q	~
+par__internal_quote_char	~ -q	~ ~
+par__internal_quote_char	~ -q	"~" ~
+par__internal_quote_char	~ -q	~~
+par__internal_quote_char	~ -q	"~"~
+par__internal_quote_char	~ -q	/usr/bin/bash: line 1: $'echo \177~': command not found
+par__internal_quote_char	~ -Xq	~
+par__internal_quote_char	~ -Xq	~~ ~
+par__internal_quote_char	~ -Xq	"~~" ~
+par__internal_quote_char	~ -Xq	~~
+par__internal_quote_char	~ -Xq	"~"~
+par__internal_quote_char	~ -Xq	/usr/bin/bash: line 1: $'echo \177~': command not found
+par__internal_quote_char	~ -k	~
+par__internal_quote_char	~ -k	~
+par__internal_quote_char	~ -k	~ ~
+par__internal_quote_char	~ -k	~ ~
+par__internal_quote_char	~ -k	~~
+par__internal_quote_char	~ -k	~~
+par__internal_quote_char	ØØÆ -X	ØØÆ
+par__internal_quote_char	ØØÆ -X	ØØÆ
+par__internal_quote_char	ØØÆ -X	ØØÆ ØØÆ
+par__internal_quote_char	ØØÆ -X	ØØÆ ØØÆ
+par__internal_quote_char	ØØÆ -X	ØØÆØØÆ
+par__internal_quote_char	ØØÆ -X	ØØÆØØÆ
+par__internal_quote_char	ØØÆ -q	ØØÆ
+par__internal_quote_char	ØØÆ -q	ØØÆ ØØÆ
+par__internal_quote_char	ØØÆ -q	"ØØÆ" ØØÆ
+par__internal_quote_char	ØØÆ -q	ØØÆØØÆ
+par__internal_quote_char	ØØÆ -q	"ØØÆ"ØØÆ
+par__internal_quote_char	ØØÆ -q	/usr/bin/bash: line 1: $'echo \257\257\256': command not found
+par__internal_quote_char	ØØÆ -Xq	ØØÆ
+par__internal_quote_char	ØØÆ -Xq	ØØÆ ØØÆ
+par__internal_quote_char	ØØÆ -Xq	"ØØÆ" ØØÆ
+par__internal_quote_char	ØØÆ -Xq	ØØÆØØÆ
+par__internal_quote_char	ØØÆ -Xq	"ØØÆ"ØØÆ
+par__internal_quote_char	ØØÆ -Xq	/usr/bin/bash: line 1: $'echo \257\257\256': command not found
+par__internal_quote_char	ØØÆ -k	ØØÆ
+par__internal_quote_char	ØØÆ -k	ØØÆ
+par__internal_quote_char	ØØÆ -k	ØØÆ ØØÆ
+par__internal_quote_char	ØØÆ -k	ØØÆ ØØÆ
+par__internal_quote_char	ØØÆ -k	ØØÆØØÆ
+par__internal_quote_char	ØØÆ -k	ØØÆØØÆ
+par__internal_quote_char	~ -X	~
+par__internal_quote_char	~ -X	~
+par__internal_quote_char	~ -X	~~~ ~
+par__internal_quote_char	~ -X	~~~ ~
+par__internal_quote_char	~ -X	~~
+par__internal_quote_char	~ -X	~~
+par__internal_quote_char	~ -q	~
+par__internal_quote_char	~ -q	~ ~
+par__internal_quote_char	~ -q	"~" ~
+par__internal_quote_char	~ -q	~~
+par__internal_quote_char	~ -q	"~"~
+par__internal_quote_char	~ -q	/usr/bin/bash: line 1: $'echo \177\177~': command not found
+par__internal_quote_char	~ -Xq	~
+par__internal_quote_char	~ -Xq	~~~ ~
+par__internal_quote_char	~ -Xq	"~~~" ~
+par__internal_quote_char	~ -Xq	~~
+par__internal_quote_char	~ -Xq	"~"~
+par__internal_quote_char	~ -Xq	/usr/bin/bash: line 1: $'echo \177\177~': command not found
+par__internal_quote_char	~ -k	~
+par__internal_quote_char	~ -k	~
+par__internal_quote_char	~ -k	~ ~
+par__internal_quote_char	~ -k	~ ~
+par__internal_quote_char	~ -k	~~
+par__internal_quote_char	~ -k	~~
+par__internal_quote_char	Ø<Ø<Ø>Ø -X	Ø<Ø<Ø>Ø
+par__internal_quote_char	Ø<Ø<Ø>Ø -X	Ø<Ø<Ø>Ø Ø<Ø<Ø>Ø
+par__internal_quote_char	Ø<Ø<Ø>Ø -X	Ø<Ø<Ø>ØØ<Ø<Ø>Ø
+par__internal_quote_char	Ø<Ø<Ø>Ø -X	/usr/bin/bash: line 1: Ø: Invalid or incomplete multibyte or wide character
+par__internal_quote_char	Ø<Ø<Ø>Ø -X	/usr/bin/bash: line 1: Ø: Invalid or incomplete multibyte or wide character
+par__internal_quote_char	Ø<Ø<Ø>Ø -X	/usr/bin/bash: line 1: Ø: Invalid or incomplete multibyte or wide character
+par__internal_quote_char	Ø<Ø<Ø>Ø -q	Ø<Ø<Ø>Ø
+par__internal_quote_char	Ø<Ø<Ø>Ø -q	Ø<Ø<Ø>Ø Ø<Ø<Ø>Ø
+par__internal_quote_char	Ø<Ø<Ø>Ø -q	"Ø<Ø<Ø>Ø" Ø<Ø<Ø>Ø
+par__internal_quote_char	Ø<Ø<Ø>Ø -q	Ø<Ø<Ø>ØØ<Ø<Ø>Ø
+par__internal_quote_char	Ø<Ø<Ø>Ø -q	"Ø<Ø<Ø>Ø"Ø<Ø<Ø>Ø
+par__internal_quote_char	Ø<Ø<Ø>Ø -q	/usr/bin/bash: line 1: $'echo \257<\257<\257>\257': command not found
+par__internal_quote_char	Ø<Ø<Ø>Ø -Xq	Ø<Ø<Ø>Ø
+par__internal_quote_char	Ø<Ø<Ø>Ø -Xq	Ø<Ø<Ø>Ø Ø<Ø<Ø>Ø
+par__internal_quote_char	Ø<Ø<Ø>Ø -Xq	"Ø<Ø<Ø>Ø" Ø<Ø<Ø>Ø
+par__internal_quote_char	Ø<Ø<Ø>Ø -Xq	Ø<Ø<Ø>ØØ<Ø<Ø>Ø
+par__internal_quote_char	Ø<Ø<Ø>Ø -Xq	"Ø<Ø<Ø>Ø"Ø<Ø<Ø>Ø
+par__internal_quote_char	Ø<Ø<Ø>Ø -Xq	/usr/bin/bash: line 1: $'echo \257<\257<\257>\257': command not found
+par__internal_quote_char	Ø<Ø<Ø>Ø -k	Ø<Ø<Ø>Ø
+par__internal_quote_char	Ø<Ø<Ø>Ø -k	Ø<Ø<Ø>Ø Ø<Ø<Ø>Ø
+par__internal_quote_char	Ø<Ø<Ø>Ø -k	Ø<Ø<Ø>ØØ<Ø<Ø>Ø
+par__internal_quote_char	Ø<Ø<Ø>Ø -k	/usr/bin/bash: line 1: Ø: Invalid or incomplete multibyte or wide character
+par__internal_quote_char	Ø<Ø<Ø>Ø -k	/usr/bin/bash: line 1: Ø: Invalid or incomplete multibyte or wide character
+par__internal_quote_char	Ø<Ø<Ø>Ø -k	/usr/bin/bash: line 1: Ø: Invalid or incomplete multibyte or wide character
+par__internal_quote_char	<<> -X	<<>
+par__internal_quote_char	<<> -X	~<~<~>~ <<>
+par__internal_quote_char	<<> -X	<<><<>
+par__internal_quote_char	<<> -X	/usr/bin/bash: line 1: : Invalid or incomplete multibyte or wide character
+par__internal_quote_char	<<> -X	/usr/bin/bash: line 1: ~: Invalid or incomplete multibyte or wide character
+par__internal_quote_char	<<> -X	/usr/bin/bash: line 1: : Invalid or incomplete multibyte or wide character
+par__internal_quote_char	<<> -q	<<>
+par__internal_quote_char	<<> -q	<<> <<>
+par__internal_quote_char	<<> -q	"<<>" <<>
+par__internal_quote_char	<<> -q	<<><<>
+par__internal_quote_char	<<> -q	"<<>"<<>
+par__internal_quote_char	<<> -q	/usr/bin/bash: line 1: $'echo \177<\177<\177>\177': command not found
+par__internal_quote_char	<<> -Xq	<<>
+par__internal_quote_char	<<> -Xq	~<~<~>~ <<>
+par__internal_quote_char	<<> -Xq	"~<~<~>~" <<>
+par__internal_quote_char	<<> -Xq	<<><<>
+par__internal_quote_char	<<> -Xq	"<<>"<<>
+par__internal_quote_char	<<> -Xq	/usr/bin/bash: line 1: $'echo \177<\177<\177>\177': command not found
+par__internal_quote_char	<<> -k	<<>
+par__internal_quote_char	<<> -k	<<> <<>
+par__internal_quote_char	<<> -k	<<><<>
+par__internal_quote_char	<<> -k	/usr/bin/bash: line 1: : Invalid or incomplete multibyte or wide character
+par__internal_quote_char	<<> -k	/usr/bin/bash: line 1: : Invalid or incomplete multibyte or wide character
+par__internal_quote_char	<<> -k	/usr/bin/bash: line 1: : Invalid or incomplete multibyte or wide character
+par__internal_quote_char	Compare old quote char csv
+par__internal_quote_char	with new quote char csv (must be the same)
+par__internal_quote_char	OK
+par__plus_dyn_repl	Dynamic replacement strings defined by --plus
+par__plus_dyn_repl	myval
+par__plus_dyn_repl	myval
+par__plus_dyn_repl	myval
+par__plus_dyn_repl	myval
+par__plus_dyn_repl	myval
+par__plus_dyn_repl	cAaBdefCdefDdef
+par__plus_dyn_repl	cAaBdefCdefDdef
+par__plus_dyn_repl	cAaBdefCdefDdef
+par__plus_dyn_repl	cAaBdefCdefDdef
+par__plus_dyn_repl	cAaBdefCdefDdef
+par__plus_dyn_repl	cAa
+par__plus_dyn_repl	cAa
+par__plus_dyn_repl	cAa
+par__plus_dyn_repl	cAa
+par__plus_dyn_repl	cAa
+par__plus_dyn_repl	17
+par__plus_dyn_repl	17
+par__plus_dyn_repl	1
+par__plus_dyn_repl	abcAaBdefCdefDdef
+par__plus_dyn_repl	abcAaBdefCdefDdef
+par__plus_dyn_repl	abcAaBdefCdefDdef
+par__plus_dyn_repl	abcAaBdefCdefDdef
+par__plus_dyn_repl	abcAaBdefCdefDdef
+par__plus_dyn_repl	AaBdefCdefDdef
+par__plus_dyn_repl	AaBdefCdefDdef
+par__plus_dyn_repl	AaBdefCdefDdef
+par__plus_dyn_repl	AaBdefCdefDdef
+par__plus_dyn_repl	AaBdefCdefDdef
+par__plus_dyn_repl	abcAaBdefCdefDdef
+par__plus_dyn_repl	abcAaBdefCdefDdef
+par__plus_dyn_repl	abcAaBdefCdefDdef
+par__plus_dyn_repl	abcAaBdefCdefDdef
+par__plus_dyn_repl	abcAaBdefCdefDdef
+par__plus_dyn_repl	abcAaBdefCdefD
+par__plus_dyn_repl	abcAaBdefCdefD
+par__plus_dyn_repl	abcAaBdefCdefD
+par__plus_dyn_repl	abcAaBdefCdefD
+par__plus_dyn_repl	abcAaBdefCdefD
+par__plus_dyn_repl	abcAaBghiCdefDdef
+par__plus_dyn_repl	abcAaBghiCdefDdef
+par__plus_dyn_repl	abcAaBghiCdefDdef
+par__plus_dyn_repl	abcAaBghiCdefDdef
+par__plus_dyn_repl	abcAaBghiCdefDdef
+par__plus_dyn_repl	abcAaBghiCghiDghi
+par__plus_dyn_repl	abcAaBghiCghiDghi
+par__plus_dyn_repl	abcAaBghiCghiDghi
+par__plus_dyn_repl	abcAaBghiCghiDghi
+par__plus_dyn_repl	abcAaBghiCghiDghi
+par__plus_dyn_repl	AbcAaBdefCdefDdef
+par__plus_dyn_repl	AbcAaBdefCdefDdef
+par__plus_dyn_repl	AbcAaBdefCdefDdef
+par__plus_dyn_repl	AbcAaBdefCdefDdef
+par__plus_dyn_repl	AbcAaBdefCdefDdef
+par__plus_dyn_repl	AbcAABdefCdefDdef
+par__plus_dyn_repl	AbcAABdefCdefDdef
+par__plus_dyn_repl	AbcAABdefCdefDdef
+par__plus_dyn_repl	AbcAABdefCdefDdef
+par__plus_dyn_repl	AbcAABdefCdefDdef
+par__plus_dyn_repl	abcAaAdef
+par__plus_dyn_repl	abcAaAdef
+par__plus_dyn_repl	abcAaAdef
+par__plus_dyn_repl	abcAaAdef
+par__plus_dyn_repl	abcAaAdef
+par__plus_dyn_repl	abcaaadef
+par__plus_dyn_repl	abcaaadef
+par__plus_dyn_repl	abcaaadef
+par__plus_dyn_repl	abcaaadef
+par__plus_dyn_repl	abcaaadef
+par__plus_dyn_repl	abcabcdefdef ABCabcdefdef
+par__plus_dyn_repl	abcabcdefdef ABCabcdefdef
+par__plus_dyn_repl	abcabcdefdef abcabcdefDEF
+par__plus_dyn_repl	abcabcdefdef abcabcdefDEF
+par__plus_dyn_repl	abcabcdefdef abcdefdef
+par__plus_dyn_repl	abcabcdefdef abcdefdef
+par__plus_dyn_repl	abcabcdefdef abcabcdef
+par__plus_dyn_repl	abcabcdefdef abcabcdef
+par__print_in_blocks	### bug #41565: Print happens in blocks - not after each job complete
+par__print_in_blocks	The timing here is important: a full second between each
+par__print_in_blocks	1
+par__print_in_blocks	300 ms jobs:
+par__print_in_blocks	3
+par__quote_special_results	### Test --results on file systems with limited UTF8 support
+par__quote_special_results	mkfs.btrfs	
+par__quote_special_results	mkfs.btrfs	Label: (null)
+par__quote_special_results	mkfs.btrfs	Node size: 16384
+par__quote_special_results	mkfs.btrfs	Sector size: 4096	(CPU page size: 4096)
+par__quote_special_results	mkfs.btrfs	Filesystem size: 301.00MiB
+par__quote_special_results	mkfs.btrfs	Block group profiles:
+par__quote_special_results	mkfs.btrfs	 Data: single 8.00MiB
+par__quote_special_results	mkfs.btrfs	 Metadata: DUP 32.00MiB
+par__quote_special_results	mkfs.btrfs	 System: DUP 8.00MiB
+par__quote_special_results	mkfs.btrfs	SSD detected: no
+par__quote_special_results	mkfs.btrfs	Zoned device: no
+par__quote_special_results	mkfs.btrfs	Features: extref, skinny-metadata, no-holes, free-space-tree
+par__quote_special_results	mkfs.btrfs	Checksum: crc32c
+par__quote_special_results	mkfs.btrfs	Number of devices: 1
+par__quote_special_results	mkfs.btrfs	Devices:
+par__quote_special_results	mkfs.btrfs	 1 301.00MiB /dev/shm/par-test-loop
+par__quote_special_results	mkfs.btrfs	
+par__quote_special_results	mkfs.btrfs	Filesystem 1K-blocks Used Available Use% Mounted on
+par__quote_special_results	mkfs.btrfs	/dev/loop 999999 99999 99999 9% /tmp/par-test-loop
+par__quote_special_results	mkfs.btrfs	. ./++ ./++++ ./++_ ./++__ ./++m ./++z ./+_ ./+__ ./+m ./+z ./,. ./,..
+par__quote_special_results	mkfs.btrfs	
+par__quote_special_results	mkfs.btrfs	. ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./! ./" ./# ./$ ./% ./& ./' ./( ./) ./* ./++ ./+_ ./+z ./, ./- ./0 ./1 ./2 ./3 ./4 ./5 ./6 ./7 ./8 ./9 ./: ./; ./< ./= ./> ./? ./@ ./A ./B ./C ./D ./E ./F ./G ./H ./I ./J ./K ./L ./M ./N ./O ./P ./Q ./R ./S ./T ./U ./V ./W ./X ./Y ./Z ./[ ./\ ./] ./^ ./_ ./` ./a ./b ./c ./d ./e ./f ./g ./h ./i ./j ./k ./l ./m ./n ./o ./p ./q ./r ./s ./t ./u ./v ./w ./x ./y ./z ./{ ./| ./} ./~ ./ ./Ä
+par__quote_special_results	mkfs.btrfs	. ./Ä ./Å ./Ç ./É ./Ñ ./Ö ./Ü ./á ./à ./â ./ä ./ã ./å ./ç ./é ./è ./ê ./ë ./í ./ì ./î ./ï ./ñ ./ó ./ò ./ô ./ö ./õ ./ú ./ù ./û ./ü ./† ./° ./¢ ./£ ./§ ./• ./¶ ./ß ./® ./© ./™ ./´ ./¨ ./≠ ./Æ ./Ø ./∞ ./± ./≤ ./≥ ./¥ ./µ ./∂ ./∑ ./∏ ./π ./∫ ./ª ./º ./Ω ./æ ./ø ./¿ ./¡ ./¬ ./√ ./ƒ ./≈ ./∆ ./« ./» ./… ./  ./À ./Ã ./Õ ./Œ ./œ ./– ./— ./“ ./” ./‘ ./’ ./÷ ./◊ ./ÿ ./Ÿ ./⁄ ./€ ./‹ ./› ./ﬁ ./ﬂ ./‡ ./· ./‚ ./„ ./‰ ./Â ./Ê ./Á ./Ë ./È ./Í ./Î ./Ï ./Ì ./Ó ./Ô ./ ./Ò ./Ú ./Û ./Ù ./ı ./ˆ ./˜ ./¯ ./˘ ./˙ ./˚ ./¸ ./˝ ./˛ ./ˇ
+par__quote_special_results	mkfs.btrfs	301+0 records in
+par__quote_special_results	mkfs.btrfs	301+0 records out
+par__quote_special_results	mkfs.exfat	Creating exFAT filesystem(/dev/shm/par-test-loop cluster size=32768)
+par__quote_special_results	mkfs.exfat	
+par__quote_special_results	mkfs.exfat	Writing volume boot record: done
+par__quote_special_results	mkfs.exfat	Writing backup volume boot record: done
+par__quote_special_results	mkfs.exfat	Fat table creation: done
+par__quote_special_results	mkfs.exfat	Allocation bitmap creation: done
+par__quote_special_results	mkfs.exfat	Upcase table creation: done
+par__quote_special_results	mkfs.exfat	Writing root directory entry: done
+par__quote_special_results	mkfs.exfat	Synchronizing...
+par__quote_special_results	mkfs.exfat	
+par__quote_special_results	mkfs.exfat	exFAT format complete!
+par__quote_special_results	mkfs.exfat	Filesystem 1K-blocks Used Available Use% Mounted on
+par__quote_special_results	mkfs.exfat	/dev/loop 999999 99999 99999 9% /tmp/par-test-loop
+par__quote_special_results	mkfs.exfat	. ./++ ./++++ ./++_ ./++__ ./++m ./++z ./+_ ./+__ ./+m ./+z ./,
+par__quote_special_results	mkfs.exfat	. ./ ./! ./# ./$ ./% ./& ./' ./( ./) ./++ ./+01 ./+02 ./+03 ./+04 ./+05 ./+06 ./+07 ./+08 ./+09 ./+0a ./+0b ./+0c ./+0d ./+0e ./+0f ./+10 ./+11 ./+12 ./+13 ./+14 ./+15 ./+16 ./+17 ./+18 ./+19 ./+1a ./+1b ./+1c ./+1d ./+1e ./+1f ./+80 ./+_ ./+a ./+b ./+d ./+g ./+k ./+l ./+p ./+y ./+z ./, ./- ./0 ./1 ./2 ./3 ./4 ./5 ./6 ./7 ./8 ./9 ./; ./= ./@ ./A ./B ./C ./D ./E ./F ./G ./H ./I ./J ./K ./L ./M ./N ./O ./P ./Q ./R ./S ./T ./U ./V ./W ./X ./Y ./Z ./[ ./] ./^ ./_ ./` ./{ ./} ./~ ./
+par__quote_special_results	mkfs.exfat	. ./+80 ./+81 ./+82 ./+83 ./+84 ./+85 ./+86 ./+87 ./+88 ./+89 ./+8a ./+8b ./+8c ./+8d ./+8e ./+8f ./+90 ./+91 ./+92 ./+93 ./+94 ./+95 ./+96 ./+97 ./+98 ./+99 ./+9a ./+9b ./+9c ./+9d ./+9e ./+9f ./+a0 ./+a1 ./+a2 ./+a3 ./+a4 ./+a5 ./+a6 ./+a7 ./+a8 ./+a9 ./+aa ./+ab ./+ac ./+ad ./+ae ./+af ./+b0 ./+b1 ./+b2 ./+b3 ./+b4 ./+b5 ./+b6 ./+b7 ./+b8 ./+b9 ./+ba ./+bb ./+bc ./+bd ./+be ./+bf ./+c0 ./+c1 ./+c2 ./+c3 ./+c4 ./+c5 ./+c6 ./+c7 ./+c8 ./+c9 ./+ca ./+cb ./+cc ./+cd ./+ce ./+cf ./+d0 ./+d1 ./+d2 ./+d3 ./+d4 ./+d5 ./+d6 ./+d7 ./+d8 ./+d9 ./+da ./+db ./+dc ./+dd ./+de ./+df ./+e0 ./+e1 ./+e2 ./+e3 ./+e4 ./+e5 ./+e6 ./+e7 ./+e8 ./+e9 ./+ea ./+eb ./+ec ./+ed ./+ee ./+ef ./+f0 ./+f1 ./+f2 ./+f3 ./+f4 ./+f5 ./+f6 ./+f7 ./+f8 ./+f9 ./+fa ./+fb ./+fc ./+fd ./+fe ./+ff
+par__quote_special_results	mkfs.exfat	301+0 records in
+par__quote_special_results	mkfs.exfat	301+0 records out
+par__quote_special_results	mkfs.ext2	Discarding device blocks: 0/77056 done 
+par__quote_special_results	mkfs.ext2	Creating filesystem with 77056 4k blocks and 77088 inodes
+par__quote_special_results	mkfs.ext2	Superblock backups stored on blocks: 
+par__quote_special_results	mkfs.ext2		32768
+par__quote_special_results	mkfs.ext2	
+par__quote_special_results	mkfs.ext2	Allocating group tables: 0/3 done 
+par__quote_special_results	mkfs.ext2	Writing inode tables: 0/3 done 
+par__quote_special_results	mkfs.ext2	Writing superblocks and filesystem accounting information: 0/3 done
+par__quote_special_results	mkfs.ext2	
+par__quote_special_results	mkfs.ext2	Filesystem 1K-blocks Used Available Use% Mounted on
+par__quote_special_results	mkfs.ext2	/dev/loop 999999 99999 99999 9% /tmp/par-test-loop
+par__quote_special_results	mkfs.ext2	. ./++ ./++++ ./++_ ./++__ ./++m ./++z ./+_ ./+__ ./+m ./+z ./,. ./,..
+par__quote_special_results	mkfs.ext2	
+par__quote_special_results	mkfs.ext2	. ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./! ./" ./# ./$ ./% ./& ./' ./( ./) ./* ./++ ./+_ ./+z ./, ./- ./0 ./1 ./2 ./3 ./4 ./5 ./6 ./7 ./8 ./9 ./: ./; ./< ./= ./> ./? ./@ ./A ./B ./C ./D ./E ./F ./G ./H ./I ./J ./K ./L ./M ./N ./O ./P ./Q ./R ./S ./T ./U ./V ./W ./X ./Y ./Z ./[ ./\ ./] ./^ ./_ ./` ./a ./b ./c ./d ./e ./f ./g ./h ./i ./j ./k ./l ./m ./n ./o ./p ./q ./r ./s ./t ./u ./v ./w ./x ./y ./z ./{ ./| ./} ./~ ./ ./Ä
+par__quote_special_results	mkfs.ext2	. ./Ä ./Å ./Ç ./É ./Ñ ./Ö ./Ü ./á ./à ./â ./ä ./ã ./å ./ç ./é ./è ./ê ./ë ./í ./ì ./î ./ï ./ñ ./ó ./ò ./ô ./ö ./õ ./ú ./ù ./û ./ü ./† ./° ./¢ ./£ ./§ ./• ./¶ ./ß ./® ./© ./™ ./´ ./¨ ./≠ ./Æ ./Ø ./∞ ./± ./≤ ./≥ ./¥ ./µ ./∂ ./∑ ./∏ ./π ./∫ ./ª ./º ./Ω ./æ ./ø ./¿ ./¡ ./¬ ./√ ./ƒ ./≈ ./∆ ./« ./» ./… ./  ./À ./Ã ./Õ ./Œ ./œ ./– ./— ./“ ./” ./‘ ./’ ./÷ ./◊ ./ÿ ./Ÿ ./⁄ ./€ ./‹ ./› ./ﬁ ./ﬂ ./‡ ./· ./‚ ./„ ./‰ ./Â ./Ê ./Á ./Ë ./È ./Í ./Î ./Ï ./Ì ./Ó ./Ô ./ ./Ò ./Ú ./Û ./Ù ./ı ./ˆ ./˜ ./¯ ./˘ ./˙ ./˚ ./¸ ./˝ ./˛ ./ˇ
+par__quote_special_results	mkfs.ext2	301+0 records in
+par__quote_special_results	mkfs.ext2	301+0 records out
+par__quote_special_results	mkfs.ext3	Discarding device blocks: 0/77056 done 
+par__quote_special_results	mkfs.ext3	Creating filesystem with 77056 4k blocks and 77088 inodes
+par__quote_special_results	mkfs.ext3	Superblock backups stored on blocks: 
+par__quote_special_results	mkfs.ext3		32768
+par__quote_special_results	mkfs.ext3	
+par__quote_special_results	mkfs.ext3	Allocating group tables: 0/3 done 
+par__quote_special_results	mkfs.ext3	Writing inode tables: 0/3 done 
+par__quote_special_results	mkfs.ext3	Creating journal (4096 blocks): done
+par__quote_special_results	mkfs.ext3	Writing superblocks and filesystem accounting information: 0/3 done
+par__quote_special_results	mkfs.ext3	
+par__quote_special_results	mkfs.ext3	Filesystem 1K-blocks Used Available Use% Mounted on
+par__quote_special_results	mkfs.ext3	/dev/loop 999999 99999 99999 9% /tmp/par-test-loop
+par__quote_special_results	mkfs.ext3	. ./++ ./++++ ./++_ ./++__ ./++m ./++z ./+_ ./+__ ./+m ./+z ./,. ./,..
+par__quote_special_results	mkfs.ext3	
+par__quote_special_results	mkfs.ext3	. ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./! ./" ./# ./$ ./% ./& ./' ./( ./) ./* ./++ ./+_ ./+z ./, ./- ./0 ./1 ./2 ./3 ./4 ./5 ./6 ./7 ./8 ./9 ./: ./; ./< ./= ./> ./? ./@ ./A ./B ./C ./D ./E ./F ./G ./H ./I ./J ./K ./L ./M ./N ./O ./P ./Q ./R ./S ./T ./U ./V ./W ./X ./Y ./Z ./[ ./\ ./] ./^ ./_ ./` ./a ./b ./c ./d ./e ./f ./g ./h ./i ./j ./k ./l ./m ./n ./o ./p ./q ./r ./s ./t ./u ./v ./w ./x ./y ./z ./{ ./| ./} ./~ ./ ./Ä
+par__quote_special_results	mkfs.ext3	. ./Ä ./Å ./Ç ./É ./Ñ ./Ö ./Ü ./á ./à ./â ./ä ./ã ./å ./ç ./é ./è ./ê ./ë ./í ./ì ./î ./ï ./ñ ./ó ./ò ./ô ./ö ./õ ./ú ./ù ./û ./ü ./† ./° ./¢ ./£ ./§ ./• ./¶ ./ß ./® ./© ./™ ./´ ./¨ ./≠ ./Æ ./Ø ./∞ ./± ./≤ ./≥ ./¥ ./µ ./∂ ./∑ ./∏ ./π ./∫ ./ª ./º ./Ω ./æ ./ø ./¿ ./¡ ./¬ ./√ ./ƒ ./≈ ./∆ ./« ./» ./… ./  ./À ./Ã ./Õ ./Œ ./œ ./– ./— ./“ ./” ./‘ ./’ ./÷ ./◊ ./ÿ ./Ÿ ./⁄ ./€ ./‹ ./› ./ﬁ ./ﬂ ./‡ ./· ./‚ ./„ ./‰ ./Â ./Ê ./Á ./Ë ./È ./Í ./Î ./Ï ./Ì ./Ó ./Ô ./ ./Ò ./Ú ./Û ./Ù ./ı ./ˆ ./˜ ./¯ ./˘ ./˙ ./˚ ./¸ ./˝ ./˛ ./ˇ
+par__quote_special_results	mkfs.ext3	301+0 records in
+par__quote_special_results	mkfs.ext3	301+0 records out
+par__quote_special_results	mkfs.ext4	Discarding device blocks: 0/77056 done 
+par__quote_special_results	mkfs.ext4	Creating filesystem with 77056 4k blocks and 77088 inodes
+par__quote_special_results	mkfs.ext4	Superblock backups stored on blocks: 
+par__quote_special_results	mkfs.ext4		32768
+par__quote_special_results	mkfs.ext4	
+par__quote_special_results	mkfs.ext4	Allocating group tables: 0/3 done 
+par__quote_special_results	mkfs.ext4	Writing inode tables: 0/3 done 
+par__quote_special_results	mkfs.ext4	Creating journal (4096 blocks): done
+par__quote_special_results	mkfs.ext4	Writing superblocks and filesystem accounting information: 0/3 done
+par__quote_special_results	mkfs.ext4	
+par__quote_special_results	mkfs.ext4	Filesystem 1K-blocks Used Available Use% Mounted on
+par__quote_special_results	mkfs.ext4	/dev/loop 999999 99999 99999 9% /tmp/par-test-loop
+par__quote_special_results	mkfs.ext4	. ./++ ./++++ ./++_ ./++__ ./++m ./++z ./+_ ./+__ ./+m ./+z ./,. ./,..
+par__quote_special_results	mkfs.ext4	
+par__quote_special_results	mkfs.ext4	. ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./! ./" ./# ./$ ./% ./& ./' ./( ./) ./* ./++ ./+_ ./+z ./, ./- ./0 ./1 ./2 ./3 ./4 ./5 ./6 ./7 ./8 ./9 ./: ./; ./< ./= ./> ./? ./@ ./A ./B ./C ./D ./E ./F ./G ./H ./I ./J ./K ./L ./M ./N ./O ./P ./Q ./R ./S ./T ./U ./V ./W ./X ./Y ./Z ./[ ./\ ./] ./^ ./_ ./` ./a ./b ./c ./d ./e ./f ./g ./h ./i ./j ./k ./l ./m ./n ./o ./p ./q ./r ./s ./t ./u ./v ./w ./x ./y ./z ./{ ./| ./} ./~ ./ ./Ä
+par__quote_special_results	mkfs.ext4	. ./Ä ./Å ./Ç ./É ./Ñ ./Ö ./Ü ./á ./à ./â ./ä ./ã ./å ./ç ./é ./è ./ê ./ë ./í ./ì ./î ./ï ./ñ ./ó ./ò ./ô ./ö ./õ ./ú ./ù ./û ./ü ./† ./° ./¢ ./£ ./§ ./• ./¶ ./ß ./® ./© ./™ ./´ ./¨ ./≠ ./Æ ./Ø ./∞ ./± ./≤ ./≥ ./¥ ./µ ./∂ ./∑ ./∏ ./π ./∫ ./ª ./º ./Ω ./æ ./ø ./¿ ./¡ ./¬ ./√ ./ƒ ./≈ ./∆ ./« ./» ./… ./  ./À ./Ã ./Õ ./Œ ./œ ./– ./— ./“ ./” ./‘ ./’ ./÷ ./◊ ./ÿ ./Ÿ ./⁄ ./€ ./‹ ./› ./ﬁ ./ﬂ ./‡ ./· ./‚ ./„ ./‰ ./Â ./Ê ./Á ./Ë ./È ./Í ./Î ./Ï ./Ì ./Ó ./Ô ./ ./Ò ./Ú ./Û ./Ù ./ı ./ˆ ./˜ ./¯ ./˘ ./˙ ./˚ ./¸ ./˝ ./˛ ./ˇ
+par__quote_special_results	mkfs.ext4	301+0 records in
+par__quote_special_results	mkfs.ext4	301+0 records out
+par__quote_special_results	mkfs.ntfs -F	Cluster size has been automatically set to 4096 bytes.
+par__quote_special_results	mkfs.ntfs -F	Initializing device with zeroes: 0% 0% 1% 2% 3% 4% 5% 6% 7% 8% 9% 10% 11% 12% 13% 14% 15% 16% 17% 18% 19% 20% 21% 22% 23% 24% 25% 26% 27% 28% 29% 30% 31% 32% 33% 34% 35% 36% 37% 38% 39% 40% 41% 42% 43% 44% 45% 46% 47% 48% 49% 50% 51% 52% 53% 54% 55% 56% 57% 58% 59% 60% 61% 62% 63% 64% 65% 66% 67% 68% 69% 70% 71% 72% 73% 74% 75% 76% 77% 78% 79% 80% 81% 82% 83% 84% 85% 86% 87% 88% 89% 90% 91% 92% 93% 94% 95% 96% 97% 98% 99%100% - Done.
+par__quote_special_results	mkfs.ntfs -F	Creating NTFS volume structures.
+par__quote_special_results	mkfs.ntfs -F	mkntfs completed successfully. Have a nice day.
+par__quote_special_results	mkfs.ntfs -F	Filesystem 1K-blocks Used Available Use% Mounted on
+par__quote_special_results	mkfs.ntfs -F	/dev/loop 999999 99999 99999 9% /tmp/par-test-loop
+par__quote_special_results	mkfs.ntfs -F	. ./++ ./++++ ./++_ ./++__ ./++m ./++z ./+_ ./+__ ./+m ./+z ./,. ./,..
+par__quote_special_results	mkfs.ntfs -F	
+par__quote_special_results	mkfs.ntfs -F	. ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./! ./" ./# ./$ ./% ./& ./' ./( ./) ./* ./++ ./+80 ./+_ ./+z ./, ./- ./0 ./1 ./2 ./3 ./4 ./5 ./6 ./7 ./8 ./9 ./: ./; ./< ./= ./> ./? ./@ ./A ./B ./C ./D ./E ./F ./G ./H ./I ./J ./K ./L ./M ./N ./O ./P ./Q ./R ./S ./T ./U ./V ./W ./X ./Y ./Z ./[ ./\ ./] ./^ ./_ ./` ./a ./b ./c ./d ./e ./f ./g ./h ./i ./j ./k ./l ./m ./n ./o ./p ./q ./r ./s ./t ./u ./v ./w ./x ./y ./z ./{ ./| ./} ./~ ./
+par__quote_special_results	mkfs.ntfs -F	. ./+80 ./+81 ./+82 ./+83 ./+84 ./+85 ./+86 ./+87 ./+88 ./+89 ./+8a ./+8b ./+8c ./+8d ./+8e ./+8f ./+90 ./+91 ./+92 ./+93 ./+94 ./+95 ./+96 ./+97 ./+98 ./+99 ./+9a ./+9b ./+9c ./+9d ./+9e ./+9f ./+a0 ./+a1 ./+a2 ./+a3 ./+a4 ./+a5 ./+a6 ./+a7 ./+a8 ./+a9 ./+aa ./+ab ./+ac ./+ad ./+ae ./+af ./+b0 ./+b1 ./+b2 ./+b3 ./+b4 ./+b5 ./+b6 ./+b7 ./+b8 ./+b9 ./+ba ./+bb ./+bc ./+bd ./+be ./+bf ./+c0 ./+c1 ./+c2 ./+c3 ./+c4 ./+c5 ./+c6 ./+c7 ./+c8 ./+c9 ./+ca ./+cb ./+cc ./+cd ./+ce ./+cf ./+d0 ./+d1 ./+d2 ./+d3 ./+d4 ./+d5 ./+d6 ./+d7 ./+d8 ./+d9 ./+da ./+db ./+dc ./+dd ./+de ./+df ./+e0 ./+e1 ./+e2 ./+e3 ./+e4 ./+e5 ./+e6 ./+e7 ./+e8 ./+e9 ./+ea ./+eb ./+ec ./+ed ./+ee ./+ef ./+f0 ./+f1 ./+f2 ./+f3 ./+f4 ./+f5 ./+f6 ./+f7 ./+f8 ./+f9 ./+fa ./+fb ./+fc ./+fd ./+fe ./+ff
+par__quote_special_results	mkfs.ntfs -F	301+0 records in
+par__quote_special_results	mkfs.ntfs -F	301+0 records out
+par__quote_special_results	mkfs.ntfs -F	/dev/shm/par-test-loop is not a block device.
+par__quote_special_results	mkfs.ntfs -F	mkntfs forced anyway.
+par__quote_special_results	mkfs.ntfs -F	The sector size was not specified for /dev/shm/par-test-loop and it could not be obtained automatically. It has been set to 512 bytes.
+par__quote_special_results	mkfs.ntfs -F	The partition start sector was not specified for /dev/shm/par-test-loop and it could not be obtained automatically. It has been set to 0.
+par__quote_special_results	mkfs.ntfs -F	The number of sectors per track was not specified for /dev/shm/par-test-loop and it could not be obtained automatically. It has been set to 0.
+par__quote_special_results	mkfs.ntfs -F	The number of heads was not specified for /dev/shm/par-test-loop and it could not be obtained automatically. It has been set to 0.
+par__quote_special_results	mkfs.ntfs -F	To boot from a device, Windows needs the 'partition start sector', the 'sectors per track' and the 'number of heads' to be set.
+par__quote_special_results	mkfs.ntfs -F	Windows will not be able to boot from this device.
+par__quote_special_results	mkfs.xfs -f	meta-data=/dev/shm/par-test-loop isize=512 agcount=4, agsize=19264 blks
+par__quote_special_results	mkfs.xfs -f	 = sectsz=512 attr=2, projid32bit=1
+par__quote_special_results	mkfs.xfs -f	 = exchange=0 metadir=0
+par__quote_special_results	mkfs.xfs -f	data = bsize=4096 blocks=77056, imaxpct=25
+par__quote_special_results	mkfs.xfs -f	 = sunit=0 swidth=0 blks
+par__quote_special_results	mkfs.xfs -f	naming =version 2 bsize=4096 ascii-ci=0, ftype=1, parent=0
+par__quote_special_results	mkfs.xfs -f	 = sectsz=512 sunit=0 blks, lazy-count=1
+par__quote_special_results	mkfs.xfs -f	realtime =none extsz=4096 blocks=0, rtextents=0
+par__quote_special_results	mkfs.xfs -f	 = rgcount=0 rgsize=0 extents
+par__quote_special_results	mkfs.xfs -f	 = zoned=0 start=0 reserved=0
+par__quote_special_results	mkfs.xfs -f	Filesystem 1K-blocks Used Available Use% Mounted on
+par__quote_special_results	mkfs.xfs -f	/dev/loop 999999 99999 99999 9% /tmp/par-test-loop
+par__quote_special_results	mkfs.xfs -f	. ./++ ./++++ ./++_ ./++__ ./++m ./++z ./+_ ./+__ ./+m ./+z ./,. ./,..
+par__quote_special_results	mkfs.xfs -f	
+par__quote_special_results	mkfs.xfs -f	. ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./! ./" ./# ./$ ./% ./& ./' ./( ./) ./* ./++ ./+_ ./+z ./, ./- ./0 ./1 ./2 ./3 ./4 ./5 ./6 ./7 ./8 ./9 ./: ./; ./< ./= ./> ./? ./@ ./A ./B ./C ./D ./E ./F ./G ./H ./I ./J ./K ./L ./M ./N ./O ./P ./Q ./R ./S ./T ./U ./V ./W ./X ./Y ./Z ./[ ./\ ./] ./^ ./_ ./` ./a ./b ./c ./d ./e ./f ./g ./h ./i ./j ./k ./l ./m ./n ./o ./p ./q ./r ./s ./t ./u ./v ./w ./x ./y ./z ./{ ./| ./} ./~ ./ ./Ä
+par__quote_special_results	mkfs.xfs -f	. ./Ä ./Å ./Ç ./É ./Ñ ./Ö ./Ü ./á ./à ./â ./ä ./ã ./å ./ç ./é ./è ./ê ./ë ./í ./ì ./î ./ï ./ñ ./ó ./ò ./ô ./ö ./õ ./ú ./ù ./û ./ü ./† ./° ./¢ ./£ ./§ ./• ./¶ ./ß ./® ./© ./™ ./´ ./¨ ./≠ ./Æ ./Ø ./∞ ./± ./≤ ./≥ ./¥ ./µ ./∂ ./∑ ./∏ ./π ./∫ ./ª ./º ./Ω ./æ ./ø ./¿ ./¡ ./¬ ./√ ./ƒ ./≈ ./∆ ./« ./» ./… ./  ./À ./Ã ./Õ ./Œ ./œ ./– ./— ./“ ./” ./‘ ./’ ./÷ ./◊ ./ÿ ./Ÿ ./⁄ ./€ ./‹ ./› ./ﬁ ./ﬂ ./‡ ./· ./‚ ./„ ./‰ ./Â ./Ê ./Á ./Ë ./È ./Í ./Î ./Ï ./Ì ./Ó ./Ô ./ ./Ò ./Ú ./Û ./Ù ./ı ./ˆ ./˜ ./¯ ./˘ ./˙ ./˚ ./¸ ./˝ ./˛ ./ˇ
+par__quote_special_results	mkfs.xfs -f	301+0 records in
+par__quote_special_results	mkfs.xfs -f	301+0 records out
+par__quote_special_results	mkfs.minix	21856 inodes
+par__quote_special_results	mkfs.minix	65535 blocks
+par__quote_special_results	mkfs.minix	Firstdatazone=696 (696)
+par__quote_special_results	mkfs.minix	Zonesize=1024
+par__quote_special_results	mkfs.minix	Maxsize=268966912
+par__quote_special_results	mkfs.minix	
+par__quote_special_results	mkfs.minix	Filesystem 1K-blocks Used Available Use% Mounted on
+par__quote_special_results	mkfs.minix	/dev/loop 999999 99999 99999 9% /tmp/par-test-loop
+par__quote_special_results	mkfs.minix	. ./++ ./++++ ./++_ ./++__ ./++m ./++z ./+_ ./+__ ./+m ./+z ./,. ./,..
+par__quote_special_results	mkfs.minix	
+par__quote_special_results	mkfs.minix	. ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./! ./" ./# ./$ ./% ./& ./' ./( ./) ./* ./++ ./+_ ./+z ./, ./- ./0 ./1 ./2 ./3 ./4 ./5 ./6 ./7 ./8 ./9 ./: ./; ./< ./= ./> ./? ./@ ./A ./B ./C ./D ./E ./F ./G ./H ./I ./J ./K ./L ./M ./N ./O ./P ./Q ./R ./S ./T ./U ./V ./W ./X ./Y ./Z ./[ ./\ ./] ./^ ./_ ./` ./a ./b ./c ./d ./e ./f ./g ./h ./i ./j ./k ./l ./m ./n ./o ./p ./q ./r ./s ./t ./u ./v ./w ./x ./y ./z ./{ ./| ./} ./~ ./ ./Ä
+par__quote_special_results	mkfs.minix	. ./Ä ./Å ./Ç ./É ./Ñ ./Ö ./Ü ./á ./à ./â ./ä ./ã ./å ./ç ./é ./è ./ê ./ë ./í ./ì ./î ./ï ./ñ ./ó ./ò ./ô ./ö ./õ ./ú ./ù ./û ./ü ./† ./° ./¢ ./£ ./§ ./• ./¶ ./ß ./® ./© ./™ ./´ ./¨ ./≠ ./Æ ./Ø ./∞ ./± ./≤ ./≥ ./¥ ./µ ./∂ ./∑ ./∏ ./π ./∫ ./ª ./º ./Ω ./æ ./ø ./¿ ./¡ ./¬ ./√ ./ƒ ./≈ ./∆ ./« ./» ./… ./  ./À ./Ã ./Õ ./Œ ./œ ./– ./— ./“ ./” ./‘ ./’ ./÷ ./◊ ./ÿ ./Ÿ ./⁄ ./€ ./‹ ./› ./ﬁ ./ﬂ ./‡ ./· ./‚ ./„ ./‰ ./Â ./Ê ./Á ./Ë ./È ./Í ./Î ./Ï ./Ì ./Ó ./Ô ./ ./Ò ./Ú ./Û ./Ù ./ı ./ˆ ./˜ ./¯ ./˘ ./˙ ./˚ ./¸ ./˝ ./˛ ./ˇ
+par__quote_special_results	mkfs.minix	301+0 records in
+par__quote_special_results	mkfs.minix	301+0 records out
+par__quote_special_results	mkfs.fat	mkfs.fat 4.2 (2021-01-31)
+par__quote_special_results	mkfs.fat	Filesystem 1K-blocks Used Available Use% Mounted on
+par__quote_special_results	mkfs.fat	/dev/loop 999999 99999 99999 9% /tmp/par-test-loop
+par__quote_special_results	mkfs.fat	. ./++ ./++++ ./++_ ./++__ ./++m ./++z ./+_ ./+__ ./+m ./+z ./,
+par__quote_special_results	mkfs.fat	. ./! ./# ./$ ./% ./& ./' ./( ./) ./++ ./+01 ./+02 ./+03 ./+04 ./+05 ./+06 ./+07 ./+08 ./+09 ./+0a ./+0b ./+0c ./+0d ./+0e ./+0f ./+10 ./+11 ./+12 ./+13 ./+14 ./+15 ./+16 ./+17 ./+18 ./+19 ./+1a ./+1b ./+1c ./+1d ./+1e ./+1f ./+20 ./+_ ./+a ./+b ./+d ./+g ./+k ./+l ./+p ./+y ./+z ./, ./- ./0 ./1 ./2 ./3 ./4 ./5 ./6 ./7 ./8 ./9 ./; ./= ./@ ./A ./B ./C ./D ./E ./F ./G ./H ./I ./J ./K ./L ./M ./N ./O ./P ./Q ./R ./S ./T ./U ./V ./W ./X ./Y ./Z ./[ ./] ./^ ./_ ./` ./{ ./} ./~ ./ ./Ä
+par__quote_special_results	mkfs.fat	. ./Ä ./Å ./Ç ./É ./Ñ ./Ö ./Ü ./á ./à ./â ./ä ./ã ./å ./ç ./é ./è ./ê ./ë ./í ./ì ./î ./ï ./ñ ./ó ./ò ./ô ./ö ./õ ./ú ./ù ./û ./ü ./† ./° ./¢ ./£ ./§ ./• ./¶ ./ß ./® ./© ./™ ./´ ./¨ ./≠ ./Æ ./Ø ./∞ ./± ./≤ ./≥ ./¥ ./µ ./∂ ./∑ ./∏ ./π ./∫ ./ª ./º ./Ω ./æ ./ø ./¿ ./¡ ./¬ ./√ ./ƒ ./≈ ./∆ ./« ./» ./… ./  ./À ./Ã ./Õ ./Œ ./œ ./– ./— ./“ ./” ./‘ ./’ ./÷ ./◊ ./ÿ ./Ÿ ./⁄ ./€ ./‹ ./› ./ﬁ ./ﬂ ./˜ ./ˇ
+par__quote_special_results	mkfs.fat	301+0 records in
+par__quote_special_results	mkfs.fat	301+0 records out
+par__quote_special_results	mkfs.vfat	mkfs.fat 4.2 (2021-01-31)
+par__quote_special_results	mkfs.vfat	Filesystem 1K-blocks Used Available Use% Mounted on
+par__quote_special_results	mkfs.vfat	/dev/loop 999999 99999 99999 9% /tmp/par-test-loop
+par__quote_special_results	mkfs.vfat	. ./++ ./++++ ./++_ ./++__ ./++m ./++z ./+_ ./+__ ./+m ./+z ./,
+par__quote_special_results	mkfs.vfat	. ./! ./# ./$ ./% ./& ./' ./( ./) ./++ ./+01 ./+02 ./+03 ./+04 ./+05 ./+06 ./+07 ./+08 ./+09 ./+0a ./+0b ./+0c ./+0d ./+0e ./+0f ./+10 ./+11 ./+12 ./+13 ./+14 ./+15 ./+16 ./+17 ./+18 ./+19 ./+1a ./+1b ./+1c ./+1d ./+1e ./+1f ./+20 ./+_ ./+a ./+b ./+d ./+g ./+k ./+l ./+p ./+y ./+z ./, ./- ./0 ./1 ./2 ./3 ./4 ./5 ./6 ./7 ./8 ./9 ./; ./= ./@ ./A ./B ./C ./D ./E ./F ./G ./H ./I ./J ./K ./L ./M ./N ./O ./P ./Q ./R ./S ./T ./U ./V ./W ./X ./Y ./Z ./[ ./] ./^ ./_ ./` ./{ ./} ./~ ./ ./Ä
+par__quote_special_results	mkfs.vfat	. ./Ä ./Å ./Ç ./É ./Ñ ./Ö ./Ü ./á ./à ./â ./ä ./ã ./å ./ç ./é ./è ./ê ./ë ./í ./ì ./î ./ï ./ñ ./ó ./ò ./ô ./ö ./õ ./ú ./ù ./û ./ü ./† ./° ./¢ ./£ ./§ ./• ./¶ ./ß ./® ./© ./™ ./´ ./¨ ./≠ ./Æ ./Ø ./∞ ./± ./≤ ./≥ ./¥ ./µ ./∂ ./∑ ./∏ ./π ./∫ ./ª ./º ./Ω ./æ ./ø ./¿ ./¡ ./¬ ./√ ./ƒ ./≈ ./∆ ./« ./» ./… ./  ./À ./Ã ./Õ ./Œ ./œ ./– ./— ./“ ./” ./‘ ./’ ./÷ ./◊ ./ÿ ./Ÿ ./⁄ ./€ ./‹ ./› ./ﬁ ./ﬂ ./˜ ./ˇ
+par__quote_special_results	mkfs.vfat	301+0 records in
+par__quote_special_results	mkfs.vfat	301+0 records out
+par__quote_special_results	mkfs.msdos	mkfs.fat 4.2 (2021-01-31)
+par__quote_special_results	mkfs.msdos	Filesystem 1K-blocks Used Available Use% Mounted on
+par__quote_special_results	mkfs.msdos	/dev/loop 999999 99999 99999 9% /tmp/par-test-loop
+par__quote_special_results	mkfs.msdos	. ./++ ./++++ ./++_ ./++__ ./++m ./++z ./+_ ./+__ ./+m ./+z ./,
+par__quote_special_results	mkfs.msdos	. ./! ./# ./$ ./% ./& ./' ./( ./) ./++ ./+01 ./+02 ./+03 ./+04 ./+05 ./+06 ./+07 ./+08 ./+09 ./+0a ./+0b ./+0c ./+0d ./+0e ./+0f ./+10 ./+11 ./+12 ./+13 ./+14 ./+15 ./+16 ./+17 ./+18 ./+19 ./+1a ./+1b ./+1c ./+1d ./+1e ./+1f ./+20 ./+_ ./+a ./+b ./+d ./+g ./+k ./+l ./+p ./+y ./+z ./, ./- ./0 ./1 ./2 ./3 ./4 ./5 ./6 ./7 ./8 ./9 ./; ./= ./@ ./A ./B ./C ./D ./E ./F ./G ./H ./I ./J ./K ./L ./M ./N ./O ./P ./Q ./R ./S ./T ./U ./V ./W ./X ./Y ./Z ./[ ./] ./^ ./_ ./` ./{ ./} ./~ ./ ./Ä
+par__quote_special_results	mkfs.msdos	. ./Ä ./Å ./Ç ./É ./Ñ ./Ö ./Ü ./á ./à ./â ./ä ./ã ./å ./ç ./é ./è ./ê ./ë ./í ./ì ./î ./ï ./ñ ./ó ./ò ./ô ./ö ./õ ./ú ./ù ./û ./ü ./† ./° ./¢ ./£ ./§ ./• ./¶ ./ß ./® ./© ./™ ./´ ./¨ ./≠ ./Æ ./Ø ./∞ ./± ./≤ ./≥ ./¥ ./µ ./∂ ./∑ ./∏ ./π ./∫ ./ª ./º ./Ω ./æ ./ø ./¿ ./¡ ./¬ ./√ ./ƒ ./≈ ./∆ ./« ./» ./… ./  ./À ./Ã ./Õ ./Œ ./œ ./– ./— ./“ ./” ./‘ ./’ ./÷ ./◊ ./ÿ ./Ÿ ./⁄ ./€ ./‹ ./› ./ﬁ ./ﬂ ./˜ ./ˇ
+par__quote_special_results	mkfs.msdos	301+0 records in
+par__quote_special_results	mkfs.msdos	301+0 records out
+par__quote_special_results	mkfs.f2fs	
+par__quote_special_results	mkfs.f2fs	
+par__quote_special_results	mkfs.f2fs	Info: Disable heap-based policy
+par__quote_special_results	mkfs.f2fs	Info: Debug level = 0
+par__quote_special_results	mkfs.f2fs	Info: Trim is enabled
+par__quote_special_results	mkfs.f2fs	Info: Segments per section = 1
+par__quote_special_results	mkfs.f2fs	Info: Sections per zone = 1
+par__quote_special_results	mkfs.f2fs	Info: sector size = 512
+par__quote_special_results	mkfs.f2fs	Info: total sectors = 616448 (301 MB)
+par__quote_special_results	mkfs.f2fs	Info: zone aligned segment0 blkaddr: 512
+par__quote_special_results	mkfs.f2fs	Info: format version with
+par__quote_special_results	mkfs.f2fs	Info: [/dev/shm/par-test-loop Discarding device
+par__quote_special_results	mkfs.f2fs	Info: format successful
+par__quote_special_results	mkfs.f2fs	Filesystem 1K-blocks Used Available Use% Mounted on
+par__quote_special_results	mkfs.f2fs	/dev/loop 999999 99999 99999 9% /tmp/par-test-loop
+par__quote_special_results	mkfs.f2fs	. ./++ ./++++ ./++_ ./++__ ./++m ./++z ./+_ ./+__ ./+m ./+z ./,. ./,..
+par__quote_special_results	mkfs.f2fs	
+par__quote_special_results	mkfs.f2fs	. ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./ ./! ./" ./# ./$ ./% ./& ./' ./( ./) ./* ./++ ./+_ ./+z ./, ./- ./0 ./1 ./2 ./3 ./4 ./5 ./6 ./7 ./8 ./9 ./: ./; ./< ./= ./> ./? ./@ ./A ./B ./C ./D ./E ./F ./G ./H ./I ./J ./K ./L ./M ./N ./O ./P ./Q ./R ./S ./T ./U ./V ./W ./X ./Y ./Z ./[ ./\ ./] ./^ ./_ ./` ./a ./b ./c ./d ./e ./f ./g ./h ./i ./j ./k ./l ./m ./n ./o ./p ./q ./r ./s ./t ./u ./v ./w ./x ./y ./z ./{ ./| ./} ./~ ./ ./Ä
+par__quote_special_results	mkfs.f2fs	. ./Ä ./Å ./Ç ./É ./Ñ ./Ö ./Ü ./á ./à ./â ./ä ./ã ./å ./ç ./é ./è ./ê ./ë ./í ./ì ./î ./ï ./ñ ./ó ./ò ./ô ./ö ./õ ./ú ./ù ./û ./ü ./† ./° ./¢ ./£ ./§ ./• ./¶ ./ß ./® ./© ./™ ./´ ./¨ ./≠ ./Æ ./Ø ./∞ ./± ./≤ ./≥ ./¥ ./µ ./∂ ./∑ ./∏ ./π ./∫ ./ª ./º ./Ω ./æ ./ø ./¿ ./¡ ./¬ ./√ ./ƒ ./≈ ./∆ ./« ./» ./… ./  ./À ./Ã ./Õ ./Œ ./œ ./– ./— ./“ ./” ./‘ ./’ ./÷ ./◊ ./ÿ ./Ÿ ./⁄ ./€ ./‹ ./› ./ﬁ ./ﬂ ./‡ ./· ./‚ ./„ ./‰ ./Â ./Ê ./Á ./Ë ./È ./Í ./Î ./Ï ./Ì ./Ó ./Ô ./ ./Ò ./Ú ./Û ./Ù ./ı ./ˆ ./˜ ./¯ ./˘ ./˙ ./˚ ./¸ ./˝ ./˛ ./ˇ
+par__quote_special_results	mkfs.f2fs	301+0 records in
+par__quote_special_results	mkfs.f2fs	301+0 records out
+par__test_detected_shell	### bug #42913: Dont use $SHELL but the shell currently running
+par__test_detected_shell	test_unknown_shell bash	Global::shell /usr/bin/bash
+par__test_detected_shell	test_unknown_shell csh	Global::shell /usr/bin/bash
+par__test_detected_shell	test_unknown_shell dash	Global::shell /usr/bin/bash
+par__test_detected_shell	test_unknown_shell fish	Global::shell /usr/bin/bash
+par__test_detected_shell	test_unknown_shell fizsh	Global::shell /usr/bin/zsh
+par__test_detected_shell	test_unknown_shell ksh	Global::shell /usr/bin/bash
+par__test_detected_shell	test_unknown_shell ksh93	Global::shell /usr/bin/bash
+par__test_detected_shell	test_unknown_shell mksh	Global::shell /usr/bin/bash
+par__test_detected_shell	test_unknown_shell posh	Global::shell /usr/bin/bash
+par__test_detected_shell	test_unknown_shell rbash	Global::shell /usr/bin/bash
+par__test_detected_shell	test_unknown_shell rzsh	Global::shell /usr/bin/bash
+par__test_detected_shell	test_unknown_shell sash	Global::shell /usr/bin/sh
+par__test_detected_shell	test_unknown_shell sh	Global::shell /usr/bin/bash
+par__test_detected_shell	test_unknown_shell tcsh	Global::shell /usr/bin/bash
+par__test_detected_shell	test_unknown_shell yash	Global::shell /usr/bin/bash
+par__test_detected_shell	test_unknown_shell zsh	Global::shell /usr/bin/bash
+par__test_detected_shell	test_known_shell_c bash	Global::shell /usr/bin/bash
+par__test_detected_shell	test_known_shell_c csh	Global::shell /usr/bin/csh
+par__test_detected_shell	test_known_shell_c dash	Global::shell /usr/bin/dash
+par__test_detected_shell	test_known_shell_c fish	Global::shell /usr/bin/fish
+par__test_detected_shell	test_known_shell_c fizsh	Global::shell /usr/bin/zsh
+par__test_detected_shell	test_known_shell_c ksh	Global::shell /usr/bin/ksh
+par__test_detected_shell	test_known_shell_c ksh93	Global::shell /usr/bin/ksh93
+par__test_detected_shell	test_known_shell_c mksh	Global::shell /usr/bin/mksh
+par__test_detected_shell	test_known_shell_c posh	Global::shell /usr/bin/posh
+par__test_detected_shell	test_known_shell_c rbash	Global::shell /usr/bin/rbash
+par__test_detected_shell	test_known_shell_c rzsh	Global::shell /usr/bin/rzsh
+par__test_detected_shell	test_known_shell_c sash	Global::shell /usr/bin/sh
+par__test_detected_shell	test_known_shell_c sh	Global::shell /usr/bin/sh
+par__test_detected_shell	test_known_shell_c static-sh	Global::shell /usr/bin/static-sh
+par__test_detected_shell	test_known_shell_c tcsh	Global::shell /usr/bin/tcsh
+par__test_detected_shell	test_known_shell_c yash	Global::shell /usr/bin/yash
+par__test_detected_shell	test_known_shell_c zsh	Global::shell /usr/bin/zsh
+par__test_detected_shell	test_known_shell_pipe bash	Global::shell /usr/bin/bash
+par__test_detected_shell	test_known_shell_pipe csh	Global::shell /usr/bin/csh
+par__test_detected_shell	test_known_shell_pipe dash	Global::shell /usr/bin/dash
+par__test_detected_shell	test_known_shell_pipe fish	Global::shell /usr/bin/fish
+par__test_detected_shell	test_known_shell_pipe fizsh	Global::shell /usr/bin/fizsh
+par__test_detected_shell	test_known_shell_pipe ksh	Global::shell /usr/bin/ksh
+par__test_detected_shell	test_known_shell_pipe ksh93	Global::shell /usr/bin/ksh93
+par__test_detected_shell	test_known_shell_pipe mksh	Global::shell /usr/bin/mksh
+par__test_detected_shell	test_known_shell_pipe posh	Global::shell /usr/bin/posh
+par__test_detected_shell	test_known_shell_pipe rbash	Global::shell /usr/bin/rbash
+par__test_detected_shell	test_known_shell_pipe rzsh	Global::shell /usr/bin/rzsh
+par__test_detected_shell	test_known_shell_pipe sash	Global::shell /usr/bin/sh
+par__test_detected_shell	test_known_shell_pipe sh	Global::shell /usr/bin/sh
+par__test_detected_shell	test_known_shell_pipe static-sh	Global::shell /usr/bin/static-sh
+par__test_detected_shell	test_known_shell_pipe tcsh	Global::shell /usr/bin/tcsh
+par__test_detected_shell	test_known_shell_pipe yash	Global::shell /usr/bin/yash
+par__test_detected_shell	test_known_shell_pipe zsh	Global::shell /usr/bin/zsh
+par_exit_code	bug #52207: Exit status 0 when child job is killed, even with "now,fail=1"
+par_exit_code	# Ideally the command should return the same
+par_exit_code	#   with or without parallel
+par_exit_code	csh /tmp/mysleep 100	137
+par_exit_code	csh parallel --halt-on-error now,fail=1 /tmp/mysleep ::: 100	137
+par_exit_code	csh parallel --halt-on-error now,done=1 /tmp/mysleep ::: 100	137
+par_exit_code	csh parallel --halt-on-error now,done=1 /bin/true ::: 100	0
+par_exit_code	csh parallel --halt-on-error now,done=1 exit ::: 100	100
+par_exit_code	csh true;/tmp/mysleep 100	137
+par_exit_code	csh parallel --halt-on-error now,fail=1 'true;/tmp/mysleep' ::: 100	137
+par_exit_code	csh parallel --halt-on-error now,done=1 'true;/tmp/mysleep' ::: 100	137
+par_exit_code	csh parallel --halt-on-error now,done=1 'true;/bin/true' ::: 100	0
+par_exit_code	csh parallel --halt-on-error now,done=1 'true;exit' ::: 100	100
+par_exit_code	dash /tmp/mysleep 100	137
+par_exit_code	dash parallel --halt-on-error now,fail=1 /tmp/mysleep ::: 100	137
+par_exit_code	dash parallel --halt-on-error now,done=1 /tmp/mysleep ::: 100	137
+par_exit_code	dash parallel --halt-on-error now,done=1 /bin/true ::: 100	0
+par_exit_code	dash parallel --halt-on-error now,done=1 exit ::: 100	100
+par_exit_code	dash true;/tmp/mysleep 100	137
+par_exit_code	dash parallel --halt-on-error now,fail=1 'true;/tmp/mysleep' ::: 100	137
+par_exit_code	dash parallel --halt-on-error now,done=1 'true;/tmp/mysleep' ::: 100	137
+par_exit_code	dash parallel --halt-on-error now,done=1 'true;/bin/true' ::: 100	0
+par_exit_code	dash parallel --halt-on-error now,done=1 'true;exit' ::: 100	100
+par_exit_code	fish /tmp/mysleep 100	137
+par_exit_code	fish parallel --halt-on-error now,fail=1 /tmp/mysleep ::: 100	137
+par_exit_code	fish parallel --halt-on-error now,done=1 /tmp/mysleep ::: 100	137
+par_exit_code	fish parallel --halt-on-error now,done=1 /bin/true ::: 100	0
+par_exit_code	fish parallel --halt-on-error now,done=1 exit ::: 100	100
+par_exit_code	fish true;/tmp/mysleep 100	137
+par_exit_code	fish parallel --halt-on-error now,fail=1 'true;/tmp/mysleep' ::: 100	137
+par_exit_code	fish parallel --halt-on-error now,done=1 'true;/tmp/mysleep' ::: 100	137
+par_exit_code	fish parallel --halt-on-error now,done=1 'true;/bin/true' ::: 100	0
+par_exit_code	fish parallel --halt-on-error now,done=1 'true;exit' ::: 100	100
+par_exit_code	fizsh /tmp/mysleep 100	137
+par_exit_code	fizsh parallel --halt-on-error now,fail=1 /tmp/mysleep ::: 100	137
+par_exit_code	fizsh parallel --halt-on-error now,done=1 /tmp/mysleep ::: 100	137
+par_exit_code	fizsh parallel --halt-on-error now,done=1 /bin/true ::: 100	0
+par_exit_code	fizsh parallel --halt-on-error now,done=1 exit ::: 100	100
+par_exit_code	fizsh true;/tmp/mysleep 100	137
+par_exit_code	fizsh parallel --halt-on-error now,fail=1 'true;/tmp/mysleep' ::: 100	137
+par_exit_code	fizsh parallel --halt-on-error now,done=1 'true;/tmp/mysleep' ::: 100	137
+par_exit_code	fizsh parallel --halt-on-error now,done=1 'true;/bin/true' ::: 100	0
+par_exit_code	fizsh parallel --halt-on-error now,done=1 'true;exit' ::: 100	100
+par_exit_code	ksh2020 /tmp/mysleep 100	open3: exec of ksh2020 -c /tmp/mysleep 100 failed: No such file or directory at -e line 1.
+par_exit_code	ksh2020 parallel --halt-on-error now,fail=1 /tmp/mysleep ::: 100	open3: exec of ksh2020 -c parallel --halt-on-error now,fail=1 /tmp/mysleep ::: 100 failed: No such file or directory at -e line 1.
+par_exit_code	ksh2020 parallel --halt-on-error now,done=1 /tmp/mysleep ::: 100	open3: exec of ksh2020 -c parallel --halt-on-error now,done=1 /tmp/mysleep ::: 100 failed: No such file or directory at -e line 1.
+par_exit_code	ksh2020 parallel --halt-on-error now,done=1 /bin/true ::: 100	open3: exec of ksh2020 -c parallel --halt-on-error now,done=1 /bin/true ::: 100 failed: No such file or directory at -e line 1.
+par_exit_code	ksh2020 parallel --halt-on-error now,done=1 exit ::: 100	open3: exec of ksh2020 -c parallel --halt-on-error now,done=1 exit ::: 100 failed: No such file or directory at -e line 1.
+par_exit_code	ksh2020 true;/tmp/mysleep 100	open3: exec of ksh2020 -c true;/tmp/mysleep 100 failed: No such file or directory at -e line 1.
+par_exit_code	ksh2020 parallel --halt-on-error now,fail=1 'true;/tmp/mysleep' ::: 100	open3: exec of ksh2020 -c parallel --halt-on-error now,fail=1 'true;/tmp/mysleep' ::: 100 failed: No such file or directory at -e line 1.
+par_exit_code	ksh2020 parallel --halt-on-error now,done=1 'true;/tmp/mysleep' ::: 100	open3: exec of ksh2020 -c parallel --halt-on-error now,done=1 'true;/tmp/mysleep' ::: 100 failed: No such file or directory at -e line 1.
+par_exit_code	ksh2020 parallel --halt-on-error now,done=1 'true;/bin/true' ::: 100	open3: exec of ksh2020 -c parallel --halt-on-error now,done=1 'true;/bin/true' ::: 100 failed: No such file or directory at -e line 1.
+par_exit_code	ksh2020 parallel --halt-on-error now,done=1 'true;exit' ::: 100	open3: exec of ksh2020 -c parallel --halt-on-error now,done=1 'true;exit' ::: 100 failed: No such file or directory at -e line 1.
+par_exit_code	posh /tmp/mysleep 100	137
+par_exit_code	posh parallel --halt-on-error now,fail=1 /tmp/mysleep ::: 100	137
+par_exit_code	posh parallel --halt-on-error now,done=1 /tmp/mysleep ::: 100	137
+par_exit_code	posh parallel --halt-on-error now,done=1 /bin/true ::: 100	0
+par_exit_code	posh parallel --halt-on-error now,done=1 exit ::: 100	100
+par_exit_code	posh true;/tmp/mysleep 100	137
+par_exit_code	posh parallel --halt-on-error now,fail=1 'true;/tmp/mysleep' ::: 100	137
+par_exit_code	posh parallel --halt-on-error now,done=1 'true;/tmp/mysleep' ::: 100	137
+par_exit_code	posh parallel --halt-on-error now,done=1 'true;/bin/true' ::: 100	0
+par_exit_code	posh parallel --halt-on-error now,done=1 'true;exit' ::: 100	100
+par_exit_code	rc /tmp/mysleep 100	1
+par_exit_code	rc parallel --halt-on-error now,fail=1 /tmp/mysleep ::: 100	1
+par_exit_code	rc parallel --halt-on-error now,done=1 /tmp/mysleep ::: 100	1
+par_exit_code	rc parallel --halt-on-error now,done=1 /bin/true ::: 100	0
+par_exit_code	rc parallel --halt-on-error now,done=1 exit ::: 100	100
+par_exit_code	rc true;/tmp/mysleep 100	1
+par_exit_code	rc parallel --halt-on-error now,fail=1 'true;/tmp/mysleep' ::: 100	1
+par_exit_code	rc parallel --halt-on-error now,done=1 'true;/tmp/mysleep' ::: 100	1
+par_exit_code	rc parallel --halt-on-error now,done=1 'true;/bin/true' ::: 100	0
+par_exit_code	rc parallel --halt-on-error now,done=1 'true;exit' ::: 100	100
+par_exit_code	sash /tmp/mysleep 100	255
+par_exit_code	sash parallel --halt-on-error now,fail=1 /tmp/mysleep ::: 100	255
+par_exit_code	sash parallel --halt-on-error now,done=1 /tmp/mysleep ::: 100	255
+par_exit_code	sash parallel --halt-on-error now,done=1 /bin/true ::: 100	0
+par_exit_code	sash parallel --halt-on-error now,done=1 exit ::: 100	100
+par_exit_code	sash true;/tmp/mysleep 100	0
+par_exit_code	sash parallel --halt-on-error now,fail=1 'true;/tmp/mysleep' ::: 100	0
+par_exit_code	sash parallel --halt-on-error now,done=1 'true;/tmp/mysleep' ::: 100	0
+par_exit_code	sash parallel --halt-on-error now,done=1 'true;/bin/true' ::: 100	0
+par_exit_code	sash parallel --halt-on-error now,done=1 'true;exit' ::: 100	0
+par_exit_code	sh /tmp/mysleep 100	137
+par_exit_code	sh parallel --halt-on-error now,fail=1 /tmp/mysleep ::: 100	137
+par_exit_code	sh parallel --halt-on-error now,done=1 /tmp/mysleep ::: 100	137
+par_exit_code	sh parallel --halt-on-error now,done=1 /bin/true ::: 100	0
+par_exit_code	sh parallel --halt-on-error now,done=1 exit ::: 100	100
+par_exit_code	sh true;/tmp/mysleep 100	137
+par_exit_code	sh parallel --halt-on-error now,fail=1 'true;/tmp/mysleep' ::: 100	137
+par_exit_code	sh parallel --halt-on-error now,done=1 'true;/tmp/mysleep' ::: 100	137
+par_exit_code	sh parallel --halt-on-error now,done=1 'true;/bin/true' ::: 100	0
+par_exit_code	sh parallel --halt-on-error now,done=1 'true;exit' ::: 100	100
+par_exit_code	tcsh /tmp/mysleep 100	137
+par_exit_code	tcsh parallel --halt-on-error now,fail=1 /tmp/mysleep ::: 100	137
+par_exit_code	tcsh parallel --halt-on-error now,done=1 /tmp/mysleep ::: 100	137
+par_exit_code	tcsh parallel --halt-on-error now,done=1 /bin/true ::: 100	0
+par_exit_code	tcsh parallel --halt-on-error now,done=1 exit ::: 100	100
+par_exit_code	tcsh true;/tmp/mysleep 100	137
+par_exit_code	tcsh parallel --halt-on-error now,fail=1 'true;/tmp/mysleep' ::: 100	137
+par_exit_code	tcsh parallel --halt-on-error now,done=1 'true;/tmp/mysleep' ::: 100	137
+par_exit_code	tcsh parallel --halt-on-error now,done=1 'true;/bin/true' ::: 100	0
+par_exit_code	tcsh parallel --halt-on-error now,done=1 'true;exit' ::: 100	100
+par_exit_code	bash /tmp/mysleep 100	0
+par_exit_code	bash parallel --halt-on-error now,fail=1 /tmp/mysleep ::: 100	137
+par_exit_code	bash parallel --halt-on-error now,done=1 /tmp/mysleep ::: 100	137
+par_exit_code	bash parallel --halt-on-error now,done=1 /bin/true ::: 100	0
+par_exit_code	bash parallel --halt-on-error now,done=1 exit ::: 100	100
+par_exit_code	bash true;/tmp/mysleep 100	0
+par_exit_code	bash parallel --halt-on-error now,fail=1 'true;/tmp/mysleep' ::: 100	137
+par_exit_code	bash parallel --halt-on-error now,done=1 'true;/tmp/mysleep' ::: 100	137
+par_exit_code	bash parallel --halt-on-error now,done=1 'true;/bin/true' ::: 100	0
+par_exit_code	bash parallel --halt-on-error now,done=1 'true;exit' ::: 100	100
+par_exit_code	ksh93 /tmp/mysleep 100	0
+par_exit_code	ksh93 parallel --halt-on-error now,fail=1 /tmp/mysleep ::: 100	137
+par_exit_code	ksh93 parallel --halt-on-error now,done=1 /tmp/mysleep ::: 100	137
+par_exit_code	ksh93 parallel --halt-on-error now,done=1 /bin/true ::: 100	0
+par_exit_code	ksh93 parallel --halt-on-error now,done=1 exit ::: 100	100
+par_exit_code	ksh93 true;/tmp/mysleep 100	0
+par_exit_code	ksh93 parallel --halt-on-error now,fail=1 'true;/tmp/mysleep' ::: 100	137
+par_exit_code	ksh93 parallel --halt-on-error now,done=1 'true;/tmp/mysleep' ::: 100	137
+par_exit_code	ksh93 parallel --halt-on-error now,done=1 'true;/bin/true' ::: 100	0
+par_exit_code	ksh93 parallel --halt-on-error now,done=1 'true;exit' ::: 100	100
+par_exit_code	mksh /tmp/mysleep 100	0
+par_exit_code	mksh parallel --halt-on-error now,fail=1 /tmp/mysleep ::: 100	137
+par_exit_code	mksh parallel --halt-on-error now,done=1 /tmp/mysleep ::: 100	137
+par_exit_code	mksh parallel --halt-on-error now,done=1 /bin/true ::: 100	0
+par_exit_code	mksh parallel --halt-on-error now,done=1 exit ::: 100	100
+par_exit_code	mksh true;/tmp/mysleep 100	137
+par_exit_code	mksh parallel --halt-on-error now,fail=1 'true;/tmp/mysleep' ::: 100	137
+par_exit_code	mksh parallel --halt-on-error now,done=1 'true;/tmp/mysleep' ::: 100	137
+par_exit_code	mksh parallel --halt-on-error now,done=1 'true;/bin/true' ::: 100	0
+par_exit_code	mksh parallel --halt-on-error now,done=1 'true;exit' ::: 100	100
+par_exit_code	static-sh /tmp/mysleep 100	0
+par_exit_code	static-sh parallel --halt-on-error now,fail=1 /tmp/mysleep ::: 100	137
+par_exit_code	static-sh parallel --halt-on-error now,done=1 /tmp/mysleep ::: 100	137
+par_exit_code	static-sh parallel --halt-on-error now,done=1 /bin/true ::: 100	0
+par_exit_code	static-sh parallel --halt-on-error now,done=1 exit ::: 100	100
+par_exit_code	static-sh true;/tmp/mysleep 100	0
+par_exit_code	static-sh parallel --halt-on-error now,fail=1 'true;/tmp/mysleep' ::: 100	137
+par_exit_code	static-sh parallel --halt-on-error now,done=1 'true;/tmp/mysleep' ::: 100	137
+par_exit_code	static-sh parallel --halt-on-error now,done=1 'true;/bin/true' ::: 100	0
+par_exit_code	static-sh parallel --halt-on-error now,done=1 'true;exit' ::: 100	100
+par_exit_code	yash /tmp/mysleep 100	0
+par_exit_code	yash parallel --halt-on-error now,fail=1 /tmp/mysleep ::: 100	137
+par_exit_code	yash parallel --halt-on-error now,done=1 /tmp/mysleep ::: 100	137
+par_exit_code	yash parallel --halt-on-error now,done=1 /bin/true ::: 100	0
+par_exit_code	yash parallel --halt-on-error now,done=1 exit ::: 100	100
+par_exit_code	yash true;/tmp/mysleep 100	0
+par_exit_code	yash parallel --halt-on-error now,fail=1 'true;/tmp/mysleep' ::: 100	137
+par_exit_code	yash parallel --halt-on-error now,done=1 'true;/tmp/mysleep' ::: 100	137
+par_exit_code	yash parallel --halt-on-error now,done=1 'true;/bin/true' ::: 100	0
+par_exit_code	yash parallel --halt-on-error now,done=1 'true;exit' ::: 100	100
+par_exit_code	zsh /tmp/mysleep 100	0
+par_exit_code	zsh parallel --halt-on-error now,fail=1 /tmp/mysleep ::: 100	137
+par_exit_code	zsh parallel --halt-on-error now,done=1 /tmp/mysleep ::: 100	137
+par_exit_code	zsh parallel --halt-on-error now,done=1 /bin/true ::: 100	0
+par_exit_code	zsh parallel --halt-on-error now,done=1 exit ::: 100	100
+par_exit_code	zsh true;/tmp/mysleep 100	0
+par_exit_code	zsh parallel --halt-on-error now,fail=1 'true;/tmp/mysleep' ::: 100	137
+par_exit_code	zsh parallel --halt-on-error now,done=1 'true;/tmp/mysleep' ::: 100	137
+par_exit_code	zsh parallel --halt-on-error now,done=1 'true;/bin/true' ::: 100	0
+par_exit_code	zsh parallel --halt-on-error now,done=1 'true;exit' ::: 100	100
+par_exit_code	fdsh /tmp/mysleep 100	137
+par_exit_code	fdsh parallel --halt-on-error now,fail=1 /tmp/mysleep ::: 100	2
+par_exit_code	fdsh parallel --halt-on-error now,done=1 /tmp/mysleep ::: 100	2
+par_exit_code	fdsh parallel --halt-on-error now,done=1 /bin/true ::: 100	2
+par_exit_code	fdsh parallel --halt-on-error now,done=1 exit ::: 100	100
+par_exit_code	fdsh true;/tmp/mysleep 100	137
+par_exit_code	fdsh parallel --halt-on-error now,fail=1 'true;/tmp/mysleep' ::: 100	2
+par_exit_code	fdsh parallel --halt-on-error now,done=1 'true;/tmp/mysleep' ::: 100	2
+par_exit_code	fdsh parallel --halt-on-error now,done=1 'true;/bin/true' ::: 100	2
+par_exit_code	fdsh parallel --halt-on-error now,done=1 'true;exit' ::: 100	100
+par_exit_code	parallel: This job finished:
+par_exit_code	runit
+par_fifo_under_csh	### Test --fifo under csh
+par_fifo_under_csh	1048571
+par_fifo_under_csh	1
+par_fifo_under_csh	1048572
+par_fifo_under_csh	1
+par_fifo_under_csh	1048572
+par_fifo_under_csh	1
+par_fifo_under_csh	1048572
+par_fifo_under_csh	1
+par_fifo_under_csh	1048572
+par_fifo_under_csh	1
+par_fifo_under_csh	1048572
+par_fifo_under_csh	1
+par_fifo_under_csh	1048569
+par_fifo_under_csh	1
+par_fifo_under_csh	1048576
+par_fifo_under_csh	1
+par_fifo_under_csh	1048576
+par_fifo_under_csh	1
+par_fifo_under_csh	1048576
+par_fifo_under_csh	1
+par_fifo_under_csh	1048576
+par_fifo_under_csh	1
+par_fifo_under_csh	1048576
+par_fifo_under_csh	1
+par_fifo_under_csh	1048576
+par_fifo_under_csh	1
+par_fifo_under_csh	1048576
+par_fifo_under_csh	1
+par_fifo_under_csh	1048576
+par_fifo_under_csh	1
+par_fifo_under_csh	1048576
+par_fifo_under_csh	1
+par_fifo_under_csh	1048576
+par_fifo_under_csh	1
+par_fifo_under_csh	1048576
+par_fifo_under_csh	1
+par_fifo_under_csh	1048576
+par_fifo_under_csh	1
+par_fifo_under_csh	1048576
+par_fifo_under_csh	1
+par_fifo_under_csh	1048576
+par_fifo_under_csh	1
+par_fifo_under_csh	868832
+par_fifo_under_csh	1
+par_fifo_under_csh	exit 22
+par_groupby	-N1 3 $_%=2 tsv \t	### test tsv | --colsep \t --groupby 3 $_%=2 -N1
+par_groupby	-N1 3 $_%=2 tsv \t	NewRec
+par_groupby	-N1 3 $_%=2 tsv \t	a1	b1	C1	
+par_groupby	-N1 3 $_%=2 tsv \t	2	2	2	
+par_groupby	-N1 3 $_%=2 tsv \t	3	2	2	
+par_groupby	-N1 3 $_%=2 tsv \t	3	3	2	
+par_groupby	-N1 3 $_%=2 tsv \t	3	2	4	
+par_groupby	-N1 3 $_%=2 tsv \t	3	2	2	
+par_groupby	-N1 3 $_%=2 tsv \t	NewRec
+par_groupby	-N1 3 $_%=2 tsv \t	3	2	3	
+par_groupby	-N1 3 $_%=2 tsv \t	3	1	3	
+par_groupby	-N1 3 $_%=2 tsv \t	3	2	3	
+par_groupby	-N1 3 $_%=2 tsv \t	3	3	3	
+par_groupby	-N1 3 $_%=2 tsv \t	NewRec
+par_groupby	-N1 3 $_%=2 tsv \t	3	4	4	
+par_groupby	-N1 3 $_%=2 tsv \t	3	5	4	
+par_groupby	-N1 3 $_%=2 ssv \s+	### test ssv | --colsep \s+ --groupby 3 $_%=2 -N1
+par_groupby	-N1 3 $_%=2 ssv \s+	NewRec
+par_groupby	-N1 3 $_%=2 ssv \s+	a1	b1	C1	
+par_groupby	-N1 3 $_%=2 ssv \s+	2 2 2 
+par_groupby	-N1 3 $_%=2 ssv \s+	3 	2 	2 	
+par_groupby	-N1 3 $_%=2 ssv \s+	3	 3	 2	 
+par_groupby	-N1 3 $_%=2 ssv \s+	3  2  4  
+par_groupby	-N1 3 $_%=2 ssv \s+	3		2		2		
+par_groupby	-N1 3 $_%=2 ssv \s+	NewRec
+par_groupby	-N1 3 $_%=2 ssv \s+	3	  	2	  	3	  	
+par_groupby	-N1 3 $_%=2 ssv \s+	3	  	  1	  	  3	  	  
+par_groupby	-N1 3 $_%=2 ssv \s+	3	  	 2	  	 3	  	 
+par_groupby	-N1 3 $_%=2 ssv \s+	3	  	3	  	3	  	
+par_groupby	-N1 3 $_%=2 ssv \s+	NewRec
+par_groupby	-N1 3 $_%=2 ssv \s+	3		4		4		
+par_groupby	-N1 3 $_%=2 ssv \s+	3	 	5	 	4	 	
+par_groupby	-N1 3 $_%=2 cssv [\s,]+	### test cssv | --colsep [\s,]+ --groupby 3 $_%=2 -N1
+par_groupby	-N1 3 $_%=2 cssv [\s,]+	NewRec
+par_groupby	-N1 3 $_%=2 cssv [\s,]+	a1,	b1,	C1,	
+par_groupby	-N1 3 $_%=2 cssv [\s,]+	2 ,2 ,2 ,
+par_groupby	-N1 3 $_%=2 cssv [\s,]+	3  ,	2  ,	2  ,	
+par_groupby	-N1 3 $_%=2 cssv [\s,]+	3	, 3	, 2	, 
+par_groupby	-N1 3 $_%=2 cssv [\s,]+	3,,2,,4,,
+par_groupby	-N1 3 $_%=2 cssv [\s,]+	3	,,, 2	,,, 2	,,, 
+par_groupby	-N1 3 $_%=2 cssv [\s,]+	NewRec
+par_groupby	-N1 3 $_%=2 cssv [\s,]+	3	2	3	
+par_groupby	-N1 3 $_%=2 cssv [\s,]+	3	, 1	, 3	, 
+par_groupby	-N1 3 $_%=2 cssv [\s,]+	3	,2	,3	,
+par_groupby	-N1 3 $_%=2 cssv [\s,]+	3, 	3, 	3, 	
+par_groupby	-N1 3 $_%=2 cssv [\s,]+	NewRec
+par_groupby	-N1 3 $_%=2 cssv [\s,]+	3,	,4,	,4,	,
+par_groupby	-N1 3 $_%=2 cssv [\s,]+	3	,,5	,,4	,,
+par_groupby	-N1 3 $_%=2 csv ,	### test csv | --colsep , --groupby 3 $_%=2 -N1
+par_groupby	-N1 3 $_%=2 csv ,	NewRec
+par_groupby	-N1 3 $_%=2 csv ,	a1,b1,C1,
+par_groupby	-N1 3 $_%=2 csv ,	2,2,2,
+par_groupby	-N1 3 $_%=2 csv ,	3,2,2,
+par_groupby	-N1 3 $_%=2 csv ,	3,3,2,
+par_groupby	-N1 3 $_%=2 csv ,	3,2,4,
+par_groupby	-N1 3 $_%=2 csv ,	3,2,2,
+par_groupby	-N1 3 $_%=2 csv ,	NewRec
+par_groupby	-N1 3 $_%=2 csv ,	3,2,3,
+par_groupby	-N1 3 $_%=2 csv ,	3,1,3,
+par_groupby	-N1 3 $_%=2 csv ,	3,2,3,
+par_groupby	-N1 3 $_%=2 csv ,	3,3,3,
+par_groupby	-N1 3 $_%=2 csv ,	NewRec
+par_groupby	-N1 3 $_%=2 csv ,	3,4,4,
+par_groupby	-N1 3 $_%=2 csv ,	3,5,4,
+par_groupby	-N1 3 tsv \t	### test tsv | --colsep \t --groupby 3 -N1
+par_groupby	-N1 3 tsv \t	NewRec
+par_groupby	-N1 3 tsv \t	a1	b1	C1	
+par_groupby	-N1 3 tsv \t	NewRec
+par_groupby	-N1 3 tsv \t	2	2	2	
+par_groupby	-N1 3 tsv \t	3	2	2	
+par_groupby	-N1 3 tsv \t	3	3	2	
+par_groupby	-N1 3 tsv \t	NewRec
+par_groupby	-N1 3 tsv \t	3	2	4	
+par_groupby	-N1 3 tsv \t	NewRec
+par_groupby	-N1 3 tsv \t	3	2	2	
+par_groupby	-N1 3 tsv \t	NewRec
+par_groupby	-N1 3 tsv \t	3	2	3	
+par_groupby	-N1 3 tsv \t	3	1	3	
+par_groupby	-N1 3 tsv \t	3	2	3	
+par_groupby	-N1 3 tsv \t	3	3	3	
+par_groupby	-N1 3 tsv \t	NewRec
+par_groupby	-N1 3 tsv \t	3	4	4	
+par_groupby	-N1 3 tsv \t	3	5	4	
+par_groupby	-N1 3 ssv \s+	### test ssv | --colsep \s+ --groupby 3 -N1
+par_groupby	-N1 3 ssv \s+	NewRec
+par_groupby	-N1 3 ssv \s+	a1	b1	C1	
+par_groupby	-N1 3 ssv \s+	NewRec
+par_groupby	-N1 3 ssv \s+	2 2 2 
+par_groupby	-N1 3 ssv \s+	3 	2 	2 	
+par_groupby	-N1 3 ssv \s+	3	 3	 2	 
+par_groupby	-N1 3 ssv \s+	NewRec
+par_groupby	-N1 3 ssv \s+	3  2  4  
+par_groupby	-N1 3 ssv \s+	NewRec
+par_groupby	-N1 3 ssv \s+	3		2		2		
+par_groupby	-N1 3 ssv \s+	NewRec
+par_groupby	-N1 3 ssv \s+	3	  	2	  	3	  	
+par_groupby	-N1 3 ssv \s+	3	  	  1	  	  3	  	  
+par_groupby	-N1 3 ssv \s+	3	  	 2	  	 3	  	 
+par_groupby	-N1 3 ssv \s+	3	  	3	  	3	  	
+par_groupby	-N1 3 ssv \s+	NewRec
+par_groupby	-N1 3 ssv \s+	3		4		4		
+par_groupby	-N1 3 ssv \s+	3	 	5	 	4	 	
+par_groupby	-N1 3 cssv [\s,]+	### test cssv | --colsep [\s,]+ --groupby 3 -N1
+par_groupby	-N1 3 cssv [\s,]+	NewRec
+par_groupby	-N1 3 cssv [\s,]+	a1,	b1,	C1,	
+par_groupby	-N1 3 cssv [\s,]+	NewRec
+par_groupby	-N1 3 cssv [\s,]+	2 ,2 ,2 ,
+par_groupby	-N1 3 cssv [\s,]+	3  ,	2  ,	2  ,	
+par_groupby	-N1 3 cssv [\s,]+	3	, 3	, 2	, 
+par_groupby	-N1 3 cssv [\s,]+	NewRec
+par_groupby	-N1 3 cssv [\s,]+	3,,2,,4,,
+par_groupby	-N1 3 cssv [\s,]+	NewRec
+par_groupby	-N1 3 cssv [\s,]+	3	,,, 2	,,, 2	,,, 
+par_groupby	-N1 3 cssv [\s,]+	NewRec
+par_groupby	-N1 3 cssv [\s,]+	3	2	3	
+par_groupby	-N1 3 cssv [\s,]+	3	, 1	, 3	, 
+par_groupby	-N1 3 cssv [\s,]+	3	,2	,3	,
+par_groupby	-N1 3 cssv [\s,]+	3, 	3, 	3, 	
+par_groupby	-N1 3 cssv [\s,]+	NewRec
+par_groupby	-N1 3 cssv [\s,]+	3,	,4,	,4,	,
+par_groupby	-N1 3 cssv [\s,]+	3	,,5	,,4	,,
+par_groupby	-N1 3 csv ,	### test csv | --colsep , --groupby 3 -N1
+par_groupby	-N1 3 csv ,	NewRec
+par_groupby	-N1 3 csv ,	a1,b1,C1,
+par_groupby	-N1 3 csv ,	NewRec
+par_groupby	-N1 3 csv ,	2,2,2,
+par_groupby	-N1 3 csv ,	3,2,2,
+par_groupby	-N1 3 csv ,	3,3,2,
+par_groupby	-N1 3 csv ,	NewRec
+par_groupby	-N1 3 csv ,	3,2,4,
+par_groupby	-N1 3 csv ,	NewRec
+par_groupby	-N1 3 csv ,	3,2,2,
+par_groupby	-N1 3 csv ,	NewRec
+par_groupby	-N1 3 csv ,	3,2,3,
+par_groupby	-N1 3 csv ,	3,1,3,
+par_groupby	-N1 3 csv ,	3,2,3,
+par_groupby	-N1 3 csv ,	3,3,3,
+par_groupby	-N1 3 csv ,	NewRec
+par_groupby	-N1 3 csv ,	3,4,4,
+par_groupby	-N1 3 csv ,	3,5,4,
+par_groupby	-N1 s/^(.).*/$1/ tsv \t	### test tsv | --colsep \t --groupby s/^(.).*/$1/ -N1
+par_groupby	-N1 s/^(.).*/$1/ tsv \t	NewRec
+par_groupby	-N1 s/^(.).*/$1/ tsv \t	a1	b1	C1	
+par_groupby	-N1 s/^(.).*/$1/ tsv \t	NewRec
+par_groupby	-N1 s/^(.).*/$1/ tsv \t	2	2	2	
+par_groupby	-N1 s/^(.).*/$1/ tsv \t	NewRec
+par_groupby	-N1 s/^(.).*/$1/ tsv \t	3	2	2	
+par_groupby	-N1 s/^(.).*/$1/ tsv \t	3	3	2	
+par_groupby	-N1 s/^(.).*/$1/ tsv \t	3	2	4	
+par_groupby	-N1 s/^(.).*/$1/ tsv \t	3	2	2	
+par_groupby	-N1 s/^(.).*/$1/ tsv \t	3	2	3	
+par_groupby	-N1 s/^(.).*/$1/ tsv \t	3	1	3	
+par_groupby	-N1 s/^(.).*/$1/ tsv \t	3	2	3	
+par_groupby	-N1 s/^(.).*/$1/ tsv \t	3	3	3	
+par_groupby	-N1 s/^(.).*/$1/ tsv \t	3	4	4	
+par_groupby	-N1 s/^(.).*/$1/ tsv \t	3	5	4	
+par_groupby	-N1 s/^(.).*/$1/ ssv \s+	### test ssv | --colsep \s+ --groupby s/^(.).*/$1/ -N1
+par_groupby	-N1 s/^(.).*/$1/ ssv \s+	NewRec
+par_groupby	-N1 s/^(.).*/$1/ ssv \s+	a1	b1	C1	
+par_groupby	-N1 s/^(.).*/$1/ ssv \s+	NewRec
+par_groupby	-N1 s/^(.).*/$1/ ssv \s+	2 2 2 
+par_groupby	-N1 s/^(.).*/$1/ ssv \s+	NewRec
+par_groupby	-N1 s/^(.).*/$1/ ssv \s+	3 	2 	2 	
+par_groupby	-N1 s/^(.).*/$1/ ssv \s+	3	 3	 2	 
+par_groupby	-N1 s/^(.).*/$1/ ssv \s+	3  2  4  
+par_groupby	-N1 s/^(.).*/$1/ ssv \s+	3		2		2		
+par_groupby	-N1 s/^(.).*/$1/ ssv \s+	3	  	2	  	3	  	
+par_groupby	-N1 s/^(.).*/$1/ ssv \s+	3	  	  1	  	  3	  	  
+par_groupby	-N1 s/^(.).*/$1/ ssv \s+	3	  	 2	  	 3	  	 
+par_groupby	-N1 s/^(.).*/$1/ ssv \s+	3	  	3	  	3	  	
+par_groupby	-N1 s/^(.).*/$1/ ssv \s+	3		4		4		
+par_groupby	-N1 s/^(.).*/$1/ ssv \s+	3	 	5	 	4	 	
+par_groupby	-N1 s/^(.).*/$1/ cssv [\s,]+	### test cssv | --colsep [\s,]+ --groupby s/^(.).*/$1/ -N1
+par_groupby	-N1 s/^(.).*/$1/ cssv [\s,]+	NewRec
+par_groupby	-N1 s/^(.).*/$1/ cssv [\s,]+	a1,	b1,	C1,	
+par_groupby	-N1 s/^(.).*/$1/ cssv [\s,]+	NewRec
+par_groupby	-N1 s/^(.).*/$1/ cssv [\s,]+	2 ,2 ,2 ,
+par_groupby	-N1 s/^(.).*/$1/ cssv [\s,]+	NewRec
+par_groupby	-N1 s/^(.).*/$1/ cssv [\s,]+	3  ,	2  ,	2  ,	
+par_groupby	-N1 s/^(.).*/$1/ cssv [\s,]+	3	, 3	, 2	, 
+par_groupby	-N1 s/^(.).*/$1/ cssv [\s,]+	3,,2,,4,,
+par_groupby	-N1 s/^(.).*/$1/ cssv [\s,]+	3	,,, 2	,,, 2	,,, 
+par_groupby	-N1 s/^(.).*/$1/ cssv [\s,]+	3	2	3	
+par_groupby	-N1 s/^(.).*/$1/ cssv [\s,]+	3	, 1	, 3	, 
+par_groupby	-N1 s/^(.).*/$1/ cssv [\s,]+	3	,2	,3	,
+par_groupby	-N1 s/^(.).*/$1/ cssv [\s,]+	3, 	3, 	3, 	
+par_groupby	-N1 s/^(.).*/$1/ cssv [\s,]+	3,	,4,	,4,	,
+par_groupby	-N1 s/^(.).*/$1/ cssv [\s,]+	3	,,5	,,4	,,
+par_groupby	-N1 s/^(.).*/$1/ csv ,	### test csv | --colsep , --groupby s/^(.).*/$1/ -N1
+par_groupby	-N1 s/^(.).*/$1/ csv ,	NewRec
+par_groupby	-N1 s/^(.).*/$1/ csv ,	a1,b1,C1,
+par_groupby	-N1 s/^(.).*/$1/ csv ,	NewRec
+par_groupby	-N1 s/^(.).*/$1/ csv ,	2,2,2,
+par_groupby	-N1 s/^(.).*/$1/ csv ,	NewRec
+par_groupby	-N1 s/^(.).*/$1/ csv ,	3,2,2,
+par_groupby	-N1 s/^(.).*/$1/ csv ,	3,3,2,
+par_groupby	-N1 s/^(.).*/$1/ csv ,	3,2,4,
+par_groupby	-N1 s/^(.).*/$1/ csv ,	3,2,2,
+par_groupby	-N1 s/^(.).*/$1/ csv ,	3,2,3,
+par_groupby	-N1 s/^(.).*/$1/ csv ,	3,1,3,
+par_groupby	-N1 s/^(.).*/$1/ csv ,	3,2,3,
+par_groupby	-N1 s/^(.).*/$1/ csv ,	3,3,3,
+par_groupby	-N1 s/^(.).*/$1/ csv ,	3,4,4,
+par_groupby	-N1 s/^(.).*/$1/ csv ,	3,5,4,
+par_groupby	-N1 C1 tsv \t	### test tsv | --colsep \t --groupby C1 -N1
+par_groupby	-N1 C1 tsv \t	NewRec
+par_groupby	-N1 C1 tsv \t	a1	b1	C1	
+par_groupby	-N1 C1 tsv \t	2	2	2	
+par_groupby	-N1 C1 tsv \t	3	2	2	
+par_groupby	-N1 C1 tsv \t	3	3	2	
+par_groupby	-N1 C1 tsv \t	NewRec
+par_groupby	-N1 C1 tsv \t	a1	b1	C1	
+par_groupby	-N1 C1 tsv \t	3	2	4	
+par_groupby	-N1 C1 tsv \t	NewRec
+par_groupby	-N1 C1 tsv \t	a1	b1	C1	
+par_groupby	-N1 C1 tsv \t	3	2	2	
+par_groupby	-N1 C1 tsv \t	NewRec
+par_groupby	-N1 C1 tsv \t	a1	b1	C1	
+par_groupby	-N1 C1 tsv \t	3	2	3	
+par_groupby	-N1 C1 tsv \t	3	1	3	
+par_groupby	-N1 C1 tsv \t	3	2	3	
+par_groupby	-N1 C1 tsv \t	3	3	3	
+par_groupby	-N1 C1 tsv \t	NewRec
+par_groupby	-N1 C1 tsv \t	a1	b1	C1	
+par_groupby	-N1 C1 tsv \t	3	4	4	
+par_groupby	-N1 C1 tsv \t	3	5	4	
+par_groupby	-N1 C1 ssv \s+	### test ssv | --colsep \s+ --groupby C1 -N1
+par_groupby	-N1 C1 ssv \s+	NewRec
+par_groupby	-N1 C1 ssv \s+	a1	b1	C1	
+par_groupby	-N1 C1 ssv \s+	2 2 2 
+par_groupby	-N1 C1 ssv \s+	3 	2 	2 	
+par_groupby	-N1 C1 ssv \s+	3	 3	 2	 
+par_groupby	-N1 C1 ssv \s+	NewRec
+par_groupby	-N1 C1 ssv \s+	a1	b1	C1	
+par_groupby	-N1 C1 ssv \s+	3  2  4  
+par_groupby	-N1 C1 ssv \s+	NewRec
+par_groupby	-N1 C1 ssv \s+	a1	b1	C1	
+par_groupby	-N1 C1 ssv \s+	3		2		2		
+par_groupby	-N1 C1 ssv \s+	NewRec
+par_groupby	-N1 C1 ssv \s+	a1	b1	C1	
+par_groupby	-N1 C1 ssv \s+	3	  	2	  	3	  	
+par_groupby	-N1 C1 ssv \s+	3	  	  1	  	  3	  	  
+par_groupby	-N1 C1 ssv \s+	3	  	 2	  	 3	  	 
+par_groupby	-N1 C1 ssv \s+	3	  	3	  	3	  	
+par_groupby	-N1 C1 ssv \s+	NewRec
+par_groupby	-N1 C1 ssv \s+	a1	b1	C1	
+par_groupby	-N1 C1 ssv \s+	3		4		4		
+par_groupby	-N1 C1 ssv \s+	3	 	5	 	4	 	
+par_groupby	-N1 C1 cssv [\s,]+	### test cssv | --colsep [\s,]+ --groupby C1 -N1
+par_groupby	-N1 C1 cssv [\s,]+	NewRec
+par_groupby	-N1 C1 cssv [\s,]+	a1,	b1,	C1,	
+par_groupby	-N1 C1 cssv [\s,]+	2 ,2 ,2 ,
+par_groupby	-N1 C1 cssv [\s,]+	3  ,	2  ,	2  ,	
+par_groupby	-N1 C1 cssv [\s,]+	3	, 3	, 2	, 
+par_groupby	-N1 C1 cssv [\s,]+	NewRec
+par_groupby	-N1 C1 cssv [\s,]+	a1,	b1,	C1,	
+par_groupby	-N1 C1 cssv [\s,]+	3,,2,,4,,
+par_groupby	-N1 C1 cssv [\s,]+	NewRec
+par_groupby	-N1 C1 cssv [\s,]+	a1,	b1,	C1,	
+par_groupby	-N1 C1 cssv [\s,]+	3	,,, 2	,,, 2	,,, 
+par_groupby	-N1 C1 cssv [\s,]+	NewRec
+par_groupby	-N1 C1 cssv [\s,]+	a1,	b1,	C1,	
+par_groupby	-N1 C1 cssv [\s,]+	3	2	3	
+par_groupby	-N1 C1 cssv [\s,]+	3	, 1	, 3	, 
+par_groupby	-N1 C1 cssv [\s,]+	3	,2	,3	,
+par_groupby	-N1 C1 cssv [\s,]+	3, 	3, 	3, 	
+par_groupby	-N1 C1 cssv [\s,]+	NewRec
+par_groupby	-N1 C1 cssv [\s,]+	a1,	b1,	C1,	
+par_groupby	-N1 C1 cssv [\s,]+	3,	,4,	,4,	,
+par_groupby	-N1 C1 cssv [\s,]+	3	,,5	,,4	,,
+par_groupby	-N1 C1 csv ,	### test csv | --colsep , --groupby C1 -N1
+par_groupby	-N1 C1 csv ,	NewRec
+par_groupby	-N1 C1 csv ,	a1,b1,C1,
+par_groupby	-N1 C1 csv ,	2,2,2,
+par_groupby	-N1 C1 csv ,	3,2,2,
+par_groupby	-N1 C1 csv ,	3,3,2,
+par_groupby	-N1 C1 csv ,	NewRec
+par_groupby	-N1 C1 csv ,	a1,b1,C1,
+par_groupby	-N1 C1 csv ,	3,2,4,
+par_groupby	-N1 C1 csv ,	NewRec
+par_groupby	-N1 C1 csv ,	a1,b1,C1,
+par_groupby	-N1 C1 csv ,	3,2,2,
+par_groupby	-N1 C1 csv ,	NewRec
+par_groupby	-N1 C1 csv ,	a1,b1,C1,
+par_groupby	-N1 C1 csv ,	3,2,3,
+par_groupby	-N1 C1 csv ,	3,1,3,
+par_groupby	-N1 C1 csv ,	3,2,3,
+par_groupby	-N1 C1 csv ,	3,3,3,
+par_groupby	-N1 C1 csv ,	NewRec
+par_groupby	-N1 C1 csv ,	a1,b1,C1,
+par_groupby	-N1 C1 csv ,	3,4,4,
+par_groupby	-N1 C1 csv ,	3,5,4,
+par_groupby	-N1 C1 $_%=2 tsv \t	### test tsv | --colsep \t --groupby C1 $_%=2 -N1
+par_groupby	-N1 C1 $_%=2 tsv \t	NewRec
+par_groupby	-N1 C1 $_%=2 tsv \t	a1	b1	C1	
+par_groupby	-N1 C1 $_%=2 tsv \t	2	2	2	
+par_groupby	-N1 C1 $_%=2 tsv \t	3	2	2	
+par_groupby	-N1 C1 $_%=2 tsv \t	3	3	2	
+par_groupby	-N1 C1 $_%=2 tsv \t	3	2	4	
+par_groupby	-N1 C1 $_%=2 tsv \t	3	2	2	
+par_groupby	-N1 C1 $_%=2 tsv \t	NewRec
+par_groupby	-N1 C1 $_%=2 tsv \t	a1	b1	C1	
+par_groupby	-N1 C1 $_%=2 tsv \t	3	2	3	
+par_groupby	-N1 C1 $_%=2 tsv \t	3	1	3	
+par_groupby	-N1 C1 $_%=2 tsv \t	3	2	3	
+par_groupby	-N1 C1 $_%=2 tsv \t	3	3	3	
+par_groupby	-N1 C1 $_%=2 tsv \t	NewRec
+par_groupby	-N1 C1 $_%=2 tsv \t	a1	b1	C1	
+par_groupby	-N1 C1 $_%=2 tsv \t	3	4	4	
+par_groupby	-N1 C1 $_%=2 tsv \t	3	5	4	
+par_groupby	-N1 C1 $_%=2 ssv \s+	### test ssv | --colsep \s+ --groupby C1 $_%=2 -N1
+par_groupby	-N1 C1 $_%=2 ssv \s+	NewRec
+par_groupby	-N1 C1 $_%=2 ssv \s+	a1	b1	C1	
+par_groupby	-N1 C1 $_%=2 ssv \s+	2 2 2 
+par_groupby	-N1 C1 $_%=2 ssv \s+	3 	2 	2 	
+par_groupby	-N1 C1 $_%=2 ssv \s+	3	 3	 2	 
+par_groupby	-N1 C1 $_%=2 ssv \s+	3  2  4  
+par_groupby	-N1 C1 $_%=2 ssv \s+	3		2		2		
+par_groupby	-N1 C1 $_%=2 ssv \s+	NewRec
+par_groupby	-N1 C1 $_%=2 ssv \s+	a1	b1	C1	
+par_groupby	-N1 C1 $_%=2 ssv \s+	3	  	2	  	3	  	
+par_groupby	-N1 C1 $_%=2 ssv \s+	3	  	  1	  	  3	  	  
+par_groupby	-N1 C1 $_%=2 ssv \s+	3	  	 2	  	 3	  	 
+par_groupby	-N1 C1 $_%=2 ssv \s+	3	  	3	  	3	  	
+par_groupby	-N1 C1 $_%=2 ssv \s+	NewRec
+par_groupby	-N1 C1 $_%=2 ssv \s+	a1	b1	C1	
+par_groupby	-N1 C1 $_%=2 ssv \s+	3		4		4		
+par_groupby	-N1 C1 $_%=2 ssv \s+	3	 	5	 	4	 	
+par_groupby	-N1 C1 $_%=2 cssv [\s,]+	### test cssv | --colsep [\s,]+ --groupby C1 $_%=2 -N1
+par_groupby	-N1 C1 $_%=2 cssv [\s,]+	NewRec
+par_groupby	-N1 C1 $_%=2 cssv [\s,]+	a1,	b1,	C1,	
+par_groupby	-N1 C1 $_%=2 cssv [\s,]+	2 ,2 ,2 ,
+par_groupby	-N1 C1 $_%=2 cssv [\s,]+	3  ,	2  ,	2  ,	
+par_groupby	-N1 C1 $_%=2 cssv [\s,]+	3	, 3	, 2	, 
+par_groupby	-N1 C1 $_%=2 cssv [\s,]+	3,,2,,4,,
+par_groupby	-N1 C1 $_%=2 cssv [\s,]+	3	,,, 2	,,, 2	,,, 
+par_groupby	-N1 C1 $_%=2 cssv [\s,]+	NewRec
+par_groupby	-N1 C1 $_%=2 cssv [\s,]+	a1,	b1,	C1,	
+par_groupby	-N1 C1 $_%=2 cssv [\s,]+	3	2	3	
+par_groupby	-N1 C1 $_%=2 cssv [\s,]+	3	, 1	, 3	, 
+par_groupby	-N1 C1 $_%=2 cssv [\s,]+	3	,2	,3	,
+par_groupby	-N1 C1 $_%=2 cssv [\s,]+	3, 	3, 	3, 	
+par_groupby	-N1 C1 $_%=2 cssv [\s,]+	NewRec
+par_groupby	-N1 C1 $_%=2 cssv [\s,]+	a1,	b1,	C1,	
+par_groupby	-N1 C1 $_%=2 cssv [\s,]+	3,	,4,	,4,	,
+par_groupby	-N1 C1 $_%=2 cssv [\s,]+	3	,,5	,,4	,,
+par_groupby	-N1 C1 $_%=2 csv ,	### test csv | --colsep , --groupby C1 $_%=2 -N1
+par_groupby	-N1 C1 $_%=2 csv ,	NewRec
+par_groupby	-N1 C1 $_%=2 csv ,	a1,b1,C1,
+par_groupby	-N1 C1 $_%=2 csv ,	2,2,2,
+par_groupby	-N1 C1 $_%=2 csv ,	3,2,2,
+par_groupby	-N1 C1 $_%=2 csv ,	3,3,2,
+par_groupby	-N1 C1 $_%=2 csv ,	3,2,4,
+par_groupby	-N1 C1 $_%=2 csv ,	3,2,2,
+par_groupby	-N1 C1 $_%=2 csv ,	NewRec
+par_groupby	-N1 C1 $_%=2 csv ,	a1,b1,C1,
+par_groupby	-N1 C1 $_%=2 csv ,	3,2,3,
+par_groupby	-N1 C1 $_%=2 csv ,	3,1,3,
+par_groupby	-N1 C1 $_%=2 csv ,	3,2,3,
+par_groupby	-N1 C1 $_%=2 csv ,	3,3,3,
+par_groupby	-N1 C1 $_%=2 csv ,	NewRec
+par_groupby	-N1 C1 $_%=2 csv ,	a1,b1,C1,
+par_groupby	-N1 C1 $_%=2 csv ,	3,4,4,
+par_groupby	-N1 C1 $_%=2 csv ,	3,5,4,
+par_groupby	--block 20 3 $_%=2 tsv \t	### test tsv | --colsep \t --groupby 3 $_%=2 --block 20
+par_groupby	--block 20 3 $_%=2 tsv \t	NewRec
+par_groupby	--block 20 3 $_%=2 tsv \t	a1	b1	C1	
+par_groupby	--block 20 3 $_%=2 tsv \t	2	2	2	
+par_groupby	--block 20 3 $_%=2 tsv \t	3	2	2	
+par_groupby	--block 20 3 $_%=2 tsv \t	3	3	2	
+par_groupby	--block 20 3 $_%=2 tsv \t	3	2	4	
+par_groupby	--block 20 3 $_%=2 tsv \t	3	2	2	
+par_groupby	--block 20 3 $_%=2 tsv \t	NewRec
+par_groupby	--block 20 3 $_%=2 tsv \t	3	2	3	
+par_groupby	--block 20 3 $_%=2 tsv \t	3	1	3	
+par_groupby	--block 20 3 $_%=2 tsv \t	3	2	3	
+par_groupby	--block 20 3 $_%=2 tsv \t	3	3	3	
+par_groupby	--block 20 3 $_%=2 tsv \t	3	4	4	
+par_groupby	--block 20 3 $_%=2 tsv \t	3	5	4	
+par_groupby	--block 20 3 $_%=2 tsv \t	parallel: Warning: A record was longer than 20. Increasing to --blocksize 27.
+par_groupby	--block 20 3 $_%=2 tsv \t	parallel: Warning: A record was longer than 27. Increasing to --blocksize 37.
+par_groupby	--block 20 3 $_%=2 tsv \t	parallel: Warning: A record was longer than 37. Increasing to --blocksize 50.
+par_groupby	--block 20 3 $_%=2 tsv \t	parallel: Warning: A record was longer than 50. Increasing to --blocksize 66.
+par_groupby	--block 20 3 $_%=2 tsv \t	parallel: Warning: A record was longer than 66. Increasing to --blocksize 87.
+par_groupby	--block 20 3 $_%=2 ssv \s+	### test ssv | --colsep \s+ --groupby 3 $_%=2 --block 20
+par_groupby	--block 20 3 $_%=2 ssv \s+	NewRec
+par_groupby	--block 20 3 $_%=2 ssv \s+	a1	b1	C1	
+par_groupby	--block 20 3 $_%=2 ssv \s+	2 2 2 
+par_groupby	--block 20 3 $_%=2 ssv \s+	3 	2 	2 	
+par_groupby	--block 20 3 $_%=2 ssv \s+	3	 3	 2	 
+par_groupby	--block 20 3 $_%=2 ssv \s+	3  2  4  
+par_groupby	--block 20 3 $_%=2 ssv \s+	3		2		2		
+par_groupby	--block 20 3 $_%=2 ssv \s+	NewRec
+par_groupby	--block 20 3 $_%=2 ssv \s+	3	  	2	  	3	  	
+par_groupby	--block 20 3 $_%=2 ssv \s+	3	  	  1	  	  3	  	  
+par_groupby	--block 20 3 $_%=2 ssv \s+	3	  	 2	  	 3	  	 
+par_groupby	--block 20 3 $_%=2 ssv \s+	3	  	3	  	3	  	
+par_groupby	--block 20 3 $_%=2 ssv \s+	NewRec
+par_groupby	--block 20 3 $_%=2 ssv \s+	3		4		4		
+par_groupby	--block 20 3 $_%=2 ssv \s+	3	 	5	 	4	 	
+par_groupby	--block 20 3 $_%=2 ssv \s+	parallel: Warning: A record was longer than 20. Increasing to --blocksize 27.
+par_groupby	--block 20 3 $_%=2 ssv \s+	parallel: Warning: A record was longer than 27. Increasing to --blocksize 37.
+par_groupby	--block 20 3 $_%=2 ssv \s+	parallel: Warning: A record was longer than 37. Increasing to --blocksize 50.
+par_groupby	--block 20 3 $_%=2 ssv \s+	parallel: Warning: A record was longer than 50. Increasing to --blocksize 66.
+par_groupby	--block 20 3 $_%=2 ssv \s+	parallel: Warning: A record was longer than 66. Increasing to --blocksize 87.
+par_groupby	--block 20 3 $_%=2 ssv \s+	parallel: Warning: A record was longer than 87. Increasing to --blocksize 115.
+par_groupby	--block 20 3 $_%=2 cssv [\s,]+	### test cssv | --colsep [\s,]+ --groupby 3 $_%=2 --block 20
+par_groupby	--block 20 3 $_%=2 cssv [\s,]+	NewRec
+par_groupby	--block 20 3 $_%=2 cssv [\s,]+	a1,	b1,	C1,	
+par_groupby	--block 20 3 $_%=2 cssv [\s,]+	2 ,2 ,2 ,
+par_groupby	--block 20 3 $_%=2 cssv [\s,]+	3  ,	2  ,	2  ,	
+par_groupby	--block 20 3 $_%=2 cssv [\s,]+	3	, 3	, 2	, 
+par_groupby	--block 20 3 $_%=2 cssv [\s,]+	3,,2,,4,,
+par_groupby	--block 20 3 $_%=2 cssv [\s,]+	3	,,, 2	,,, 2	,,, 
+par_groupby	--block 20 3 $_%=2 cssv [\s,]+	NewRec
+par_groupby	--block 20 3 $_%=2 cssv [\s,]+	3	2	3	
+par_groupby	--block 20 3 $_%=2 cssv [\s,]+	3	, 1	, 3	, 
+par_groupby	--block 20 3 $_%=2 cssv [\s,]+	3	,2	,3	,
+par_groupby	--block 20 3 $_%=2 cssv [\s,]+	3, 	3, 	3, 	
+par_groupby	--block 20 3 $_%=2 cssv [\s,]+	3,	,4,	,4,	,
+par_groupby	--block 20 3 $_%=2 cssv [\s,]+	3	,,5	,,4	,,
+par_groupby	--block 20 3 $_%=2 cssv [\s,]+	parallel: Warning: A record was longer than 20. Increasing to --blocksize 27.
+par_groupby	--block 20 3 $_%=2 cssv [\s,]+	parallel: Warning: A record was longer than 27. Increasing to --blocksize 37.
+par_groupby	--block 20 3 $_%=2 cssv [\s,]+	parallel: Warning: A record was longer than 37. Increasing to --blocksize 50.
+par_groupby	--block 20 3 $_%=2 cssv [\s,]+	parallel: Warning: A record was longer than 50. Increasing to --blocksize 66.
+par_groupby	--block 20 3 $_%=2 cssv [\s,]+	parallel: Warning: A record was longer than 66. Increasing to --blocksize 87.
+par_groupby	--block 20 3 $_%=2 cssv [\s,]+	parallel: Warning: A record was longer than 87. Increasing to --blocksize 115.
+par_groupby	--block 20 3 $_%=2 cssv [\s,]+	parallel: Warning: A record was longer than 115. Increasing to --blocksize 151.
+par_groupby	--block 20 3 $_%=2 csv ,	### test csv | --colsep , --groupby 3 $_%=2 --block 20
+par_groupby	--block 20 3 $_%=2 csv ,	NewRec
+par_groupby	--block 20 3 $_%=2 csv ,	a1,b1,C1,
+par_groupby	--block 20 3 $_%=2 csv ,	2,2,2,
+par_groupby	--block 20 3 $_%=2 csv ,	3,2,2,
+par_groupby	--block 20 3 $_%=2 csv ,	3,3,2,
+par_groupby	--block 20 3 $_%=2 csv ,	3,2,4,
+par_groupby	--block 20 3 $_%=2 csv ,	3,2,2,
+par_groupby	--block 20 3 $_%=2 csv ,	NewRec
+par_groupby	--block 20 3 $_%=2 csv ,	3,2,3,
+par_groupby	--block 20 3 $_%=2 csv ,	3,1,3,
+par_groupby	--block 20 3 $_%=2 csv ,	3,2,3,
+par_groupby	--block 20 3 $_%=2 csv ,	3,3,3,
+par_groupby	--block 20 3 $_%=2 csv ,	3,4,4,
+par_groupby	--block 20 3 $_%=2 csv ,	3,5,4,
+par_groupby	--block 20 3 $_%=2 csv ,	parallel: Warning: A record was longer than 20. Increasing to --blocksize 27.
+par_groupby	--block 20 3 $_%=2 csv ,	parallel: Warning: A record was longer than 27. Increasing to --blocksize 37.
+par_groupby	--block 20 3 $_%=2 csv ,	parallel: Warning: A record was longer than 37. Increasing to --blocksize 50.
+par_groupby	--block 20 3 $_%=2 csv ,	parallel: Warning: A record was longer than 50. Increasing to --blocksize 66.
+par_groupby	--block 20 3 $_%=2 csv ,	parallel: Warning: A record was longer than 66. Increasing to --blocksize 87.
+par_groupby	--block 20 3 tsv \t	### test tsv | --colsep \t --groupby 3 --block 20
+par_groupby	--block 20 3 tsv \t	NewRec
+par_groupby	--block 20 3 tsv \t	a1	b1	C1	
+par_groupby	--block 20 3 tsv \t	NewRec
+par_groupby	--block 20 3 tsv \t	2	2	2	
+par_groupby	--block 20 3 tsv \t	3	2	2	
+par_groupby	--block 20 3 tsv \t	3	3	2	
+par_groupby	--block 20 3 tsv \t	NewRec
+par_groupby	--block 20 3 tsv \t	3	2	4	
+par_groupby	--block 20 3 tsv \t	NewRec
+par_groupby	--block 20 3 tsv \t	3	2	2	
+par_groupby	--block 20 3 tsv \t	NewRec
+par_groupby	--block 20 3 tsv \t	3	2	3	
+par_groupby	--block 20 3 tsv \t	3	1	3	
+par_groupby	--block 20 3 tsv \t	3	2	3	
+par_groupby	--block 20 3 tsv \t	3	3	3	
+par_groupby	--block 20 3 tsv \t	3	4	4	
+par_groupby	--block 20 3 tsv \t	3	5	4	
+par_groupby	--block 20 3 tsv \t	parallel: Warning: A record was longer than 20. Increasing to --blocksize 27.
+par_groupby	--block 20 3 tsv \t	parallel: Warning: A record was longer than 27. Increasing to --blocksize 37.
+par_groupby	--block 20 3 tsv \t	parallel: Warning: A record was longer than 37. Increasing to --blocksize 50.
+par_groupby	--block 20 3 tsv \t	parallel: Warning: A record was longer than 50. Increasing to --blocksize 66.
+par_groupby	--block 20 3 tsv \t	parallel: Warning: A record was longer than 66. Increasing to --blocksize 87.
+par_groupby	--block 20 3 ssv \s+	### test ssv | --colsep \s+ --groupby 3 --block 20
+par_groupby	--block 20 3 ssv \s+	NewRec
+par_groupby	--block 20 3 ssv \s+	a1	b1	C1	
+par_groupby	--block 20 3 ssv \s+	NewRec
+par_groupby	--block 20 3 ssv \s+	2 2 2 
+par_groupby	--block 20 3 ssv \s+	3 	2 	2 	
+par_groupby	--block 20 3 ssv \s+	3	 3	 2	 
+par_groupby	--block 20 3 ssv \s+	NewRec
+par_groupby	--block 20 3 ssv \s+	3  2  4  
+par_groupby	--block 20 3 ssv \s+	3		2		2		
+par_groupby	--block 20 3 ssv \s+	NewRec
+par_groupby	--block 20 3 ssv \s+	3	  	2	  	3	  	
+par_groupby	--block 20 3 ssv \s+	3	  	  1	  	  3	  	  
+par_groupby	--block 20 3 ssv \s+	3	  	 2	  	 3	  	 
+par_groupby	--block 20 3 ssv \s+	3	  	3	  	3	  	
+par_groupby	--block 20 3 ssv \s+	NewRec
+par_groupby	--block 20 3 ssv \s+	3		4		4		
+par_groupby	--block 20 3 ssv \s+	3	 	5	 	4	 	
+par_groupby	--block 20 3 ssv \s+	parallel: Warning: A record was longer than 20. Increasing to --blocksize 27.
+par_groupby	--block 20 3 ssv \s+	parallel: Warning: A record was longer than 27. Increasing to --blocksize 37.
+par_groupby	--block 20 3 ssv \s+	parallel: Warning: A record was longer than 37. Increasing to --blocksize 50.
+par_groupby	--block 20 3 ssv \s+	parallel: Warning: A record was longer than 50. Increasing to --blocksize 66.
+par_groupby	--block 20 3 ssv \s+	parallel: Warning: A record was longer than 66. Increasing to --blocksize 87.
+par_groupby	--block 20 3 ssv \s+	parallel: Warning: A record was longer than 87. Increasing to --blocksize 115.
+par_groupby	--block 20 3 cssv [\s,]+	### test cssv | --colsep [\s,]+ --groupby 3 --block 20
+par_groupby	--block 20 3 cssv [\s,]+	NewRec
+par_groupby	--block 20 3 cssv [\s,]+	a1,	b1,	C1,	
+par_groupby	--block 20 3 cssv [\s,]+	NewRec
+par_groupby	--block 20 3 cssv [\s,]+	2 ,2 ,2 ,
+par_groupby	--block 20 3 cssv [\s,]+	3  ,	2  ,	2  ,	
+par_groupby	--block 20 3 cssv [\s,]+	3	, 3	, 2	, 
+par_groupby	--block 20 3 cssv [\s,]+	NewRec
+par_groupby	--block 20 3 cssv [\s,]+	3,,2,,4,,
+par_groupby	--block 20 3 cssv [\s,]+	NewRec
+par_groupby	--block 20 3 cssv [\s,]+	3	,,, 2	,,, 2	,,, 
+par_groupby	--block 20 3 cssv [\s,]+	NewRec
+par_groupby	--block 20 3 cssv [\s,]+	3	2	3	
+par_groupby	--block 20 3 cssv [\s,]+	3	, 1	, 3	, 
+par_groupby	--block 20 3 cssv [\s,]+	3	,2	,3	,
+par_groupby	--block 20 3 cssv [\s,]+	3, 	3, 	3, 	
+par_groupby	--block 20 3 cssv [\s,]+	NewRec
+par_groupby	--block 20 3 cssv [\s,]+	3,	,4,	,4,	,
+par_groupby	--block 20 3 cssv [\s,]+	3	,,5	,,4	,,
+par_groupby	--block 20 3 cssv [\s,]+	parallel: Warning: A record was longer than 20. Increasing to --blocksize 27.
+par_groupby	--block 20 3 cssv [\s,]+	parallel: Warning: A record was longer than 27. Increasing to --blocksize 37.
+par_groupby	--block 20 3 cssv [\s,]+	parallel: Warning: A record was longer than 37. Increasing to --blocksize 50.
+par_groupby	--block 20 3 cssv [\s,]+	parallel: Warning: A record was longer than 50. Increasing to --blocksize 66.
+par_groupby	--block 20 3 cssv [\s,]+	parallel: Warning: A record was longer than 66. Increasing to --blocksize 87.
+par_groupby	--block 20 3 csv ,	### test csv | --colsep , --groupby 3 --block 20
+par_groupby	--block 20 3 csv ,	NewRec
+par_groupby	--block 20 3 csv ,	a1,b1,C1,
+par_groupby	--block 20 3 csv ,	NewRec
+par_groupby	--block 20 3 csv ,	2,2,2,
+par_groupby	--block 20 3 csv ,	3,2,2,
+par_groupby	--block 20 3 csv ,	3,3,2,
+par_groupby	--block 20 3 csv ,	NewRec
+par_groupby	--block 20 3 csv ,	3,2,4,
+par_groupby	--block 20 3 csv ,	NewRec
+par_groupby	--block 20 3 csv ,	3,2,2,
+par_groupby	--block 20 3 csv ,	NewRec
+par_groupby	--block 20 3 csv ,	3,2,3,
+par_groupby	--block 20 3 csv ,	3,1,3,
+par_groupby	--block 20 3 csv ,	3,2,3,
+par_groupby	--block 20 3 csv ,	3,3,3,
+par_groupby	--block 20 3 csv ,	3,4,4,
+par_groupby	--block 20 3 csv ,	3,5,4,
+par_groupby	--block 20 3 csv ,	parallel: Warning: A record was longer than 20. Increasing to --blocksize 27.
+par_groupby	--block 20 3 csv ,	parallel: Warning: A record was longer than 27. Increasing to --blocksize 37.
+par_groupby	--block 20 3 csv ,	parallel: Warning: A record was longer than 37. Increasing to --blocksize 50.
+par_groupby	--block 20 3 csv ,	parallel: Warning: A record was longer than 50. Increasing to --blocksize 66.
+par_groupby	--block 20 3 csv ,	parallel: Warning: A record was longer than 66. Increasing to --blocksize 87.
+par_groupby	--block 20 s/^(.).*/$1/ tsv \t	### test tsv | --colsep \t --groupby s/^(.).*/$1/ --block 20
+par_groupby	--block 20 s/^(.).*/$1/ tsv \t	NewRec
+par_groupby	--block 20 s/^(.).*/$1/ tsv \t	a1	b1	C1	
+par_groupby	--block 20 s/^(.).*/$1/ tsv \t	NewRec
+par_groupby	--block 20 s/^(.).*/$1/ tsv \t	2	2	2	
+par_groupby	--block 20 s/^(.).*/$1/ tsv \t	NewRec
+par_groupby	--block 20 s/^(.).*/$1/ tsv \t	3	2	2	
+par_groupby	--block 20 s/^(.).*/$1/ tsv \t	3	3	2	
+par_groupby	--block 20 s/^(.).*/$1/ tsv \t	3	2	4	
+par_groupby	--block 20 s/^(.).*/$1/ tsv \t	3	2	2	
+par_groupby	--block 20 s/^(.).*/$1/ tsv \t	3	2	3	
+par_groupby	--block 20 s/^(.).*/$1/ tsv \t	3	1	3	
+par_groupby	--block 20 s/^(.).*/$1/ tsv \t	3	2	3	
+par_groupby	--block 20 s/^(.).*/$1/ tsv \t	3	3	3	
+par_groupby	--block 20 s/^(.).*/$1/ tsv \t	3	4	4	
+par_groupby	--block 20 s/^(.).*/$1/ tsv \t	3	5	4	
+par_groupby	--block 20 s/^(.).*/$1/ tsv \t	parallel: Warning: A record was longer than 20. Increasing to --blocksize 27.
+par_groupby	--block 20 s/^(.).*/$1/ tsv \t	parallel: Warning: A record was longer than 27. Increasing to --blocksize 37.
+par_groupby	--block 20 s/^(.).*/$1/ tsv \t	parallel: Warning: A record was longer than 37. Increasing to --blocksize 50.
+par_groupby	--block 20 s/^(.).*/$1/ tsv \t	parallel: Warning: A record was longer than 50. Increasing to --blocksize 66.
+par_groupby	--block 20 s/^(.).*/$1/ tsv \t	parallel: Warning: A record was longer than 66. Increasing to --blocksize 87.
+par_groupby	--block 20 s/^(.).*/$1/ tsv \t	parallel: Warning: A record was longer than 87. Increasing to --blocksize 115.
+par_groupby	--block 20 s/^(.).*/$1/ ssv \s+	### test ssv | --colsep \s+ --groupby s/^(.).*/$1/ --block 20
+par_groupby	--block 20 s/^(.).*/$1/ ssv \s+	NewRec
+par_groupby	--block 20 s/^(.).*/$1/ ssv \s+	a1	b1	C1	
+par_groupby	--block 20 s/^(.).*/$1/ ssv \s+	NewRec
+par_groupby	--block 20 s/^(.).*/$1/ ssv \s+	2 2 2 
+par_groupby	--block 20 s/^(.).*/$1/ ssv \s+	NewRec
+par_groupby	--block 20 s/^(.).*/$1/ ssv \s+	3 	2 	2 	
+par_groupby	--block 20 s/^(.).*/$1/ ssv \s+	3	 3	 2	 
+par_groupby	--block 20 s/^(.).*/$1/ ssv \s+	3  2  4  
+par_groupby	--block 20 s/^(.).*/$1/ ssv \s+	3		2		2		
+par_groupby	--block 20 s/^(.).*/$1/ ssv \s+	3	  	2	  	3	  	
+par_groupby	--block 20 s/^(.).*/$1/ ssv \s+	3	  	  1	  	  3	  	  
+par_groupby	--block 20 s/^(.).*/$1/ ssv \s+	3	  	 2	  	 3	  	 
+par_groupby	--block 20 s/^(.).*/$1/ ssv \s+	3	  	3	  	3	  	
+par_groupby	--block 20 s/^(.).*/$1/ ssv \s+	3		4		4		
+par_groupby	--block 20 s/^(.).*/$1/ ssv \s+	3	 	5	 	4	 	
+par_groupby	--block 20 s/^(.).*/$1/ ssv \s+	parallel: Warning: A record was longer than 20. Increasing to --blocksize 27.
+par_groupby	--block 20 s/^(.).*/$1/ ssv \s+	parallel: Warning: A record was longer than 27. Increasing to --blocksize 37.
+par_groupby	--block 20 s/^(.).*/$1/ ssv \s+	parallel: Warning: A record was longer than 37. Increasing to --blocksize 50.
+par_groupby	--block 20 s/^(.).*/$1/ ssv \s+	parallel: Warning: A record was longer than 50. Increasing to --blocksize 66.
+par_groupby	--block 20 s/^(.).*/$1/ ssv \s+	parallel: Warning: A record was longer than 66. Increasing to --blocksize 87.
+par_groupby	--block 20 s/^(.).*/$1/ ssv \s+	parallel: Warning: A record was longer than 87. Increasing to --blocksize 115.
+par_groupby	--block 20 s/^(.).*/$1/ ssv \s+	parallel: Warning: A record was longer than 115. Increasing to --blocksize 151.
+par_groupby	--block 20 s/^(.).*/$1/ ssv \s+	parallel: Warning: A record was longer than 151. Increasing to --blocksize 198.
+par_groupby	--block 20 s/^(.).*/$1/ cssv [\s,]+	### test cssv | --colsep [\s,]+ --groupby s/^(.).*/$1/ --block 20
+par_groupby	--block 20 s/^(.).*/$1/ cssv [\s,]+	NewRec
+par_groupby	--block 20 s/^(.).*/$1/ cssv [\s,]+	a1,	b1,	C1,	
+par_groupby	--block 20 s/^(.).*/$1/ cssv [\s,]+	NewRec
+par_groupby	--block 20 s/^(.).*/$1/ cssv [\s,]+	2 ,2 ,2 ,
+par_groupby	--block 20 s/^(.).*/$1/ cssv [\s,]+	NewRec
+par_groupby	--block 20 s/^(.).*/$1/ cssv [\s,]+	3  ,	2  ,	2  ,	
+par_groupby	--block 20 s/^(.).*/$1/ cssv [\s,]+	3	, 3	, 2	, 
+par_groupby	--block 20 s/^(.).*/$1/ cssv [\s,]+	3,,2,,4,,
+par_groupby	--block 20 s/^(.).*/$1/ cssv [\s,]+	3	,,, 2	,,, 2	,,, 
+par_groupby	--block 20 s/^(.).*/$1/ cssv [\s,]+	3	2	3	
+par_groupby	--block 20 s/^(.).*/$1/ cssv [\s,]+	3	, 1	, 3	, 
+par_groupby	--block 20 s/^(.).*/$1/ cssv [\s,]+	3	,2	,3	,
+par_groupby	--block 20 s/^(.).*/$1/ cssv [\s,]+	3, 	3, 	3, 	
+par_groupby	--block 20 s/^(.).*/$1/ cssv [\s,]+	3,	,4,	,4,	,
+par_groupby	--block 20 s/^(.).*/$1/ cssv [\s,]+	3	,,5	,,4	,,
+par_groupby	--block 20 s/^(.).*/$1/ cssv [\s,]+	parallel: Warning: A record was longer than 20. Increasing to --blocksize 27.
+par_groupby	--block 20 s/^(.).*/$1/ cssv [\s,]+	parallel: Warning: A record was longer than 27. Increasing to --blocksize 37.
+par_groupby	--block 20 s/^(.).*/$1/ cssv [\s,]+	parallel: Warning: A record was longer than 37. Increasing to --blocksize 50.
+par_groupby	--block 20 s/^(.).*/$1/ cssv [\s,]+	parallel: Warning: A record was longer than 50. Increasing to --blocksize 66.
+par_groupby	--block 20 s/^(.).*/$1/ cssv [\s,]+	parallel: Warning: A record was longer than 66. Increasing to --blocksize 87.
+par_groupby	--block 20 s/^(.).*/$1/ cssv [\s,]+	parallel: Warning: A record was longer than 87. Increasing to --blocksize 115.
+par_groupby	--block 20 s/^(.).*/$1/ cssv [\s,]+	parallel: Warning: A record was longer than 115. Increasing to --blocksize 151.
+par_groupby	--block 20 s/^(.).*/$1/ csv ,	### test csv | --colsep , --groupby s/^(.).*/$1/ --block 20
+par_groupby	--block 20 s/^(.).*/$1/ csv ,	NewRec
+par_groupby	--block 20 s/^(.).*/$1/ csv ,	a1,b1,C1,
+par_groupby	--block 20 s/^(.).*/$1/ csv ,	NewRec
+par_groupby	--block 20 s/^(.).*/$1/ csv ,	2,2,2,
+par_groupby	--block 20 s/^(.).*/$1/ csv ,	NewRec
+par_groupby	--block 20 s/^(.).*/$1/ csv ,	3,2,2,
+par_groupby	--block 20 s/^(.).*/$1/ csv ,	3,3,2,
+par_groupby	--block 20 s/^(.).*/$1/ csv ,	3,2,4,
+par_groupby	--block 20 s/^(.).*/$1/ csv ,	3,2,2,
+par_groupby	--block 20 s/^(.).*/$1/ csv ,	3,2,3,
+par_groupby	--block 20 s/^(.).*/$1/ csv ,	3,1,3,
+par_groupby	--block 20 s/^(.).*/$1/ csv ,	3,2,3,
+par_groupby	--block 20 s/^(.).*/$1/ csv ,	3,3,3,
+par_groupby	--block 20 s/^(.).*/$1/ csv ,	3,4,4,
+par_groupby	--block 20 s/^(.).*/$1/ csv ,	3,5,4,
+par_groupby	--block 20 s/^(.).*/$1/ csv ,	parallel: Warning: A record was longer than 20. Increasing to --blocksize 27.
+par_groupby	--block 20 s/^(.).*/$1/ csv ,	parallel: Warning: A record was longer than 27. Increasing to --blocksize 37.
+par_groupby	--block 20 s/^(.).*/$1/ csv ,	parallel: Warning: A record was longer than 37. Increasing to --blocksize 50.
+par_groupby	--block 20 s/^(.).*/$1/ csv ,	parallel: Warning: A record was longer than 50. Increasing to --blocksize 66.
+par_groupby	--block 20 s/^(.).*/$1/ csv ,	parallel: Warning: A record was longer than 66. Increasing to --blocksize 87.
+par_groupby	--block 20 s/^(.).*/$1/ csv ,	parallel: Warning: A record was longer than 87. Increasing to --blocksize 115.
+par_groupby	--block 20 C1 tsv \t	### test tsv | --colsep \t --groupby C1 --block 20
+par_groupby	--block 20 C1 tsv \t	NewRec
+par_groupby	--block 20 C1 tsv \t	a1	b1	C1	
+par_groupby	--block 20 C1 tsv \t	2	2	2	
+par_groupby	--block 20 C1 tsv \t	3	2	2	
+par_groupby	--block 20 C1 tsv \t	3	3	2	
+par_groupby	--block 20 C1 tsv \t	NewRec
+par_groupby	--block 20 C1 tsv \t	a1	b1	C1	
+par_groupby	--block 20 C1 tsv \t	3	2	4	
+par_groupby	--block 20 C1 tsv \t	NewRec
+par_groupby	--block 20 C1 tsv \t	a1	b1	C1	
+par_groupby	--block 20 C1 tsv \t	3	2	2	
+par_groupby	--block 20 C1 tsv \t	NewRec
+par_groupby	--block 20 C1 tsv \t	a1	b1	C1	
+par_groupby	--block 20 C1 tsv \t	3	2	3	
+par_groupby	--block 20 C1 tsv \t	3	1	3	
+par_groupby	--block 20 C1 tsv \t	3	2	3	
+par_groupby	--block 20 C1 tsv \t	3	3	3	
+par_groupby	--block 20 C1 tsv \t	3	4	4	
+par_groupby	--block 20 C1 tsv \t	3	5	4	
+par_groupby	--block 20 C1 tsv \t	parallel: Warning: A record was longer than 20. Increasing to --blocksize 27.
+par_groupby	--block 20 C1 tsv \t	parallel: Warning: A record was longer than 27. Increasing to --blocksize 37.
+par_groupby	--block 20 C1 tsv \t	parallel: Warning: A record was longer than 37. Increasing to --blocksize 50.
+par_groupby	--block 20 C1 tsv \t	parallel: Warning: A record was longer than 50. Increasing to --blocksize 66.
+par_groupby	--block 20 C1 tsv \t	parallel: Warning: A record was longer than 66. Increasing to --blocksize 87.
+par_groupby	--block 20 C1 ssv \s+	### test ssv | --colsep \s+ --groupby C1 --block 20
+par_groupby	--block 20 C1 ssv \s+	NewRec
+par_groupby	--block 20 C1 ssv \s+	a1	b1	C1	
+par_groupby	--block 20 C1 ssv \s+	2 2 2 
+par_groupby	--block 20 C1 ssv \s+	3 	2 	2 	
+par_groupby	--block 20 C1 ssv \s+	3	 3	 2	 
+par_groupby	--block 20 C1 ssv \s+	NewRec
+par_groupby	--block 20 C1 ssv \s+	a1	b1	C1	
+par_groupby	--block 20 C1 ssv \s+	3  2  4  
+par_groupby	--block 20 C1 ssv \s+	3		2		2		
+par_groupby	--block 20 C1 ssv \s+	NewRec
+par_groupby	--block 20 C1 ssv \s+	a1	b1	C1	
+par_groupby	--block 20 C1 ssv \s+	3	  	2	  	3	  	
+par_groupby	--block 20 C1 ssv \s+	3	  	  1	  	  3	  	  
+par_groupby	--block 20 C1 ssv \s+	3	  	 2	  	 3	  	 
+par_groupby	--block 20 C1 ssv \s+	3	  	3	  	3	  	
+par_groupby	--block 20 C1 ssv \s+	NewRec
+par_groupby	--block 20 C1 ssv \s+	a1	b1	C1	
+par_groupby	--block 20 C1 ssv \s+	3		4		4		
+par_groupby	--block 20 C1 ssv \s+	3	 	5	 	4	 	
+par_groupby	--block 20 C1 ssv \s+	parallel: Warning: A record was longer than 20. Increasing to --blocksize 27.
+par_groupby	--block 20 C1 ssv \s+	parallel: Warning: A record was longer than 27. Increasing to --blocksize 37.
+par_groupby	--block 20 C1 ssv \s+	parallel: Warning: A record was longer than 37. Increasing to --blocksize 50.
+par_groupby	--block 20 C1 ssv \s+	parallel: Warning: A record was longer than 50. Increasing to --blocksize 66.
+par_groupby	--block 20 C1 ssv \s+	parallel: Warning: A record was longer than 66. Increasing to --blocksize 87.
+par_groupby	--block 20 C1 ssv \s+	parallel: Warning: A record was longer than 87. Increasing to --blocksize 115.
+par_groupby	--block 20 C1 cssv [\s,]+	### test cssv | --colsep [\s,]+ --groupby C1 --block 20
+par_groupby	--block 20 C1 cssv [\s,]+	NewRec
+par_groupby	--block 20 C1 cssv [\s,]+	a1,	b1,	C1,	
+par_groupby	--block 20 C1 cssv [\s,]+	2 ,2 ,2 ,
+par_groupby	--block 20 C1 cssv [\s,]+	3  ,	2  ,	2  ,	
+par_groupby	--block 20 C1 cssv [\s,]+	3	, 3	, 2	, 
+par_groupby	--block 20 C1 cssv [\s,]+	NewRec
+par_groupby	--block 20 C1 cssv [\s,]+	a1,	b1,	C1,	
+par_groupby	--block 20 C1 cssv [\s,]+	3,,2,,4,,
+par_groupby	--block 20 C1 cssv [\s,]+	NewRec
+par_groupby	--block 20 C1 cssv [\s,]+	a1,	b1,	C1,	
+par_groupby	--block 20 C1 cssv [\s,]+	3	,,, 2	,,, 2	,,, 
+par_groupby	--block 20 C1 cssv [\s,]+	NewRec
+par_groupby	--block 20 C1 cssv [\s,]+	a1,	b1,	C1,	
+par_groupby	--block 20 C1 cssv [\s,]+	3	2	3	
+par_groupby	--block 20 C1 cssv [\s,]+	3	, 1	, 3	, 
+par_groupby	--block 20 C1 cssv [\s,]+	3	,2	,3	,
+par_groupby	--block 20 C1 cssv [\s,]+	3, 	3, 	3, 	
+par_groupby	--block 20 C1 cssv [\s,]+	NewRec
+par_groupby	--block 20 C1 cssv [\s,]+	a1,	b1,	C1,	
+par_groupby	--block 20 C1 cssv [\s,]+	3,	,4,	,4,	,
+par_groupby	--block 20 C1 cssv [\s,]+	3	,,5	,,4	,,
+par_groupby	--block 20 C1 cssv [\s,]+	parallel: Warning: A record was longer than 20. Increasing to --blocksize 27.
+par_groupby	--block 20 C1 cssv [\s,]+	parallel: Warning: A record was longer than 27. Increasing to --blocksize 37.
+par_groupby	--block 20 C1 cssv [\s,]+	parallel: Warning: A record was longer than 37. Increasing to --blocksize 50.
+par_groupby	--block 20 C1 cssv [\s,]+	parallel: Warning: A record was longer than 50. Increasing to --blocksize 66.
+par_groupby	--block 20 C1 cssv [\s,]+	parallel: Warning: A record was longer than 66. Increasing to --blocksize 87.
+par_groupby	--block 20 C1 csv ,	### test csv | --colsep , --groupby C1 --block 20
+par_groupby	--block 20 C1 csv ,	NewRec
+par_groupby	--block 20 C1 csv ,	a1,b1,C1,
+par_groupby	--block 20 C1 csv ,	2,2,2,
+par_groupby	--block 20 C1 csv ,	3,2,2,
+par_groupby	--block 20 C1 csv ,	3,3,2,
+par_groupby	--block 20 C1 csv ,	NewRec
+par_groupby	--block 20 C1 csv ,	a1,b1,C1,
+par_groupby	--block 20 C1 csv ,	3,2,4,
+par_groupby	--block 20 C1 csv ,	NewRec
+par_groupby	--block 20 C1 csv ,	a1,b1,C1,
+par_groupby	--block 20 C1 csv ,	3,2,2,
+par_groupby	--block 20 C1 csv ,	NewRec
+par_groupby	--block 20 C1 csv ,	a1,b1,C1,
+par_groupby	--block 20 C1 csv ,	3,2,3,
+par_groupby	--block 20 C1 csv ,	3,1,3,
+par_groupby	--block 20 C1 csv ,	3,2,3,
+par_groupby	--block 20 C1 csv ,	3,3,3,
+par_groupby	--block 20 C1 csv ,	3,4,4,
+par_groupby	--block 20 C1 csv ,	3,5,4,
+par_groupby	--block 20 C1 csv ,	parallel: Warning: A record was longer than 20. Increasing to --blocksize 27.
+par_groupby	--block 20 C1 csv ,	parallel: Warning: A record was longer than 27. Increasing to --blocksize 37.
+par_groupby	--block 20 C1 csv ,	parallel: Warning: A record was longer than 37. Increasing to --blocksize 50.
+par_groupby	--block 20 C1 csv ,	parallel: Warning: A record was longer than 50. Increasing to --blocksize 66.
+par_groupby	--block 20 C1 csv ,	parallel: Warning: A record was longer than 66. Increasing to --blocksize 87.
+par_groupby	--block 20 C1 $_%=2 tsv \t	### test tsv | --colsep \t --groupby C1 $_%=2 --block 20
+par_groupby	--block 20 C1 $_%=2 tsv \t	NewRec
+par_groupby	--block 20 C1 $_%=2 tsv \t	a1	b1	C1	
+par_groupby	--block 20 C1 $_%=2 tsv \t	2	2	2	
+par_groupby	--block 20 C1 $_%=2 tsv \t	3	2	2	
+par_groupby	--block 20 C1 $_%=2 tsv \t	3	3	2	
+par_groupby	--block 20 C1 $_%=2 tsv \t	3	2	4	
+par_groupby	--block 20 C1 $_%=2 tsv \t	3	2	2	
+par_groupby	--block 20 C1 $_%=2 tsv \t	NewRec
+par_groupby	--block 20 C1 $_%=2 tsv \t	a1	b1	C1	
+par_groupby	--block 20 C1 $_%=2 tsv \t	3	2	3	
+par_groupby	--block 20 C1 $_%=2 tsv \t	3	1	3	
+par_groupby	--block 20 C1 $_%=2 tsv \t	3	2	3	
+par_groupby	--block 20 C1 $_%=2 tsv \t	3	3	3	
+par_groupby	--block 20 C1 $_%=2 tsv \t	3	4	4	
+par_groupby	--block 20 C1 $_%=2 tsv \t	3	5	4	
+par_groupby	--block 20 C1 $_%=2 tsv \t	parallel: Warning: A record was longer than 20. Increasing to --blocksize 27.
+par_groupby	--block 20 C1 $_%=2 tsv \t	parallel: Warning: A record was longer than 27. Increasing to --blocksize 37.
+par_groupby	--block 20 C1 $_%=2 tsv \t	parallel: Warning: A record was longer than 37. Increasing to --blocksize 50.
+par_groupby	--block 20 C1 $_%=2 tsv \t	parallel: Warning: A record was longer than 50. Increasing to --blocksize 66.
+par_groupby	--block 20 C1 $_%=2 tsv \t	parallel: Warning: A record was longer than 66. Increasing to --blocksize 87.
+par_groupby	--block 20 C1 $_%=2 ssv \s+	### test ssv | --colsep \s+ --groupby C1 $_%=2 --block 20
+par_groupby	--block 20 C1 $_%=2 ssv \s+	NewRec
+par_groupby	--block 20 C1 $_%=2 ssv \s+	a1	b1	C1	
+par_groupby	--block 20 C1 $_%=2 ssv \s+	2 2 2 
+par_groupby	--block 20 C1 $_%=2 ssv \s+	3 	2 	2 	
+par_groupby	--block 20 C1 $_%=2 ssv \s+	3	 3	 2	 
+par_groupby	--block 20 C1 $_%=2 ssv \s+	3  2  4  
+par_groupby	--block 20 C1 $_%=2 ssv \s+	3		2		2		
+par_groupby	--block 20 C1 $_%=2 ssv \s+	NewRec
+par_groupby	--block 20 C1 $_%=2 ssv \s+	a1	b1	C1	
+par_groupby	--block 20 C1 $_%=2 ssv \s+	3	  	2	  	3	  	
+par_groupby	--block 20 C1 $_%=2 ssv \s+	3	  	  1	  	  3	  	  
+par_groupby	--block 20 C1 $_%=2 ssv \s+	3	  	 2	  	 3	  	 
+par_groupby	--block 20 C1 $_%=2 ssv \s+	3	  	3	  	3	  	
+par_groupby	--block 20 C1 $_%=2 ssv \s+	NewRec
+par_groupby	--block 20 C1 $_%=2 ssv \s+	a1	b1	C1	
+par_groupby	--block 20 C1 $_%=2 ssv \s+	3		4		4		
+par_groupby	--block 20 C1 $_%=2 ssv \s+	3	 	5	 	4	 	
+par_groupby	--block 20 C1 $_%=2 ssv \s+	parallel: Warning: A record was longer than 20. Increasing to --blocksize 27.
+par_groupby	--block 20 C1 $_%=2 ssv \s+	parallel: Warning: A record was longer than 27. Increasing to --blocksize 37.
+par_groupby	--block 20 C1 $_%=2 ssv \s+	parallel: Warning: A record was longer than 37. Increasing to --blocksize 50.
+par_groupby	--block 20 C1 $_%=2 ssv \s+	parallel: Warning: A record was longer than 50. Increasing to --blocksize 66.
+par_groupby	--block 20 C1 $_%=2 ssv \s+	parallel: Warning: A record was longer than 66. Increasing to --blocksize 87.
+par_groupby	--block 20 C1 $_%=2 ssv \s+	parallel: Warning: A record was longer than 87. Increasing to --blocksize 115.
+par_groupby	--block 20 C1 $_%=2 cssv [\s,]+	### test cssv | --colsep [\s,]+ --groupby C1 $_%=2 --block 20
+par_groupby	--block 20 C1 $_%=2 cssv [\s,]+	NewRec
+par_groupby	--block 20 C1 $_%=2 cssv [\s,]+	a1,	b1,	C1,	
+par_groupby	--block 20 C1 $_%=2 cssv [\s,]+	2 ,2 ,2 ,
+par_groupby	--block 20 C1 $_%=2 cssv [\s,]+	3  ,	2  ,	2  ,	
+par_groupby	--block 20 C1 $_%=2 cssv [\s,]+	3	, 3	, 2	, 
+par_groupby	--block 20 C1 $_%=2 cssv [\s,]+	3,,2,,4,,
+par_groupby	--block 20 C1 $_%=2 cssv [\s,]+	3	,,, 2	,,, 2	,,, 
+par_groupby	--block 20 C1 $_%=2 cssv [\s,]+	NewRec
+par_groupby	--block 20 C1 $_%=2 cssv [\s,]+	a1,	b1,	C1,	
+par_groupby	--block 20 C1 $_%=2 cssv [\s,]+	3	2	3	
+par_groupby	--block 20 C1 $_%=2 cssv [\s,]+	3	, 1	, 3	, 
+par_groupby	--block 20 C1 $_%=2 cssv [\s,]+	3	,2	,3	,
+par_groupby	--block 20 C1 $_%=2 cssv [\s,]+	3, 	3, 	3, 	
+par_groupby	--block 20 C1 $_%=2 cssv [\s,]+	3,	,4,	,4,	,
+par_groupby	--block 20 C1 $_%=2 cssv [\s,]+	3	,,5	,,4	,,
+par_groupby	--block 20 C1 $_%=2 cssv [\s,]+	parallel: Warning: A record was longer than 20. Increasing to --blocksize 27.
+par_groupby	--block 20 C1 $_%=2 cssv [\s,]+	parallel: Warning: A record was longer than 27. Increasing to --blocksize 37.
+par_groupby	--block 20 C1 $_%=2 cssv [\s,]+	parallel: Warning: A record was longer than 37. Increasing to --blocksize 50.
+par_groupby	--block 20 C1 $_%=2 cssv [\s,]+	parallel: Warning: A record was longer than 50. Increasing to --blocksize 66.
+par_groupby	--block 20 C1 $_%=2 cssv [\s,]+	parallel: Warning: A record was longer than 66. Increasing to --blocksize 87.
+par_groupby	--block 20 C1 $_%=2 cssv [\s,]+	parallel: Warning: A record was longer than 87. Increasing to --blocksize 115.
+par_groupby	--block 20 C1 $_%=2 csv ,	### test csv | --colsep , --groupby C1 $_%=2 --block 20
+par_groupby	--block 20 C1 $_%=2 csv ,	NewRec
+par_groupby	--block 20 C1 $_%=2 csv ,	a1,b1,C1,
+par_groupby	--block 20 C1 $_%=2 csv ,	2,2,2,
+par_groupby	--block 20 C1 $_%=2 csv ,	3,2,2,
+par_groupby	--block 20 C1 $_%=2 csv ,	3,3,2,
+par_groupby	--block 20 C1 $_%=2 csv ,	3,2,4,
+par_groupby	--block 20 C1 $_%=2 csv ,	3,2,2,
+par_groupby	--block 20 C1 $_%=2 csv ,	NewRec
+par_groupby	--block 20 C1 $_%=2 csv ,	a1,b1,C1,
+par_groupby	--block 20 C1 $_%=2 csv ,	3,2,3,
+par_groupby	--block 20 C1 $_%=2 csv ,	3,1,3,
+par_groupby	--block 20 C1 $_%=2 csv ,	3,2,3,
+par_groupby	--block 20 C1 $_%=2 csv ,	3,3,3,
+par_groupby	--block 20 C1 $_%=2 csv ,	3,4,4,
+par_groupby	--block 20 C1 $_%=2 csv ,	3,5,4,
+par_groupby	--block 20 C1 $_%=2 csv ,	parallel: Warning: A record was longer than 20. Increasing to --blocksize 27.
+par_groupby	--block 20 C1 $_%=2 csv ,	parallel: Warning: A record was longer than 27. Increasing to --blocksize 37.
+par_groupby	--block 20 C1 $_%=2 csv ,	parallel: Warning: A record was longer than 37. Increasing to --blocksize 50.
+par_groupby	--block 20 C1 $_%=2 csv ,	parallel: Warning: A record was longer than 50. Increasing to --blocksize 66.
+par_groupby	--block 20 C1 $_%=2 csv ,	parallel: Warning: A record was longer than 66. Increasing to --blocksize 87.
+par_groupby_big	### test --group-by on file bigger than block
+par_groupby_big	--group-by on col 1..3, -n1..5
+par_groupby_big	_pipe and _ppart (pipepart) must return the same
+par_groupby_big	1 	_pipe	_ppart
+par_groupby_big	1 	0 0 0	0 0 0
+par_groupby_big	1 	0 99 9	0 99 9
+par_groupby_big	1 	_pipe	_ppart
+par_groupby_big	1 	1 0 0	1 0 0
+par_groupby_big	1 	1 99 9	1 99 9
+par_groupby_big	1 	_pipe	_ppart
+par_groupby_big	1 	2 0 0	2 0 0
+par_groupby_big	1 	2 99 9	2 99 9
+par_groupby_big	1 	_pipe	_ppart
+par_groupby_big	1 	3 0 0	3 0 0
+par_groupby_big	1 	3 99 9	3 99 9
+par_groupby_big	1 	_pipe	_ppart
+par_groupby_big	1 	4 0 0	4 0 0
+par_groupby_big	1 	4 99 9	4 99 9
+par_groupby_big	1 	_pipe	_ppart
+par_groupby_big	1 	5 0 0	5 0 0
+par_groupby_big	1 	5 99 9	5 99 9
+par_groupby_big	1 	_pipe	_ppart
+par_groupby_big	1 	6 0 0	6 0 0
+par_groupby_big	1 	6 99 9	6 99 9
+par_groupby_big	1 	_pipe	_ppart
+par_groupby_big	1 	7 0 0	7 0 0
+par_groupby_big	1 	7 99 9	7 99 9
+par_groupby_big	1 	_pipe	_ppart
+par_groupby_big	1 	8 0 0	8 0 0
+par_groupby_big	1 	8 99 9	8 99 9
+par_groupby_big	1 	_pipe	_ppart
+par_groupby_big	1 	9 0 0	9 0 0
+par_groupby_big	1 	9 99 9	9 99 9
+par_groupby_big	1 -n1	_pipe	_ppart
+par_groupby_big	1 -n1	0 0 0	0 0 0
+par_groupby_big	1 -n1	0 99 9	0 99 9
+par_groupby_big	1 -n1	_pipe	_ppart
+par_groupby_big	1 -n1	1 0 0	1 0 0
+par_groupby_big	1 -n1	1 99 9	1 99 9
+par_groupby_big	1 -n1	_pipe	_ppart
+par_groupby_big	1 -n1	2 0 0	2 0 0
+par_groupby_big	1 -n1	2 99 9	2 99 9
+par_groupby_big	1 -n1	_pipe	_ppart
+par_groupby_big	1 -n1	3 0 0	3 0 0
+par_groupby_big	1 -n1	3 99 9	3 99 9
+par_groupby_big	1 -n1	_pipe	_ppart
+par_groupby_big	1 -n1	4 0 0	4 0 0
+par_groupby_big	1 -n1	4 99 9	4 99 9
+par_groupby_big	1 -n1	_pipe	_ppart
+par_groupby_big	1 -n1	5 0 0	5 0 0
+par_groupby_big	1 -n1	5 99 9	5 99 9
+par_groupby_big	1 -n1	_pipe	_ppart
+par_groupby_big	1 -n1	6 0 0	6 0 0
+par_groupby_big	1 -n1	6 99 9	6 99 9
+par_groupby_big	1 -n1	_pipe	_ppart
+par_groupby_big	1 -n1	7 0 0	7 0 0
+par_groupby_big	1 -n1	7 99 9	7 99 9
+par_groupby_big	1 -n1	_pipe	_ppart
+par_groupby_big	1 -n1	8 0 0	8 0 0
+par_groupby_big	1 -n1	8 99 9	8 99 9
+par_groupby_big	1 -n1	_pipe	_ppart
+par_groupby_big	1 -n1	9 0 0	9 0 0
+par_groupby_big	1 -n1	9 99 9	9 99 9
+par_groupby_big	1 -n2	_pipe	_ppart
+par_groupby_big	1 -n2	0 0 0	0 0 0
+par_groupby_big	1 -n2	1 99 9	1 99 9
+par_groupby_big	1 -n2	_pipe	_ppart
+par_groupby_big	1 -n2	2 0 0	2 0 0
+par_groupby_big	1 -n2	3 99 9	3 99 9
+par_groupby_big	1 -n2	_pipe	_ppart
+par_groupby_big	1 -n2	4 0 0	4 0 0
+par_groupby_big	1 -n2	5 99 9	5 99 9
+par_groupby_big	1 -n2	_pipe	_ppart
+par_groupby_big	1 -n2	6 0 0	6 0 0
+par_groupby_big	1 -n2	7 99 9	7 99 9
+par_groupby_big	1 -n2	_pipe	_ppart
+par_groupby_big	1 -n2	8 0 0	8 0 0
+par_groupby_big	1 -n2	9 99 9	9 99 9
+par_groupby_big	1 -n2	parallel: Warning: A record was longer than 1048576. Increasing to --blocksize 1363150.
+par_groupby_big	1 -n2	parallel: Warning: A record was longer than 1363150. Increasing to --blocksize 1772096.
+par_groupby_big	1 -n3	_pipe	_ppart
+par_groupby_big	1 -n3	0 0 0	0 0 0
+par_groupby_big	1 -n3	2 99 9	2 99 9
+par_groupby_big	1 -n3	_pipe	_ppart
+par_groupby_big	1 -n3	3 0 0	3 0 0
+par_groupby_big	1 -n3	5 99 9	5 99 9
+par_groupby_big	1 -n3	_pipe	_ppart
+par_groupby_big	1 -n3	6 0 0	6 0 0
+par_groupby_big	1 -n3	8 99 9	8 99 9
+par_groupby_big	1 -n3	_pipe	_ppart
+par_groupby_big	1 -n3	9 0 0	9 0 0
+par_groupby_big	1 -n3	9 99 9	9 99 9
+par_groupby_big	1 -n3	parallel: Warning: A record was longer than 1048576. Increasing to --blocksize 1363150.
+par_groupby_big	1 -n3	parallel: Warning: A record was longer than 1363150. Increasing to --blocksize 1772096.
+par_groupby_big	1 -n3	parallel: Warning: A record was longer than 1772096. Increasing to --blocksize 2303726.
+par_groupby_big	1 -n4	_pipe	_ppart
+par_groupby_big	1 -n4	0 0 0	0 0 0
+par_groupby_big	1 -n4	3 99 9	3 99 9
+par_groupby_big	1 -n4	_pipe	_ppart
+par_groupby_big	1 -n4	4 0 0	4 0 0
+par_groupby_big	1 -n4	7 99 9	7 99 9
+par_groupby_big	1 -n4	_pipe	_ppart
+par_groupby_big	1 -n4	8 0 0	8 0 0
+par_groupby_big	1 -n4	9 99 9	9 99 9
+par_groupby_big	1 -n4	parallel: Warning: A record was longer than 1048576. Increasing to --blocksize 1363150.
+par_groupby_big	1 -n4	parallel: Warning: A record was longer than 1363150. Increasing to --blocksize 1772096.
+par_groupby_big	1 -n4	parallel: Warning: A record was longer than 1772096. Increasing to --blocksize 2303726.
+par_groupby_big	1 -n4	parallel: Warning: A record was longer than 2303726. Increasing to --blocksize 2994845.
+par_groupby_big	1 -n5	_pipe	_ppart
+par_groupby_big	1 -n5	0 0 0	0 0 0
+par_groupby_big	1 -n5	4 99 9	4 99 9
+par_groupby_big	1 -n5	_pipe	_ppart
+par_groupby_big	1 -n5	5 0 0	5 0 0
+par_groupby_big	1 -n5	9 99 9	9 99 9
+par_groupby_big	1 -n5	parallel: Warning: A record was longer than 1048576. Increasing to --blocksize 1363150.
+par_groupby_big	1 -n5	parallel: Warning: A record was longer than 1363150. Increasing to --blocksize 1772096.
+par_groupby_big	1 -n5	parallel: Warning: A record was longer than 1772096. Increasing to --blocksize 2303726.
+par_groupby_big	1 -n5	parallel: Warning: A record was longer than 2303726. Increasing to --blocksize 2994845.
+par_groupby_big	1 -n5	parallel: Warning: A record was longer than 2994845. Increasing to --blocksize 3893300.
+par_groupby_big	2 	_pipe	_ppart
+par_groupby_big	2 	0 0 0	0 0 0
+par_groupby_big	2 	9 14 9	9 1 9
+par_groupby_big	2 	_pipe	_ppart
+par_groupby_big	2 	0 15 0	0 2 0
+par_groupby_big	2 	9 28 9	9 3 9
+par_groupby_big	2 	_pipe	_ppart
+par_groupby_big	2 	0 29 0	0 4 0
+par_groupby_big	2 	9 42 9	9 5 9
+par_groupby_big	2 	_pipe	_ppart
+par_groupby_big	2 	0 43 0	0 6 0
+par_groupby_big	2 	9 56 9	9 7 9
+par_groupby_big	2 	_pipe	_ppart
+par_groupby_big	2 	0 57 0	0 8 0
+par_groupby_big	2 	9 70 9	9 9 9
+par_groupby_big	2 	_pipe	_ppart
+par_groupby_big	2 	0 71 0	0 10 0
+par_groupby_big	2 	9 84 9	9 11 9
+par_groupby_big	2 	_pipe	_ppart
+par_groupby_big	2 	0 85 0	0 12 0
+par_groupby_big	2 	9 98 9	9 13 9
+par_groupby_big	2 	_pipe	_ppart
+par_groupby_big	2 	0 99 0	0 14 0
+par_groupby_big	2 	9 99 9	9 15 9
+par_groupby_big	2 		_ppart
+par_groupby_big	2 		0 16 0
+par_groupby_big	2 		9 17 9
+par_groupby_big	2 		_ppart
+par_groupby_big	2 		0 18 0
+par_groupby_big	2 		9 19 9
+par_groupby_big	2 		_ppart
+par_groupby_big	2 		0 20 0
+par_groupby_big	2 		9 21 9
+par_groupby_big	2 		_ppart
+par_groupby_big	2 		0 22 0
+par_groupby_big	2 		9 23 9
+par_groupby_big	2 		_ppart
+par_groupby_big	2 		0 24 0
+par_groupby_big	2 		9 25 9
+par_groupby_big	2 		_ppart
+par_groupby_big	2 		0 26 0
+par_groupby_big	2 		9 27 9
+par_groupby_big	2 		_ppart
+par_groupby_big	2 		0 28 0
+par_groupby_big	2 		9 29 9
+par_groupby_big	2 		_ppart
+par_groupby_big	2 		0 30 0
+par_groupby_big	2 		9 31 9
+par_groupby_big	2 		_ppart
+par_groupby_big	2 		0 32 0
+par_groupby_big	2 		9 33 9
+par_groupby_big	2 		_ppart
+par_groupby_big	2 		0 34 0
+par_groupby_big	2 		9 35 9
+par_groupby_big	2 		_ppart
+par_groupby_big	2 		0 36 0
+par_groupby_big	2 		9 37 9
+par_groupby_big	2 		_ppart
+par_groupby_big	2 		0 38 0
+par_groupby_big	2 		9 39 9
+par_groupby_big	2 		_ppart
+par_groupby_big	2 		0 40 0
+par_groupby_big	2 		9 41 9
+par_groupby_big	2 		_ppart
+par_groupby_big	2 		0 42 0
+par_groupby_big	2 		9 43 9
+par_groupby_big	2 		_ppart
+par_groupby_big	2 		0 44 0
+par_groupby_big	2 		9 45 9
+par_groupby_big	2 		_ppart
+par_groupby_big	2 		0 46 0
+par_groupby_big	2 		9 47 9
+par_groupby_big	2 		_ppart
+par_groupby_big	2 		0 48 0
+par_groupby_big	2 		9 49 9
+par_groupby_big	2 		_ppart
+par_groupby_big	2 		0 50 0
+par_groupby_big	2 		9 51 9
+par_groupby_big	2 		_ppart
+par_groupby_big	2 		0 52 0
+par_groupby_big	2 		9 53 9
+par_groupby_big	2 		_ppart
+par_groupby_big	2 		0 54 0
+par_groupby_big	2 		9 55 9
+par_groupby_big	2 		_ppart
+par_groupby_big	2 		0 56 0
+par_groupby_big	2 		9 57 9
+par_groupby_big	2 		_ppart
+par_groupby_big	2 		0 58 0
+par_groupby_big	2 		9 59 9
+par_groupby_big	2 		_ppart
+par_groupby_big	2 		0 60 0
+par_groupby_big	2 		9 61 9
+par_groupby_big	2 		_ppart
+par_groupby_big	2 		0 62 0
+par_groupby_big	2 		9 63 9
+par_groupby_big	2 		_ppart
+par_groupby_big	2 		0 64 0
+par_groupby_big	2 		9 65 9
+par_groupby_big	2 		_ppart
+par_groupby_big	2 		0 66 0
+par_groupby_big	2 		9 67 9
+par_groupby_big	2 		_ppart
+par_groupby_big	2 		0 68 0
+par_groupby_big	2 		9 69 9
+par_groupby_big	2 		_ppart
+par_groupby_big	2 		0 70 0
+par_groupby_big	2 		9 71 9
+par_groupby_big	2 		_ppart
+par_groupby_big	2 		0 72 0
+par_groupby_big	2 		9 73 9
+par_groupby_big	2 		_ppart
+par_groupby_big	2 		0 74 0
+par_groupby_big	2 		9 75 9
+par_groupby_big	2 		_ppart
+par_groupby_big	2 		0 76 0
+par_groupby_big	2 		9 77 9
+par_groupby_big	2 		_ppart
+par_groupby_big	2 		0 78 0
+par_groupby_big	2 		9 79 9
+par_groupby_big	2 		_ppart
+par_groupby_big	2 		0 80 0
+par_groupby_big	2 		9 81 9
+par_groupby_big	2 		_ppart
+par_groupby_big	2 		0 82 0
+par_groupby_big	2 		9 83 9
+par_groupby_big	2 		_ppart
+par_groupby_big	2 		0 84 0
+par_groupby_big	2 		9 85 9
+par_groupby_big	2 		_ppart
+par_groupby_big	2 		0 86 0
+par_groupby_big	2 		9 87 9
+par_groupby_big	2 		_ppart
+par_groupby_big	2 		0 88 0
+par_groupby_big	2 		9 89 9
+par_groupby_big	2 		_ppart
+par_groupby_big	2 		0 90 0
+par_groupby_big	2 		9 91 9
+par_groupby_big	2 		_ppart
+par_groupby_big	2 		0 92 0
+par_groupby_big	2 		9 93 9
+par_groupby_big	2 		_ppart
+par_groupby_big	2 		0 94 0
+par_groupby_big	2 		9 95 9
+par_groupby_big	2 		_ppart
+par_groupby_big	2 		0 96 0
+par_groupby_big	2 		9 97 9
+par_groupby_big	2 		_ppart
+par_groupby_big	2 		0 98 0
+par_groupby_big	2 		9 99 9
+par_groupby_big	2 -n1	_pipe	_ppart
+par_groupby_big	2 -n1	0 0 0	0 0 0
+par_groupby_big	2 -n1	9 0 9	9 0 9
+par_groupby_big	2 -n1	_pipe	_ppart
+par_groupby_big	2 -n1	0 1 0	0 1 0
+par_groupby_big	2 -n1	9 1 9	9 1 9
+par_groupby_big	2 -n1	_pipe	_ppart
+par_groupby_big	2 -n1	0 2 0	0 2 0
+par_groupby_big	2 -n1	9 2 9	9 2 9
+par_groupby_big	2 -n1	_pipe	_ppart
+par_groupby_big	2 -n1	0 3 0	0 3 0
+par_groupby_big	2 -n1	9 3 9	9 3 9
+par_groupby_big	2 -n1	_pipe	_ppart
+par_groupby_big	2 -n1	0 4 0	0 4 0
+par_groupby_big	2 -n1	9 4 9	9 4 9
+par_groupby_big	2 -n1	_pipe	_ppart
+par_groupby_big	2 -n1	0 5 0	0 5 0
+par_groupby_big	2 -n1	9 5 9	9 5 9
+par_groupby_big	2 -n1	_pipe	_ppart
+par_groupby_big	2 -n1	0 6 0	0 6 0
+par_groupby_big	2 -n1	9 6 9	9 6 9
+par_groupby_big	2 -n1	_pipe	_ppart
+par_groupby_big	2 -n1	0 7 0	0 7 0
+par_groupby_big	2 -n1	9 7 9	9 7 9
+par_groupby_big	2 -n1	_pipe	_ppart
+par_groupby_big	2 -n1	0 8 0	0 8 0
+par_groupby_big	2 -n1	9 8 9	9 8 9
+par_groupby_big	2 -n1	_pipe	_ppart
+par_groupby_big	2 -n1	0 9 0	0 9 0
+par_groupby_big	2 -n1	9 9 9	9 9 9
+par_groupby_big	2 -n1	_pipe	_ppart
+par_groupby_big	2 -n1	0 10 0	0 10 0
+par_groupby_big	2 -n1	9 10 9	9 10 9
+par_groupby_big	2 -n1	_pipe	_ppart
+par_groupby_big	2 -n1	0 11 0	0 11 0
+par_groupby_big	2 -n1	9 11 9	9 11 9
+par_groupby_big	2 -n1	_pipe	_ppart
+par_groupby_big	2 -n1	0 12 0	0 12 0
+par_groupby_big	2 -n1	9 12 9	9 12 9
+par_groupby_big	2 -n1	_pipe	_ppart
+par_groupby_big	2 -n1	0 13 0	0 13 0
+par_groupby_big	2 -n1	9 13 9	9 13 9
+par_groupby_big	2 -n1	_pipe	_ppart
+par_groupby_big	2 -n1	0 14 0	0 14 0
+par_groupby_big	2 -n1	9 14 9	9 14 9
+par_groupby_big	2 -n1	_pipe	_ppart
+par_groupby_big	2 -n1	0 15 0	0 15 0
+par_groupby_big	2 -n1	9 15 9	9 15 9
+par_groupby_big	2 -n1	_pipe	_ppart
+par_groupby_big	2 -n1	0 16 0	0 16 0
+par_groupby_big	2 -n1	9 16 9	9 16 9
+par_groupby_big	2 -n1	_pipe	_ppart
+par_groupby_big	2 -n1	0 17 0	0 17 0
+par_groupby_big	2 -n1	9 17 9	9 17 9
+par_groupby_big	2 -n1	_pipe	_ppart
+par_groupby_big	2 -n1	0 18 0	0 18 0
+par_groupby_big	2 -n1	9 18 9	9 18 9
+par_groupby_big	2 -n1	_pipe	_ppart
+par_groupby_big	2 -n1	0 19 0	0 19 0
+par_groupby_big	2 -n1	9 19 9	9 19 9
+par_groupby_big	2 -n1	_pipe	_ppart
+par_groupby_big	2 -n1	0 20 0	0 20 0
+par_groupby_big	2 -n1	9 20 9	9 20 9
+par_groupby_big	2 -n1	_pipe	_ppart
+par_groupby_big	2 -n1	0 21 0	0 21 0
+par_groupby_big	2 -n1	9 21 9	9 21 9
+par_groupby_big	2 -n1	_pipe	_ppart
+par_groupby_big	2 -n1	0 22 0	0 22 0
+par_groupby_big	2 -n1	9 22 9	9 22 9
+par_groupby_big	2 -n1	_pipe	_ppart
+par_groupby_big	2 -n1	0 23 0	0 23 0
+par_groupby_big	2 -n1	9 23 9	9 23 9
+par_groupby_big	2 -n1	_pipe	_ppart
+par_groupby_big	2 -n1	0 24 0	0 24 0
+par_groupby_big	2 -n1	9 24 9	9 24 9
+par_groupby_big	2 -n1	_pipe	_ppart
+par_groupby_big	2 -n1	0 25 0	0 25 0
+par_groupby_big	2 -n1	9 25 9	9 25 9
+par_groupby_big	2 -n1	_pipe	_ppart
+par_groupby_big	2 -n1	0 26 0	0 26 0
+par_groupby_big	2 -n1	9 26 9	9 26 9
+par_groupby_big	2 -n1	_pipe	_ppart
+par_groupby_big	2 -n1	0 27 0	0 27 0
+par_groupby_big	2 -n1	9 27 9	9 27 9
+par_groupby_big	2 -n1	_pipe	_ppart
+par_groupby_big	2 -n1	0 28 0	0 28 0
+par_groupby_big	2 -n1	9 28 9	9 28 9
+par_groupby_big	2 -n1	_pipe	_ppart
+par_groupby_big	2 -n1	0 29 0	0 29 0
+par_groupby_big	2 -n1	9 29 9	9 29 9
+par_groupby_big	2 -n1	_pipe	_ppart
+par_groupby_big	2 -n1	0 30 0	0 30 0
+par_groupby_big	2 -n1	9 30 9	9 30 9
+par_groupby_big	2 -n1	_pipe	_ppart
+par_groupby_big	2 -n1	0 31 0	0 31 0
+par_groupby_big	2 -n1	9 31 9	9 31 9
+par_groupby_big	2 -n1	_pipe	_ppart
+par_groupby_big	2 -n1	0 32 0	0 32 0
+par_groupby_big	2 -n1	9 32 9	9 32 9
+par_groupby_big	2 -n1	_pipe	_ppart
+par_groupby_big	2 -n1	0 33 0	0 33 0
+par_groupby_big	2 -n1	9 33 9	9 33 9
+par_groupby_big	2 -n1	_pipe	_ppart
+par_groupby_big	2 -n1	0 34 0	0 34 0
+par_groupby_big	2 -n1	9 34 9	9 34 9
+par_groupby_big	2 -n1	_pipe	_ppart
+par_groupby_big	2 -n1	0 35 0	0 35 0
+par_groupby_big	2 -n1	9 35 9	9 35 9
+par_groupby_big	2 -n1	_pipe	_ppart
+par_groupby_big	2 -n1	0 36 0	0 36 0
+par_groupby_big	2 -n1	9 36 9	9 36 9
+par_groupby_big	2 -n1	_pipe	_ppart
+par_groupby_big	2 -n1	0 37 0	0 37 0
+par_groupby_big	2 -n1	9 37 9	9 37 9
+par_groupby_big	2 -n1	_pipe	_ppart
+par_groupby_big	2 -n1	0 38 0	0 38 0
+par_groupby_big	2 -n1	9 38 9	9 38 9
+par_groupby_big	2 -n1	_pipe	_ppart
+par_groupby_big	2 -n1	0 39 0	0 39 0
+par_groupby_big	2 -n1	9 39 9	9 39 9
+par_groupby_big	2 -n1	_pipe	_ppart
+par_groupby_big	2 -n1	0 40 0	0 40 0
+par_groupby_big	2 -n1	9 40 9	9 40 9
+par_groupby_big	2 -n1	_pipe	_ppart
+par_groupby_big	2 -n1	0 41 0	0 41 0
+par_groupby_big	2 -n1	9 41 9	9 41 9
+par_groupby_big	2 -n1	_pipe	_ppart
+par_groupby_big	2 -n1	0 42 0	0 42 0
+par_groupby_big	2 -n1	9 42 9	9 42 9
+par_groupby_big	2 -n1	_pipe	_ppart
+par_groupby_big	2 -n1	0 43 0	0 43 0
+par_groupby_big	2 -n1	9 43 9	9 43 9
+par_groupby_big	2 -n1	_pipe	_ppart
+par_groupby_big	2 -n1	0 44 0	0 44 0
+par_groupby_big	2 -n1	9 44 9	9 44 9
+par_groupby_big	2 -n1	_pipe	_ppart
+par_groupby_big	2 -n1	0 45 0	0 45 0
+par_groupby_big	2 -n1	9 45 9	9 45 9
+par_groupby_big	2 -n1	_pipe	_ppart
+par_groupby_big	2 -n1	0 46 0	0 46 0
+par_groupby_big	2 -n1	9 46 9	9 46 9
+par_groupby_big	2 -n1	_pipe	_ppart
+par_groupby_big	2 -n1	0 47 0	0 47 0
+par_groupby_big	2 -n1	9 47 9	9 47 9
+par_groupby_big	2 -n1	_pipe	_ppart
+par_groupby_big	2 -n1	0 48 0	0 48 0
+par_groupby_big	2 -n1	9 48 9	9 48 9
+par_groupby_big	2 -n1	_pipe	_ppart
+par_groupby_big	2 -n1	0 49 0	0 49 0
+par_groupby_big	2 -n1	9 49 9	9 49 9
+par_groupby_big	2 -n1	_pipe	_ppart
+par_groupby_big	2 -n1	0 50 0	0 50 0
+par_groupby_big	2 -n1	9 50 9	9 50 9
+par_groupby_big	2 -n1	_pipe	_ppart
+par_groupby_big	2 -n1	0 51 0	0 51 0
+par_groupby_big	2 -n1	9 51 9	9 51 9
+par_groupby_big	2 -n1	_pipe	_ppart
+par_groupby_big	2 -n1	0 52 0	0 52 0
+par_groupby_big	2 -n1	9 52 9	9 52 9
+par_groupby_big	2 -n1	_pipe	_ppart
+par_groupby_big	2 -n1	0 53 0	0 53 0
+par_groupby_big	2 -n1	9 53 9	9 53 9
+par_groupby_big	2 -n1	_pipe	_ppart
+par_groupby_big	2 -n1	0 54 0	0 54 0
+par_groupby_big	2 -n1	9 54 9	9 54 9
+par_groupby_big	2 -n1	_pipe	_ppart
+par_groupby_big	2 -n1	0 55 0	0 55 0
+par_groupby_big	2 -n1	9 55 9	9 55 9
+par_groupby_big	2 -n1	_pipe	_ppart
+par_groupby_big	2 -n1	0 56 0	0 56 0
+par_groupby_big	2 -n1	9 56 9	9 56 9
+par_groupby_big	2 -n1	_pipe	_ppart
+par_groupby_big	2 -n1	0 57 0	0 57 0
+par_groupby_big	2 -n1	9 57 9	9 57 9
+par_groupby_big	2 -n1	_pipe	_ppart
+par_groupby_big	2 -n1	0 58 0	0 58 0
+par_groupby_big	2 -n1	9 58 9	9 58 9
+par_groupby_big	2 -n1	_pipe	_ppart
+par_groupby_big	2 -n1	0 59 0	0 59 0
+par_groupby_big	2 -n1	9 59 9	9 59 9
+par_groupby_big	2 -n1	_pipe	_ppart
+par_groupby_big	2 -n1	0 60 0	0 60 0
+par_groupby_big	2 -n1	9 60 9	9 60 9
+par_groupby_big	2 -n1	_pipe	_ppart
+par_groupby_big	2 -n1	0 61 0	0 61 0
+par_groupby_big	2 -n1	9 61 9	9 61 9
+par_groupby_big	2 -n1	_pipe	_ppart
+par_groupby_big	2 -n1	0 62 0	0 62 0
+par_groupby_big	2 -n1	9 62 9	9 62 9
+par_groupby_big	2 -n1	_pipe	_ppart
+par_groupby_big	2 -n1	0 63 0	0 63 0
+par_groupby_big	2 -n1	9 63 9	9 63 9
+par_groupby_big	2 -n1	_pipe	_ppart
+par_groupby_big	2 -n1	0 64 0	0 64 0
+par_groupby_big	2 -n1	9 64 9	9 64 9
+par_groupby_big	2 -n1	_pipe	_ppart
+par_groupby_big	2 -n1	0 65 0	0 65 0
+par_groupby_big	2 -n1	9 65 9	9 65 9
+par_groupby_big	2 -n1	_pipe	_ppart
+par_groupby_big	2 -n1	0 66 0	0 66 0
+par_groupby_big	2 -n1	9 66 9	9 66 9
+par_groupby_big	2 -n1	_pipe	_ppart
+par_groupby_big	2 -n1	0 67 0	0 67 0
+par_groupby_big	2 -n1	9 67 9	9 67 9
+par_groupby_big	2 -n1	_pipe	_ppart
+par_groupby_big	2 -n1	0 68 0	0 68 0
+par_groupby_big	2 -n1	9 68 9	9 68 9
+par_groupby_big	2 -n1	_pipe	_ppart
+par_groupby_big	2 -n1	0 69 0	0 69 0
+par_groupby_big	2 -n1	9 69 9	9 69 9
+par_groupby_big	2 -n1	_pipe	_ppart
+par_groupby_big	2 -n1	0 70 0	0 70 0
+par_groupby_big	2 -n1	9 70 9	9 70 9
+par_groupby_big	2 -n1	_pipe	_ppart
+par_groupby_big	2 -n1	0 71 0	0 71 0
+par_groupby_big	2 -n1	9 71 9	9 71 9
+par_groupby_big	2 -n1	_pipe	_ppart
+par_groupby_big	2 -n1	0 72 0	0 72 0
+par_groupby_big	2 -n1	9 72 9	9 72 9
+par_groupby_big	2 -n1	_pipe	_ppart
+par_groupby_big	2 -n1	0 73 0	0 73 0
+par_groupby_big	2 -n1	9 73 9	9 73 9
+par_groupby_big	2 -n1	_pipe	_ppart
+par_groupby_big	2 -n1	0 74 0	0 74 0
+par_groupby_big	2 -n1	9 74 9	9 74 9
+par_groupby_big	2 -n1	_pipe	_ppart
+par_groupby_big	2 -n1	0 75 0	0 75 0
+par_groupby_big	2 -n1	9 75 9	9 75 9
+par_groupby_big	2 -n1	_pipe	_ppart
+par_groupby_big	2 -n1	0 76 0	0 76 0
+par_groupby_big	2 -n1	9 76 9	9 76 9
+par_groupby_big	2 -n1	_pipe	_ppart
+par_groupby_big	2 -n1	0 77 0	0 77 0
+par_groupby_big	2 -n1	9 77 9	9 77 9
+par_groupby_big	2 -n1	_pipe	_ppart
+par_groupby_big	2 -n1	0 78 0	0 78 0
+par_groupby_big	2 -n1	9 78 9	9 78 9
+par_groupby_big	2 -n1	_pipe	_ppart
+par_groupby_big	2 -n1	0 79 0	0 79 0
+par_groupby_big	2 -n1	9 79 9	9 79 9
+par_groupby_big	2 -n1	_pipe	_ppart
+par_groupby_big	2 -n1	0 80 0	0 80 0
+par_groupby_big	2 -n1	9 80 9	9 80 9
+par_groupby_big	2 -n1	_pipe	_ppart
+par_groupby_big	2 -n1	0 81 0	0 81 0
+par_groupby_big	2 -n1	9 81 9	9 81 9
+par_groupby_big	2 -n1	_pipe	_ppart
+par_groupby_big	2 -n1	0 82 0	0 82 0
+par_groupby_big	2 -n1	9 82 9	9 82 9
+par_groupby_big	2 -n1	_pipe	_ppart
+par_groupby_big	2 -n1	0 83 0	0 83 0
+par_groupby_big	2 -n1	9 83 9	9 83 9
+par_groupby_big	2 -n1	_pipe	_ppart
+par_groupby_big	2 -n1	0 84 0	0 84 0
+par_groupby_big	2 -n1	9 84 9	9 84 9
+par_groupby_big	2 -n1	_pipe	_ppart
+par_groupby_big	2 -n1	0 85 0	0 85 0
+par_groupby_big	2 -n1	9 85 9	9 85 9
+par_groupby_big	2 -n1	_pipe	_ppart
+par_groupby_big	2 -n1	0 86 0	0 86 0
+par_groupby_big	2 -n1	9 86 9	9 86 9
+par_groupby_big	2 -n1	_pipe	_ppart
+par_groupby_big	2 -n1	0 87 0	0 87 0
+par_groupby_big	2 -n1	9 87 9	9 87 9
+par_groupby_big	2 -n1	_pipe	_ppart
+par_groupby_big	2 -n1	0 88 0	0 88 0
+par_groupby_big	2 -n1	9 88 9	9 88 9
+par_groupby_big	2 -n1	_pipe	_ppart
+par_groupby_big	2 -n1	0 89 0	0 89 0
+par_groupby_big	2 -n1	9 89 9	9 89 9
+par_groupby_big	2 -n1	_pipe	_ppart
+par_groupby_big	2 -n1	0 90 0	0 90 0
+par_groupby_big	2 -n1	9 90 9	9 90 9
+par_groupby_big	2 -n1	_pipe	_ppart
+par_groupby_big	2 -n1	0 91 0	0 91 0
+par_groupby_big	2 -n1	9 91 9	9 91 9
+par_groupby_big	2 -n1	_pipe	_ppart
+par_groupby_big	2 -n1	0 92 0	0 92 0
+par_groupby_big	2 -n1	9 92 9	9 92 9
+par_groupby_big	2 -n1	_pipe	_ppart
+par_groupby_big	2 -n1	0 93 0	0 93 0
+par_groupby_big	2 -n1	9 93 9	9 93 9
+par_groupby_big	2 -n1	_pipe	_ppart
+par_groupby_big	2 -n1	0 94 0	0 94 0
+par_groupby_big	2 -n1	9 94 9	9 94 9
+par_groupby_big	2 -n1	_pipe	_ppart
+par_groupby_big	2 -n1	0 95 0	0 95 0
+par_groupby_big	2 -n1	9 95 9	9 95 9
+par_groupby_big	2 -n1	_pipe	_ppart
+par_groupby_big	2 -n1	0 96 0	0 96 0
+par_groupby_big	2 -n1	9 96 9	9 96 9
+par_groupby_big	2 -n1	_pipe	_ppart
+par_groupby_big	2 -n1	0 97 0	0 97 0
+par_groupby_big	2 -n1	9 97 9	9 97 9
+par_groupby_big	2 -n1	_pipe	_ppart
+par_groupby_big	2 -n1	0 98 0	0 98 0
+par_groupby_big	2 -n1	9 98 9	9 98 9
+par_groupby_big	2 -n1	_pipe	_ppart
+par_groupby_big	2 -n1	0 99 0	0 99 0
+par_groupby_big	2 -n1	9 99 9	9 99 9
+par_groupby_big	2 -n2	_pipe	_ppart
+par_groupby_big	2 -n2	0 0 0	0 0 0
+par_groupby_big	2 -n2	9 1 9	9 1 9
+par_groupby_big	2 -n2	_pipe	_ppart
+par_groupby_big	2 -n2	0 2 0	0 2 0
+par_groupby_big	2 -n2	9 3 9	9 3 9
+par_groupby_big	2 -n2	_pipe	_ppart
+par_groupby_big	2 -n2	0 4 0	0 4 0
+par_groupby_big	2 -n2	9 5 9	9 5 9
+par_groupby_big	2 -n2	_pipe	_ppart
+par_groupby_big	2 -n2	0 6 0	0 6 0
+par_groupby_big	2 -n2	9 7 9	9 7 9
+par_groupby_big	2 -n2	_pipe	_ppart
+par_groupby_big	2 -n2	0 8 0	0 8 0
+par_groupby_big	2 -n2	9 9 9	9 9 9
+par_groupby_big	2 -n2	_pipe	_ppart
+par_groupby_big	2 -n2	0 10 0	0 10 0
+par_groupby_big	2 -n2	9 11 9	9 11 9
+par_groupby_big	2 -n2	_pipe	_ppart
+par_groupby_big	2 -n2	0 12 0	0 12 0
+par_groupby_big	2 -n2	9 13 9	9 13 9
+par_groupby_big	2 -n2	_pipe	_ppart
+par_groupby_big	2 -n2	0 14 0	0 14 0
+par_groupby_big	2 -n2	9 15 9	9 15 9
+par_groupby_big	2 -n2	_pipe	_ppart
+par_groupby_big	2 -n2	0 16 0	0 16 0
+par_groupby_big	2 -n2	9 17 9	9 17 9
+par_groupby_big	2 -n2	_pipe	_ppart
+par_groupby_big	2 -n2	0 18 0	0 18 0
+par_groupby_big	2 -n2	9 19 9	9 19 9
+par_groupby_big	2 -n2	_pipe	_ppart
+par_groupby_big	2 -n2	0 20 0	0 20 0
+par_groupby_big	2 -n2	9 21 9	9 21 9
+par_groupby_big	2 -n2	_pipe	_ppart
+par_groupby_big	2 -n2	0 22 0	0 22 0
+par_groupby_big	2 -n2	9 23 9	9 23 9
+par_groupby_big	2 -n2	_pipe	_ppart
+par_groupby_big	2 -n2	0 24 0	0 24 0
+par_groupby_big	2 -n2	9 25 9	9 25 9
+par_groupby_big	2 -n2	_pipe	_ppart
+par_groupby_big	2 -n2	0 26 0	0 26 0
+par_groupby_big	2 -n2	9 27 9	9 27 9
+par_groupby_big	2 -n2	_pipe	_ppart
+par_groupby_big	2 -n2	0 28 0	0 28 0
+par_groupby_big	2 -n2	9 29 9	9 29 9
+par_groupby_big	2 -n2	_pipe	_ppart
+par_groupby_big	2 -n2	0 30 0	0 30 0
+par_groupby_big	2 -n2	9 31 9	9 31 9
+par_groupby_big	2 -n2	_pipe	_ppart
+par_groupby_big	2 -n2	0 32 0	0 32 0
+par_groupby_big	2 -n2	9 33 9	9 33 9
+par_groupby_big	2 -n2	_pipe	_ppart
+par_groupby_big	2 -n2	0 34 0	0 34 0
+par_groupby_big	2 -n2	9 35 9	9 35 9
+par_groupby_big	2 -n2	_pipe	_ppart
+par_groupby_big	2 -n2	0 36 0	0 36 0
+par_groupby_big	2 -n2	9 37 9	9 37 9
+par_groupby_big	2 -n2	_pipe	_ppart
+par_groupby_big	2 -n2	0 38 0	0 38 0
+par_groupby_big	2 -n2	9 39 9	9 39 9
+par_groupby_big	2 -n2	_pipe	_ppart
+par_groupby_big	2 -n2	0 40 0	0 40 0
+par_groupby_big	2 -n2	9 41 9	9 41 9
+par_groupby_big	2 -n2	_pipe	_ppart
+par_groupby_big	2 -n2	0 42 0	0 42 0
+par_groupby_big	2 -n2	9 43 9	9 43 9
+par_groupby_big	2 -n2	_pipe	_ppart
+par_groupby_big	2 -n2	0 44 0	0 44 0
+par_groupby_big	2 -n2	9 45 9	9 45 9
+par_groupby_big	2 -n2	_pipe	_ppart
+par_groupby_big	2 -n2	0 46 0	0 46 0
+par_groupby_big	2 -n2	9 47 9	9 47 9
+par_groupby_big	2 -n2	_pipe	_ppart
+par_groupby_big	2 -n2	0 48 0	0 48 0
+par_groupby_big	2 -n2	9 49 9	9 49 9
+par_groupby_big	2 -n2	_pipe	_ppart
+par_groupby_big	2 -n2	0 50 0	0 50 0
+par_groupby_big	2 -n2	9 51 9	9 51 9
+par_groupby_big	2 -n2	_pipe	_ppart
+par_groupby_big	2 -n2	0 52 0	0 52 0
+par_groupby_big	2 -n2	9 53 9	9 53 9
+par_groupby_big	2 -n2	_pipe	_ppart
+par_groupby_big	2 -n2	0 54 0	0 54 0
+par_groupby_big	2 -n2	9 55 9	9 55 9
+par_groupby_big	2 -n2	_pipe	_ppart
+par_groupby_big	2 -n2	0 56 0	0 56 0
+par_groupby_big	2 -n2	9 57 9	9 57 9
+par_groupby_big	2 -n2	_pipe	_ppart
+par_groupby_big	2 -n2	0 58 0	0 58 0
+par_groupby_big	2 -n2	9 59 9	9 59 9
+par_groupby_big	2 -n2	_pipe	_ppart
+par_groupby_big	2 -n2	0 60 0	0 60 0
+par_groupby_big	2 -n2	9 61 9	9 61 9
+par_groupby_big	2 -n2	_pipe	_ppart
+par_groupby_big	2 -n2	0 62 0	0 62 0
+par_groupby_big	2 -n2	9 63 9	9 63 9
+par_groupby_big	2 -n2	_pipe	_ppart
+par_groupby_big	2 -n2	0 64 0	0 64 0
+par_groupby_big	2 -n2	9 65 9	9 65 9
+par_groupby_big	2 -n2	_pipe	_ppart
+par_groupby_big	2 -n2	0 66 0	0 66 0
+par_groupby_big	2 -n2	9 67 9	9 67 9
+par_groupby_big	2 -n2	_pipe	_ppart
+par_groupby_big	2 -n2	0 68 0	0 68 0
+par_groupby_big	2 -n2	9 69 9	9 69 9
+par_groupby_big	2 -n2	_pipe	_ppart
+par_groupby_big	2 -n2	0 70 0	0 70 0
+par_groupby_big	2 -n2	9 71 9	9 71 9
+par_groupby_big	2 -n2	_pipe	_ppart
+par_groupby_big	2 -n2	0 72 0	0 72 0
+par_groupby_big	2 -n2	9 73 9	9 73 9
+par_groupby_big	2 -n2	_pipe	_ppart
+par_groupby_big	2 -n2	0 74 0	0 74 0
+par_groupby_big	2 -n2	9 75 9	9 75 9
+par_groupby_big	2 -n2	_pipe	_ppart
+par_groupby_big	2 -n2	0 76 0	0 76 0
+par_groupby_big	2 -n2	9 77 9	9 77 9
+par_groupby_big	2 -n2	_pipe	_ppart
+par_groupby_big	2 -n2	0 78 0	0 78 0
+par_groupby_big	2 -n2	9 79 9	9 79 9
+par_groupby_big	2 -n2	_pipe	_ppart
+par_groupby_big	2 -n2	0 80 0	0 80 0
+par_groupby_big	2 -n2	9 81 9	9 81 9
+par_groupby_big	2 -n2	_pipe	_ppart
+par_groupby_big	2 -n2	0 82 0	0 82 0
+par_groupby_big	2 -n2	9 83 9	9 83 9
+par_groupby_big	2 -n2	_pipe	_ppart
+par_groupby_big	2 -n2	0 84 0	0 84 0
+par_groupby_big	2 -n2	9 85 9	9 85 9
+par_groupby_big	2 -n2	_pipe	_ppart
+par_groupby_big	2 -n2	0 86 0	0 86 0
+par_groupby_big	2 -n2	9 87 9	9 87 9
+par_groupby_big	2 -n2	_pipe	_ppart
+par_groupby_big	2 -n2	0 88 0	0 88 0
+par_groupby_big	2 -n2	9 89 9	9 89 9
+par_groupby_big	2 -n2	_pipe	_ppart
+par_groupby_big	2 -n2	0 90 0	0 90 0
+par_groupby_big	2 -n2	9 91 9	9 91 9
+par_groupby_big	2 -n2	_pipe	_ppart
+par_groupby_big	2 -n2	0 92 0	0 92 0
+par_groupby_big	2 -n2	9 93 9	9 93 9
+par_groupby_big	2 -n2	_pipe	_ppart
+par_groupby_big	2 -n2	0 94 0	0 94 0
+par_groupby_big	2 -n2	9 95 9	9 95 9
+par_groupby_big	2 -n2	_pipe	_ppart
+par_groupby_big	2 -n2	0 96 0	0 96 0
+par_groupby_big	2 -n2	9 97 9	9 97 9
+par_groupby_big	2 -n2	_pipe	_ppart
+par_groupby_big	2 -n2	0 98 0	0 98 0
+par_groupby_big	2 -n2	9 99 9	9 99 9
+par_groupby_big	2 -n3	_pipe	_ppart
+par_groupby_big	2 -n3	0 0 0	0 0 0
+par_groupby_big	2 -n3	9 2 9	9 2 9
+par_groupby_big	2 -n3	_pipe	_ppart
+par_groupby_big	2 -n3	0 3 0	0 3 0
+par_groupby_big	2 -n3	9 5 9	9 5 9
+par_groupby_big	2 -n3	_pipe	_ppart
+par_groupby_big	2 -n3	0 6 0	0 6 0
+par_groupby_big	2 -n3	9 8 9	9 8 9
+par_groupby_big	2 -n3	_pipe	_ppart
+par_groupby_big	2 -n3	0 9 0	0 9 0
+par_groupby_big	2 -n3	9 11 9	9 11 9
+par_groupby_big	2 -n3	_pipe	_ppart
+par_groupby_big	2 -n3	0 12 0	0 12 0
+par_groupby_big	2 -n3	9 14 9	9 14 9
+par_groupby_big	2 -n3	_pipe	_ppart
+par_groupby_big	2 -n3	0 15 0	0 15 0
+par_groupby_big	2 -n3	9 17 9	9 17 9
+par_groupby_big	2 -n3	_pipe	_ppart
+par_groupby_big	2 -n3	0 18 0	0 18 0
+par_groupby_big	2 -n3	9 20 9	9 20 9
+par_groupby_big	2 -n3	_pipe	_ppart
+par_groupby_big	2 -n3	0 21 0	0 21 0
+par_groupby_big	2 -n3	9 23 9	9 23 9
+par_groupby_big	2 -n3	_pipe	_ppart
+par_groupby_big	2 -n3	0 24 0	0 24 0
+par_groupby_big	2 -n3	9 26 9	9 26 9
+par_groupby_big	2 -n3	_pipe	_ppart
+par_groupby_big	2 -n3	0 27 0	0 27 0
+par_groupby_big	2 -n3	9 29 9	9 29 9
+par_groupby_big	2 -n3	_pipe	_ppart
+par_groupby_big	2 -n3	0 30 0	0 30 0
+par_groupby_big	2 -n3	9 32 9	9 32 9
+par_groupby_big	2 -n3	_pipe	_ppart
+par_groupby_big	2 -n3	0 33 0	0 33 0
+par_groupby_big	2 -n3	9 35 9	9 35 9
+par_groupby_big	2 -n3	_pipe	_ppart
+par_groupby_big	2 -n3	0 36 0	0 36 0
+par_groupby_big	2 -n3	9 38 9	9 38 9
+par_groupby_big	2 -n3	_pipe	_ppart
+par_groupby_big	2 -n3	0 39 0	0 39 0
+par_groupby_big	2 -n3	9 41 9	9 41 9
+par_groupby_big	2 -n3	_pipe	_ppart
+par_groupby_big	2 -n3	0 42 0	0 42 0
+par_groupby_big	2 -n3	9 44 9	9 44 9
+par_groupby_big	2 -n3	_pipe	_ppart
+par_groupby_big	2 -n3	0 45 0	0 45 0
+par_groupby_big	2 -n3	9 47 9	9 47 9
+par_groupby_big	2 -n3	_pipe	_ppart
+par_groupby_big	2 -n3	0 48 0	0 48 0
+par_groupby_big	2 -n3	9 50 9	9 50 9
+par_groupby_big	2 -n3	_pipe	_ppart
+par_groupby_big	2 -n3	0 51 0	0 51 0
+par_groupby_big	2 -n3	9 53 9	9 53 9
+par_groupby_big	2 -n3	_pipe	_ppart
+par_groupby_big	2 -n3	0 54 0	0 54 0
+par_groupby_big	2 -n3	9 56 9	9 56 9
+par_groupby_big	2 -n3	_pipe	_ppart
+par_groupby_big	2 -n3	0 57 0	0 57 0
+par_groupby_big	2 -n3	9 59 9	9 59 9
+par_groupby_big	2 -n3	_pipe	_ppart
+par_groupby_big	2 -n3	0 60 0	0 60 0
+par_groupby_big	2 -n3	9 62 9	9 62 9
+par_groupby_big	2 -n3	_pipe	_ppart
+par_groupby_big	2 -n3	0 63 0	0 63 0
+par_groupby_big	2 -n3	9 65 9	9 65 9
+par_groupby_big	2 -n3	_pipe	_ppart
+par_groupby_big	2 -n3	0 66 0	0 66 0
+par_groupby_big	2 -n3	9 68 9	9 68 9
+par_groupby_big	2 -n3	_pipe	_ppart
+par_groupby_big	2 -n3	0 69 0	0 69 0
+par_groupby_big	2 -n3	9 71 9	9 71 9
+par_groupby_big	2 -n3	_pipe	_ppart
+par_groupby_big	2 -n3	0 72 0	0 72 0
+par_groupby_big	2 -n3	9 74 9	9 74 9
+par_groupby_big	2 -n3	_pipe	_ppart
+par_groupby_big	2 -n3	0 75 0	0 75 0
+par_groupby_big	2 -n3	9 77 9	9 77 9
+par_groupby_big	2 -n3	_pipe	_ppart
+par_groupby_big	2 -n3	0 78 0	0 78 0
+par_groupby_big	2 -n3	9 80 9	9 80 9
+par_groupby_big	2 -n3	_pipe	_ppart
+par_groupby_big	2 -n3	0 81 0	0 81 0
+par_groupby_big	2 -n3	9 83 9	9 83 9
+par_groupby_big	2 -n3	_pipe	_ppart
+par_groupby_big	2 -n3	0 84 0	0 84 0
+par_groupby_big	2 -n3	9 86 9	9 86 9
+par_groupby_big	2 -n3	_pipe	_ppart
+par_groupby_big	2 -n3	0 87 0	0 87 0
+par_groupby_big	2 -n3	9 89 9	9 89 9
+par_groupby_big	2 -n3	_pipe	_ppart
+par_groupby_big	2 -n3	0 90 0	0 90 0
+par_groupby_big	2 -n3	9 92 9	9 92 9
+par_groupby_big	2 -n3	_pipe	_ppart
+par_groupby_big	2 -n3	0 93 0	0 93 0
+par_groupby_big	2 -n3	9 95 9	9 95 9
+par_groupby_big	2 -n3	_pipe	_ppart
+par_groupby_big	2 -n3	0 96 0	0 96 0
+par_groupby_big	2 -n3	9 98 9	9 98 9
+par_groupby_big	2 -n3	_pipe	_ppart
+par_groupby_big	2 -n3	0 99 0	0 99 0
+par_groupby_big	2 -n3	9 99 9	9 99 9
+par_groupby_big	2 -n4	_pipe	_ppart
+par_groupby_big	2 -n4	0 0 0	0 0 0
+par_groupby_big	2 -n4	9 3 9	9 3 9
+par_groupby_big	2 -n4	_pipe	_ppart
+par_groupby_big	2 -n4	0 4 0	0 4 0
+par_groupby_big	2 -n4	9 7 9	9 7 9
+par_groupby_big	2 -n4	_pipe	_ppart
+par_groupby_big	2 -n4	0 8 0	0 8 0
+par_groupby_big	2 -n4	9 11 9	9 11 9
+par_groupby_big	2 -n4	_pipe	_ppart
+par_groupby_big	2 -n4	0 12 0	0 12 0
+par_groupby_big	2 -n4	9 15 9	9 15 9
+par_groupby_big	2 -n4	_pipe	_ppart
+par_groupby_big	2 -n4	0 16 0	0 16 0
+par_groupby_big	2 -n4	9 19 9	9 19 9
+par_groupby_big	2 -n4	_pipe	_ppart
+par_groupby_big	2 -n4	0 20 0	0 20 0
+par_groupby_big	2 -n4	9 23 9	9 23 9
+par_groupby_big	2 -n4	_pipe	_ppart
+par_groupby_big	2 -n4	0 24 0	0 24 0
+par_groupby_big	2 -n4	9 27 9	9 27 9
+par_groupby_big	2 -n4	_pipe	_ppart
+par_groupby_big	2 -n4	0 28 0	0 28 0
+par_groupby_big	2 -n4	9 31 9	9 31 9
+par_groupby_big	2 -n4	_pipe	_ppart
+par_groupby_big	2 -n4	0 32 0	0 32 0
+par_groupby_big	2 -n4	9 35 9	9 35 9
+par_groupby_big	2 -n4	_pipe	_ppart
+par_groupby_big	2 -n4	0 36 0	0 36 0
+par_groupby_big	2 -n4	9 39 9	9 39 9
+par_groupby_big	2 -n4	_pipe	_ppart
+par_groupby_big	2 -n4	0 40 0	0 40 0
+par_groupby_big	2 -n4	9 43 9	9 43 9
+par_groupby_big	2 -n4	_pipe	_ppart
+par_groupby_big	2 -n4	0 44 0	0 44 0
+par_groupby_big	2 -n4	9 47 9	9 47 9
+par_groupby_big	2 -n4	_pipe	_ppart
+par_groupby_big	2 -n4	0 48 0	0 48 0
+par_groupby_big	2 -n4	9 51 9	9 51 9
+par_groupby_big	2 -n4	_pipe	_ppart
+par_groupby_big	2 -n4	0 52 0	0 52 0
+par_groupby_big	2 -n4	9 55 9	9 55 9
+par_groupby_big	2 -n4	_pipe	_ppart
+par_groupby_big	2 -n4	0 56 0	0 56 0
+par_groupby_big	2 -n4	9 59 9	9 59 9
+par_groupby_big	2 -n4	_pipe	_ppart
+par_groupby_big	2 -n4	0 60 0	0 60 0
+par_groupby_big	2 -n4	9 63 9	9 63 9
+par_groupby_big	2 -n4	_pipe	_ppart
+par_groupby_big	2 -n4	0 64 0	0 64 0
+par_groupby_big	2 -n4	9 67 9	9 67 9
+par_groupby_big	2 -n4	_pipe	_ppart
+par_groupby_big	2 -n4	0 68 0	0 68 0
+par_groupby_big	2 -n4	9 71 9	9 71 9
+par_groupby_big	2 -n4	_pipe	_ppart
+par_groupby_big	2 -n4	0 72 0	0 72 0
+par_groupby_big	2 -n4	9 75 9	9 75 9
+par_groupby_big	2 -n4	_pipe	_ppart
+par_groupby_big	2 -n4	0 76 0	0 76 0
+par_groupby_big	2 -n4	9 79 9	9 79 9
+par_groupby_big	2 -n4	_pipe	_ppart
+par_groupby_big	2 -n4	0 80 0	0 80 0
+par_groupby_big	2 -n4	9 83 9	9 83 9
+par_groupby_big	2 -n4	_pipe	_ppart
+par_groupby_big	2 -n4	0 84 0	0 84 0
+par_groupby_big	2 -n4	9 87 9	9 87 9
+par_groupby_big	2 -n4	_pipe	_ppart
+par_groupby_big	2 -n4	0 88 0	0 88 0
+par_groupby_big	2 -n4	9 91 9	9 91 9
+par_groupby_big	2 -n4	_pipe	_ppart
+par_groupby_big	2 -n4	0 92 0	0 92 0
+par_groupby_big	2 -n4	9 95 9	9 95 9
+par_groupby_big	2 -n4	_pipe	_ppart
+par_groupby_big	2 -n4	0 96 0	0 96 0
+par_groupby_big	2 -n4	9 99 9	9 99 9
+par_groupby_big	2 -n5	_pipe	_ppart
+par_groupby_big	2 -n5	0 0 0	0 0 0
+par_groupby_big	2 -n5	9 4 9	9 4 9
+par_groupby_big	2 -n5	_pipe	_ppart
+par_groupby_big	2 -n5	0 5 0	0 5 0
+par_groupby_big	2 -n5	9 9 9	9 9 9
+par_groupby_big	2 -n5	_pipe	_ppart
+par_groupby_big	2 -n5	0 10 0	0 10 0
+par_groupby_big	2 -n5	9 14 9	9 14 9
+par_groupby_big	2 -n5	_pipe	_ppart
+par_groupby_big	2 -n5	0 15 0	0 15 0
+par_groupby_big	2 -n5	9 19 9	9 19 9
+par_groupby_big	2 -n5	_pipe	_ppart
+par_groupby_big	2 -n5	0 20 0	0 20 0
+par_groupby_big	2 -n5	9 24 9	9 24 9
+par_groupby_big	2 -n5	_pipe	_ppart
+par_groupby_big	2 -n5	0 25 0	0 25 0
+par_groupby_big	2 -n5	9 29 9	9 29 9
+par_groupby_big	2 -n5	_pipe	_ppart
+par_groupby_big	2 -n5	0 30 0	0 30 0
+par_groupby_big	2 -n5	9 34 9	9 34 9
+par_groupby_big	2 -n5	_pipe	_ppart
+par_groupby_big	2 -n5	0 35 0	0 35 0
+par_groupby_big	2 -n5	9 39 9	9 39 9
+par_groupby_big	2 -n5	_pipe	_ppart
+par_groupby_big	2 -n5	0 40 0	0 40 0
+par_groupby_big	2 -n5	9 44 9	9 44 9
+par_groupby_big	2 -n5	_pipe	_ppart
+par_groupby_big	2 -n5	0 45 0	0 45 0
+par_groupby_big	2 -n5	9 49 9	9 49 9
+par_groupby_big	2 -n5	_pipe	_ppart
+par_groupby_big	2 -n5	0 50 0	0 50 0
+par_groupby_big	2 -n5	9 54 9	9 54 9
+par_groupby_big	2 -n5	_pipe	_ppart
+par_groupby_big	2 -n5	0 55 0	0 55 0
+par_groupby_big	2 -n5	9 59 9	9 59 9
+par_groupby_big	2 -n5	_pipe	_ppart
+par_groupby_big	2 -n5	0 60 0	0 60 0
+par_groupby_big	2 -n5	9 64 9	9 64 9
+par_groupby_big	2 -n5	_pipe	_ppart
+par_groupby_big	2 -n5	0 65 0	0 65 0
+par_groupby_big	2 -n5	9 69 9	9 69 9
+par_groupby_big	2 -n5	_pipe	_ppart
+par_groupby_big	2 -n5	0 70 0	0 70 0
+par_groupby_big	2 -n5	9 74 9	9 74 9
+par_groupby_big	2 -n5	_pipe	_ppart
+par_groupby_big	2 -n5	0 75 0	0 75 0
+par_groupby_big	2 -n5	9 79 9	9 79 9
+par_groupby_big	2 -n5	_pipe	_ppart
+par_groupby_big	2 -n5	0 80 0	0 80 0
+par_groupby_big	2 -n5	9 84 9	9 84 9
+par_groupby_big	2 -n5	_pipe	_ppart
+par_groupby_big	2 -n5	0 85 0	0 85 0
+par_groupby_big	2 -n5	9 89 9	9 89 9
+par_groupby_big	2 -n5	_pipe	_ppart
+par_groupby_big	2 -n5	0 90 0	0 90 0
+par_groupby_big	2 -n5	9 94 9	9 94 9
+par_groupby_big	2 -n5	_pipe	_ppart
+par_groupby_big	2 -n5	0 95 0	0 95 0
+par_groupby_big	2 -n5	9 99 9	9 99 9
+par_groupby_big	3 	_pipe	_ppart
+par_groupby_big	3 	0 0 0	0 0 0
+par_groupby_big	3 	9 99 1	9 99 0
+par_groupby_big	3 	_pipe	_ppart
+par_groupby_big	3 	0 0 2	0 0 1
+par_groupby_big	3 	9 99 3	9 99 1
+par_groupby_big	3 	_pipe	_ppart
+par_groupby_big	3 	0 0 4	0 0 2
+par_groupby_big	3 	9 99 5	9 99 2
+par_groupby_big	3 	_pipe	_ppart
+par_groupby_big	3 	0 0 6	0 0 3
+par_groupby_big	3 	9 99 7	9 99 3
+par_groupby_big	3 	_pipe	_ppart
+par_groupby_big	3 	0 0 8	0 0 4
+par_groupby_big	3 	9 99 9	9 99 4
+par_groupby_big	3 	_pipe	_ppart
+par_groupby_big	3 	0 0 10	0 0 5
+par_groupby_big	3 	9 99 10	9 99 5
+par_groupby_big	3 	_pipe	_ppart
+par_groupby_big	3 	0 0 11	0 0 6
+par_groupby_big	3 	9 99 11	9 99 6
+par_groupby_big	3 	_pipe	_ppart
+par_groupby_big	3 	0 0 12	0 0 7
+par_groupby_big	3 	9 99 12	9 99 7
+par_groupby_big	3 	_pipe	_ppart
+par_groupby_big	3 	0 0 13	0 0 8
+par_groupby_big	3 	9 99 13	9 99 8
+par_groupby_big	3 		_ppart
+par_groupby_big	3 		0 0 9
+par_groupby_big	3 		9 99 9
+par_groupby_big	3 		_ppart
+par_groupby_big	3 		0 0 10
+par_groupby_big	3 		9 99 10
+par_groupby_big	3 		_ppart
+par_groupby_big	3 		0 0 11
+par_groupby_big	3 		9 99 11
+par_groupby_big	3 		_ppart
+par_groupby_big	3 		0 0 12
+par_groupby_big	3 		9 99 12
+par_groupby_big	3 		_ppart
+par_groupby_big	3 		0 0 13
+par_groupby_big	3 		9 99 13
+par_groupby_big	3 -n1	_pipe	_ppart
+par_groupby_big	3 -n1	0 0 0	0 0 0
+par_groupby_big	3 -n1	9 99 0	9 99 0
+par_groupby_big	3 -n1	_pipe	_ppart
+par_groupby_big	3 -n1	0 0 1	0 0 1
+par_groupby_big	3 -n1	9 99 1	9 99 1
+par_groupby_big	3 -n1	_pipe	_ppart
+par_groupby_big	3 -n1	0 0 2	0 0 2
+par_groupby_big	3 -n1	9 99 2	9 99 2
+par_groupby_big	3 -n1	_pipe	_ppart
+par_groupby_big	3 -n1	0 0 3	0 0 3
+par_groupby_big	3 -n1	9 99 3	9 99 3
+par_groupby_big	3 -n1	_pipe	_ppart
+par_groupby_big	3 -n1	0 0 4	0 0 4
+par_groupby_big	3 -n1	9 99 4	9 99 4
+par_groupby_big	3 -n1	_pipe	_ppart
+par_groupby_big	3 -n1	0 0 5	0 0 5
+par_groupby_big	3 -n1	9 99 5	9 99 5
+par_groupby_big	3 -n1	_pipe	_ppart
+par_groupby_big	3 -n1	0 0 6	0 0 6
+par_groupby_big	3 -n1	9 99 6	9 99 6
+par_groupby_big	3 -n1	_pipe	_ppart
+par_groupby_big	3 -n1	0 0 7	0 0 7
+par_groupby_big	3 -n1	9 99 7	9 99 7
+par_groupby_big	3 -n1	_pipe	_ppart
+par_groupby_big	3 -n1	0 0 8	0 0 8
+par_groupby_big	3 -n1	9 99 8	9 99 8
+par_groupby_big	3 -n1	_pipe	_ppart
+par_groupby_big	3 -n1	0 0 9	0 0 9
+par_groupby_big	3 -n1	9 99 9	9 99 9
+par_groupby_big	3 -n1	_pipe	_ppart
+par_groupby_big	3 -n1	0 0 10	0 0 10
+par_groupby_big	3 -n1	9 99 10	9 99 10
+par_groupby_big	3 -n1	_pipe	_ppart
+par_groupby_big	3 -n1	0 0 11	0 0 11
+par_groupby_big	3 -n1	9 99 11	9 99 11
+par_groupby_big	3 -n1	_pipe	_ppart
+par_groupby_big	3 -n1	0 0 12	0 0 12
+par_groupby_big	3 -n1	9 99 12	9 99 12
+par_groupby_big	3 -n1	_pipe	_ppart
+par_groupby_big	3 -n1	0 0 13	0 0 13
+par_groupby_big	3 -n1	9 99 13	9 99 13
+par_groupby_big	3 -n2	_pipe	_ppart
+par_groupby_big	3 -n2	0 0 0	0 0 0
+par_groupby_big	3 -n2	9 99 1	9 99 1
+par_groupby_big	3 -n2	_pipe	_ppart
+par_groupby_big	3 -n2	0 0 2	0 0 2
+par_groupby_big	3 -n2	9 99 3	9 99 3
+par_groupby_big	3 -n2	_pipe	_ppart
+par_groupby_big	3 -n2	0 0 4	0 0 4
+par_groupby_big	3 -n2	9 99 5	9 99 5
+par_groupby_big	3 -n2	_pipe	_ppart
+par_groupby_big	3 -n2	0 0 6	0 0 6
+par_groupby_big	3 -n2	9 99 7	9 99 7
+par_groupby_big	3 -n2	_pipe	_ppart
+par_groupby_big	3 -n2	0 0 8	0 0 8
+par_groupby_big	3 -n2	9 99 9	9 99 9
+par_groupby_big	3 -n2	_pipe	_ppart
+par_groupby_big	3 -n2	0 0 10	0 0 10
+par_groupby_big	3 -n2	9 99 11	9 99 11
+par_groupby_big	3 -n2	_pipe	_ppart
+par_groupby_big	3 -n2	0 0 12	0 0 12
+par_groupby_big	3 -n2	9 99 13	9 99 13
+par_groupby_big	3 -n2	parallel: Warning: A record was longer than 1048576. Increasing to --blocksize 1363150.
+par_groupby_big	3 -n3	_pipe	_ppart
+par_groupby_big	3 -n3	0 0 0	0 0 0
+par_groupby_big	3 -n3	9 99 2	9 99 2
+par_groupby_big	3 -n3	_pipe	_ppart
+par_groupby_big	3 -n3	0 0 3	0 0 3
+par_groupby_big	3 -n3	9 99 5	9 99 5
+par_groupby_big	3 -n3	_pipe	_ppart
+par_groupby_big	3 -n3	0 0 6	0 0 6
+par_groupby_big	3 -n3	9 99 8	9 99 8
+par_groupby_big	3 -n3	_pipe	_ppart
+par_groupby_big	3 -n3	0 0 9	0 0 9
+par_groupby_big	3 -n3	9 99 11	9 99 11
+par_groupby_big	3 -n3	_pipe	_ppart
+par_groupby_big	3 -n3	0 0 12	0 0 12
+par_groupby_big	3 -n3	9 99 13	9 99 13
+par_groupby_big	3 -n3	parallel: Warning: A record was longer than 1048576. Increasing to --blocksize 1363150.
+par_groupby_big	3 -n3	parallel: Warning: A record was longer than 1363150. Increasing to --blocksize 1772096.
+par_groupby_big	3 -n4	_pipe	_ppart
+par_groupby_big	3 -n4	0 0 0	0 0 0
+par_groupby_big	3 -n4	9 99 3	9 99 3
+par_groupby_big	3 -n4	_pipe	_ppart
+par_groupby_big	3 -n4	0 0 4	0 0 4
+par_groupby_big	3 -n4	9 99 7	9 99 7
+par_groupby_big	3 -n4	_pipe	_ppart
+par_groupby_big	3 -n4	0 0 8	0 0 8
+par_groupby_big	3 -n4	9 99 11	9 99 11
+par_groupby_big	3 -n4	_pipe	_ppart
+par_groupby_big	3 -n4	0 0 12	0 0 12
+par_groupby_big	3 -n4	9 99 13	9 99 13
+par_groupby_big	3 -n4	parallel: Warning: A record was longer than 1048576. Increasing to --blocksize 1363150.
+par_groupby_big	3 -n4	parallel: Warning: A record was longer than 1363150. Increasing to --blocksize 1772096.
+par_groupby_big	3 -n4	parallel: Warning: A record was longer than 1772096. Increasing to --blocksize 2303726.
+par_groupby_big	3 -n5	_pipe	_ppart
+par_groupby_big	3 -n5	0 0 0	0 0 0
+par_groupby_big	3 -n5	9 99 4	9 99 4
+par_groupby_big	3 -n5	_pipe	_ppart
+par_groupby_big	3 -n5	0 0 5	0 0 5
+par_groupby_big	3 -n5	9 99 9	9 99 9
+par_groupby_big	3 -n5	_pipe	_ppart
+par_groupby_big	3 -n5	0 0 10	0 0 10
+par_groupby_big	3 -n5	9 99 13	9 99 13
+par_groupby_big	3 -n5	parallel: Warning: A record was longer than 1048576. Increasing to --blocksize 1363150.
+par_groupby_big	3 -n5	parallel: Warning: A record was longer than 1363150. Increasing to --blocksize 1772096.
+par_groupby_big	3 -n5	parallel: Warning: A record was longer than 1772096. Increasing to --blocksize 2303726.
+par_groupby_big	3 -n5	parallel: Warning: A record was longer than 2303726. Increasing to --blocksize 2994845.
+par_keeporder_roundrobin	bug #50081: --keep-order --round-robin should give predictable results
+par_keeporder_roundrobin	OK
+par_max_length_len_128k	### BUG: The length for -X is not close to max (131072)
+par_max_length_len_128k	63xxx
+par_max_length_len_128k	63xxx
+par_max_length_len_128k	63xxx
+par_max_length_len_128k	63xxx
+par_max_length_len_128k	63xxx
+par_max_length_len_128k	63xxx
+par_memfree	### test memfree - it should be killed by timeout
+par_memfree	Free mem: 1k
+par_memfree	parallel: Warning: This job was killed because it timed out:
+par_memfree	parallel: Warning: parallel --memfree 1t echo Free mem: ::: 1t
+par_perlexpr_repl	### {= and =} in different groups separated by space
+par_perlexpr_repl	b
+par_perlexpr_repl	b
+par_perlexpr_repl	bb
+par_perlexpr_repl	bb
+par_perlexpr_repl	b{= b
+par_perlexpr_repl	b{=b
+par_perlexpr_repl	b {=a
+par_perlexpr_repl	{=a
+par_perlexpr_repl	{= a
+par_perlexpr_repl	{= a =}
+par_perlexpr_repl	### bug #45842: Do not evaluate {= =} twice
+par_perlexpr_repl	1
+par_perlexpr_repl	2
+par_perlexpr_repl	3
+par_perlexpr_repl	4
+par_perlexpr_repl	1
+par_perlexpr_repl	2
+par_perlexpr_repl	3
+par_perlexpr_repl	4
+par_perlexpr_repl	1 2
+par_perlexpr_repl	3 4
+par_perlexpr_repl	5 6
+par_perlexpr_repl	7 8
+par_perlexpr_repl	9 10
+par_perlexpr_repl	11 12
+par_perlexpr_repl	13 14
+par_perlexpr_repl	15 16
+par_perlexpr_repl	17 18
+par_perlexpr_repl	19 20
+par_perlexpr_repl	21 22
+par_perlexpr_repl	23 24
+par_perlexpr_repl	1
+par_perlexpr_repl	2
+par_perlexpr_repl	3
+par_perlexpr_repl	4
+par_perlexpr_repl	5
+par_perlexpr_repl	6
+par_perlexpr_repl	7
+par_perlexpr_repl	8
+par_perlexpr_repl	9
+par_perlexpr_repl	10
+par_perlexpr_repl	11
+par_perlexpr_repl	12
+par_perlexpr_repl	### bug #45939: {2} in {= =} fails
+par_perlexpr_repl	OK
+par_perlexpr_repl	OK-OK
+par_race_condition1	### Test race condition on 8 CPU (my laptop)
+par_race_condition1	1
+par_race_condition1	2
+par_race_condition1	3
+par_race_condition1	4
+par_race_condition1	5
+par_race_condition1	6
+par_race_condition1	7
+par_race_condition1	8
+par_race_condition1	9
+par_race_condition1	10
+par_reload_slf_every_second	### --slf should reload every second
+par_reload_slf_every_second	OK
+par_roundrobin_blocks	bug #49664: --round-robin does not complete
+par_roundrobin_blocks	8
+par_sighup	### Test SIGHUP
+par_sighup	1
+par_sighup	10
+par_sighup	2
+par_sighup	3
+par_sighup	4
+par_sighup	5
+par_sighup	6
+par_sighup	7
+par_sighup	8
+par_sighup	9
+par_sighup	parallel: SIGHUP received. No new jobs will be started.
+par_sighup	parallel: Waiting for these 5 jobs to finish. Send SIGTERM to stop now.
+par_sighup	parallel: sleep 15; echo 10
+par_sighup	parallel: sleep 15; echo 6
+par_sighup	parallel: sleep 15; echo 7
+par_sighup	parallel: sleep 15; echo 8
+par_sighup	parallel: sleep 15; echo 9
+par_slow_total_jobs	bug #51006: Slow total_jobs() eats job
+par_slow_total_jobs	a
+par_slow_total_jobs	b
+par_slow_total_jobs	1
+par_slow_total_jobs	2
+par_slow_total_jobs	parallel: Warning: Reading X arguments took longer than XX seconds.
+par_test_diff_roundrobin_k	### test there is difference on -k
+par_test_diff_roundrobin_k	OK

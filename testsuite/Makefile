@@ -2,6 +2,8 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+ORACLE_VM_IP = $(shell grep .private_network.*ip:. vagrant-projects/OracleDatabase/26ai-Free/Vagrantfile | grep -oE .\\b[0-9]+\\.[0-9]+\\.[0-9]+\\.[0-9]+\\b.)
+
 ### Full test set (except mem)
 testsuite: short
 	true
@@ -9,12 +11,12 @@ testsuite: short
 all: mem short long polar 
 	true
 
-3: ../src/parallel tests-to-run/* wanted-results/* startdb prereqlocal prereqremote
+3: ../src/parallel tests-to-run/* wanted-results/* dbstart prereqlocal prereqremote
 	TRIES=3 time bash Start.sh '' mem || true
 	touch ~/.parallel/will-cite
 	make stopvm
 
-1: ../src/parallel tests-to-run/* wanted-results/* prereqlocal startdb prereqremote
+1: ../src/parallel tests-to-run/* wanted-results/* prereqlocal dbstart prereqremote
 	TRIES=1 time bash Start.sh '' mem || true
 	touch ~/.parallel/will-cite
 	make stopvm
@@ -22,7 +24,7 @@ all: mem short long polar
 # Mem
 mem: ../src/parallel tests-to-run/*mem* wanted-results/*mem*
 	make stopvm || true
-	make stopdb || true
+	make dbstop || true
 	time bash Start.sh mem NONE || true
 	touch ~/.parallel/will-cite
 	make stopvm
@@ -65,6 +67,11 @@ local:	../src/parallel tests-to-run/*local* wanted-results/*local* prereqlocal i
 # short
 short:	 ../src/parallel tests-to-run/* wanted-results/* prereqlocal installparallel
 	TRIES=1 time bash Start.sh '' 'polar|mem|100s|300s|manual'
+
+# Tests not requiring SSH
+no-ssh: ../src/parallel tests-to-run/*no-ssh* wanted-results/*no-ssh* prereqlocal installparallel
+	TRIES=1 time bash Start.sh no-ssh nosuch || true
+	touch ~/.parallel/will-cite
 
 # Tests using SSH to localhost/lo only
 local-ssh: ../src/parallel tests-to-run/*local-ssh* wanted-results/*local-ssh* prereqlocal installparallel
@@ -165,21 +172,47 @@ haltvm:
 snapshot:
 	# Make snapshots of the working, running vms
 	parallel -j0 ssh vagrant@{} echo {} ::: ${namedservers} | parallel --tagstring {1} --colsep ' ' bin/vm snapshot
-	. ~/.passwords && sql oracle://SYSTEM:$$VM_ORACLE_PWD@172.27.27.2:1521/FREE "select 'Oracle is running' from dual;" && bin/vm snapshot 26ai-Free
+	. ~/.passwords && sql oracle://SYSTEM:$$VM_ORACLE_PWD@/FREE "select 'Oracle is running' from dual;" && bin/vm snapshot 26ai-Free
 
 snapshotclean:
 	# Keep 2 snapshots of the running vms
 	VBoxManage list runningvms | parallel --colsep ' ' --tagstring {2} -k VBoxManage snapshot {2} list '| head -n -2' | parallel --match '(\S+)\s+.*UUID: (\S+).' -j1 VBoxManage snapshot {1.1} delete {1.2}
 	VBoxManage list runningvms | parallel --colsep ' ' --tagstring {2} -k VBoxManage snapshot {2} list
 
-startdb:
-	. ~/.passwords && sql oracle://SYSTEM:$$VM_ORACLE_PWD@172.27.27.2:1521/FREE "select 'Oracle is running' from dual;" || \
-	  (cd vagrant-projects/OracleDatabase/26ai-Free && vagrant up && \
-	   . ~/.passwords && sql oracle://SYSTEM:$$VM_ORACLE_PWD@172.27.27.2:1521/FREE "select 'Oracle is running' from dual;")
-stopdb:
+startdb: dbstart
+	true
+
+stopdb: dbstop
+	true
+
+dbstart:
+	make dbtestonip || make dbvagrantstart
+	make dbtestonlocalhost || make dbstarttunnel
+	make dbtestonip dbtestonlocalhost
+
+dbstop:
 	cd vagrant-projects/OracleDatabase/26ai-Free; vagrant suspend
-haltdb:
+dbhalt:
 	cd vagrant-projects/OracleDatabase/26ai-Free; vagrant halt
+
+dbtestonip:
+	# Test if db answers on <<ip>>:1521
+	. ~/.passwords && sql oracle://SYSTEM:$$VM_ORACLE_PWD@$(ORACLE_VM_IP):1521/FREE "select 'Oracle is running on $(ORACLE_VM_IP)' from dual;"
+
+dbtestonlocalhost:
+	# Test if db answers on localhost:1521
+	. ~/.passwords && sql oracle://SYSTEM:$$VM_ORACLE_PWD@/FREE "select 'Oracle is running on localhost' from dual;"
+
+dbstarttunnel:
+	# sql cannot access lo:1521 => Start SSH tunnel for localhost:1521
+	# (bypasses VirtualBox NAT packet corruption of Oracle TNS)
+	pgrep -f "ssh.*-L.*1521:localhost:1521" >/dev/null 2>&1 || \
+	  (cd vagrant-projects/OracleDatabase/26ai-Free && vagrant ssh-config > /tmp/oracle-ssh-config && \
+	   ssh -f -N -L 127.0.0.1:1521:localhost:1521 -F /tmp/oracle-ssh-config oracle26ai-free-vagrant)
+
+dbvagrantstart:
+	# sql cannot access IP-address:1521 => Start Oracle VM
+	cd vagrant-projects/OracleDatabase/26ai-Free && vagrant up
 
 ### Distribution
 installparallel: ../src/parallel

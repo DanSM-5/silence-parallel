@@ -173,13 +173,13 @@ par_no_route_to_host() {
 	nice nohup bash -c 'findhosts |
 	    filterhosts | filterhosts | filterhosts |
 	    filterhosts | filterhosts | head > /tmp/filtered.$$
-	mv /tmp/filtered.$$ /tmp/filtered.hosts
+	mv /tmp/filtered.$$ ~/tmp/filtered.hosts
 	' &
     ) &
     (
 	# We just need one of each to complete
-	stdout parallel --halt now,done=1 -j0 raw :::: /tmp/filtered.hosts
-	stdout parallel --halt now,done=1 -j0 via_parallel :::: /tmp/filtered.hosts
+	stdout parallel --halt now,done=1 -j0 raw :::: ~/tmp/filtered.hosts
+	stdout parallel --halt now,done=1 -j0 via_parallel :::: ~/tmp/filtered.hosts
     ) | perl -pe 's/(\d+\.\d+\.\d+\.\d+)/i.p.n.r/' | puniq
 }
 

@@ -1,0 +1,21 @@
+par_space	### Test --env  - https://savannah.gnu.org/bugs/?37351
+par_space	a  2  spaces  b 1
+par_space	a  2  spaces  b 1
+par_space	a  2  spaces  b 1
+par_space	a  2  spaces  b 1
+par_space	a  2  spaces  b 1
+par_space	a  2  spaces  b a >  My brother's 12" records  < b 2
+par_space	a  2  spaces  b a >  My brother's 12" records  < b 2
+par_space	a  2  spaces  b a >  My brother's 12" records  < b 2
+par_space	a  2  spaces  b a >  My brother's 12" records  < b 2
+par_space	a  2  spaces  b a >  My brother's 12" records  < b 2
+par_space	a  2  spaces  b a >  My brother's 12" records  < b 3
+par_space	a  2  spaces  b a >  My brother's 12" records  < b 3
+par_space	a  2  spaces  b a >  My brother's 12" records  < b 3
+par_space	a  2  spaces  b a >  My brother's 12" records  < b 3
+par_space	a  2  spaces  b a >  My brother's 12" records  < b 3
+par_space_quote	a  \'"b 4
+par_space_quote	a  \'"b 4
+par_space_quote	a  \'"b 4
+par_space_quote	a  \'"b 4
+par_space_quote	a  \'"b 4

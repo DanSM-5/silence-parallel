@@ -73,24 +73,516 @@ par_workdir_in_HOME() {
 	    grep -v 'Permanently added'
 }
 
-par_more_than_9_relative_sshlogin() {
-    echo '### Check more than 9(relative) simultaneous sshlogins'
-    seq 1 11 | stdout parallel -k -j10000% -S "ssh vagrant@freebsd13" echo |
-	grep -v 'parallel: Warning:'
-}
-
 par_nonall_u() {
     SSHLOGIN1=vagrant@parallel-server1
     SSHLOGIN2=vagrant@parallel-server2
     echo '### Test --nonall -u - should be interleaved x y x y'
+    echo 'thus making uniq -c return 1 four times'
     parallel --nonall --sshdelay 2 -S $SSHLOGIN1,$SSHLOGIN2 -u \
 	     'hostname|grep -q rhel && sleep 2; hostname;sleep 4;hostname;' |
 	uniq -c | sort
 }
 
+par__sshlogin_with_comma() {
+    echo "### --sshlogin with \,"
+    parallel -S 'ssh -J lo\,localhost 127.0.0.1' echo ::: OK
+    echo "### --sshlogin with ,,"
+    parallel -S 'ssh -J lo,,localhost 127.0.0.1' echo ::: OK
+    echo "### Both , and ,, in -S"
+    parallel -S'1/ssh -oProxyJump=vagrant@parallel-server1,,vagrant@parallel-server2 vagrant@parallel-server3,1/vagrant@parallel-server1' ::: hostname hostname |
+	sort
+    parallel --nonall -S'1/ssh -oProxyJump=vagrant@parallel-server1,,vagrant@parallel-server2 vagrant@parallel-server3,1/vagrant@parallel-server1' hostname |
+        sort
+    parallel --onall -S'1/ssh -oProxyJump=vagrant@parallel-server1,,vagrant@parallel-server2 vagrant@parallel-server3,1/vagrant@parallel-server1' ::: hostname |
+        sort
+}
+
+par__man_bash() {
+    echo '### bash'
+
+    myscript=$(cat <<'_EOF'
+    echo "### From man env_parallel"
+
+    . `which env_parallel.bash`;
+    shopt -s expand_aliases&>/dev/null;
+
+    alias myecho='echo aliases with \= \& \" \!'" \'"
+    myecho work
+    env_parallel myecho ::: work
+    env_parallel -S server myecho ::: work
+    env_parallel --env myecho myecho ::: work
+    env_parallel --env myecho -S server myecho ::: work
+
+    # multiline aliases with when followed by newline
+    alias multiline='echo multiline
+      echo aliases with \= \& \" \!'" \'"
+    multiline work
+    env_parallel 'multiline {};
+      echo but only when followed by a newline' ::: work
+    env_parallel -S server 'multiline {};
+      echo but only when followed by a newline' ::: work
+    env_parallel --env multiline 'multiline {};
+      echo but only when followed by a newline' ::: work
+    env_parallel --env multiline -S server 'multiline {};
+      echo but only when followed by a newline' ::: work
+    alias multiline="dummy"
+
+    myfunc() { echo functions 'with  = & " !'" '" $*; }
+    myfunc work
+    env_parallel myfunc ::: work
+    env_parallel -S server myfunc ::: work
+    env_parallel --env myfunc myfunc ::: work
+    env_parallel --env myfunc -S server myfunc ::: work
+
+    myvar='variables with  = & " !'" '"
+    echo "$myvar" work
+    env_parallel echo '"$myvar"' ::: work
+    env_parallel -S server echo '"$myvar"' ::: work
+    env_parallel --env myvar echo '"$myvar"' ::: work
+    env_parallel --env myvar -S server echo '"$myvar"' ::: work
+
+    multivar='multiline
+    variables with  = & " !'" '"
+    echo "$multivar" work
+    env_parallel echo '"$multivar"' ::: work
+    env_parallel -S server echo '"$multivar"' ::: work
+    env_parallel --env multivar echo '"$multivar"' ::: work
+    env_parallel --env multivar -S server echo '"$multivar"' ::: work
+
+    myarray=(arrays 'with = & " !'" '" work, too)
+    echo "${myarray[0]}" "${myarray[1]}" "${myarray[2]}" "${myarray[3]}"
+    env_parallel -k echo '"${myarray[{}]}"' ::: 0 1 2 3
+    env_parallel -k -S server echo '"${myarray[{}]}"' ::: 0 1 2 3
+    env_parallel -k --env myarray echo '"${myarray[{}]}"' ::: 0 1 2 3
+    env_parallel -k --env myarray -S server echo '"${myarray[{}]}"' ::: 0 1 2 3
+
+    env_parallel --argsep --- env_parallel -k echo ::: multi level --- env_parallel
+
+    env_parallel ::: true false true false
+    echo exit value $? should be 2
+
+    env_parallel --no-such-option 2>&1 >/dev/null
+    # Sleep 1 to delay output to stderr to avoid race
+    echo exit value $? should be 255 `sleep 1`
+_EOF
+	    )
+    ssh bash@lo "$myscript"
+}
+
+par__man_csh() {
+    echo '### csh'
+    myscript=$(cat <<'_EOF'
+    echo "### From man env_parallel"
+
+#    source `which env_parallel.csh`;
+
+    alias myecho 'echo aliases with \= \& \"'
+    env_parallel myecho ::: work
+    env_parallel -S server myecho ::: work
+    env_parallel --env myecho myecho ::: work
+    env_parallel --env myecho -S server myecho ::: work
+
+    # Functions not supported
+
+    # TODO This does not work
+    # set myvar='variables with = & "'" '"
+    set myvar='variables with \= \& \"'
+    env_parallel echo '$myvar' ::: work
+    env_parallel -S server echo '$myvar' ::: work
+    env_parallel --env myvar echo '$myvar' ::: work
+    env_parallel --env myvar -S server echo '$myvar' ::: work
+
+    # Space is not supported in arrays
+
+    set myarray=(arrays with\=\&\""'" work, too)
+    env_parallel -k echo \$'{myarray[{}]}' ::: 1 2 3 4
+    env_parallel -k -S server echo \$'{myarray[{}]}' ::: 1 2 3 4
+    env_parallel -k --env myarray echo \$'{myarray[{}]}' ::: 1 2 3 4
+    env_parallel -k --env myarray -S server echo \$'{myarray[{}]}' ::: 1 2 3 4
+
+    env_parallel --argsep --- env_parallel -k echo ::: multi level --- env_parallel
+
+    env_parallel ::: true false true false
+    echo exit value $status should be 2
+
+    env_parallel --no-such-option >/dev/null
+    echo exit value $status should be 255 `sleep 1`
+_EOF
+	    )
+    # Sometimes the order f*cks up
+    stdout ssh csh@lo "$myscript" |
+	grep -v "Tange" | grep -v "Zenodo" | LC_ALL=C sort
+}
+
+par__man_dash() {
+    echo '### dash'
+
+    myscript=$(cat <<'_EOF'
+    echo "### From man env_parallel"
+
+    . `which env_parallel.dash`;
+
+    alias myecho='echo aliases with \= \& \" \!'" \'"
+    myecho work
+    env_parallel myecho ::: work
+    env_parallel -S server myecho ::: work
+    env_parallel --env myecho myecho ::: work
+    env_parallel --env myecho -S server myecho ::: work
+
+    alias multiline='echo multiline
+      echo aliases with \= \& \" \!'" \'"
+    multiline work
+    env_parallel multiline ::: work
+    env_parallel -S server multiline ::: work
+    env_parallel --env multiline multiline ::: work
+    env_parallel --env multiline -S server multiline ::: work
+    alias multiline="dummy"
+
+    # Functions are not supported in dash
+
+    myvar='variables with  = & " !'" '"
+    echo "$myvar" work
+    env_parallel echo '"$myvar"' ::: work
+    env_parallel -S server echo '"$myvar"' ::: work
+    env_parallel --env myvar echo '"$myvar"' ::: work
+    env_parallel --env myvar -S server echo '"$myvar"' ::: work
+
+    multivar='multiline
+    variables with  = & " !'" '"
+    echo "$multivar" work
+    env_parallel echo '"$multivar"' ::: work
+    env_parallel -S server echo '"$multivar"' ::: work
+    env_parallel --env multivar echo '"$multivar"' ::: work
+    env_parallel --env multivar -S server echo '"$multivar"' ::: work
+
+    # Arrays are not supported in dash
+
+    # Exporting of functions is not supported
+    # env_parallel --argsep --- env_parallel -k echo ::: multi level --- env_parallel
+
+    env_parallel ::: true false true false
+    echo exit value $? should be 2
+
+    env_parallel --no-such-option 2>&1 >/dev/null
+    # Sleep 1 to delay output to stderr to avoid race
+    echo exit value $? should be 255 `sleep 1`
+_EOF
+	    )
+    ssh dash@lo "$myscript"
+}
+
+par__man_ksh() {
+    echo '### ksh'
+    myscript=$(cat <<'_EOF'
+    echo "### From man env_parallel"
+
+    . `which env_parallel.ksh`;
+
+    alias myecho='echo aliases with \= \& \" \!'" \'"
+    myecho work
+    env_parallel myecho ::: work
+    env_parallel -S server myecho ::: work
+    env_parallel --env myecho myecho ::: work
+    env_parallel --env myecho -S server myecho ::: work
+
+    alias multiline='echo multiline
+      echo aliases with \= \& \" \!'" \'"
+    multiline work
+    env_parallel multiline ::: work
+    env_parallel -S server multiline ::: work
+    env_parallel --env multiline multiline ::: work
+    env_parallel --env multiline -S server multiline ::: work
+    alias multiline='dummy'
+
+    myfunc() { echo functions 'with  = & " !'" '" $*; }
+    myfunc work
+    env_parallel myfunc ::: work
+    env_parallel -S server myfunc ::: work
+    env_parallel --env myfunc myfunc ::: work
+    env_parallel --env myfunc -S server myfunc ::: work
+
+    myvar='variables with  = & " !'" '"
+    echo "$myvar" work
+    env_parallel echo '"$myvar"' ::: work
+    env_parallel -S server echo '"$myvar"' ::: work
+    env_parallel --env myvar echo '"$myvar"' ::: work
+    env_parallel --env myvar -S server echo '"$myvar"' ::: work
+
+    multivar='multiline
+    variables with  = & " !'" '"
+    echo "$multivar" work
+    env_parallel echo '"$multivar"' ::: work
+    env_parallel -S server echo '"$multivar"' ::: work
+    env_parallel --env multivar echo '"$multivar"' ::: work
+    env_parallel --env multivar -S server echo '"$multivar"' ::: work
+
+    myarray=(arrays 'with = & " !'" '" work, too)
+    echo "${myarray[0]}" "${myarray[1]}" "${myarray[2]}" "${myarray[3]}"
+    env_parallel -k echo '"${myarray[{}]}"' ::: 0 1 2 3
+    env_parallel -k -S server echo '"${myarray[{}]}"' ::: 0 1 2 3
+    env_parallel -k --env myarray echo '"${myarray[{}]}"' ::: 0 1 2 3
+    env_parallel -k --env myarray -S server echo '"${myarray[{}]}"' ::: 0 1 2 3
+
+    echo This may never work
+    echo https://unix.stackexchange.com/questions/457031/extract-full-function-definitions
+    env_parallel --argsep --- env_parallel -k echo ::: multi level --- env_parallel 2>&1 |
+	perl -pe 's/line \d*/line 9/g'
+
+    env_parallel ::: true false true false
+    echo exit value $? should be 2
+
+    env_parallel --no-such-option 2>&1 >/dev/null
+    # Sleep 1 to delay output to stderr to avoid race
+    echo exit value $? should be 255 `sleep 1`
+_EOF
+	    )
+    ssh ksh@lo "$myscript"
+}
+
+par__man_mksh() {
+    echo '### mksh'
+    myscript=$(cat <<'_EOF'
+    echo "### From man env_parallel"
+
+    . `which env_parallel.mksh`;
+
+    alias myecho='echo aliases with \= \& \" \!'" \'"
+    myecho work
+    env_parallel myecho ::: work
+    env_parallel -S server myecho ::: work
+    env_parallel --env myecho myecho ::: work
+    env_parallel --env myecho -S server myecho ::: work
+
+    alias multiline='echo multiline
+      echo aliases with \= \& \" \!'" \'"
+    multiline work
+    env_parallel multiline ::: work
+    env_parallel -S server multiline ::: work
+    env_parallel --env multiline multiline ::: work
+    env_parallel --env multiline -S server multiline ::: work
+    alias multiline='dummy'
+
+    myfunc() { echo functions 'with  = & " !'" '" $*; }
+    myfunc work
+    env_parallel myfunc ::: work
+    env_parallel -S server myfunc ::: work
+    env_parallel --env myfunc myfunc ::: work
+    env_parallel --env myfunc -S server myfunc ::: work
+
+    myvar='variables with  = & " !'" '"
+    echo "$myvar" work
+    env_parallel echo '"$myvar"' ::: work
+    env_parallel -S server echo '"$myvar"' ::: work
+    env_parallel --env myvar echo '"$myvar"' ::: work
+    env_parallel --env myvar -S server echo '"$myvar"' ::: work
+
+    multivar='multiline
+    variables with  = & " !'" '"
+    echo "$multivar" work
+    env_parallel echo '"$multivar"' ::: work
+    env_parallel -S server echo '"$multivar"' ::: work
+    env_parallel --env multivar echo '"$multivar"' ::: work
+    env_parallel --env multivar -S server echo '"$multivar"' ::: work
+
+    myarray=(arrays 'with = & " !'" '" work, too)
+    echo "${myarray[0]}" "${myarray[1]}" "${myarray[2]}" "${myarray[3]}"
+    env_parallel -k echo '"${myarray[{}]}"' ::: 0 1 2 3
+    env_parallel -k -S server echo '"${myarray[{}]}"' ::: 0 1 2 3
+    env_parallel -k --env myarray echo '"${myarray[{}]}"' ::: 0 1 2 3
+    env_parallel -k --env myarray -S server echo '"${myarray[{}]}"' ::: 0 1 2 3
+
+    env_parallel --argsep --- env_parallel -k echo ::: multi level --- env_parallel
+
+    env_parallel ::: true false true false
+    echo exit value $? should be 2
+
+    env_parallel --no-such-option 2>&1 >/dev/null
+    # Sleep 1 to delay output to stderr to avoid race
+    echo exit value $? should be 255 `sleep 1`
+_EOF
+	    )
+    ssh mksh@lo "$myscript"
+}
+
+par__man_sh() {
+    echo '### sh'
+
+    myscript=$(cat <<'_EOF'
+    echo "### From man env_parallel"
+
+    . `which env_parallel.sh`;
+
+    alias myecho='echo aliases with \= \& \" \!'" \'"
+    myecho work
+    env_parallel myecho ::: work
+    env_parallel -S server myecho ::: work
+    env_parallel --env myecho myecho ::: work
+    env_parallel --env myecho -S server myecho ::: work
+
+    alias multiline='echo multiline
+      echo aliases with \= \& \" \!'" \'"
+    multiline work
+    env_parallel multiline ::: work
+    env_parallel -S server multiline ::: work
+    env_parallel --env multiline multiline ::: work
+    env_parallel --env multiline -S server multiline ::: work
+    alias multiline="dummy"
+
+    # Functions not supported
+
+    myvar='variables with  = & " !'" '"
+    echo "$myvar" work
+    env_parallel echo '"$myvar"' ::: work
+    env_parallel -S server echo '"$myvar"' ::: work
+    env_parallel --env myvar echo '"$myvar"' ::: work
+    env_parallel --env myvar -S server echo '"$myvar"' ::: work
+
+    multivar='multiline
+    variables with  = & " !'" '"
+    echo "$multivar" work
+    env_parallel echo '"$multivar"' ::: work
+    env_parallel -S server echo '"$multivar"' ::: work
+    env_parallel --env multivar echo '"$multivar"' ::: work
+    env_parallel --env multivar -S server echo '"$multivar"' ::: work
+
+    # Arrays are not supported
+
+    # Exporting of functions is not supported
+    # env_parallel --argsep --- env_parallel -k echo ::: multi level --- env_parallel
+
+    env_parallel ::: true false true false
+    echo exit value $? should be 2
+
+    env_parallel --no-such-option 2>&1 >/dev/null
+    # Sleep 1 to delay output to stderr to avoid race
+    echo exit value $? should be 255 `sleep 1`
+_EOF
+	    )
+    ssh sh@lo "$myscript"
+}
+
+par__man_tcsh() {
+    echo '### tcsh'
+    myscript=$(cat <<'_EOF'
+    echo "### From man env_parallel"
+
+#    source `which env_parallel.tcsh`
+
+    alias myecho 'echo aliases with \= \& \"'
+    env_parallel myecho ::: work
+    env_parallel -S server myecho ::: work
+    env_parallel --env myecho myecho ::: work
+    env_parallel --env myecho -S server myecho ::: work
+
+    echo Functions not supported
+
+    # TODO This does not work
+    # set myvar='variables with = & "'" '"
+    set myvar='variables with \= \& \"'
+    env_parallel echo '$myvar' ::: work
+    env_parallel -S server echo '$myvar' ::: work
+    env_parallel --env myvar echo '$myvar' ::: work
+    env_parallel --env myvar -S server echo '$myvar' ::: work
+
+    # Space is not supported in arrays
+
+    set myarray=(arrays with\=\&\""'" work, too)
+    env_parallel -k echo \$'{myarray[{}]}' ::: 1 2 3 4
+    env_parallel -k -S server echo \$'{myarray[{}]}' ::: 1 2 3 4
+    env_parallel -k --env myarray echo \$'{myarray[{}]}' ::: 1 2 3 4
+    env_parallel -k --env myarray -S server echo \$'{myarray[{}]}' ::: 1 2 3 4
+
+    echo 'Segmentation faults? Are you running bsd-csh version 20110502-3?'
+    env_parallel --argsep --- env_parallel -k echo ::: multi level --- env_parallel
+
+    env_parallel ::: true false true false
+    echo exit value $status should be 2
+
+    env_parallel --no-such-option >/dev/null
+    echo exit value $status should be 255 `sleep 1`
+_EOF
+	    )
+    ssh -tt tcsh@lo "$myscript"	|
+ 	grep -v "Tange" | grep -v "Zenodo"
+}
+
+par__man_zsh() {
+    echo '### zsh'
+    # eval is needed make aliases work
+    myscript=$(cat <<'_EOF'
+    echo "### From man env_parallel"
+
+    . `which env_parallel.zsh`;
+
+    alias myecho='echo aliases with \= \& \" \!'" \'"
+    # eval is needed make aliases work
+    eval myecho work
+    env_parallel myecho ::: work
+    env_parallel -S server myecho ::: work
+    env_parallel --env myecho myecho ::: work
+    env_parallel --env myecho -S server myecho ::: work
+
+    alias multiline='echo multiline
+      echo aliases with \= \& \" \!'" \'"
+    eval multiline work
+    # Zsh-5.4.2 requires additional quoting when multiline
+    # Looks like a bug
+    alias multiline='echo multiline
+      echo aliases with \\= \\& \\" \\!'" \\\'"
+    # eval is needed make aliases work
+    env_parallel multiline ::: work
+    env_parallel -S server multiline ::: work
+    env_parallel --env multiline multiline ::: work
+    env_parallel --env multiline -S server multiline ::: work
+    alias multiline="dummy"
+
+    myfunc() { echo functions 'with  = & " !'" '" $*; }
+    myfunc work
+    env_parallel myfunc ::: work
+    env_parallel -S server myfunc ::: work
+    env_parallel --env myfunc myfunc ::: work
+    env_parallel --env myfunc -S server myfunc ::: work
+
+    myvar='variables with  = & " !'" '"
+    echo "$myvar" work
+    env_parallel echo '"$myvar"' ::: work
+    env_parallel -S server echo '"$myvar"' ::: work
+    env_parallel --env myvar echo '"$myvar"' ::: work
+    env_parallel --env myvar -S server echo '"$myvar"' ::: work
+
+    multivar='multiline
+    variables with  = & " !'" '"
+    echo "$multivar" work
+    env_parallel echo '"$multivar"' ::: work
+    env_parallel -S server echo '"$multivar"' ::: work
+    env_parallel --env multivar echo '"$multivar"' ::: work
+    env_parallel --env multivar -S server echo '"$multivar"' ::: work
+
+    myarray=(arrays 'with = & " !'" '" work, too)
+    # zsh counts from 1 - not 0
+    echo "${myarray[1]}" "${myarray[2]}" "${myarray[3]}" "${myarray[4]}"
+    env_parallel -k echo '"${myarray[{}]}"' ::: 1 2 3 4
+    env_parallel -k -S server echo '"${myarray[{}]}"' ::: 1 2 3 4
+    env_parallel -k --env myarray echo '"${myarray[{}]}"' ::: 1 2 3 4
+    env_parallel -k --env myarray -S server echo '"${myarray[{}]}"' ::: 1 2 3 4
+
+    env_parallel --argsep --- env_parallel -k echo ::: multi level --- env_parallel
+
+    env_parallel ::: true false true false
+    echo exit value $? should be 2
+
+    env_parallel --no-such-option 2>&1 >/dev/null
+    # Sleep 1 to delay output to stderr to avoid race
+    echo exit value $? should be 255 `sleep 1`
+_EOF
+	    )
+    ssh zsh@lo "$myscript"
+}
+
+
 export -f $(compgen -A function | grep par_)
 compgen -A function | G "$@" par_ | LC_ALL=C sort |
-    parallel --timeout 3000% -j6 --tag -k --joblog /tmp/jl-`basename $0` '{} 2>&1' |
+    parallel --timeout 3000% --delay 1 -j6 --tag -k --joblog /tmp/jl-`basename $0` '{} 2>&1' |
     perl -pe 's:/usr/bin:/bin:g'
 
   

@@ -1,3 +1,5 @@
+par__more_than_9_relative_sshlogin	### Check more than 9(relative) simultaneous sshlogins
+par__more_than_9_relative_sshlogin	13
 par__obey_servers_capacity_slf_reload	### bug #43518: GNU Parallel doesn't obey servers' jobs capacity when an ssh login file is reloaded
 par__obey_servers_capacity_slf_reload	OK
 par_cat_fifo_exit	### --cat and --fifo exit value in bash
@@ -17,6 +19,7 @@ par_cat_incorrect_exit_csh	0
 par_csh_newline_var	### bug #42725: csh with \n in variables
 par_csh_newline_var	CSH/TCSH DO NOT SUPPORT newlines IN VARIABLES/FUNCTIONS. Unset not_csh
 par_csh_newline_var	CSH/TCSH DO NOT SUPPORT newlines IN VARIABLES/FUNCTIONS. Unset not_csh
+par_csh_newline_var	parallel: Warning: Could not figure out number of cpus on parallel@lo (). Using 1.
 par_csh_newline_var	This is not csh/tcsh
 par_csh_wd_trc	### --wd ... --trc in csh: exitstatuswrapper must not produce ;;
 par_csh_wd_trc	OK
@@ -96,15 +99,15 @@ par_tee_ssh	2
 par_tee_ssh	3
 par_tee_ssh	3
 par_wd_no_such_dir	### --wd no-such-dir - csh
-par_wd_no_such_dir	mkdir: cannot create directory '/no-such-dir': Permission denied
+par_wd_no_such_dir	mkdir: Permission denied
 par_wd_no_such_dir	parallel: Cannot chdir to /no-such-dir
 par_wd_no_such_dir	Exit code 1
 par_wd_no_such_dir	### --wd no-such-dir - tcsh
-par_wd_no_such_dir	mkdir: cannot create directory '/no-such-dir': Permission denied
+par_wd_no_such_dir	mkdir: Permission denied
 par_wd_no_such_dir	parallel: Cannot chdir to /no-such-dir
 par_wd_no_such_dir	Exit code 1
 par_wd_no_such_dir	### --wd no-such-dir - bash
-par_wd_no_such_dir	mkdir: cannot create directory '/no-such-dir': Permission denied
+par_wd_no_such_dir	mkdir: Permission denied
 par_wd_no_such_dir	parallel: Cannot chdir to /no-such-dir
 par_wd_no_such_dir	Exit code 1
 par_z_filter_hosts_slf	### --filter-hosts --slf <()
