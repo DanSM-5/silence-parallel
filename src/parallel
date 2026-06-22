@@ -9768,6 +9768,7 @@ sub sct_gnu_linux($) {
 	my $prefix = shift;
 	my %sibiling;
 	my %socket;
+	my %pkg_coreid_siblings;
 	my $thread;
 	for($thread = 0;
 	    -r "$prefix/cpu$thread/topology/physical_package_id";
@@ -9778,11 +9779,27 @@ sub sct_gnu_linux($) {
 	for($thread = 0;
 	    -r "$prefix/cpu$thread/topology/thread_siblings";
 	    $thread++) {
-	    $sibiling{::slurp_or_exit(
-			  "$prefix/cpu$thread/topology/thread_siblings")}++;
+	    my $sibling = ::slurp_or_exit(
+			  "$prefix/cpu$thread/topology/thread_siblings");
+	    $sibiling{$sibling}++;
+	    if(-r "$prefix/cpu$thread/topology/core_id"
+	       and -r "$prefix/cpu$thread/topology/physical_package_id") {
+		my $pkg = ::slurp_or_exit(
+			"$prefix/cpu$thread/topology/physical_package_id");
+		my $cid = ::slurp_or_exit(
+			"$prefix/cpu$thread/topology/core_id");
+		$pkg_coreid_siblings{$pkg}{$cid}{$sibling} = 1;
+	    }
 	}
 	$cpu->{'sockets'} = keys %socket;
-	$cpu->{'cores'} = keys %sibiling;
+	# AMD Piledriver: same core_id repeats across different thread_siblings
+	# groups in the same package (core_ids wrap within socket halves)
+	my $is_piledriver_cmt = grep {
+	    my $p = $_;
+	    grep { keys %{$pkg_coreid_siblings{$p}{$_}} > 1 }
+		 keys %{$pkg_coreid_siblings{$p}};
+	} keys %pkg_coreid_siblings;
+	$cpu->{'cores'} = $is_piledriver_cmt ? $thread : keys %sibiling;
 	$cpu->{'threads'} = $thread;
     }
 
@@ -9884,7 +9901,8 @@ sub sct_gnu_linux($) {
     }
     if(-e "/proc/self/status"
        and not $ENV{'PARALLEL_CPUINFO'}
-       and not $ENV{'PARALLEL_LSCPU'}) {
+       and not $ENV{'PARALLEL_LSCPU'}
+       and not $ENV{'PARALLEL_CPUPREFIX'}) {
 	# if 'taskset' is used to limit number of threads
 	if(open(my $in_fh, "<", "/proc/self/status")) {
 	    while(<$in_fh>) {
@@ -17033,7 +17051,11 @@ sub fh {
     my $self = shift;
     if(!defined $self->{fh}) {
 	if($self->{compressed}) {
-	    my @cmd = ("zextract");
+	    my @cmd = ::which("zextract");
+	    if(not @cmd) {
+		::error("Install 'zextract' to use --pipepart with compressed files");
+		::wait_and_exit(255);		
+	    }
 	    push @cmd, "--lines" if $self->{lines_mode};
 	    push @cmd, "--range", "0-", $self->{name};
 	    ::debug("zex","fh: @cmd\n");
