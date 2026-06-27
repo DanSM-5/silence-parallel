@@ -28,6 +28,7 @@ install_packages() {
     # Debian package
     packaging_pkgs="dpkg-dev build-essential debhelper osc cvs automake"
     packaging_pkgs="$packaging_pkgs python3-m2crypto alien python3-pip lftp"
+    packaging_pkgs="$packaging_pkgs qpdf"
 
     # Shebang Tools
     shebang_pkgs="gnuplot octave ruby r-base-core"
@@ -53,8 +54,8 @@ install_packages() {
     # Build Tools
     build_pkgs="bison libxxhash-dev libzstd-dev liblz4-dev libssl-dev"
     build_pkgs="$build_pkgs python3-cmarkgfm libpod-pom-view-restructured-perl"
-    build_pkgs="$build_pkgs graphviz yodl libreoffice"
-
+    build_pkgs="$build_pkgs graphviz libgvplugin-neato-layout8 yodl libreoffice"
+ 
     # Alternatives
     alt_database="sqlite sqlite3"
     sudo dpkg --add-architecture i386; sudo apt update

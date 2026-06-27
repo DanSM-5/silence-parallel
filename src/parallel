@@ -3341,7 +3341,7 @@ sub init_globals() {
     #   SSH / remote host data structures
     #   Job counters and state flags
     # Defaults:
-    $Global::version = 20260522;
+    $Global::version = 20260622;
     # Deliver perl bootstrap source via stdin pipe (ssh host -- exec perl).
     # Set to 0 to use an alternative delivery mechanism (future option).
     $Global::command_via_pipe = 1;
@@ -6627,8 +6627,8 @@ sub usage() {
 	 "If you use programs that use GNU Parallel to process data for an article in a",
 	 "scientific publication, please cite:",
 	 "",
-	 "  Tange, O. (2026, May 22). GNU Parallel 20260522 ('Hantavirus').",
-	 "  Zenodo. https://doi.org/10.5281/zenodo.20402000",
+	 "  Tange, O. (2026, June 22). GNU Parallel 20260622 ('Rape Gang Inquiry').",
+	 "  Zenodo. https://doi.org/10.5281/zenodo.20959929",
 	 "",
 	 # Before changing these lines,  please read
 	 # https://www.gnu.org/software/parallel/parallel_design.html#citation-notice
@@ -6660,8 +6660,8 @@ sub citation_notice() {
 	     "If you use programs that use GNU Parallel to process data for an article in a",
 	     "scientific publication, please cite:",
 	     "",
-	     "  Tange, O. (2026, May 22). GNU Parallel 20260522 ('Hantavirus').",
-	     "  Zenodo. https://doi.org/10.5281/zenodo.20402000",
+	     "  Tange, O. (2026, June 22). GNU Parallel 20260622 ('Rape Gang Inquiry').",
+	     "  Zenodo. https://doi.org/10.5281/zenodo.20959929",
 	     "",
 	     # Before changing these line,   please read
 	     # https://www.gnu.org/software/parallel/parallel_design.html#citation-notice and
@@ -6787,20 +6787,20 @@ sub citation() {
 	"If you use programs that use GNU Parallel to process data for an article in a",
 	"scientific publication, please cite:",
 	"",
-	"\@software{tange_2026_20402000,",
+	"\@software{tange_2026_20959929,",
 	"      author       = {Tange, Ole},",
-	"      title        = {GNU Parallel 20260522 ('Hantavirus')},",
-	"      month        = May,",
-	"      year         = 2025,",
+	"      title        = {GNU Parallel 20260622 ('Rape Gang Inquiry')},",
+	"      month        = Jun,",
+	"      year         = 2026,",
 	"      note         = {{GNU Parallel is a general parallelizer to run",
 	"                       multiple serial command line programs in parallel",
 	"                       without changing them.}},",
 	"      publisher    = {Zenodo},",
-	"      doi          = {10.5281/zenodo.20402000},",
-	"      url          = {https://doi.org/10.5281/zenodo.20402000}",
+	"      doi          = {10.5281/zenodo.20959929},",
+	"      url          = {https://doi.org/10.5281/zenodo.20959929}",
 	"}",
 	"",
-	"(Feel free to use \\nocite{tange_2026_20402000})",
+	"(Feel free to use \\nocite{tange_2026_20959929})",
 	"",
 	# Before changing these lines, please read
 	# https://www.gnu.org/software/parallel/parallel_design.html#citation-notice and

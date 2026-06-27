@@ -1,3 +1,10 @@
+20260622
+
+* testsuite reorganized.
+
+* Bug fixes and man page updates.
+
+
 20260522
 
 * --fast rewritten. 1 million jobs in 10 seconds. Try:
