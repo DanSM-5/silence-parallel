@@ -1,5 +1,4 @@
 #!/usr/bin/env perl
-
 # Copyright (C) 2007-2026 Ole Tange, http://ole.tange.dk and Free
 # Software Foundation, Inc.
 #
@@ -3341,7 +3340,7 @@ sub init_globals() {
     #   SSH / remote host data structures
     #   Job counters and state flags
     # Defaults:
-    $Global::version = 20260622;
+    $Global::version = 20260722;
     # Deliver perl bootstrap source via stdin pipe (ssh host -- exec perl).
     # Set to 0 to use an alternative delivery mechanism (future option).
     $Global::command_via_pipe = 1;
@@ -6627,8 +6626,8 @@ sub usage() {
 	 "If you use programs that use GNU Parallel to process data for an article in a",
 	 "scientific publication, please cite:",
 	 "",
-	 "  Tange, O. (2026, June 22). GNU Parallel 20260622 ('Rape Gang Inquiry').",
-	 "  Zenodo. https://doi.org/10.5281/zenodo.20959929",
+	 "  Tange, O. (2026, July 22). GNU Parallel 20260722 ('Chat Control').",
+	 "  Zenodo. https://doi.org/10.5281/zenodo.4381888",
 	 "",
 	 # Before changing these lines,  please read
 	 # https://www.gnu.org/software/parallel/parallel_design.html#citation-notice
@@ -6655,27 +6654,6 @@ sub citation_notice() {
        grep { -e "$_/will-cite" } @Global::config_dirs) {
 	# skip
     } else {
-	::status
-	    ("Academic tradition requires you to cite works you base your article on.",
-	     "If you use programs that use GNU Parallel to process data for an article in a",
-	     "scientific publication, please cite:",
-	     "",
-	     "  Tange, O. (2026, June 22). GNU Parallel 20260622 ('Rape Gang Inquiry').",
-	     "  Zenodo. https://doi.org/10.5281/zenodo.20959929",
-	     "",
-	     # Before changing these line,   please read
-	     # https://www.gnu.org/software/parallel/parallel_design.html#citation-notice and
-	     # https://git.savannah.gnu.org/cgit/parallel.git/tree/doc/citation-notice-faq.txt
-	     # You accept to be put in a public hall of shame by removing these lines
-	     "This helps funding further development; AND IT WON'T COST YOU A CENT.",
-	     "If you pay 10000 EUR you should feel free to use GNU Parallel without citing.",
-	     "",
-	     "More about funding GNU Parallel and the citation notice:",
-	     "https://www.gnu.org/software/parallel/parallel_design.html#citation-notice",
-	     "",
-	     "To silence this citation notice: run 'parallel --citation' once.",
-	     ""
-	    );
 	mkdir $Global::config_dir;
 	# Number of times the user has run GNU Parallel without showing
 	# willingness to cite
@@ -6685,18 +6663,42 @@ sub citation_notice() {
 	    $runs = <$fh>;
 	    close $fh;
 	}
-	$runs++;
 	if(open (my $fh, ">", $Global::config_dir.
 		 "/runs-without-willing-to-cite")) {
+	    $runs++;
 	    print $fh $runs;
 	    close $fh;
-	    if($runs >= 10) {
-		::status("Come on: You have run parallel $runs times. ".
-			 "Isn't it about time ",
-			 "you run 'parallel --citation' once to silence ".
-			 "the citation notice?",
-			 "");
-	    }
+	}
+	if($runs >= 5) {
+	    ::status
+		("Academic tradition requires you to cite works you base your article on.",
+		 "If you use programs that use GNU Parallel to process data for an article in a",
+		 "scientific publication, please cite:",
+		 "",
+		 "  Tange, O. (2026, July 22). GNU Parallel 20260722 ('Chat Control').",
+		 "  Zenodo. https://doi.org/10.5281/zenodo.4381888",
+		 "",
+		 # Before changing the code to block printing the citation notice
+		 # if the user has not accepted to cite, please read:
+		 # https://www.gnu.org/software/parallel/parallel_design.html#citation-notice and
+		 # https://git.savannah.gnu.org/cgit/parallel.git/tree/doc/citation-notice-faq.txt
+		 # You accept to be put in a public hall of shame by blocking the notice
+		 "This helps funding further development; AND IT WON'T COST YOU A CENT.",
+		 "If you pay 10000 EUR you should feel free to use GNU Parallel without citing.",
+		 "",
+		 "More about funding GNU Parallel and the citation notice:",
+		 "https://www.gnu.org/software/parallel/parallel_design.html#citation-notice",
+		 "",
+		 "To silence this citation notice: run 'parallel --citation' once.",
+		 ""
+		);
+	}
+	if($runs >= 10) {
+	    ::status("Come on: You have run parallel $runs times. ".
+		     "Isn't it about time ",
+		     "you run 'parallel --citation' once to silence ".
+		     "the citation notice?",
+		     "");
 	}
     }
 }
@@ -6787,26 +6789,26 @@ sub citation() {
 	"If you use programs that use GNU Parallel to process data for an article in a",
 	"scientific publication, please cite:",
 	"",
-	"\@software{tange_2026_20959929,",
+	"\@software{tange_2026_4381888,",
 	"      author       = {Tange, Ole},",
-	"      title        = {GNU Parallel 20260622 ('Rape Gang Inquiry')},",
-	"      month        = Jun,",
+	"      title        = {GNU Parallel 20260722 ('Chat Control')},",
+	"      month        = Jul,",
 	"      year         = 2026,",
 	"      note         = {{GNU Parallel is a general parallelizer to run",
 	"                       multiple serial command line programs in parallel",
 	"                       without changing them.}},",
 	"      publisher    = {Zenodo},",
-	"      doi          = {10.5281/zenodo.20959929},",
-	"      url          = {https://doi.org/10.5281/zenodo.20959929}",
+	"      doi          = {10.5281/zenodo.4381888},",
+	"      url          = {https://doi.org/10.5281/zenodo.4381888}",
 	"}",
 	"",
-	"(Feel free to use \\nocite{tange_2026_20959929})",
+	"(Feel free to use \\nocite{tange_2026_4381888})",
 	"",
-	# Before changing these lines, please read
+	# Before changing the code to block printing the citation notice
+	# if the user has not accepted to cite, please read:
 	# https://www.gnu.org/software/parallel/parallel_design.html#citation-notice and
 	# https://git.savannah.gnu.org/cgit/parallel.git/tree/doc/citation-notice-faq.txt
-	# You accept to be put in a public hall of shame by removing
-	# these lines
+	# You accept to be put in a public hall of shame by blocking the notice
 	"This helps funding further development; AND IT WON'T COST YOU A CENT.",
 	"If you pay 10000 EUR you should feel free to use GNU Parallel without citing.",
 	"",
@@ -7616,6 +7618,8 @@ sub which(@) {
 	    #	/bin/sh /sbin/sh /opt/csw/sh
 	    # But not: foo.sh sshd crash flush pdflush scosh fsflush ssh
 	    $shell = "(?:".join("|",map { "\Q$_\E" } @shells).")";
+	    $regexp = '^((\[)(-?)('. $shell. ')(\])|' .
+			 '(|\S+/|\S*busybox |\S*rosetta |\S*qemu-\S+ )'.
 	    $regexp = '^((\[)(-?)('. $shell. ')(\])|(|\S+/|\S*busybox |\S*rosetta )'.
 		'(-?)('. $shell. '))( *$| [^(])';
 	    %fakename = (
@@ -7648,9 +7652,11 @@ sub which(@) {
 		if(open(my $fd, "<", "/proc/$testpid/cmdline")) {
 		    local $/="\0";
 		    chomp($shellline = <$fd>);
-		    if($shellline =~ /busybox$|rosetta$/) {
-			# Possibly:  busybox \0 sh  or  .../rosetta \0 /bin/bash
-			# Skip busybox/rosetta
+		    if($shellline =~ /busybox$|rosetta$|qemu-/) {
+			# Possibly:  busybox \0 sh
+			# or  .../rosetta \0 /bin/bash
+			# or  ...qemu-...
+			# Skip busybox/rosetta/qemu-
 			chomp($shellline = <$fd>);
 		    }
 		    if($shellline =~ /$regexp/o) {
@@ -17599,4 +17605,3 @@ sub main() {
 }
 
 main();
-__END__

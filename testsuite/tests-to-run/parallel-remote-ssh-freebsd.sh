@@ -9,6 +9,7 @@ SERVER1=freebsd14
 SSHUSER1=vagrant
 SSHLOGIN1=$SSHUSER1@$SERVER1
 echo $SSHUSER1@$SERVER1
+ssh $SSHUSER1@$SERVER1 echo ssh $SSHUSER1@$SERVER1 is working
 
 ssh $SSHLOGIN1 touch .parallel/will-cite
 (

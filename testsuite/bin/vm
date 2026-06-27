@@ -15,7 +15,13 @@ vbox_preflight() {
     # Kill duplicate VBoxSVC processes; multiple instances cause VBoxManage to hang
     local lockpid
     lockpid=$(cat /tmp/.vbox-"$USER"-ipc/lock 2>/dev/null)
-    [ -n "$lockpid" ] && pgrep -x VBoxSVC | grep -v "^$lockpid$" | xargs -r kill
+    # lock file content is not always a clean PID (can contain stray VBoxHeadless
+    # output); only act on it when it actually parses as one, and match it quoted
+    # so it can never be word-split or read as a grep pattern.
+    case "$lockpid" in
+	''|*[!0-9]*) : ;;
+	*) pgrep -x VBoxSVC | grep -vx "$lockpid" | xargs -r kill ;;
+    esac
 }
 
 start() {
@@ -119,6 +125,109 @@ snapshot() {
     vm=$1
     if cdvm $vm ; then
 	vagrant snapshot save running-$$
+    fi
+}
+
+zerofill() {
+    # Guest-side prep before halt+compress(). Guest must be running.
+    # On ZFS-root guests (illumos/Solaris; no-op elsewhere), destroys
+    # inactive boot environments and their snapshots, since those pin disk
+    # blocks that a plain zero-fill can never reach. Then zero-fills free
+    # space in the mounted filesystems so compress() can reclaim it.
+    vm=$1
+    if cdvm $vm ; then
+	script=$(cat <<'GUESTSCRIPT'
+if command -v zfs >/dev/null 2>&1; then
+    if command -v beadm >/dev/null 2>&1; then
+        beadm list -H | awk -F';' '$3 !~ /N/ {print $1}' | while read -r be; do
+            beadm destroy -F -f "$be"
+        done
+    fi
+    zfs list -H -o name -t snapshot | while read -r snap; do zfs destroy "$snap"; done
+fi
+dd if=/dev/zero of=/zero-fill bs=1M 2>/dev/null; sync; rm -f /zero-fill; sync
+GUESTSCRIPT
+	)
+	DISPLAY= timeout 1800 vagrant ssh -c "echo $(printf '%s' "$script" | base64 -w0) | base64 -d | sudo sh" 2>/dev/null
+    fi
+}
+
+compress() {
+    # Flatten any snapshot chain and reclaim zeroed space by cloning to a
+    # fresh dynamic VMDK. VM must already be powered off (run zerofill()
+    # before halting, then compress() after halting).
+    vm=$1
+    if cdvm $vm ; then
+	uuid=$(cat .vagrant/machines/default/virtualbox/id 2>/dev/null)
+	if [ -z "$uuid" ]; then
+	    echo "$vm: no VBox UUID found, skipping compress"
+	    return 1
+	fi
+
+	state=
+	for i in $(seq 1 30); do
+	    state=$(VBoxManage showvminfo "$uuid" --machinereadable 2>/dev/null | sed -n 's/^VMState="\(.*\)"$/\1/p')
+	    [ "$state" = "poweroff" ] && break
+	    sleep 2
+	done
+	if [ "$state" != "poweroff" ]; then
+	    echo "$vm: VM not powered off (state=$state), skipping compress"
+	    return 1
+	fi
+
+	VBoxManage snapshot "$uuid" list --machinereadable 2>/dev/null |
+	    sed -n 's/^SnapshotUUID[0-9-]*="\(.*\)"$/\1/p' |
+	    while read -r snap; do
+		echo "$vm: deleting snapshot $snap"
+		timeout 600 VBoxManage snapshot "$uuid" delete "$snap"
+	    done
+
+	info=$(VBoxManage showvminfo "$uuid" --machinereadable 2>/dev/null)
+	line=$(echo "$info" | perl -ne 'print "$1\t$2\t$3\t$4\n" if /^"(.+)-(\d+)-(\d+)"="(.+\.vmdk)"$/' | head -1)
+	ctrl=$(echo "$line" | cut -f1)
+	port=$(echo "$line" | cut -f2)
+	device=$(echo "$line" | cut -f3)
+	oldpath=$(echo "$line" | cut -f4)
+	if [ -z "$oldpath" ]; then
+	    echo "$vm: could not determine attached disk, skipping compress"
+	    return 1
+	fi
+	oldmediumuuid=$(echo "$info" | perl -ne "print \"\$1\n\" if /^\"\Q$ctrl\E-ImageUUID-\Q$port\E-\Q$device\E\"=\"(.+)\"\$/")
+
+	tmppath="${oldpath%.vmdk}.tmp.vmdk"
+	rm -f "$tmppath"
+	# A prior interrupted compress() run may have left tmppath registered
+	# under a stale UUID; that alone (independent of the file existing)
+	# makes clonemedium refuse to register a fresh clone at the same path.
+	staleuuid=$(TMPPATH="$tmppath" VBoxManage list hdds 2>/dev/null | perl -ne '
+	    $u=$1 if /^UUID:\s*(\S+)/;
+	    if (/^Location:\s*(.*)$/ && $1 eq $ENV{TMPPATH}) { print "$u\n"; exit }
+	')
+	[ -n "$staleuuid" ] && VBoxManage closemedium disk "$staleuuid" 2>/dev/null
+	cloneout=$(timeout 1800 VBoxManage clonemedium "$oldpath" "$tmppath" --format VMDK --variant Standard 2>&1)
+	if [ $? -ne 0 ] || [ ! -s "$tmppath" ]; then
+	    echo "$vm: compress clone failed, leaving original disk attached"
+	    echo "$cloneout"
+	    rm -f "$tmppath"
+	    return 1
+	fi
+	newmediumuuid=$(echo "$cloneout" | sed -n 's/.*UUID: \([0-9a-f-]*\)/\1/p')
+	# Deregister (not delete) the clone under its temp path so we can move
+	# it to the final filename and reattach by path without a UUID clash.
+	[ -n "$newmediumuuid" ] && VBoxManage closemedium disk "$newmediumuuid"
+
+	VBoxManage storageattach "$uuid" --storagectl "$ctrl" --port "$port" --device "$device" --medium none
+	if [ -n "$oldmediumuuid" ]; then
+	    VBoxManage closemedium disk "$oldmediumuuid" --delete
+	else
+	    rm -f "$oldpath"
+	fi
+	mv "$tmppath" "$oldpath"
+	if ! VBoxManage storageattach "$uuid" --storagectl "$ctrl" --port "$port" --device "$device" --medium "$oldpath" --type hdd; then
+	    echo "$vm: WARNING: reattach of compacted disk failed, VM has no disk attached - needs manual fix"
+	    return 1
+	fi
+	echo "$vm: compress done ($(du -sh "$oldpath" | cut -f1))"
     fi
 }
 

@@ -86,4 +86,17 @@ Vagrant.configure("2") do |config|
       sudo apt install rsync || sudo yum install -y rsync || sudo pkg install -y rsync
     SHELL
   end
+  # Zero-fill guest free space before halt and reclaim it into a smaller
+  # dynamic VMDK after halt. See testsuite/bin/vm zerofill()/compress().
+  config.trigger.before :halt do |trigger|
+    trigger.info = "vm zerofill: zeroing free disk space..."
+    trigger.on_error = :continue
+    trigger.run = {inline: "bash -c 'cd ../../.. && ./bin/vm zerofill freebsd14'"}
+  end
+
+  config.trigger.after :halt do |trigger|
+    trigger.info = "vm compress: reclaiming zeroed disk space..."
+    trigger.on_error = :continue
+    trigger.run = {inline: "bash -c 'cd ../../.. && ./bin/vm compress freebsd14'"}
+  end
 end

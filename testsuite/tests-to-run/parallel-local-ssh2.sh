@@ -139,6 +139,6 @@ par_pipepart_tee_ssh() {
 
 export -f $(compgen -A function | grep par_)
 #compgen -A function | grep par_ | sort | parallel --delay $D -j$P --tag -k '{} 2>&1'
-compgen -A function | grep par_ | sort |
-    parallel --joblog /tmp/jl-`basename $0` --retries 3 -j300% --tag -k '{} 2>&1' |
+compgen -A function | G par_ "$@" | sort |
+    parallel --joblog /tmp/jl-`basename $0` --retries 3 -j200% --tag -k '{} 2>&1' |
     perl -pe "s/‘/'/g;s/’/'/g"

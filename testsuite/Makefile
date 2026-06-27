@@ -155,13 +155,13 @@ startsnap:
 	parallel -j0 --tagstring {#}-{} -k --timeout 300 bin/vm restoresnapshot ::: ${servers}
 
 checkvm:
-	parallel -j0 --delay 0.2 --plus --tagstring '/|\ {0#} {}' --lb --timeout 400 bin/vm check ::: ${servers}
+	parallel -j0 --delay 0.2 --plus --tagstring '/|\ {0#} {}' --lb --timeout 40 bin/vm check ::: ${servers}
 
 startvm:
 	touch vagrant/authorized_keys
 	sort -u ~/.ssh/*.pub vagrant/authorized_keys > vagrant/authorized_keys.
 	mv vagrant/authorized_keys. vagrant/authorized_keys
-	parallel -j0 --delay 0.2 --plus --tagstring '/|\ {0#} {}' --lb --timeout 400 bin/vm start ::: ${servers}
+	parallel -j0 --delay 0.2 --plus --tagstring '/|\ {0#} {}' --lb --timeout 300 bin/vm start ::: ${servers}
 
 stopvm:
 	parallel -vj0 --tag -k bin/vm stop ::: ${namedservers} || true
@@ -206,7 +206,11 @@ dbtestonlocalhost:
 dbstarttunnel:
 	# sql cannot access lo:1521 => Start SSH tunnel for localhost:1521
 	# (bypasses VirtualBox NAT packet corruption of Oracle TNS)
-	pgrep -f "ssh.*-L.*1521:localhost:1521" >/dev/null 2>&1 || \
+	# Must check the actual listening port, not `pgrep -f`: make passes this
+	# whole recipe to `sh -c` as one argument, so a `pgrep -f` pattern that
+	# matches the ssh command below also matches that wrapping shell itself,
+	# making the check always true and the tunnel never start.
+	ss -ltn 'sport = :1521' | grep -q ':1521' || \
 	  (cd vagrant-projects/OracleDatabase/26ai-Free && vagrant ssh-config > /tmp/oracle-ssh-config && \
 	   ssh -f -N -L 127.0.0.1:1521:localhost:1521 -F /tmp/oracle-ssh-config oracle26ai-free-vagrant)
 
