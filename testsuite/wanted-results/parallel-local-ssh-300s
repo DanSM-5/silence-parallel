@@ -1,0 +1,6 @@
+par_retries_unreachable	### Test of --retries on unreachable host
+par_retries_unreachable	parallel: Warning: Could not figure out number of cpus on 4.3.2.1 (). Using 1.
+par_retries_unreachable	echo 1
+par_retries_unreachable	1
+par_retries_unreachable	echo 2
+par_retries_unreachable	2

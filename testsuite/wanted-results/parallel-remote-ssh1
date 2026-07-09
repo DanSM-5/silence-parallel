@@ -1,34 +1,525 @@
 par__filter_hosts_different_errors	### --filter-hosts - OK, non-such-user, connection refused, wrong host
 par__filter_hosts_different_errors	myhostname
 par__filter_hosts_no_ssh_nxserver	### test --filter-hosts with server w/o ssh, non-existing server
-par__filter_hosts_no_ssh_nxserver	parallel: Warning: Could not figure out number of cpus on vagrant@parallel-server2 (). Using 1.
 par__filter_hosts_no_ssh_nxserver	vagrant@parallel-server1	
 par__filter_hosts_no_ssh_nxserver	vagrant@parallel-server2	
 par__filter_hosts_no_ssh_nxserver	vagrant@parallel-server3	
+par__man_bash	### bash
+par__man_bash	### From man env_parallel
+par__man_bash	aliases with = & " ! ' work
+par__man_bash	aliases with = & " ! ' work
+par__man_bash	aliases with = & " ! ' work
+par__man_bash	aliases with = & " ! ' work
+par__man_bash	aliases with = & " ! ' work
+par__man_bash	multiline
+par__man_bash	aliases with = & " ! ' work
+par__man_bash	env_parallel: Warning: Alias 'multiline' contains newline.
+par__man_bash	env_parallel: Warning: Make sure the command has at least one newline after 'multiline'.
+par__man_bash	env_parallel: Warning: See BUGS in 'man env_parallel'.
+par__man_bash	multiline
+par__man_bash	aliases with = & " ! ' work
+par__man_bash	but only when followed by a newline
+par__man_bash	env_parallel: Warning: Alias 'multiline' contains newline.
+par__man_bash	env_parallel: Warning: Make sure the command has at least one newline after 'multiline'.
+par__man_bash	env_parallel: Warning: See BUGS in 'man env_parallel'.
+par__man_bash	multiline
+par__man_bash	aliases with = & " ! ' work
+par__man_bash	but only when followed by a newline
+par__man_bash	env_parallel: Warning: Alias 'multiline' contains newline.
+par__man_bash	env_parallel: Warning: Make sure the command has at least one newline after 'multiline'.
+par__man_bash	env_parallel: Warning: See BUGS in 'man env_parallel'.
+par__man_bash	multiline
+par__man_bash	aliases with = & " ! ' work
+par__man_bash	but only when followed by a newline
+par__man_bash	env_parallel: Warning: Alias 'multiline' contains newline.
+par__man_bash	env_parallel: Warning: Make sure the command has at least one newline after 'multiline'.
+par__man_bash	env_parallel: Warning: See BUGS in 'man env_parallel'.
+par__man_bash	multiline
+par__man_bash	aliases with = & " ! ' work
+par__man_bash	but only when followed by a newline
+par__man_bash	functions with  = & " ! ' work
+par__man_bash	functions with  = & " ! ' work
+par__man_bash	functions with  = & " ! ' work
+par__man_bash	functions with  = & " ! ' work
+par__man_bash	functions with  = & " ! ' work
+par__man_bash	variables with  = & " ! ' work
+par__man_bash	variables with  = & " ! ' work
+par__man_bash	variables with  = & " ! ' work
+par__man_bash	variables with  = & " ! ' work
+par__man_bash	variables with  = & " ! ' work
+par__man_bash	multiline
+par__man_bash	    variables with  = & " ! ' work
+par__man_bash	multiline
+par__man_bash	    variables with  = & " ! ' work
+par__man_bash	multiline
+par__man_bash	    variables with  = & " ! ' work
+par__man_bash	multiline
+par__man_bash	    variables with  = & " ! ' work
+par__man_bash	multiline
+par__man_bash	    variables with  = & " ! ' work
+par__man_bash	arrays with = & " ! ' work, too
+par__man_bash	arrays
+par__man_bash	with = & " ! '
+par__man_bash	work,
+par__man_bash	too
+par__man_bash	arrays
+par__man_bash	with = & " ! '
+par__man_bash	work,
+par__man_bash	too
+par__man_bash	arrays
+par__man_bash	with = & " ! '
+par__man_bash	work,
+par__man_bash	too
+par__man_bash	arrays
+par__man_bash	with = & " ! '
+par__man_bash	work,
+par__man_bash	too
+par__man_bash	multi
+par__man_bash	level
+par__man_bash	env_parallel
+par__man_bash	exit value 2 should be 2
+par__man_bash	Unknown option: no-such-option
+par__man_bash	exit value 255 should be 255
+par__man_csh	### csh
+par__man_csh	
+par__man_csh	
+par__man_csh	
+par__man_csh	
+par__man_csh	
+par__man_csh	
+par__man_csh	
+par__man_csh	
+par__man_csh	
+par__man_csh	                {+/}/{/..}.{+..} = {...}.{+...} = {+/}/{/...}.{+...}
+par__man_csh	### From man env_parallel
+par__man_csh	--colsep regexp Split input on regexp for positional replacements
+par__man_csh	--nonall        Run the given command with no arguments on all sshlogins
+par__man_csh	--onall         Run the given command with argument on all sshlogins
+par__man_csh	--pipe          Split stdin (standard input) to multiple jobs.
+par__man_csh	--recend str    Record end separator for --pipe.
+par__man_csh	--recstart str  Record start separator for --pipe.
+par__man_csh	--slf ..        Use ~/.parallel/sshloginfile as the list of sshlogins
+par__man_csh	--trc {}.bar    Shorthand for --transfer --return {}.bar --cleanup
+par__man_csh	-S sshlogin     Example: foo@server.example.com
+par__man_csh	-X              Multiple arguments with context replace
+par__man_csh	-j n            Run n jobs in parallel
+par__man_csh	-k              Keep same order
+par__man_csh	Academic tradition requires you to cite works you base your article on.
+par__man_csh	GNU Parallel can do much more. See 'man parallel' for details
+par__man_csh	If you pay 10000 EUR you should feel free to use GNU Parallel without citing.
+par__man_csh	If you use programs that use GNU Parallel to process data for an article in a
+par__man_csh	This helps funding further development; AND IT WON'T COST YOU A CENT.
+par__man_csh	Unknown option: no-such-option
+par__man_csh	Usage:
+par__man_csh	With --plus:    {} = {+/}/{/} = {.}.{+.} = {+/}/{/.}.{+.} = {..}.{+..} =
+par__man_csh	aliases with = & " work
+par__man_csh	aliases with = & " work
+par__man_csh	aliases with = & " work
+par__man_csh	aliases with = & " work
+par__man_csh	arrays
+par__man_csh	arrays
+par__man_csh	arrays
+par__man_csh	arrays
+par__man_csh	cat ... | parallel --pipe [options] [command [arguments]]
+par__man_csh	env_parallel
+par__man_csh	exit value 2 should be 2
+par__man_csh	exit value 255 should be 255
+par__man_csh	level
+par__man_csh	multi
+par__man_csh	parallel [options] [command [arguments]] (::: arguments|:::: argfile(s))...
+par__man_csh	parallel [options] [command [arguments]] < list_of_arguments
+par__man_csh	scientific publication, please cite:
+par__man_csh	too
+par__man_csh	too
+par__man_csh	too
+par__man_csh	too
+par__man_csh	variables with = & " work
+par__man_csh	variables with = & " work
+par__man_csh	variables with = & " work
+par__man_csh	variables with = & " work
+par__man_csh	with=&"'
+par__man_csh	with=&"'
+par__man_csh	with=&"'
+par__man_csh	with=&"'
+par__man_csh	work,
+par__man_csh	work,
+par__man_csh	work,
+par__man_csh	work,
+par__man_csh	{3} {3.} {3/} {3/.} {=3 perl code =}    Positional replacement strings
+par__man_csh	{} {.} {/} {/.} {#} {%} {= perl code =} Replacement strings
+par__man_dash	### dash
+par__man_dash	### From man env_parallel
+par__man_dash	aliases with = & " ! ' work
+par__man_dash	aliases with = & " ! ' work
+par__man_dash	aliases with = & " ! ' work
+par__man_dash	aliases with = & " ! ' work
+par__man_dash	aliases with = & " ! ' work
+par__man_dash	multiline
+par__man_dash	aliases with = & " ! ' work
+par__man_dash	multiline
+par__man_dash	aliases with = & " ! ' work
+par__man_dash	multiline
+par__man_dash	aliases with = & " ! ' work
+par__man_dash	multiline
+par__man_dash	aliases with = & " ! ' work
+par__man_dash	multiline
+par__man_dash	aliases with = & " ! ' work
+par__man_dash	variables with  = & " ! ' work
+par__man_dash	variables with  = & " ! ' work
+par__man_dash	variables with  = & " ! ' work
+par__man_dash	variables with  = & " ! ' work
+par__man_dash	variables with  = & " ! ' work
+par__man_dash	multiline
+par__man_dash	    variables with  = & " ! ' work
+par__man_dash	multiline
+par__man_dash	    variables with  = & " ! ' work
+par__man_dash	multiline
+par__man_dash	    variables with  = & " ! ' work
+par__man_dash	multiline
+par__man_dash	    variables with  = & " ! ' work
+par__man_dash	multiline
+par__man_dash	    variables with  = & " ! ' work
+par__man_dash	exit value 2 should be 2
+par__man_dash	Unknown option: no-such-option
+par__man_dash	exit value 255 should be 255
+par__man_ksh	### ksh
+par__man_ksh	### From man env_parallel
+par__man_ksh	aliases with = & " ! ' work
+par__man_ksh	aliases with = & " ! ' work
+par__man_ksh	aliases with = & " ! ' work
+par__man_ksh	aliases with = & " ! ' work
+par__man_ksh	aliases with = & " ! ' work
+par__man_ksh	multiline
+par__man_ksh	aliases with = & " ! ' work
+par__man_ksh	env_parallel: Warning: Alias "multiline" contains newline.
+par__man_ksh	env_parallel: Warning: Make sure the command has at least one newline after "multiline".
+par__man_ksh	env_parallel: Warning: See BUGS in "man env_parallel".
+par__man_ksh	multiline
+par__man_ksh	aliases with = & " ! ' work
+par__man_ksh	env_parallel: Warning: Alias "multiline" contains newline.
+par__man_ksh	env_parallel: Warning: Make sure the command has at least one newline after "multiline".
+par__man_ksh	env_parallel: Warning: See BUGS in "man env_parallel".
+par__man_ksh	multiline
+par__man_ksh	aliases with = & " ! ' work
+par__man_ksh	env_parallel: Warning: Alias "multiline" contains newline.
+par__man_ksh	env_parallel: Warning: Make sure the command has at least one newline after "multiline".
+par__man_ksh	env_parallel: Warning: See BUGS in "man env_parallel".
+par__man_ksh	multiline
+par__man_ksh	aliases with = & " ! ' work
+par__man_ksh	env_parallel: Warning: Alias "multiline" contains newline.
+par__man_ksh	env_parallel: Warning: Make sure the command has at least one newline after "multiline".
+par__man_ksh	env_parallel: Warning: See BUGS in "man env_parallel".
+par__man_ksh	multiline
+par__man_ksh	aliases with = & " ! ' work
+par__man_ksh	functions with  = & " ! ' work
+par__man_ksh	functions with  = & " ! ' work
+par__man_ksh	functions with  = & " ! ' work
+par__man_ksh	functions with  = & " ! ' work
+par__man_ksh	functions with  = & " ! ' work
+par__man_ksh	variables with  = & " ! ' work
+par__man_ksh	variables with  = & " ! ' work
+par__man_ksh	variables with  = & " ! ' work
+par__man_ksh	variables with  = & " ! ' work
+par__man_ksh	variables with  = & " ! ' work
+par__man_ksh	multiline
+par__man_ksh	    variables with  = & " ! ' work
+par__man_ksh	multiline
+par__man_ksh	    variables with  = & " ! ' work
+par__man_ksh	multiline
+par__man_ksh	    variables with  = & " ! ' work
+par__man_ksh	multiline
+par__man_ksh	    variables with  = & " ! ' work
+par__man_ksh	multiline
+par__man_ksh	    variables with  = & " ! ' work
+par__man_ksh	arrays with = & " ! ' work, too
+par__man_ksh	arrays
+par__man_ksh	with = & " ! '
+par__man_ksh	work,
+par__man_ksh	too
+par__man_ksh	arrays
+par__man_ksh	with = & " ! '
+par__man_ksh	work,
+par__man_ksh	too
+par__man_ksh	arrays
+par__man_ksh	with = & " ! '
+par__man_ksh	work,
+par__man_ksh	too
+par__man_ksh	arrays
+par__man_ksh	with = & " ! '
+par__man_ksh	work,
+par__man_ksh	too
+par__man_ksh	This may never work
+par__man_ksh	https://unix.stackexchange.com/questions/457031/extract-full-function-definitions
+par__man_ksh	/bin/ksh: line 9: syntax error at line 9: `{' unmatched
+par__man_ksh	/bin/ksh: line 9: syntax error at line 9: `{' unmatched
+par__man_ksh	/bin/ksh: line 9: syntax error at line 9: `{' unmatched
+par__man_ksh	exit value 2 should be 2
+par__man_ksh	Unknown option: no-such-option
+par__man_ksh	exit value 255 should be 255
+par__man_mksh	### mksh
+par__man_mksh	### From man env_parallel
+par__man_mksh	aliases with = & " ! ' work
+par__man_mksh	aliases with = & " ! ' work
+par__man_mksh	aliases with = & " ! ' work
+par__man_mksh	aliases with = & " ! ' work
+par__man_mksh	aliases with = & " ! ' work
+par__man_mksh	multiline
+par__man_mksh	aliases with = & " ! ' work
+par__man_mksh	env_parallel: Warning: Alias "multiline" contains newline.
+par__man_mksh	env_parallel: Warning: Make sure the command has at least one newline after "multiline".
+par__man_mksh	env_parallel: Warning: See BUGS in "man env_parallel".
+par__man_mksh	multiline
+par__man_mksh	aliases with = & " ! ' work
+par__man_mksh	env_parallel: Warning: Alias "multiline" contains newline.
+par__man_mksh	env_parallel: Warning: Make sure the command has at least one newline after "multiline".
+par__man_mksh	env_parallel: Warning: See BUGS in "man env_parallel".
+par__man_mksh	multiline
+par__man_mksh	aliases with = & " ! ' work
+par__man_mksh	env_parallel: Warning: Alias "multiline" contains newline.
+par__man_mksh	env_parallel: Warning: Make sure the command has at least one newline after "multiline".
+par__man_mksh	env_parallel: Warning: See BUGS in "man env_parallel".
+par__man_mksh	multiline
+par__man_mksh	aliases with = & " ! ' work
+par__man_mksh	env_parallel: Warning: Alias "multiline" contains newline.
+par__man_mksh	env_parallel: Warning: Make sure the command has at least one newline after "multiline".
+par__man_mksh	env_parallel: Warning: See BUGS in "man env_parallel".
+par__man_mksh	multiline
+par__man_mksh	aliases with = & " ! ' work
+par__man_mksh	functions with  = & " ! ' work
+par__man_mksh	functions with  = & " ! ' work
+par__man_mksh	functions with  = & " ! ' work
+par__man_mksh	functions with  = & " ! ' work
+par__man_mksh	functions with  = & " ! ' work
+par__man_mksh	variables with  = & " ! ' work
+par__man_mksh	variables with  = & " ! ' work
+par__man_mksh	variables with  = & " ! ' work
+par__man_mksh	variables with  = & " ! ' work
+par__man_mksh	variables with  = & " ! ' work
+par__man_mksh	multiline
+par__man_mksh	    variables with  = & " ! ' work
+par__man_mksh	multiline
+par__man_mksh	    variables with  = & " ! ' work
+par__man_mksh	multiline
+par__man_mksh	    variables with  = & " ! ' work
+par__man_mksh	multiline
+par__man_mksh	    variables with  = & " ! ' work
+par__man_mksh	multiline
+par__man_mksh	    variables with  = & " ! ' work
+par__man_mksh	arrays with = & " ! ' work, too
+par__man_mksh	arrays
+par__man_mksh	with = & " ! '
+par__man_mksh	work,
+par__man_mksh	too
+par__man_mksh	arrays
+par__man_mksh	with = & " ! '
+par__man_mksh	work,
+par__man_mksh	too
+par__man_mksh	arrays
+par__man_mksh	with = & " ! '
+par__man_mksh	work,
+par__man_mksh	too
+par__man_mksh	arrays
+par__man_mksh	with = & " ! '
+par__man_mksh	work,
+par__man_mksh	too
+par__man_mksh	multi
+par__man_mksh	level
+par__man_mksh	env_parallel
+par__man_mksh	exit value 2 should be 2
+par__man_mksh	Unknown option: no-such-option
+par__man_mksh	exit value 255 should be 255
+par__man_sh	### sh
+par__man_sh	### From man env_parallel
+par__man_sh	aliases with = & " ! ' work
+par__man_sh	aliases with = & " ! ' work
+par__man_sh	aliases with = & " ! ' work
+par__man_sh	aliases with = & " ! ' work
+par__man_sh	aliases with = & " ! ' work
+par__man_sh	multiline
+par__man_sh	aliases with = & " ! ' work
+par__man_sh	multiline
+par__man_sh	aliases with = & " ! ' work
+par__man_sh	multiline
+par__man_sh	aliases with = & " ! ' work
+par__man_sh	multiline
+par__man_sh	aliases with = & " ! ' work
+par__man_sh	multiline
+par__man_sh	aliases with = & " ! ' work
+par__man_sh	variables with  = & " ! ' work
+par__man_sh	variables with  = & " ! ' work
+par__man_sh	variables with  = & " ! ' work
+par__man_sh	variables with  = & " ! ' work
+par__man_sh	variables with  = & " ! ' work
+par__man_sh	multiline
+par__man_sh	    variables with  = & " ! ' work
+par__man_sh	multiline
+par__man_sh	    variables with  = & " ! ' work
+par__man_sh	multiline
+par__man_sh	    variables with  = & " ! ' work
+par__man_sh	multiline
+par__man_sh	    variables with  = & " ! ' work
+par__man_sh	multiline
+par__man_sh	    variables with  = & " ! ' work
+par__man_sh	exit value 2 should be 2
+par__man_sh	Unknown option: no-such-option
+par__man_sh	exit value 255 should be 255
+par__man_tcsh	### tcsh
+par__man_tcsh	Connection to lo closed.par__man_tcsh	
+par__man_tcsh	### From man env_parallelpar__man_tcsh	
+par__man_tcsh	#: Command not found.par__man_tcsh	
+par__man_tcsh	aliases with = & " workpar__man_tcsh	
+par__man_tcsh	aliases with = & " workpar__man_tcsh	
+par__man_tcsh	aliases with = & " workpar__man_tcsh	
+par__man_tcsh	aliases with = & " workpar__man_tcsh	
+par__man_tcsh	Functions not supportedpar__man_tcsh	
+par__man_tcsh	#: Command not found.par__man_tcsh	
+par__man_tcsh	#: Command not found.par__man_tcsh	
+par__man_tcsh	variables with = & " workpar__man_tcsh	
+par__man_tcsh	variables with = & " workpar__man_tcsh	
+par__man_tcsh	variables with = & " workpar__man_tcsh	
+par__man_tcsh	variables with = & " workpar__man_tcsh	
+par__man_tcsh	#: Command not found.par__man_tcsh	
+par__man_tcsh	arrayspar__man_tcsh	
+par__man_tcsh	with=&"'par__man_tcsh	
+par__man_tcsh	work,par__man_tcsh	
+par__man_tcsh	toopar__man_tcsh	
+par__man_tcsh	arrayspar__man_tcsh	
+par__man_tcsh	with=&"'par__man_tcsh	
+par__man_tcsh	work,par__man_tcsh	
+par__man_tcsh	toopar__man_tcsh	
+par__man_tcsh	arrayspar__man_tcsh	
+par__man_tcsh	with=&"'par__man_tcsh	
+par__man_tcsh	work,par__man_tcsh	
+par__man_tcsh	toopar__man_tcsh	
+par__man_tcsh	arrayspar__man_tcsh	
+par__man_tcsh	with=&"'par__man_tcsh	
+par__man_tcsh	work,par__man_tcsh	
+par__man_tcsh	toopar__man_tcsh	
+par__man_tcsh	Segmentation faults? Are you running bsd-csh version 20110502-3?par__man_tcsh	
+par__man_tcsh	multipar__man_tcsh	
+par__man_tcsh	levelpar__man_tcsh	
+par__man_tcsh	env_parallelpar__man_tcsh	
+par__man_tcsh	exit value 2 should be 2par__man_tcsh	
+par__man_tcsh	Unknown option: no-such-optionpar__man_tcsh	
+par__man_tcsh	Usage:par__man_tcsh	
+par__man_tcsh	par__man_tcsh	
+par__man_tcsh	parallel [options] [command [arguments]] < list_of_argumentspar__man_tcsh	
+par__man_tcsh	parallel [options] [command [arguments]] (::: arguments|:::: argfile(s))...par__man_tcsh	
+par__man_tcsh	cat ... | parallel --pipe [options] [command [arguments]]par__man_tcsh	
+par__man_tcsh	par__man_tcsh	
+par__man_tcsh	-j n            Run n jobs in parallelpar__man_tcsh	
+par__man_tcsh	-k              Keep same orderpar__man_tcsh	
+par__man_tcsh	-X              Multiple arguments with context replacepar__man_tcsh	
+par__man_tcsh	--colsep regexp Split input on regexp for positional replacementspar__man_tcsh	
+par__man_tcsh	{} {.} {/} {/.} {#} {%} {= perl code =} Replacement stringspar__man_tcsh	
+par__man_tcsh	{3} {3.} {3/} {3/.} {=3 perl code =}    Positional replacement stringspar__man_tcsh	
+par__man_tcsh	With --plus:    {} = {+/}/{/} = {.}.{+.} = {+/}/{/.}.{+.} = {..}.{+..} =par__man_tcsh	
+par__man_tcsh	                {+/}/{/..}.{+..} = {...}.{+...} = {+/}/{/...}.{+...}par__man_tcsh	
+par__man_tcsh	par__man_tcsh	
+par__man_tcsh	-S sshlogin     Example: foo@server.example.compar__man_tcsh	
+par__man_tcsh	--slf ..        Use ~/.parallel/sshloginfile as the list of sshloginspar__man_tcsh	
+par__man_tcsh	--trc {}.bar    Shorthand for --transfer --return {}.bar --cleanuppar__man_tcsh	
+par__man_tcsh	--onall         Run the given command with argument on all sshloginspar__man_tcsh	
+par__man_tcsh	--nonall        Run the given command with no arguments on all sshloginspar__man_tcsh	
+par__man_tcsh	par__man_tcsh	
+par__man_tcsh	--pipe          Split stdin (standard input) to multiple jobs.par__man_tcsh	
+par__man_tcsh	--recend str    Record end separator for --pipe.par__man_tcsh	
+par__man_tcsh	--recstart str  Record start separator for --pipe.par__man_tcsh	
+par__man_tcsh	par__man_tcsh	
+par__man_tcsh	GNU Parallel can do much more. See 'man parallel' for detailspar__man_tcsh	
+par__man_tcsh	par__man_tcsh	
+par__man_tcsh	Academic tradition requires you to cite works you base your article on.par__man_tcsh	
+par__man_tcsh	If you use programs that use GNU Parallel to process data for an article in apar__man_tcsh	
+par__man_tcsh	scientific publication, please cite:par__man_tcsh	
+par__man_tcsh	par__man_tcsh	
+par__man_tcsh	par__man_tcsh	
+par__man_tcsh	This helps funding further development; AND IT WON'T COST YOU A CENT.par__man_tcsh	
+par__man_tcsh	If you pay 10000 EUR you should feel free to use GNU Parallel without citing.par__man_tcsh	
+par__man_tcsh	par__man_tcsh	
+par__man_tcsh	exit value 255 should be 255par__man_tcsh	
+par__man_zsh	### zsh
+par__man_zsh	### From man env_parallel
+par__man_zsh	aliases with = & " ! ' work
+par__man_zsh	aliases with = & " ! ' work
+par__man_zsh	aliases with = & " ! ' work
+par__man_zsh	aliases with = & " ! ' work
+par__man_zsh	aliases with = & " ! ' work
+par__man_zsh	multiline
+par__man_zsh	aliases with = & " ! ' work
+par__man_zsh	multiline
+par__man_zsh	aliases with = & " ! ' work
+par__man_zsh	multiline
+par__man_zsh	aliases with = & " ! ' work
+par__man_zsh	multiline
+par__man_zsh	aliases with = & " ! ' work
+par__man_zsh	multiline
+par__man_zsh	aliases with = & " ! ' work
+par__man_zsh	functions with  = & " ! ' work
+par__man_zsh	functions with  = & " ! ' work
+par__man_zsh	functions with  = & " ! ' work
+par__man_zsh	functions with  = & " ! ' work
+par__man_zsh	functions with  = & " ! ' work
+par__man_zsh	variables with  = & " ! ' work
+par__man_zsh	variables with  = & " ! ' work
+par__man_zsh	variables with  = & " ! ' work
+par__man_zsh	variables with  = & " ! ' work
+par__man_zsh	variables with  = & " ! ' work
+par__man_zsh	multiline
+par__man_zsh	    variables with  = & " ! ' work
+par__man_zsh	multiline
+par__man_zsh	    variables with  = & " ! ' work
+par__man_zsh	multiline
+par__man_zsh	    variables with  = & " ! ' work
+par__man_zsh	multiline
+par__man_zsh	    variables with  = & " ! ' work
+par__man_zsh	multiline
+par__man_zsh	    variables with  = & " ! ' work
+par__man_zsh	arrays with = & " ! ' work, too
+par__man_zsh	arrays
+par__man_zsh	with = & " ! '
+par__man_zsh	work,
+par__man_zsh	too
+par__man_zsh	arrays
+par__man_zsh	with = & " ! '
+par__man_zsh	work,
+par__man_zsh	too
+par__man_zsh	arrays
+par__man_zsh	with = & " ! '
+par__man_zsh	work,
+par__man_zsh	too
+par__man_zsh	arrays
+par__man_zsh	with = & " ! '
+par__man_zsh	work,
+par__man_zsh	too
+par__man_zsh	multi
+par__man_zsh	level
+par__man_zsh	env_parallel
+par__man_zsh	exit value 2 should be 2
+par__man_zsh	Unknown option: no-such-option
+par__man_zsh	exit value 255 should be 255
+par__sshlogin_with_comma	### --sshlogin with \,
+par__sshlogin_with_comma	OK
+par__sshlogin_with_comma	### --sshlogin with ,,
+par__sshlogin_with_comma	OK
+par__sshlogin_with_comma	### Both , and ,, in -S
+par__sshlogin_with_comma	freebsd14.localdomain
+par__sshlogin_with_comma	rhel8.localdomain
+par__sshlogin_with_comma	freebsd14.localdomain
+par__sshlogin_with_comma	rhel8.localdomain
+par__sshlogin_with_comma	freebsd14.localdomain
+par__sshlogin_with_comma	rhel8.localdomain
 par_force_number_of_cpu	### Check forced number of CPUs being respected
 par_force_number_of_cpu	ssh is slow, so should only get 7. : should get the rest
 par_force_number_of_cpu	7
 par_force_number_of_cpu	13
-par_more_than_9_relative_sshlogin	### Check more than 9(relative) simultaneous sshlogins
-par_more_than_9_relative_sshlogin	1
-par_more_than_9_relative_sshlogin	2
-par_more_than_9_relative_sshlogin	3
-par_more_than_9_relative_sshlogin	4
-par_more_than_9_relative_sshlogin	5
-par_more_than_9_relative_sshlogin	6
-par_more_than_9_relative_sshlogin	7
-par_more_than_9_relative_sshlogin	8
-par_more_than_9_relative_sshlogin	9
-par_more_than_9_relative_sshlogin	10
-par_more_than_9_relative_sshlogin	11
 par_nonall_u	### Test --nonall -u - should be interleaved x y x y
-par_nonall_u	      1 openindiana
-par_nonall_u	      1 openindiana
+par_nonall_u	thus making uniq -c return 1 four times
+par_nonall_u	      1 localhost
+par_nonall_u	      1 localhost
 par_nonall_u	      1 rhel8.localdomain
 par_nonall_u	      1 rhel8.localdomain
 par_special_ssh	### Test use special ssh
 par_special_ssh	TODO test ssh with > 9 simultaneous
-par_special_ssh	parallel: Warning: Could not figure out number of cpus on /tmp/myssh2 vagrant@parallel-server2 (). Using 1.
 par_special_ssh	1
 par_special_ssh	2
 par_special_ssh	3

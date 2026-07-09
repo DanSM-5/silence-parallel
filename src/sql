@@ -697,7 +697,7 @@ $Global::Initfile && unlink $Global::Initfile;
 exit ($err);
 
 sub parse_options {
-    $Global::version = 20260522;
+    $Global::version = 20260622;
     $Global::progname = 'sql';
 
     # This must be done first as this may exec myself
@@ -1209,7 +1209,7 @@ sub parse_dburl {
                ((?:oracle|ora|mysql|pg|postgres|postgresql|influx|influxdb)(?:s|ssl|)|
                  (?:sqlite|sqlite2|sqlite3|csv)):// # Databasedriver ($1)
                (?:
-                ([^:@/][^:@]*|) # Username ($2)
+                ([^:@]*) # Username ($2)
                 (?:
                  :([^@]*) # Password ($3)
                 )?
@@ -1221,10 +1221,10 @@ sub parse_dburl {
                )?
                (?:
                 /
-                ([^?]*?)? # Database ($6)
+                ([^?/]*)? # Database ($6)
                )?
+	       /? # Ignore final / in pg:////
                (?:
-                /?
                 \?
                 (.*)? # Query ($7)
                )?

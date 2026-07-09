@@ -1,0 +1,2 @@
+par_uninstalled_sshpass	### sshpass must be installed for --sshlogin user:pass@host
+par_uninstalled_sshpass	parallel: Error: --sshlogin with password requires sshpass installed

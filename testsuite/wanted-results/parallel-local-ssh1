@@ -67,17 +67,6 @@ par__remote_load	parallel: Warning: perl -e 'while(1){ }'
 par__remote_load	parallel: Warning: This job was killed because it timed out:
 par__remote_load	parallel: Warning: perl -e 'while(1){ }'
 par__remote_load	OK
-par__sshlogin_with_comma	### --sshlogin with \,
-par__sshlogin_with_comma	OK
-par__sshlogin_with_comma	### --sshlogin with ,,
-par__sshlogin_with_comma	OK
-par__sshlogin_with_comma	### Both , and ,, in -S
-par__sshlogin_with_comma	freebsd14.localdomain
-par__sshlogin_with_comma	rhel8.localdomain
-par__sshlogin_with_comma	freebsd14.localdomain
-par__sshlogin_with_comma	rhel8.localdomain
-par__sshlogin_with_comma	freebsd14.localdomain
-par__sshlogin_with_comma	rhel8.localdomain
 par__sshpass_with_password	### sshpass
 par__sshpass_with_password	OK
 par__sshpass_with_password	OK

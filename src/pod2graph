@@ -110,7 +110,7 @@ for(split(/\n\n+/,$pod)) {
 sub header() {
     return q[
 	graph test123 {
-	    graph [splines=true; overlap=false;];
+	    graph [splines=true; overlap=prism; sep="+10";];
 	    labelloc="t";
 	    label="Related map for options for GNU Parallel\nFind the options you use and learn about the options related to it";fontsize=33;
 	    

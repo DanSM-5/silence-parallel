@@ -41,7 +41,7 @@ tor-%: torrsync
 
 
 test-%:
-	cd testsuite && make test-$*
+	cd testsuite && make $*
 
 web:
 	cd src; make web

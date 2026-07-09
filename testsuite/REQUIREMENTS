@@ -15,19 +15,20 @@ install_packages() {
     test_pkgs="$test_pkgs libpod-simple-perl libtext-csv-perl"
     test_pkgs="$test_pkgs libtest-nowarnings-perl pod2pdf"
     test_pkgs="$test_pkgs xemacs21 csvkit"
-    test_pkgs="$test_pkgs gawk lua5.3 clisp php-cli nodejs guile-3.0 fsharp"
+    test_pkgs="$test_pkgs gawk lua5.3 clisp php-cli nodejs guile-3.0"
     test_pkgs="$test_pkgs mono-csharp-shell octave openjdk-11-jdk-headless tcl"
     test_pkgs="$test_pkgs racket libevent-dev python-is-python3"
     test_pkgs="$test_pkgs xterm libc6-i386 libcrypt1:i386 virtualbox"
     test_pkgs="$test_pkgs torsocks net-tools"
-    test_pkgs="$test_pkgs reiserfsprogs btrfs-progs exfatprogs f2fs-tools"
-    test_pkgs="$test_pkgs xfsprogs"
+    test_pkgs="$test_pkgs btrfs-progs exfatprogs f2fs-tools" # missing reiserfsprogs
+    test_pkgs="$test_pkgs xfsprogs util-linux-extra"
 
     test_snap_pkgs="groovy julia"
     
     # Debian package
     packaging_pkgs="dpkg-dev build-essential debhelper osc cvs automake"
     packaging_pkgs="$packaging_pkgs python3-m2crypto alien python3-pip lftp"
+    packaging_pkgs="$packaging_pkgs qpdf"
 
     # Shebang Tools
     shebang_pkgs="gnuplot octave ruby r-base-core"
@@ -44,7 +45,7 @@ install_packages() {
     # Shells
     # (csh = bsd-csh that is broken)
     # (ash ksh93 gone)
-    shell_pkgs="ash dash fdclone fish fizsh ksh ksh93u+m mksh posh rc rush sash"
+    shell_pkgs="dash fdclone fish fizsh ksh ksh93u+m mksh posh rc rush sash" # missing ash
     shell_pkgs="$shell_pkgs tcsh yash zsh busybox-static"
 
     # Databases
@@ -53,8 +54,8 @@ install_packages() {
     # Build Tools
     build_pkgs="bison libxxhash-dev libzstd-dev liblz4-dev libssl-dev"
     build_pkgs="$build_pkgs python3-cmarkgfm libpod-pom-view-restructured-perl"
-    build_pkgs="$build_pkgs graphviz yodl libreoffice"
-
+    build_pkgs="$build_pkgs graphviz libgvplugin-neato-layout8 yodl libreoffice"
+ 
     # Alternatives
     alt_database="sqlite sqlite3"
     sudo dpkg --add-architecture i386; sudo apt update
@@ -87,6 +88,9 @@ install_packages() {
 	# Version 2.3.7 is the last under a free license
 	wget -m https://releases.hashicorp.com/vagrant/2.3.7/vagrant_2.3.7-1_amd64.deb
 	sudo dpkg -i releases.hashicorp.com/vagrant/2.3.7/vagrant_2.3.7-1_amd64.deb
+	# Vagrant 2.3.7 only supports VirtualBox up to 7.0; patch it to also accept 7.1 and 7.2
+	sudo sed -i '/"7.0" => Version_7_0,/a            "7.1" => Version_7_0,
+            "7.2" => Version_7_0,' /opt/vagrant/embedded/gems/gems/vagrant-2.3.7/plugins/providers/virtualbox/driver/meta.rb
     fi
     sudo apt install -y python3-sphinx-rtd-theme || pip install sphinx-rtd-theme
     sudo apt update &
@@ -106,75 +110,93 @@ install_sqlite2() {
 	perl -i -pe \
 	     's/echo (.#include <stdio.h>)(.)/printf $1\\n#include <stdlib.h>\\n$2/' \
 	     Makefile.in
+	# GCC 15 defaults to C17 where () means (void), breaking old K&R lemon.c
+	perl -i -pe 's/^(BCC = .*)/$1 -std=gnu89/' Makefile.in
+	# GCC 15 C17 mode treats isatty() as taking no args, breaking shell.c
+	perl -i -pe 's/extern int isatty\(\);/extern int isatty(int);/' src/shell.c
 	./configure --prefix=/usr/local && make -j && sudo make install
     )
 }
 
+setup_oracle_listener() {
+    # VirtualBox NAT corrupts Oracle TNS packets; use host-only adapter 172.27.27.2 instead.
+    # Vagrantfile adds private_network ip=172.27.27.2; listener must bind to 0.0.0.0.
+    . ~/.passwords
+    sql --showtables oracle://SYSTEM:$VM_ORACLE_PWD@172.27.27.2:1521/FREE > /dev/null &&
+        return 0
+    (cd ~/privat/parallel/testsuite/vagrant-projects/OracleDatabase/26ai-Free
+     vagrant ssh -- bash -s) << 'GUESTEOF'
+sudo sed -i 's/(HOST = localhost)(PORT = 1521)/(HOST = 0.0.0.0)(PORT = 1521)/g' \
+    /opt/oracle/product/26ai/dbhomeFree/network/admin/listener.ora
+sudo -Hu oracle bash -c 'export ORACLE_SID=FREE; export ORACLE_HOME=/opt/oracle/product/26ai/dbhomeFree; export PATH=$PATH:$ORACLE_HOME/bin; lsnrctl stop; sleep 2; lsnrctl start'
+sleep 15
+sudo -Hu oracle bash -c 'export ORACLE_SID=FREE; export ORACLE_HOME=/opt/oracle/product/26ai/dbhomeFree; export PATH=$PATH:$ORACLE_HOME/bin; sqlplus -s / as sysdba <<< "ALTER SYSTEM REGISTER;"'
+GUESTEOF
+    sleep 5
+    sql --showtables oracle://SYSTEM:$VM_ORACLE_PWD@172.27.27.2:1521/FREE > /dev/null
+}
+
 install_oracle_client() {
     . ~/.passwords
-    sql --showtables oracle://SYSTEM:$VM_ORACLE_PWD@/FREE > /dev/null &&
+    sql --showtables oracle://SYSTEM:$VM_ORACLE_PWD@172.27.27.2:1521/FREE > /dev/null &&
 	echo "oracle client installed OK" && return 0
-    # https://salsa.debian.org/perl-team/modules/packages/libdbd-oracle-perl/blob/master/debian/README.Debian
-    # sql oracle:// && return 0
+    # Install Oracle Instant Client 23.7 via zip (compatible with Oracle 26ai)
+    icdir=/opt/oracle/instantclient_23_7
+    icurl=https://download.oracle.com/otn_software/linux/instantclient/2370000
+    sudo mkdir -p /opt/oracle
     (cd /tmp
-
-     get_rpm_install_deb() {
-	 glob="$1"
-	 url="$oracleurl/$2"
-	 testglob="$3"
-	 if [ ! -e `echo $glob*rpm` ] ; then
-	     wget $url
-	 fi
-	 if [ ! -e `echo $glob*deb` ] ; then
-	     echo Convert `echo $glob*rpm` to deb
-	     fakeroot alien `echo $glob*rpm`
-	 fi
-	 if [ ! -e `echo $testglob` ] ; then
-	     echo Install `echo $glob*deb`
-	     sudo dpkg -i `echo $glob*deb`
-	 fi
-     }
-
-     oracleurl=https://download.oracle.com/otn_software/linux/instantclient/19600
-     client=oracle-instantclient19.6
-     ver=19.6.0.0.0-1.x86_64.rpm
-     get_rpm_install_deb 'oracle-instantclient*devel' $client-devel-$ver /usr/share/doc/oracle-instantclient*-devel/copyright
-     get_rpm_install_deb 'oracle-instantclient*basic'   $client-basic-$ver /usr/share/oracle/*/client*/doc/BASIC_README
-     get_rpm_install_deb 'oracle-instantclient*sqlplus' $client-sqlplus-$ver /usr/lib/oracle/*/client*/bin/sqlplus
-    )     
-
-    echo Add this to .bashrc:
-    ORACLE_HOME=`echo /usr/lib/oracle/*/client*`
-    echo ORACLE_HOME=$ORACLE_HOME
+     [ -e instantclient-basic-linux.x64-23.7.0.25.01.zip ] ||
+	 wget $icurl/instantclient-basic-linux.x64-23.7.0.25.01.zip
+     [ -e instantclient-sqlplus-linux.x64-23.7.0.25.01.zip ] ||
+	 wget $icurl/instantclient-sqlplus-linux.x64-23.7.0.25.01.zip
+     [ -e instantclient-sdk-linux.x64-23.7.0.25.01.zip ] ||
+	 wget $icurl/instantclient-sdk-linux.x64-23.7.0.25.01.zip
+     sudo unzip -o instantclient-basic-linux.x64-23.7.0.25.01.zip   -d /opt/oracle
+     sudo unzip -o instantclient-sqlplus-linux.x64-23.7.0.25.01.zip -d /opt/oracle
+     sudo unzip -o instantclient-sdk-linux.x64-23.7.0.25.01.zip     -d /opt/oracle
+    )
+    ORACLE_HOME=$icdir
+    export ORACLE_HOME
+    export PATH=$PATH:$ORACLE_HOME
+    # Register Oracle libs with ldconfig so sqlplus and DBD::Oracle can find them
+    echo $ORACLE_HOME | sudo tee /etc/ld.so.conf.d/oracle.conf
+    sudo ldconfig
+    export LD_LIBRARY_PATH=$ORACLE_HOME:$LD_LIBRARY_PATH
     if grep -q ORACLE_HOME=/ ~/.bashrc; then
 	perl -i.old -pe "s:ORACLE_HOME=/.*:ORACLE_HOME=$ORACLE_HOME:" ~/.bashrc
     else
 	echo ORACLE_HOME=$ORACLE_HOME >> ~/.bashrc
-	echo 'PATH=$PATH:$ORACLE_HOME/bin' >> ~/.bashrc
+	echo 'PATH=$PATH:$ORACLE_HOME' >> ~/.bashrc
 	echo 'export ORACLE_HOME' >> ~/.bashrc
-	echo 'export ORACLE_SID=XE' >> ~/.bashrc
+	echo 'export ORACLE_SID=FREE' >> ~/.bashrc
     fi
-    # libaio
-    sudo apt install libaio1 || sudo apt install libaio1t64
-    sudo ln -s libaio.so.1t64 /usr/lib/x86_64-linux-gnu/libaio.so.1
-    perl -MCPAN -e 'install DBD::Oracle'
+    # crypt.h needed by DBD::Oracle on newer systems
+    sudo apt -y install libcrypt-dev
+    sudo perl -MCPAN -e 'install DBD::Oracle'
 }
 
 install_oracle_server() {
     . ~/.passwords
-    sql --showtables oracle://SYSTEM:$VM_ORACLE_PWD@/FREE > /dev/null &&
+    sql --showtables oracle://SYSTEM:$VM_ORACLE_PWD@172.27.27.2:1521/FREE > /dev/null &&
 	echo "oracle server installed OK" && return 0
     # set up vagrant oracle server
     vagrantid=OracleDatabase/26ai-Free
     git clone https://github.com/oracle/vagrant-projects.git
+    # Remove forwarded_port for Oracle: VBoxHeadless would bind 0.0.0.0:1521 (all interfaces
+    # incl. vboxnet0), causing dual SYN-ACK when connecting to 172.27.27.2:1521 - VBoxHeadless
+    # responds first, then the Oracle VM responds too; TCP race condition corrupts Oracle TNS.
+    sed -i '/config.vm.network "forwarded_port".*VM_LISTENER_PORT/d' \
+	vagrant-projects/"$vagrantid"/Vagrantfile
     (
 	cd vagrant-projects/"$vagrantid"
-	echo export VM_ORACLE_PWD=`goodpasswd` >> ~/.passwords
-	echo export 'ORACLE_PWD=$VM_ORACLE_PWD' >> ~/.passwords
+	grep -q VM_ORACLE_PWD= ~/.passwords || {
+	    echo export VM_ORACLE_PWD=`goodpasswd` >> ~/.passwords
+	    echo export 'ORACLE_PWD=$VM_ORACLE_PWD' >> ~/.passwords
+	}
 	. ~/.passwords
 	vagrant up
 	# test it works:
-	sql --showtables oracle://SYSTEM:$VM_ORACLE_PWD@/FREE &&
+	sql --showtables oracle://SYSTEM:$VM_ORACLE_PWD@172.27.27.2:1521/FREE &&
 	    (
 		# Pack as box
 		(
@@ -234,8 +256,15 @@ setup_databases() {
 	sudo sql "$dburl" "GRANT ALL PRIVILEGES ON $me.* TO '$me'@'localhost';"
 	sudo sql "$dburl" "FLUSH PRIVILEGES;"	
     }
+    add_to_aliases() {
+	(cat ~/.sql/aliases; echo :mysqlunittest mysql:///) |
+	    puniq > ~/.sql/aliases.new
+	mv ~/.sql/aliases.new ~/.sql/aliases
+	chmod 600 ~/.sql/aliases
+    }
     (test_postgres || (setup_postgres && test_postgres) ) &&
-    (test_mysql || (setup_mysql && test_mysql) )
+	(test_mysql || (setup_mysql && test_mysql) ) &&
+	add_to_aliases
 }
 
 setup_virtual_box_network() {
@@ -325,7 +354,7 @@ vagrant_up() {
 	vm=$1
 	echo Testing $vm
 	# If "ssh" works, then "vagrant ssh" probably also works
-	timeout 10 ssh vagrant@$vm echo ssh vagrant@$vm OK && return 0
+	timeout 10 ssh -n vagrant@$vm echo ssh vagrant@$vm OK && return 0
 	cd "$2" || return 1
 	vagrant ssh -c "echo 'vagrant ssh $vm OK'" && return 0
 	# Fetch .box and do any special config
@@ -357,15 +386,20 @@ vagrant_centos3() {
 	echo '  GSSAPIAuthentication no'
 	echo '  KexAlgorithms +diffie-hellman-group1-sha1'
 	echo '  Ciphers +3des-cbc,aes128-cbc,aes192-cbc,aes256-cbc'
-	echo '  HostKeyAlgorithms +ssh-rsa,ssh-dss'
-	echo '  PubkeyAcceptedKeyTypes +ssh-rsa,ssh-dss'
+	echo '  HostKeyAlgorithms +ssh-rsa'
+	echo '  PubkeyAcceptedKeyTypes +ssh-rsa'
 
+	# user vagrant required; ssh-dss omitted: removed in OpenSSH 10.2+
+	echo
+	echo 'Host centos3'
+	echo '  user vagrant'
+	echo '  HostKeyAlgorithms +ssh-rsa'
     ) >> ~/.ssh/config
     (
 	echo KexAlgorithms +diffie-hellman-group1-sha1,curve25519-sha256@libssh.org,ecdh-sha2-nistp256,ecdh-sha2-nistp384,ecdh-sha2-nistp521,diffie-hellman-group-exchange-sha256,diffie-hellman-group14-sha1
 	echo Ciphers +3des-cbc,aes128-cbc,aes192-cbc,aes256-cbc,aes128-ctr,aes192-ctr,aes256-ctr,aes128-gcm@openssh.com,aes256-gcm@openssh.com,chacha20-poly1305@openssh.com
-	echo HostKeyAlgorithms +ssh-rsa,ssh-dss
-	echo PubkeyAcceptedKeyTypes +ssh-rsa,ssh-dss
+	echo HostKeyAlgorithms +ssh-rsa
+	echo PubkeyAcceptedKeyTypes +ssh-rsa
 	echo MaxStartups 100:30:1000
 	echo MaxAuthTries 10
     ) | sudo tee /etc/ssh/sshd_config.d/parallel.conf > /dev/null
@@ -503,20 +537,20 @@ create_shell_logins() {
 	fi
 	sudo adduser --shell $loginshell --disabled-password --gecos "$shell for parallel,,," $shell &&
 	    echo "$shell:$SSHPASS" | sudo chpasswd &&
-	    sshpass -e ssh-copy-id $shell@lo &&
+	    sshpass -e ssh-copy-id -o StrictHostKeyChecking=accept-new $shell@lo &&
 	    echo "$shell created"
     }
     export -f del_add_user
     grep_not_OK() {
 	shell="$1"
-	timeout 30 ssh $shell@lo echo ssh $shell@lo OK >&2 ||
+	timeout 30 ssh -o BatchMode=yes $shell@lo echo ssh $shell@lo OK >&2 ||
 	    echo $shell
     }
     export -f grep_not_OK
 
     echo '# (Re-)create user'
     # Racecondition: if multiple adds a group it will the same group ID
-    (shellsplus; echo withpassword) | parallel -j200% grep_not_OK |
+    (shellsplus; echo withpassword) | parallel -j200% grep_not_OK | sort |
 	parallel --lb --halt soon,fail=1 --timeout 1000% --retries 5 --tag -j1 del_add_user ||
 	(echo Creation failed: $?; false)
     # Homedir must be readable by others
@@ -549,7 +583,7 @@ copy_ssh_keys() {
     export -f make_sshkey
     grep_not_OK() {
 	shell="$1"
-	timeout 30 ssh $shell@lo "ls .parallel/will-cite >/dev/null && echo ssh $shell@lo OK" >&2 ||
+	timeout 30 ssh -o BatchMode=yes $shell@lo "ls .parallel/will-cite >/dev/null && echo ssh $shell@lo OK" >&2 ||
 	    echo $shell
     }
     export -f grep_not_OK
@@ -630,6 +664,7 @@ lsh_setup() {
 	    --capture-to ~/.lsh/host-acls -l $user $server echo Added host-auth
 	rm -f .lsh/identity .lsh/identity.pub
 	lsh-keygen | lsh-writekey -c none
+	lsh-export-key --openssh < ~/.lsh/identity.pub > ~/.ssh/lsh.pub
 	export_key_to_local_users() {
 	    lsh-export-key --openssh < ~/.lsh/identity.pub |
 		ssh -l $1 $2 'cat >>.ssh/authorized_keys'
@@ -715,7 +750,7 @@ bash_versions() {
 	 cd $1
 	 git reset --hard
 	 git checkout $1
-	 LDFLAGS=-static ./configure &&
+	 LDFLAGS=-static CFLAGS="-g -O2 -std=gnu89" CFLAGS_FOR_BUILD="-g -std=gnu89" ./configure &&
 	     make -j2 &&
 	     sudo cp bash /usr/local/bin/$1
      }
@@ -738,11 +773,11 @@ rsync_versions() {
      }
      make_one() {
 	 configure_make_install() {
-	     ./configure && make -j2 &&
+	     CFLAGS="${CFLAGS} -std=gnu89 -Wno-error=discarded-qualifiers" ./configure && make -j2 &&
 		 sudo cp rsync /usr/local/bin/rsync-$1
 	 }
 	 configure_make_proto_install() {
-	     ./configure && make proto && make -j2 &&
+	     CFLAGS="${CFLAGS} -std=gnu89" ./configure && make proto && make -j2 &&
 		 sudo cp rsync /usr/local/bin/rsync-$1
 	 }
 	 edit_configure.in() {
@@ -780,7 +815,7 @@ rsync_versions() {
 	     # strlcat strlcpy 
 	     perl -i -pe 's/void (strlc..)/void _$1/' util.c
 	     # Force FNM_CASEFOLD to be set
-	     export CFLAGS='-Wno-incompatible-pointer-types -D_GNU_SOURCE=1'
+	     export CFLAGS='-Wno-incompatible-pointer-types -D_GNU_SOURCE=1 -std=gnu89'
 	     configure_make_proto_install $1
 	 }
 	 build-v3.0.0() {
@@ -809,6 +844,23 @@ rsync_versions() {
     )
 }
 
+install_fsharpi() {
+    fsharpi --version >/dev/null 2>&1 && return 0
+    sudo apt -y install dotnet-sdk-10.0
+    sudo tee /usr/bin/fsharpi >/dev/null << 'WRAPPER'
+#!/bin/bash
+if [[ -n "$1" && -f "$1" && "$1" != *.fsx && "$1" != *.fsscript && "$1" != *.fs && "$1" != *.fsi ]]; then
+    tmp=$(mktemp /tmp/fsharpi-XXXXXX.fsx)
+    trap "rm -f $tmp" EXIT
+    cp "$1" "$tmp"
+    shift
+    exec dotnet fsi --exec "$tmp" "$@"
+fi
+exec dotnet fsi "$@"
+WRAPPER
+    sudo chmod +x /usr/bin/fsharpi
+}
+
 install_tangetools() {
     stdout echo "tangetools installed OK" && return 0
     (
@@ -832,7 +884,6 @@ misc() {
     echo "export withpassword=$p" >> ~/.passwords
 
     echo TODO
-    echo 'set $withpassword'
     echo 'set $mysqlrootpassword in .passwords'
     echo '~/.sql/aliases'
     echo 'python install python-is-python3'
@@ -841,13 +892,15 @@ misc() {
 run() {
     install_packages &&
 	# fast
+	install_fsharpi &&
+	# fast
 	install_tangetools &&
 	# fast
 	install_sqlite2 &&
 	# fast
-	install_oracle_server &&
-	# fast
 	install_oracle_client &&
+	# fast
+	install_oracle_server &&
 	# fast
 	setup_databases &&
 	# fast
@@ -856,6 +909,8 @@ run() {
 	add_server_to_hosts &&
 	# fast
 	vagrant_up &&
+	# fast
+	setup_oracle_listener &&
 	# fast
 	vagrant_centos3 &&
 	# fast
@@ -881,7 +936,8 @@ run() {
 
 run2() {
     install_packages 
-	install_tangetools 
+	install_fsharpi
+	install_tangetools
 	install_sqlite2 
 	install_oracle_client 
 	install_oracle_server 

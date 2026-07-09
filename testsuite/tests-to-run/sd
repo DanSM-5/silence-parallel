@@ -1,0 +1,31 @@
+groupcol() {
+    export groupcol=$1
+    export n=$2
+    export sorted=$(mktemp)
+    # Sort on grouping column
+    parsort -k${groupcol}n testfile > "$sorted"
+    headtail() { (head -n1;tail -n1); }
+    export -f headtail
+    # wrapper functions for -v below
+    _ppart() { headtail; }
+    export -f _ppart
+    _pipe() { headtail; }
+    export -f _pipe
+    pipepart() {
+	ppar $n -k --groupby $groupcol --colsep ' ' -v --pipepart -a "$sorted" _ppart
+    }
+    pipe() {
+	ppar $n -k --groupby $groupcol --colsep ' ' -v < "$sorted" _pipe
+    }
+    export -f pipepart pipe
+    . `which env_parallel.bash`
+    # Do the same with --pipe and --pipepart
+    parset a,b -k ::: pipe pipepart
+    paste <(echo "$a") <(echo "$b")
+    rm "$sorted"
+}
+export -f groupcol
+
+seq 1 1000000 | awk '{print int(10*rand()),int(100*rand()),int(14*rand())}' > testfile
+
+parallel --jl /tmp/jl -k --tag groupcol ::: 1 2 3 ::: '' -n1 -n2 -n3 -n4 -n5
