@@ -6627,7 +6627,7 @@ sub usage() {
 	 "scientific publication, please cite:",
 	 "",
 	 "  Tange, O. (2026, July 22). GNU Parallel 20260722 ('Chat Control').",
-	 "  Zenodo. https://doi.org/10.5281/zenodo.4381888",
+	 "  Zenodo. https://doi.org/10.5281/zenodo.21476260",
 	 "",
 	 # Before changing these lines,  please read
 	 # https://www.gnu.org/software/parallel/parallel_design.html#citation-notice
@@ -6676,7 +6676,7 @@ sub citation_notice() {
 		 "scientific publication, please cite:",
 		 "",
 		 "  Tange, O. (2026, July 22). GNU Parallel 20260722 ('Chat Control').",
-		 "  Zenodo. https://doi.org/10.5281/zenodo.4381888",
+		 "  Zenodo. https://doi.org/10.5281/zenodo.21476260",
 		 "",
 		 # Before changing the code to block printing the citation notice
 		 # if the user has not accepted to cite, please read:
@@ -6789,7 +6789,7 @@ sub citation() {
 	"If you use programs that use GNU Parallel to process data for an article in a",
 	"scientific publication, please cite:",
 	"",
-	"\@software{tange_2026_4381888,",
+	"\@software{tange_2026_21476260,",
 	"      author       = {Tange, Ole},",
 	"      title        = {GNU Parallel 20260722 ('Chat Control')},",
 	"      month        = Jul,",
@@ -6798,11 +6798,11 @@ sub citation() {
 	"                       multiple serial command line programs in parallel",
 	"                       without changing them.}},",
 	"      publisher    = {Zenodo},",
-	"      doi          = {10.5281/zenodo.4381888},",
-	"      url          = {https://doi.org/10.5281/zenodo.4381888}",
+	"      doi          = {10.5281/zenodo.21476260},",
+	"      url          = {https://doi.org/10.5281/zenodo.21476260}",
 	"}",
 	"",
-	"(Feel free to use \\nocite{tange_2026_4381888})",
+	"(Feel free to use \\nocite{tange_2026_21476260})",
 	"",
 	# Before changing the code to block printing the citation notice
 	# if the user has not accepted to cite, please read:
