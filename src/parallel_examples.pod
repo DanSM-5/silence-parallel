@@ -1709,6 +1709,33 @@ can read into R or LibreCalc, then you can use B<--results>:
   > write(as.character(mydf[2,c("Stdout")]),'')
 
 
+=head2 EXAMPLE: Use JSON as input
+
+JSON often has a structure like:
+
+  {
+    "header": "data",
+    "thelist": [
+      {
+        "element": 1
+      },
+      {
+        "element": 2
+      },
+      {
+        "element": 3
+      }
+    ],
+    "footer": "data"
+  }
+
+Use B<jq -c> to extract each element of I<thelist> on a single line
+and {%jq:expr%} to extract the value from each element:
+
+  cat json | jq -c '.thelist[]' | \
+    parallel --plus echo {%jq:.element%}
+
+
 =head2 EXAMPLE: Use XML as input
 
 The show Aflyttet on Radio 24syv publishes an RSS feed with their audio

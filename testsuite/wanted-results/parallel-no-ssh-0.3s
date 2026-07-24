@@ -150,7 +150,7 @@ par_dirnamereplace	. a
 par_dirnamereplace	a a/b
 par_dirnamereplace	a/b a/b/c
 par_disk_full	### Disk full
-par_disk_full	cat: /dev/zero: No space left on device
+par_disk_full	cat: write error: No space left on device
 par_disk_full	parallel: Error: Output is incomplete.
 par_disk_full	parallel: Error: Cannot append to buffer file in /mnt/ram.
 par_disk_full	parallel: Error: Is the disk full?

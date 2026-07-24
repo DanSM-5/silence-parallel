@@ -3451,6 +3451,22 @@ sub init_globals() {
 	 '{hgrp}' => '1 $_="\${PARALLEL_HOSTGROUPS}";uq()',
 	 # {agrp} = hostgroups of the argument
 	 '{agrp}' => '1 $_="\${PARALLEL_ARGHOSTGROUPS}";uq()',
+	 # {%jq: ... %} = jq expression
+	 # ex. '{%jq:result: [.type]%}' = jq '{result: [.type]}'
+	 '{%jq:(.*?)%}' =>
+	 q{
+	     # Arrays are joined by $IFS
+	     my $ifs = $ENV{IFS} || " ";
+	     my $pid = ::open3(my $in, my $out, my $err, "jq", "-rc",
+			       "$$1 | if type == \"array\" then join(\"$ifs\") else . // \"\" end") or
+		 die "Could not open pipe to jq!";
+	     print $in $_; close $in;
+	     my $jqout = <$out>; chomp $jqout; close $out;
+	     waitpid $pid, 0;
+	     if($?) {
+		 $job->skip() < 1 and warn "jq failed $$1 on: '$_'\n";
+	     } else { $_ = $jqout; }
+	 },
 	);
     # Modifiable copy of %Global::replace
     %Global::rpl = %Global::replace;
@@ -14540,7 +14556,8 @@ sub replace_placeholders($$$$) {
 sub skip($) {
     # Skip this job
     my $self = shift;
-    $self->{'skip'} = 1;
+    # Called this number of times
+    $self->{'skip'}++;
 }
 
 

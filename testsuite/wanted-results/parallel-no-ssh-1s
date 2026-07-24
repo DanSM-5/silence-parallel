@@ -411,6 +411,25 @@ par_jobslot_jobnumber_pipe	1
 par_jobslot_jobnumber_pipe	1
 par_jobslot_jobnumber_pipe	1
 par_jobslot_jobnumber_pipe	1
+par_jq	jq failed .type on: 'Invalid JSON'
+par_jq	other-val-is-null 
+par_jq	jq failed  .data."id  2"  on: '{More garbage'
+par_jq	success two  spaces
+par_jq	Broken due to space splitting into two tokens (is it important?):
+par_jq	{%jq: .type%} Invalid JSON
+par_jq	{%jq: .type%} {"type": "other-val-is-null"}
+par_jq	{%jq: .type%} {More garbage
+par_jq	{%jq: .type%} {  "type": "success",  "message": "Operation completed",  "data": {    "id  2": "two  spaces"  }}
+par_jq	Tags sep=space
+par_jq	123	DataID=123 | CustomerID=456 | Tags='billing urgent'
+par_jq	124	DataID=124 | CustomerID=457 | Tags=billing
+par_jq	125	DataID=125 | CustomerID='' | Tags='critical refund'
+par_jq	Tags sep=,
+par_jq	123	DataID=123 | CustomerID=456 | Tags(,)='billing,urgent'
+par_jq	124	DataID=124 | CustomerID=457 | Tags(,)=billing
+par_jq	125	DataID=125 | CustomerID='' | Tags(,)='critical,refund'
+par_jq	Syntax error in jq expression
+par_jq	jq failed syntax)error) on: '{"type":"success","message":"Operation\ncompleted successfully","data":{"id":123,"customer":{"id":456,"tier":"premium"},"tags":["billing","urgent"],"amount":299.95,"completed_at":"2026-07-25T06:30:12Z"},"metrics":{"duration_ms":1247,"retries":0}}'
 par_keep_order	### Bug made 4 5 go before 1 2 3
 par_keep_order	1
 par_keep_order	2

@@ -2315,7 +2315,7 @@ Example wrapper script running as root:
 See also: B<--profile>
 
 
-=item B<--plus>
+=item B<--plus> (alpha testing)
 
 Add more replacement strings.
 
@@ -2368,6 +2368,15 @@ inspired by bash's parameter expansion:
   {^^str}        uppercase str
   {,str}         lowercase str if found at the start
   {,,str}        lowercase str
+
+For JSON processing:
+
+  {%jq:expr%}    B<jq> expression for extracting JSON fields
+
+'null' is replaced by ''. If the field is an array, the string $IFS
+will be use used to join them: ["foo", "bar"] becomes foo bar.
+
+{%jq:expr%} adds ~5 ms per job: It spawns B<jq> for each line.
 
 See also: B<--rpl> B<{}>
 

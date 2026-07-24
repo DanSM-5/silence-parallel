@@ -1,2 +1,0 @@
-parallel -j60 -t seq 100000 '>' {} ::: *
-perl ~/perl/parcat-thread-arr * | pv |wc -c
