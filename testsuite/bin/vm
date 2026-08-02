@@ -12,16 +12,29 @@ vbox_preflight() {
     lsmod | grep -q vboxdrv    || sudo modprobe vboxdrv
     lsmod | grep -q vboxnetflt || sudo modprobe vboxnetflt
     lsmod | grep -q vboxnetadp || sudo modprobe vboxnetadp
-    # Kill duplicate VBoxSVC processes; multiple instances cause VBoxManage to hang
-    local lockpid
-    lockpid=$(cat /tmp/.vbox-"$USER"-ipc/lock 2>/dev/null)
-    # lock file content is not always a clean PID (can contain stray VBoxHeadless
-    # output); only act on it when it actually parses as one, and match it quoted
-    # so it can never be word-split or read as a grep pattern.
-    case "$lockpid" in
-	''|*[!0-9]*) : ;;
-	*) pgrep -x VBoxSVC | grep -vx "$lockpid" | xargs -r kill ;;
-    esac
+    # Kill duplicate VBoxSVC processes; multiple instances cause VBoxManage to hang.
+    # Always keep the OLDEST instance and kill only newer ones. VBoxSVC runs with
+    # --auto-shutdown (exits when idle, respawns on demand); under concurrent
+    # `bin/vm start` (make startvm runs -j0) the lock file can transiently point to
+    # a freshly-respawned instance while the old one still holds every live VM
+    # session, so trusting the lock file here would kill the wrong one and take
+    # down all running VMs. Preserving the oldest is safe regardless of how many
+    # of these run concurrently.
+    local pids pid age oldest_pid oldest_age
+    pids=$(pgrep -x VBoxSVC)
+    [ "$(printf '%s\n' "$pids" | grep -c .)" -gt 1 ] || return 0
+    oldest_pid=
+    oldest_age=-1
+    for pid in $pids; do
+	age=$(ps -o etimes= -p "$pid" 2>/dev/null | tr -d ' ')
+	if [ -n "$age" ] && [ "$age" -gt "$oldest_age" ]; then
+	    oldest_age=$age
+	    oldest_pid=$pid
+	fi
+    done
+    for pid in $pids; do
+	[ "$pid" = "$oldest_pid" ] || kill "$pid"
+    done
 }
 
 start() {
@@ -89,7 +102,8 @@ start() {
 	    fi
 	    # If still unreachable (e.g. VirtualBox host-only ARP broken on first up), do a clean restart
 	    if ! cleanping $vm; then
-		DISPLAY= timeout 60 vagrant halt
+		# zerofill/compress must only run on a manually requested halt, not this internal recovery halt
+		NO_ZEROFILL=1 DISPLAY= timeout 60 vagrant halt
 		DISPLAY= timeout 300 vagrant up
 		if is_centos3 ; then
 		    centos3_configure_eth1
@@ -262,16 +276,30 @@ sync_vagrant_id() {
     printf '%s' "$uuid" > "$idfile"
 }
 
+resume_if_paused() {
+    # vagrant up fails outright on a paused VM ("entered an invalid state");
+    # resume it directly via VBoxManage so the normal start flow can proceed.
+    local vm=$1
+    local id
+    id=$(cat ".vagrant/machines/default/virtualbox/id" 2>/dev/null)
+    [ -n "$id" ] || return 0
+    if VBoxManage showvminfo "$id" --machinereadable 2>/dev/null | grep -q '^VMState="paused"'; then
+	echo "$vm is paused - resuming"
+	VBoxManage controlvm "$id" resume 2>/dev/null
+    fi
+}
+
 cdvm() {
     vm=$1
     if cd vagrant*/*/$vm ; then
 	sync_vagrant_id $vm
+	resume_if_paused $vm
 	true
     else
 	echo $vm dir not found
 	false
     fi
-}    
+}
 
 cleanping() {
     host=$1
