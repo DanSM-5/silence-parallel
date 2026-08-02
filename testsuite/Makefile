@@ -161,6 +161,7 @@ startvm:
 	touch vagrant/authorized_keys
 	sort -u ~/.ssh/*.pub vagrant/authorized_keys > vagrant/authorized_keys.
 	mv vagrant/authorized_keys. vagrant/authorized_keys
+	bin/vm cleanorphans ${namedservers}
 	parallel -j0 --delay 0.2 --plus --tagstring '/|\ {0#} {}' --lb --timeout 300 bin/vm start ::: ${servers}
 
 stopvm:

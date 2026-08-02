@@ -323,5 +323,34 @@ pingsshok() {
     cleanping $host && sshok $host
 }
 
+cleanorphans() {
+    # Remove stale VirtualBox registrations left behind by earlier startvm
+    # runs. Every `vagrant up` on a box with no prior/matching machine ID
+    # registers a *new* VM (name pattern: <vmname>_default_<timestamp>_<rand>)
+    # instead of replacing the old one, so repeated destroy/recreate cycles
+    # (or vagrant losing track of a machine) pile up orphaned registrations
+    # over time -- these are pure cruft: not referenced by any Vagrantfile,
+    # and can even block a current VM's fixed port (seen with freebsd13).
+    #
+    # For each name passed in, only ever removes a registration that:
+    #   - matches "<name>_default_" (never touches unrelated/manually-made VMs)
+    #   - is NOT the box's current vagrant instance (per .vagrant/.../id)
+    #   - is not currently running/paused/saved (never touches a live VM)
+    local vm current_id line uuid state
+    for vm in "$@"; do
+	current_id=$(cat vagrant*/*/"$vm"/.vagrant/machines/default/virtualbox/id 2>/dev/null)
+	VBoxManage list vms 2>/dev/null | grep "^\"${vm}_default_" | while read -r line; do
+	    uuid=$(echo "$line" | grep -oP '\{[^}]+\}' | tr -d '{}')
+	    [ "$uuid" = "$current_id" ] && continue
+	    state=$(VBoxManage showvminfo "$uuid" --machinereadable 2>/dev/null | grep -oP '^VMState="\K[^"]+')
+	    case "$state" in
+		running|paused|saved) : ;;
+		*) echo "cleanorphans: removing stale $vm registration $uuid ($state)"
+		   VBoxManage unregistervm "$uuid" --delete 2>/dev/null ;;
+	    esac
+	done
+    done
+}
+
 "$@"
 
