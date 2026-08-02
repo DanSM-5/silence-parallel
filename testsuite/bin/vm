@@ -44,9 +44,25 @@ start() {
 	echo $vm | grep -q centos3
     }
     centos3_configure_eth1() {
-	cat ../../authorized_keys | vagrant ssh -c "cat >>.ssh/authorized_keys"
-	test -f ~/.lsh/identity.pub && lsh-export-key --openssh < ~/.lsh/identity.pub | vagrant ssh -c "cat >>.ssh/authorized_keys"
-	vagrant ssh -c "sudo /sbin/ifconfig eth1 172.27.27.3"
+	cat ../../authorized_keys | DISPLAY= timeout 30 vagrant ssh -c "cat >>.ssh/authorized_keys"
+	test -f ~/.lsh/identity.pub && lsh-export-key --openssh < ~/.lsh/identity.pub | DISPLAY= timeout 30 vagrant ssh -c "cat >>.ssh/authorized_keys"
+	DISPLAY= timeout 30 vagrant ssh -c "sudo /sbin/ifconfig eth1 172.27.27.3"
+    }
+    vagrant_up_racing_ssh() {
+	# vagrant's own boot-detection is unreliable/slow for this box: it
+	# reports a boot_timeout error even though the VM actually finishes
+	# booting fine moments later. Race a backgrounded `vagrant up` against
+	# our own lightweight `vagrant ssh -- true` poll (NAT-based -- doesn't
+	# need eth1's static IP, which centos3_configure_eth1 sets up only
+	# afterward) and return as soon as that succeeds, instead of waiting
+	# on vagrant's own (untrustworthy) up-time boot-wait verdict.
+	( DISPLAY= timeout 300 vagrant up >/dev/null 2>&1 ) &
+	local i
+	for i in $(seq 1 150); do
+	    DISPLAY= timeout 5 vagrant ssh -- true 2>/dev/null && return 0
+	    sleep 2
+	done
+	return 1
     }
     push_authorized_keys() {
 	# VM is up but SSH auth fails - push keys via vagrant's built-in key.
@@ -95,7 +111,7 @@ start() {
 		fi
 	    else
 		echo vagrant up $vm
-		DISPLAY= timeout 300 vagrant up
+		if is_centos3; then vagrant_up_racing_ssh; else DISPLAY= timeout 300 vagrant up; fi
 		if is_centos3 ; then
 		    centos3_configure_eth1
 		fi
@@ -104,7 +120,7 @@ start() {
 	    if ! cleanping $vm; then
 		# zerofill/compress must only run on a manually requested halt, not this internal recovery halt
 		NO_ZEROFILL=1 DISPLAY= timeout 60 vagrant halt
-		DISPLAY= timeout 300 vagrant up
+		if is_centos3; then vagrant_up_racing_ssh; else DISPLAY= timeout 300 vagrant up; fi
 		if is_centos3 ; then
 		    centos3_configure_eth1
 		fi
