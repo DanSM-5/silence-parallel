@@ -43,6 +43,9 @@ start() {
     is_centos3() {
 	echo $vm | grep -q centos3
     }
+    is_freebsd() {
+	echo $vm | grep -q '^freebsd'
+    }
     centos3_configure_eth1() {
 	cat ../../authorized_keys | DISPLAY= timeout 30 vagrant ssh -c "cat >>.ssh/authorized_keys"
 	test -f ~/.lsh/identity.pub && lsh-export-key --openssh < ~/.lsh/identity.pub | DISPLAY= timeout 30 vagrant ssh -c "cat >>.ssh/authorized_keys"
@@ -101,28 +104,44 @@ start() {
     else
 	# Server does not respond to ping
 	if cdvm $vm ; then
-	    if DISPLAY= timeout 60 vagrant ssh -- true 2>/dev/null; then
-		# VM is running but has wrong network IP - fix it
-		if is_centos3; then
-		    centos3_configure_eth1
-		else
-		    ip=$(getent hosts "$vm" | awk '{print $1}')
-		    DISPLAY= timeout 60 vagrant ssh -- "iface=\$(ifconfig -l 2>/dev/null | tr ' ' '\\n' | grep -v '^lo' | sed -n '2p'); [ -z \"\$iface\" ] && iface=\$(ip -o link show 2>/dev/null | awk -F'[ :]+' '\$2!=\"lo\"{a[++n]=\$2}END{print a[2]}'); sudo ifconfig \$iface $ip netmask 255.255.255.0 2>/dev/null || (sudo ip addr flush dev \$iface 2>/dev/null; sudo ip addr add $ip/24 dev \$iface)" 2>/dev/null
-		fi
-	    else
-		echo vagrant up $vm
-		if is_centos3; then vagrant_up_racing_ssh; else DISPLAY= timeout 300 vagrant up; fi
-		if is_centos3 ; then
-		    centos3_configure_eth1
-		fi
+	    # A killed/crashed VBoxHeadless (e.g. `killall -9 VBoxHeadless`,
+	    # a host reboot, or an unclean shutdown mid network-provision) can
+	    # truncate the guest's /etc/rc.conf to zero bytes - wiping not
+	    # just the vagrant-managed static IP but the box's baked-in
+	    # ifconfig_em0=SYNCDHCP/sshd_enable defaults too. No vagrant
+	    # up/halt cycle can fix a problem that lives on disk, and
+	    # vagrant's own `up` has independently been flaky here (spurious
+	    # forwarded-port collisions) - so for an already-created freebsd
+	    # box, boot/repair it directly instead and skip vagrant's `up`
+	    # entirely. Only falls through to the vagrant-based path below if
+	    # that's not possible (e.g. the box was never created).
+	    if is_freebsd; then
+		repair_freebsd_rcconf $vm
 	    fi
-	    # If still unreachable (e.g. VirtualBox host-only ARP broken on first up), do a clean restart
 	    if ! cleanping $vm; then
-		# zerofill/compress must only run on a manually requested halt, not this internal recovery halt
-		NO_ZEROFILL=1 DISPLAY= timeout 60 vagrant halt
-		if is_centos3; then vagrant_up_racing_ssh; else DISPLAY= timeout 300 vagrant up; fi
-		if is_centos3 ; then
-		    centos3_configure_eth1
+		if DISPLAY= timeout 60 vagrant ssh -- true 2>/dev/null; then
+		    # VM is running but has wrong network IP - fix it
+		    if is_centos3; then
+			centos3_configure_eth1
+		    else
+			ip=$(getent hosts "$vm" | awk '{print $1}')
+			DISPLAY= timeout 60 vagrant ssh -- "iface=\$(ifconfig -l 2>/dev/null | tr ' ' '\\n' | grep -v '^lo' | sed -n '2p'); [ -z \"\$iface\" ] && iface=\$(ip -o link show 2>/dev/null | awk -F'[ :]+' '\$2!=\"lo\"{a[++n]=\$2}END{print a[2]}'); sudo ifconfig \$iface $ip netmask 255.255.255.0 2>/dev/null || (sudo ip addr flush dev \$iface 2>/dev/null; sudo ip addr add $ip/24 dev \$iface)" 2>/dev/null
+		    fi
+		else
+		    echo vagrant up $vm
+		    if is_centos3; then vagrant_up_racing_ssh; else DISPLAY= timeout 300 vagrant up; fi
+		    if is_centos3 ; then
+			centos3_configure_eth1
+		    fi
+		fi
+		# If still unreachable (e.g. VirtualBox host-only ARP broken on first up), do a clean restart
+		if ! cleanping $vm; then
+		    # zerofill/compress must only run on a manually requested halt, not this internal recovery halt
+		    NO_ZEROFILL=1 DISPLAY= timeout 60 vagrant halt
+		    if is_centos3; then vagrant_up_racing_ssh; else DISPLAY= timeout 300 vagrant up; fi
+		    if is_centos3 ; then
+			centos3_configure_eth1
+		    fi
 		fi
 	    fi
 	    stdout ssh-keygen -R $vm
@@ -290,6 +309,90 @@ sync_vagrant_id() {
     [ -n "$uuid" ] || return 0
     mkdir -p "$(dirname "$idfile")"
     printf '%s' "$uuid" > "$idfile"
+}
+
+repair_freebsd_rcconf() {
+    # Recovers a FreeBSD guest whose /etc/rc.conf got zeroed out (see the
+    # comment at the start() call site). Boots the VM directly via
+    # VBoxManage if needed (skipping vagrant's own flaky `up`), then polls
+    # rather than guessing at a wait: a healthy boot reaches a working
+    # sshd in ~30s on this host (measured directly - see session notes),
+    # so wait only whatever's left of a 2x-margin budget beyond however
+    # long VBox says the VM has already been running, polling cleanping
+    # the whole time in case rc.conf actually survived this time. Only if
+    # that budget is exhausted do we conclude it's genuinely wiped and
+    # fall back to blind keystroke injection via the console: safe even
+    # if mistakenly typed at an already-active shell (worst case, two
+    # harmless "command not found" lines), and the repair commands
+    # themselves are idempotent. Assumes cwd is already the vm's vagrant
+    # directory (caller is inside `if cdvm $vm`).
+    local vm=$1
+    local uuid ip rc b64 state i running_since now budget remaining
+    uuid=$(cat .vagrant/machines/default/virtualbox/id 2>/dev/null)
+    [ -n "$uuid" ] || return 1
+    ip=$(getent hosts "$vm" | awk '{print $1}')
+    [ -n "$ip" ] || return 1
+
+    state=$(VBoxManage showvminfo "$uuid" --machinereadable 2>/dev/null | sed -n 's/^VMState="\(.*\)"$/\1/p')
+    if [ "$state" != "running" ]; then
+	VBoxManage startvm "$uuid" --type headless >/dev/null 2>&1
+	for i in $(seq 1 15); do
+	    state=$(VBoxManage showvminfo "$uuid" --machinereadable 2>/dev/null | sed -n 's/^VMState="\(.*\)"$/\1/p')
+	    [ "$state" = "running" ] && break
+	    sleep 1
+	done
+	[ "$state" = "running" ] || return 1
+    fi
+
+    running_since=$(VBoxManage showvminfo "$uuid" --machinereadable 2>/dev/null |
+	sed -n 's/^VMStateChangeTime="\(.*\)"$/\1/p' | xargs -I{} date -u -d {} +%s 2>/dev/null)
+    now=$(date +%s)
+    budget=60
+    remaining=$budget
+    [ -n "$running_since" ] && remaining=$(( budget - (now - running_since) ))
+    [ "$remaining" -lt 5 ] && remaining=5
+    i=0
+    while [ "$i" -lt "$remaining" ]; do
+	cleanping $vm >/dev/null 2>&1 && return 0
+	sleep 3
+	i=$(( i + 3 ))
+    done
+
+    rc=$(cat <<-RCCONF
+	ifconfig_DEFAULT="SYNCDHCP"
+	ifconfig_em0="SYNCDHCP"
+	ipv6_network_interfaces="none"
+	sshd_enable="YES"
+	dumpdev="NO"
+	firstboot_growfs_enable="YES"
+	firstboot_pkgs_enable="YES"
+	vboxguest_enable="YES"
+	vboxservice_enable="YES"
+	rpcbind_enable="YES"
+	rpc_lockd_enable="YES"
+	nfs_client_enable="YES"
+	#VAGRANT-BEGIN
+	ifconfig_em1="inet $ip netmask 255.255.255.0"
+	#VAGRANT-END
+	RCCONF
+	)
+    b64=$(printf '%s\n' "$rc" | base64 -w0)
+    VBoxManage controlvm "$uuid" keyboardputstring "vagrant" >/dev/null 2>&1
+    VBoxManage controlvm "$uuid" keyboardputscancode 1c 9c >/dev/null 2>&1
+    sleep 1
+    VBoxManage controlvm "$uuid" keyboardputstring "vagrant" >/dev/null 2>&1
+    VBoxManage controlvm "$uuid" keyboardputscancode 1c 9c >/dev/null 2>&1
+    sleep 2
+    VBoxManage controlvm "$uuid" keyboardputstring \
+	"echo $b64 | openssl base64 -d -out /tmp/rc.conf.repaired && sudo cp /tmp/rc.conf.repaired /etc/rc.conf && sudo service netif restart >/dev/null 2>&1 ; sudo service routing restart >/dev/null 2>&1 ; sudo service sshd restart >/dev/null 2>&1" \
+	>/dev/null 2>&1
+    VBoxManage controlvm "$uuid" keyboardputscancode 1c 9c >/dev/null 2>&1
+
+    for i in $(seq 1 10); do
+	cleanping $vm >/dev/null 2>&1 && return 0
+	sleep 2
+    done
+    return 1
 }
 
 resume_if_paused() {
