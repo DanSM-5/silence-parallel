@@ -8505,7 +8505,7 @@ sub ssh_perl_cmd($) {
     my $self = shift;
     return(join " ",
            $self->sshcmd(), $self->{'host'}, "--",
-	   "exec", "perl", "-", '$PARALLEL_SEQ');
+	   "exec", "perl", "-", 'job-$PARALLEL_SEQ-slot-$PARALLEL_JOBSLOT');
 }
 
 sub generate_padding() {
@@ -11623,7 +11623,8 @@ sub sshlogin_wrap($) {
 		} while(-e $ENV{PARALLEL_TMP});
 		# Set $script to a non-existent file name in $TMPDIR
 		do {
-		    $script = $tmpdir."/par-job-$ENV{PARALLEL_SEQ}_".
+		    $script = $tmpdir.
+			"/job-$ENV{PARALLEL_SEQ}-slot-$ENV{PARALLEL_JOBSLOT}_".
 			join"", map { (0..9,"a".."z","A".."Z")[rand(62)] } (1..5);
 		} while(-e $script);
 		# Create a script from the hex code
