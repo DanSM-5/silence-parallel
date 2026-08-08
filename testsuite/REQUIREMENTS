@@ -329,8 +329,8 @@ add_server_to_hosts() {
 	vagrant_ip() {
 	    cd vagrant/*/$1
 	    # .vagrant can contain dirt
-	    rm -rf .vagrant
-	    grep 172 Vagrantfile | grep -v '#' |
+	    rm -rf .vagrant	    
+	    cat Vagrantfile | G -v '#' config.vm.network 172 |
 		perl -pe 's/.*(172.27[\.0-9]+).*/$1/';
 	}
 	insert_in_etc_hosts $(vagrant_ip $1) "$@"

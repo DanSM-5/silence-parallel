@@ -702,9 +702,15 @@ par__print_in_blocks	300 ms jobs:
 par__print_in_blocks	3
 par__quote_special_results	### Test --results on file systems with limited UTF8 support
 par__quote_special_results	mkfs.btrfs	
+par__quote_special_results	mkfs.btrfs	NOTE: several default settings have changed in version 5.15, please make sure
+par__quote_special_results	mkfs.btrfs	 this does not affect your deployments:
+par__quote_special_results	mkfs.btrfs	 - DUP for metadata (-m dup)
+par__quote_special_results	mkfs.btrfs	 - enabled no-holes (-O no-holes)
+par__quote_special_results	mkfs.btrfs	 - enabled free-space-tree (-R free-space-tree)
+par__quote_special_results	mkfs.btrfs	
 par__quote_special_results	mkfs.btrfs	Label: (null)
 par__quote_special_results	mkfs.btrfs	Node size: 16384
-par__quote_special_results	mkfs.btrfs	Sector size: 4096	(CPU page size: 4096)
+par__quote_special_results	mkfs.btrfs	Sector size: 4096
 par__quote_special_results	mkfs.btrfs	Filesystem size: 301.00MiB
 par__quote_special_results	mkfs.btrfs	Block group profiles:
 par__quote_special_results	mkfs.btrfs	 Data: single 8.00MiB
@@ -712,7 +718,7 @@ par__quote_special_results	mkfs.btrfs	 Metadata: DUP 32.00MiB
 par__quote_special_results	mkfs.btrfs	 System: DUP 8.00MiB
 par__quote_special_results	mkfs.btrfs	SSD detected: no
 par__quote_special_results	mkfs.btrfs	Zoned device: no
-par__quote_special_results	mkfs.btrfs	Features: extref, skinny-metadata, no-holes, free-space-tree
+par__quote_special_results	mkfs.btrfs	Runtime features: free-space-tree
 par__quote_special_results	mkfs.btrfs	Checksum: crc32c
 par__quote_special_results	mkfs.btrfs	Number of devices: 1
 par__quote_special_results	mkfs.btrfs	Devices:
@@ -819,14 +825,11 @@ par__quote_special_results	mkfs.ntfs -F	To boot from a device, Windows needs the
 par__quote_special_results	mkfs.ntfs -F	Windows will not be able to boot from this device.
 par__quote_special_results	mkfs.xfs -f	meta-data=/dev/shm/par-test-loop isize=512 agcount=4, agsize=19264 blks
 par__quote_special_results	mkfs.xfs -f	 = sectsz=512 attr=2, projid32bit=1
-par__quote_special_results	mkfs.xfs -f	 = exchange=0 metadir=0
 par__quote_special_results	mkfs.xfs -f	data = bsize=4096 blocks=77056, imaxpct=25
 par__quote_special_results	mkfs.xfs -f	 = sunit=0 swidth=0 blks
-par__quote_special_results	mkfs.xfs -f	naming =version 2 bsize=4096 ascii-ci=0, ftype=1, parent=0
+par__quote_special_results	mkfs.xfs -f	naming =version 2 bsize=4096 ascii-ci=0, ftype=1
 par__quote_special_results	mkfs.xfs -f	 = sectsz=512 sunit=0 blks, lazy-count=1
 par__quote_special_results	mkfs.xfs -f	realtime =none extsz=4096 blocks=0, rtextents=0
-par__quote_special_results	mkfs.xfs -f	 = rgcount=0 rgsize=0 extents
-par__quote_special_results	mkfs.xfs -f	 = zoned=0 start=0 reserved=0
 par__quote_special_results	mkfs.xfs -f	Filesystem 1K-blocks Used Available Use% Mounted on
 par__quote_special_results	mkfs.xfs -f	/dev/loop 999999 99999 99999 9% /tmp/par-test-loop
 par__quote_special_results	mkfs.xfs -f	. ./++ ./++++ ./++_ ./++__ ./++m ./++z ./+_ ./+__ ./+m ./+z ./,. ./,..

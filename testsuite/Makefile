@@ -155,7 +155,7 @@ startsnap:
 	parallel -j0 --tagstring {#}-{} -k --timeout 300 bin/vm restoresnapshot ::: ${servers}
 
 checkvm:
-	parallel -j0 --delay 0.2 --plus --tagstring '/|\ {0#} {}' --lb --timeout 40 bin/vm check ::: ${servers}
+	parallel -j0 --delay 0.5 --color-failed --plus --tagstring '/|\ {0#} {}' --timeout 40 bin/vm check ::: ${servers}
 
 startvm:
 	touch vagrant/authorized_keys

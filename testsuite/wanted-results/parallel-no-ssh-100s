@@ -570,7 +570,7 @@ par_dburl_parsing	csv:///mydir/username	parallel: Error:
 par_dburl_parsing	csv:///mydir/username	Execution ERROR: Cannot open /tmp/parallel-no-ssh-100s-tmp/
 par_dburl_parsing	csv:///mydir/username	`/tmp/trip`>/tmp/tripwire;
 par_dburl_parsing	csv:///mydir/username		
-par_dburl_parsing	csv:///mydir/username	"'@<?[]|~\/tmp/test/mydir/username: No such file or directory (2) at /usr/lib/x86_64-linux-gnu/perl5/5.40/DBI/DBD/SqlEngine.pm line 1619.
+par_dburl_parsing	csv:///mydir/username	"'@<?[]|~\/tmp/test/mydir/username: No such file or directory (2) at /usr/lib/x86_64-linux-gnu/perl5/5.38/DBI/DBD/SqlEngine.pm line 1624.
 par_dburl_parsing	csv:///mydir/username	 called from /usr/local/bin/parallel at 99999.
 par_dburl_parsing	csv:///mydir/username	
 par_dburl_parsing	csv:///mydir/username	
@@ -578,7 +578,7 @@ par_dburl_parsing	csv:///./mydir/username	parallel: Error:
 par_dburl_parsing	csv:///./mydir/username	Execution ERROR: Cannot open /tmp/parallel-no-ssh-100s-tmp/
 par_dburl_parsing	csv:///./mydir/username	`/tmp/trip`>/tmp/tripwire;
 par_dburl_parsing	csv:///./mydir/username		
-par_dburl_parsing	csv:///./mydir/username	"'@<?[]|~\/tmp/test/mydir/username: No such file or directory (2) at /usr/lib/x86_64-linux-gnu/perl5/5.40/DBI/DBD/SqlEngine.pm line 1619.
+par_dburl_parsing	csv:///./mydir/username	"'@<?[]|~\/tmp/test/mydir/username: No such file or directory (2) at /usr/lib/x86_64-linux-gnu/perl5/5.38/DBI/DBD/SqlEngine.pm line 1624.
 par_dburl_parsing	csv:///./mydir/username	 called from /usr/local/bin/parallel at 99999.
 par_dburl_parsing	csv:///./mydir/username	
 par_dburl_parsing	csv:///./mydir/username	
@@ -586,7 +586,7 @@ par_dburl_parsing	csv:///.%2Fmydir/username	parallel: Error:
 par_dburl_parsing	csv:///.%2Fmydir/username	Execution ERROR: Cannot open /tmp/parallel-no-ssh-100s-tmp/
 par_dburl_parsing	csv:///.%2Fmydir/username	`/tmp/trip`>/tmp/tripwire;
 par_dburl_parsing	csv:///.%2Fmydir/username		
-par_dburl_parsing	csv:///.%2Fmydir/username	"'@<?[]|~\/tmp/test/mydir/username: No such file or directory (2) at /usr/lib/x86_64-linux-gnu/perl5/5.40/DBI/DBD/SqlEngine.pm line 1619.
+par_dburl_parsing	csv:///.%2Fmydir/username	"'@<?[]|~\/tmp/test/mydir/username: No such file or directory (2) at /usr/lib/x86_64-linux-gnu/perl5/5.38/DBI/DBD/SqlEngine.pm line 1624.
 par_dburl_parsing	csv:///.%2Fmydir/username	 called from /usr/local/bin/parallel at 99999.
 par_dburl_parsing	csv:///.%2Fmydir/username	
 par_dburl_parsing	csv:///.%2Fmydir/username	
@@ -604,7 +604,7 @@ par_dburl_parsing	csv:///./username	parallel: Error:
 par_dburl_parsing	csv:///./username	Execution ERROR: Cannot open /tmp/parallel-no-ssh-100s-tmp/
 par_dburl_parsing	csv:///./username	`/tmp/trip`>/tmp/tripwire;
 par_dburl_parsing	csv:///./username		
-par_dburl_parsing	csv:///./username	"'@<?[]|~\/tmp/test/username: No such file or directory (2) at /usr/lib/x86_64-linux-gnu/perl5/5.40/DBI/DBD/SqlEngine.pm line 1619.
+par_dburl_parsing	csv:///./username	"'@<?[]|~\/tmp/test/username: No such file or directory (2) at /usr/lib/x86_64-linux-gnu/perl5/5.38/DBI/DBD/SqlEngine.pm line 1624.
 par_dburl_parsing	csv:///./username	 called from /usr/local/bin/parallel at 99999.
 par_dburl_parsing	csv:///./username	
 par_dburl_parsing	csv:///./username	
@@ -612,7 +612,7 @@ par_dburl_parsing	csv:///./	parallel: Error:
 par_dburl_parsing	csv:///./	Execution ERROR: Cannot open /tmp/parallel-no-ssh-100s-tmp/
 par_dburl_parsing	csv:///./	`/tmp/trip`>/tmp/tripwire;
 par_dburl_parsing	csv:///./		
-par_dburl_parsing	csv:///./	"'@<?[]|~\/tmp/test/username: No such file or directory (2) at /usr/lib/x86_64-linux-gnu/perl5/5.40/DBI/DBD/SqlEngine.pm line 1619.
+par_dburl_parsing	csv:///./	"'@<?[]|~\/tmp/test/username: No such file or directory (2) at /usr/lib/x86_64-linux-gnu/perl5/5.38/DBI/DBD/SqlEngine.pm line 1624.
 par_dburl_parsing	csv:///./	 called from /usr/local/bin/parallel at 99999.
 par_dburl_parsing	csv:///./	
 par_dburl_parsing	csv:///./	
@@ -765,7 +765,7 @@ par_dburl_parsing	csv:///./	parallel: Error:
 par_dburl_parsing	csv:///./	Execution ERROR: Cannot open /tmp/parallel-no-ssh-100s-tmp/
 par_dburl_parsing	csv:///./	`/tmp/trip`>/tmp/tripwire;
 par_dburl_parsing	csv:///./		
-par_dburl_parsing	csv:///./	"'@<?[]|~\/tmp/test/username: No such file or directory (2) at /usr/lib/x86_64-linux-gnu/perl5/5.40/DBI/DBD/SqlEngine.pm line 1619.
+par_dburl_parsing	csv:///./	"'@<?[]|~\/tmp/test/username: No such file or directory (2) at /usr/lib/x86_64-linux-gnu/perl5/5.38/DBI/DBD/SqlEngine.pm line 1624.
 par_dburl_parsing	csv:///./	 called from /usr/local/bin/parallel at 99999.
 par_dburl_parsing	csv:///./	
 par_dburl_parsing	csv:///./	
@@ -773,10 +773,10 @@ par_dburl_parsing	csv:///username/username	parallel: Error: username/username is
 par_dburl_parsing	csv:////username	parallel: Error: /username is not a directory.
 par_dburl_parsing	csv:///username/	parallel: Error: username/ is not a directory.
 par_dburl_parsing	csv:////	parallel: Error: 
-par_dburl_parsing	csv:////	Execution ERROR: Cannot open /username for writing: Permission denied (13) at /usr/lib/x86_64-linux-gnu/perl5/5.40/DBI/DBD/SqlEngine.pm line 1619.
+par_dburl_parsing	csv:////	Execution ERROR: Cannot open /username for writing: Permission denied (13) at /usr/lib/x86_64-linux-gnu/perl5/5.38/DBI/DBD/SqlEngine.pm line 1624.
 par_dburl_parsing	csv:////	 called from /usr/local/bin/parallel at 99999.
 par_dburl_parsing	csv:////	
-par_dburl_parsing	csv:////	 at /usr/lib/x86_64-linux-gnu/perl5/5.40/DBI/DBD/SqlEngine.pm line 1266.
+par_dburl_parsing	csv:////	 at /usr/lib/x86_64-linux-gnu/perl5/5.38/DBI/DBD/SqlEngine.pm line 1271.
 par_dburl_parsing	csv:////	
 par_dburl_parsing	csv:///	parallel: Error: username is not a directory.
 par_dburl_parsing	sqlite3:///username/username	DBI connect('dbname=username/username','',...) failed: unable to open database file at /usr/local/bin/parallel line 99999.
