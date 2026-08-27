@@ -16,6 +16,11 @@ export -f stdsort
 # Test amount of parallelization
 # parallel --shuf --jl /tmp/myjl -j1 'export JOBS={1};'bash tests-to-run/parallel-local-0.3s.sh ::: {1..16} ::: {1..5}
 
+par_shell_not_set_pipe() {
+    echo "### --pipe should not fail if SHELL unset"
+    echo OK | env -u SHELL parallel --pipe cat
+}
+
 par_pipe_no_run_if_empty() {
     echo 'bug #67351: Newlines are ommitted when using `--no-run-if-empty` and null separators'
     printf ' \nA\n \n\nB\n\n ' |

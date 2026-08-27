@@ -1,5 +1,6 @@
 par__test_different_rsync_versions	### different versions of rsync need fixups
 par__test_different_rsync_versions	### no output is good
+par__test_different_rsync_versions	rsync-mbp_bk_export0	Basic use failed - not tested: rsync-mbp_bk_export0
 par__test_different_rsync_versions	rsync-v1.6.4	Basic use failed - not tested: rsync-v1.6.4
 par__test_different_rsync_versions	rsync-v1.6.5	Basic use failed - not tested: rsync-v1.6.5
 par__test_different_rsync_versions	rsync-v1.6.6	Basic use failed - not tested: rsync-v1.6.6
@@ -93,6 +94,7 @@ par__test_different_rsync_versions	rsync-v3.4.1-sec-patches1	Basic use works: rs
 par__test_different_rsync_versions	rsync-v3.4.2	Basic use works: rsync-v3.4.2
 par__test_different_rsync_versions	rsync-v3.4.3	Basic use works: rsync-v3.4.3
 par__test_different_rsync_versions	rsync-v3.4.4	Basic use works: rsync-v3.4.4
+par__test_different_rsync_versions	rsync-v3.5.0	Basic use works: rsync-v3.5.0
 par_filter_host_noise	### bug #63296: --filter-hosts option gets confused by output from SSH command
 par_filter_host_noise	localhost	OK
 par_filter_host_noise	localhost	Warning: Identity file id_rsa not accessible: No such file or directory.

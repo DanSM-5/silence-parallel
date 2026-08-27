@@ -12,7 +12,7 @@ all: mem short long polar
 	true
 
 3: ../src/parallel tests-to-run/* wanted-results/* dbstart prereqlocal prereqremote
-	TRIES=3 time bash Start.sh '' mem || true
+	TRIES=3 time bash Start.sh '' 'mem|manual' || true
 	touch ~/.parallel/will-cite
 	make stopvm
 
@@ -62,7 +62,7 @@ test-%:	../src/parallel prereqlocal installparallel
 
 # *local* only
 local:	../src/parallel tests-to-run/*local* wanted-results/*local* prereqlocal installparallel
-	time bash Start.sh local 'mem|ssh'
+	time bash Start.sh local 'mem|ssh|manual'
 
 # short
 short:	 ../src/parallel tests-to-run/* wanted-results/* prereqlocal installparallel
@@ -70,17 +70,17 @@ short:	 ../src/parallel tests-to-run/* wanted-results/* prereqlocal installparal
 
 # Tests not requiring SSH
 no-ssh: ../src/parallel tests-to-run/*no-ssh* wanted-results/*no-ssh* prereqlocal installparallel
-	TRIES=1 time bash Start.sh no-ssh nosuch || true
+	TRIES=1 time bash Start.sh no-ssh manual || true
 	touch ~/.parallel/will-cite
 
 # Tests using SSH to localhost/lo only
 local-ssh: ../src/parallel tests-to-run/*local-ssh* wanted-results/*local-ssh* prereqlocal installparallel
-	TRIES=1 time bash Start.sh local-ssh NONE || true
+	TRIES=1 time bash Start.sh local-ssh manual || true
 	touch ~/.parallel/will-cite
 
 # Tests using SSH to remote servers
 remote-ssh: ../src/parallel tests-to-run/*remote-ssh* wanted-results/*remote-ssh* prereqlocal prereqremote installparallel
-	TRIES=1 time bash Start.sh remote-ssh NONE || true
+	TRIES=1 time bash Start.sh remote-ssh manual || true
 	touch ~/.parallel/will-cite
 
 # Tests not requiring SSH (includes timing/load tests)

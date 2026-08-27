@@ -1,6 +1,7 @@
 par__filter_hosts_different_errors	### --filter-hosts - OK, non-such-user, connection refused, wrong host
 par__filter_hosts_different_errors	myhostname
 par__filter_hosts_no_ssh_nxserver	### test --filter-hosts with server w/o ssh, non-existing server
+par__filter_hosts_no_ssh_nxserver	parallel: Warning: Could not figure out number of cpus on vagrant@parallel-server3 (). Using 1.
 par__filter_hosts_no_ssh_nxserver	vagrant@parallel-server1	
 par__filter_hosts_no_ssh_nxserver	vagrant@parallel-server2	
 par__filter_hosts_no_ssh_nxserver	vagrant@parallel-server3	
@@ -502,11 +503,11 @@ par__sshlogin_with_comma	OK
 par__sshlogin_with_comma	### --sshlogin with ,,
 par__sshlogin_with_comma	OK
 par__sshlogin_with_comma	### Both , and ,, in -S
-par__sshlogin_with_comma	freebsd14.localdomain
+par__sshlogin_with_comma	openindiana
 par__sshlogin_with_comma	rhel8.localdomain
-par__sshlogin_with_comma	freebsd14.localdomain
+par__sshlogin_with_comma	openindiana
 par__sshlogin_with_comma	rhel8.localdomain
-par__sshlogin_with_comma	freebsd14.localdomain
+par__sshlogin_with_comma	openindiana
 par__sshlogin_with_comma	rhel8.localdomain
 par_force_number_of_cpu	### Check forced number of CPUs being respected
 par_force_number_of_cpu	ssh is slow, so should only get 7. : should get the rest

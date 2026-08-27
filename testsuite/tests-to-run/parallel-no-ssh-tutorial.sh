@@ -117,7 +117,7 @@ perl -ne '$/="\n\n"; /^Output/../^[^O=]\S/ and next; /^  / and print;' "$testsui
 	      s/.Feel free to use .nocite.*//;
 	      # tmpdir and files
 	      s:/tmp/parallel-tutorial-tmpdir/par-job-\S+:script:g;
-	      s:/tmp/par-job-\S+:script:g;
+	      s:/tmp/job-\d+-slot-\d+_\S+:script:g;
 	      s:par......par:tempfile:g;
 	      s:^tempfile\n::g;
 	      #+(zenity:2012805): Gtk-WARNING **: 02:25:32.662: cannot open display:

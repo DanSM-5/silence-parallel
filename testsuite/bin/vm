@@ -316,7 +316,7 @@ repair_freebsd_rcconf() {
     # comment at the start() call site). Boots the VM directly via
     # VBoxManage if needed (skipping vagrant's own flaky `up`), then polls
     # rather than guessing at a wait: a healthy boot reaches a working
-    # sshd in ~30s on this host (measured directly - see session notes),
+    # sshd in ~30s on this host,
     # so wait only whatever's left of a 2x-margin budget beyond however
     # long VBox says the VM has already been running, polling cleanping
     # the whole time in case rc.conf actually survived this time. Only if
@@ -402,7 +402,8 @@ resume_if_paused() {
     local id
     id=$(cat ".vagrant/machines/default/virtualbox/id" 2>/dev/null)
     [ -n "$id" ] || return 0
-    if VBoxManage showvminfo "$id" --machinereadable 2>/dev/null | grep -q '^VMState="paused"'; then
+    if VBoxManage showvminfo "$id" --machinereadable 2>/dev/null |
+	    grep -q '^VMState="paused"'; then
 	echo "$vm is paused - resuming"
 	VBoxManage controlvm "$id" resume 2>/dev/null
     fi

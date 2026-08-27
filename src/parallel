@@ -2758,6 +2758,7 @@ sub parse_options(@) {
     ::debug("init","Global::shell $Global::shell\n");
     $Global::cshell = $Global::shell =~ m:(/[-a-z]*)?csh:;
     $Global::fish = $Global::shell =~ m:(/[-a-z]*)?fish:;
+    $::qperl = ::Q($^X);
     if(defined $opt::_parset) { parse_parset(); }
     if(defined $opt::X) { $Global::ContextReplace = 1; }
     if(defined $opt::silent) { $Global::verbose = 0; }
@@ -3341,13 +3342,12 @@ sub init_globals() {
     #   SSH / remote host data structures
     #   Job counters and state flags
     # Defaults:
-    $Global::version = 20260722;
+    $Global::version = 20260822;
     # Deliver perl bootstrap source via stdin pipe (ssh host -- exec perl).
     # Set to 0 to use an alternative delivery mechanism (future option).
     $Global::command_via_pipe = 1;
     $Global::progname = 'parallel';
     $::name = "GNU Parallel";
-    $::qperl = ::Q($^X);
     $Global::infinity = 2**31;
     $Global::debug = 0;
     $Global::verbose = 0;
@@ -6644,8 +6644,8 @@ sub usage() {
 	 "If you use programs that use GNU Parallel to process data for an article in a",
 	 "scientific publication, please cite:",
 	 "",
-	 "  Tange, O. (2026, July 22). GNU Parallel 20260722 ('Chat Control').",
-	 "  Zenodo. https://doi.org/10.5281/zenodo.21476260",
+	 "  Tange, O. (2026, August 22). GNU Parallel 20260822 ('Ceuta').",
+	 "  Zenodo. https://doi.org/10.5281/zenodo.22180990",
 	 "",
 	 # Before changing these lines,  please read
 	 # https://www.gnu.org/software/parallel/parallel_design.html#citation-notice
@@ -6693,8 +6693,8 @@ sub citation_notice() {
 		 "If you use programs that use GNU Parallel to process data for an article in a",
 		 "scientific publication, please cite:",
 		 "",
-		 "  Tange, O. (2026, July 22). GNU Parallel 20260722 ('Chat Control').",
-		 "  Zenodo. https://doi.org/10.5281/zenodo.21476260",
+		 "  Tange, O. (2026, August 22). GNU Parallel 20260822 ('Ceuta').",
+		 "  Zenodo. https://doi.org/10.5281/zenodo.22180990",
 		 "",
 		 # Before changing the code to block printing the citation notice
 		 # if the user has not accepted to cite, please read:
@@ -6807,20 +6807,20 @@ sub citation() {
 	"If you use programs that use GNU Parallel to process data for an article in a",
 	"scientific publication, please cite:",
 	"",
-	"\@software{tange_2026_21476260,",
+	"\@software{tange_2026_22180990,",
 	"      author       = {Tange, Ole},",
-	"      title        = {GNU Parallel 20260722 ('Chat Control')},",
-	"      month        = Jul,",
+	"      title        = {GNU Parallel 20260822 ('Ceuta')},",
+	"      month        = Aug,",
 	"      year         = 2026,",
 	"      note         = {{GNU Parallel is a general parallelizer to run",
 	"                       multiple serial command line programs in parallel",
 	"                       without changing them.}},",
 	"      publisher    = {Zenodo},",
-	"      doi          = {10.5281/zenodo.21476260},",
-	"      url          = {https://doi.org/10.5281/zenodo.21476260}",
+	"      doi          = {10.5281/zenodo.22180990},",
+	"      url          = {https://doi.org/10.5281/zenodo.22180990}",
 	"}",
 	"",
-	"(Feel free to use \\nocite{tange_2026_21476260})",
+	"(Feel free to use \\nocite{tange_2026_22180990})",
 	"",
 	# Before changing the code to block printing the citation notice
 	# if the user has not accepted to cite, please read:
@@ -10859,7 +10859,7 @@ sub empty_input_wrapper($) {
 				   ::perl_quote_scalar($command).'"');
     } else {
 	return "$::qperl -e ".::Q($script)." ".
-	    $Global::shell." -c ".::Q($command);
+	    ::Q($Global::shell)." -c ".::Q($command);
     }
 }
 
@@ -11393,7 +11393,7 @@ sub wrapped($) {
 	    #	wait; rm {}
 	    # without affecting $?
 	    $command = fifo_wrap(). " ".
-		$Global::shell. " ". ::Q($command). ' "$PARALLEL_TMP"'. ';';
+		::Q($Global::shell). " ". ::Q($command). ' "$PARALLEL_TMP"'. ';';
 	}
 	# Wrap with ssh + tranferring of files
 	$command = $self->sshlogin_wrap($command);
@@ -11592,7 +11592,7 @@ sub sshlogin_wrap($) {
 	    $monitor_parent_sshd_script =
 		# This will be packed in ', so only use "
 		::spacefree
-		(0,'$shell = "'.($ENV{'PARALLEL_SHELL'} || '$ENV{SHELL}').'";'.
+		(0,'$shell = "'.($ENV{'PARALLEL_SHELL'} || '$ENV{SHELL}').'"||pack("H*","'.unpack("H*",$Global::shell).'");'.
 			    '$tmpdir = $ENV{"TMPDIR"} || "'.
 			    ::perl_quote_scalar($ENV{'PARALLEL_REMOTE_TMPDIR'}).'";'.
 			    '$nice = '.$opt::nice.';'.
@@ -11754,7 +11754,7 @@ sub sshlogin_wrap($) {
 	    }
 	    $bashfuncset =
 		'@bash_functions=qw('."@bash_functions".");".
-		::spacefree(1,'$shell="'.($ENV{'PARALLEL_SHELL'} || '$ENV{SHELL}').'";'.q{
+		::spacefree(1,'$shell="'.($ENV{'PARALLEL_SHELL'} || '$ENV{SHELL}').'"||pack("H*","'.unpack("H*",$Global::shell).'");'.q{
 		    if($shell=~/csh/) {
 			print STDERR "CSH/TCSH DO NOT SUPPORT newlines IN VARIABLES/FUNCTIONS. Unset @bash_functions\n";
 			exec "false";
@@ -12559,7 +12559,7 @@ sub interactive_start($) {
 	    # Read a / separated line: 0h/2 for csh, 2/0 for bash.
 	    # If csh the first will be 0h, so use the second as exit value.
 	    # Otherwise just use the first value as exit value.
-		"; exec $::qperl ".q{-e '$/="/";$_=<>;$c=<>;unlink $ARGV; };
+	    "; exec $::qperl ".q{-e '$/="/";$_=<>;$c=<>;unlink $ARGV; }.
 	    q{/(\d+)h/ and exit($1);exit$c' }.::Q($tmpfifo);
     }
 }

@@ -32,7 +32,7 @@ par__test_different_rsync_versions() {
 	rm -rf "$tmp"
     }
     export -f doit
-    stdout parallel --tagstring {/} -k doit {} {/} ::: /usr/local/bin/rsync-v*
+    stdout parallel --tagstring {/} -k doit {} {/} ::: /usr/local/bin/rsync-*
 }
 
 par_transfer_special_char_names() {

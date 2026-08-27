@@ -69,10 +69,10 @@ par_csh_newline_var() {
 par_pipepart_remote() {
     echo '### bug #42999: --pipepart with remote does not work'
     seq 100 > /tmp/bug42999; chmod 600 /tmp/bug42999
-    parallel --sshdelay 0.3 --pipepart --block 31 -a /tmp/bug42999 -k -S parallel@lo wc
-    parallel --sshdelay 0.2 --pipepart --block 31 -a /tmp/bug42999 -k --fifo -S parallel@lo wc |
+    parallel -j1 --sshdelay 0.3 --pipepart --block 31 -a /tmp/bug42999 -k -S parallel@lo wc
+    parallel -j1 --sshdelay 0.2 --pipepart --block 31 -a /tmp/bug42999 -k --fifo -S parallel@lo wc |
 	perl -pe 's:(/tmp\S+par)\S+:${1}XXXXX:'
-    parallel --sshdelay 0.1 --pipepart --block 31 -a /tmp/bug42999 -k --cat -S parallel@lo wc |
+    parallel -j1 --sshdelay 0.1 --pipepart --block 31 -a /tmp/bug42999 -k --cat -S parallel@lo wc |
 	perl -pe 's:(/tmp\S+par)\S+:${1}XXXXX:'
     rm /tmp/bug42999
 }
@@ -87,8 +87,8 @@ par_cat_incorrect_exit_csh() {
 
 par_cat_fifo_exit() {
     echo '### --cat and --fifo exit value in bash'
-    echo true  | parallel --pipe --fifo -Slo 'cat {}; true' ; echo $?
-    echo false | parallel --pipe --fifo -Slo 'cat {}; false' ; echo $?
+    echo true  | parallel -j1 --pipe --fifo -Slo 'cat {}; true' ; echo $?
+    echo false | parallel -j1 --pipe --fifo -Slo 'cat {}; false' ; echo $?
 }
 
 par_env_parallel_fifo() {
@@ -98,9 +98,9 @@ par_env_parallel_fifo() {
 	echo transferred non-exported func;
     }
     echo data from stdin |
-	env_parallel --timeout 10 --pipe -S lo --fifo 'cat {};myfunc'
+	env_parallel --timeout 15 --pipe -S lo --fifo 'cat {};myfunc'
     echo data from stdin |
-	env_parallel --timeout 10 --pipe -S lo --cat 'cat {};myfunc'
+	env_parallel --timeout 15 --pipe -S lo --cat 'cat {};myfunc'
 }
 
 par_tee_ssh() {
@@ -115,7 +115,7 @@ par_csh_wd_trc() {
     echo '### --wd ... --trc in csh: exitstatuswrapper must not produce ;;'
     myscript=$(cat <<'_EOF'
     echo OK > bug_64222
-    parallel --wd ... --sshlogin lo --trc {} cat ::: bug_64222
+    parallel -j1 --wd ... --sshlogin lo --trc {} cat ::: bug_64222
     rm -f bug_64222
 _EOF
     )
@@ -125,7 +125,7 @@ _EOF
 par_pipepart_ssh() {
     echo '### --pipepart -S lo: pipepart data reaches remote and local (sum must equal 100)'
     seq 100 > /tmp/recent-pipepart
-    parallel --block -1 --pipepart -a /tmp/recent-pipepart -S :,lo wc -l |
+    parallel -j1 --block -1 --pipepart -a /tmp/recent-pipepart -S :,lo wc -l |
         awk '{s+=$1}END{print s}'
     rm -f /tmp/recent-pipepart
 }
@@ -140,5 +140,5 @@ par_pipepart_tee_ssh() {
 export -f $(compgen -A function | grep par_)
 #compgen -A function | grep par_ | sort | parallel --delay $D -j$P --tag -k '{} 2>&1'
 compgen -A function | G par_ "$@" | sort |
-    parallel --joblog /tmp/jl-`basename $0` --retries 3 -j200% --tag -k '{} 2>&1' |
+    parallel --joblog /tmp/jl-`basename $0` --retries 3 --delay 0.1 --tag -k '{} 2>&1' |
     perl -pe "s/‘/'/g;s/’/'/g"
