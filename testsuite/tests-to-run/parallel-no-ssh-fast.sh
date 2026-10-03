@@ -339,10 +339,10 @@ par__fast_timeout() {
     parallel --timeout 3 sleep ::: 1 2 4 5
     echo "exit=$?"
     # TODO Broken - should kill after 3 sec
-    parallel --fast --timeout 3 sleep ::: 1 2 4 5
+    timeout 5 parallel --fast --timeout 3 sleep ::: 1 2 4 5
     echo "exit=$?"
     # TODO Broken
-    seq 230 | timeout 10 parallel --fast --timeout 3 sleep
+    seq 230 | timeout 5 parallel --fast --timeout 3 sleep
     echo "exit=$?"
 }
 

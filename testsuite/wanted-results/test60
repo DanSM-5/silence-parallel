@@ -1,5 +1,5 @@
 par_nonall	### Test --nonall
-par_nonall	openindiana
+par_nonall	localhost
 par_nonall	rhel8.localdomain
 par_nonall_basefile	### Test --nonall --basefile
 par_nonall_basefile	/tmp/nonall--basefile
@@ -62,7 +62,6 @@ par_pipe_onall	1
 par_pipe_onall	2
 par_pipe_onall	3
 par_wd	### Test --wd .
-par_wd	parallel: Warning: Could not figure out number of cpus on vagrant@parallel-server2 (). Using 1.
-par_wd	/export/home/vagrant/mydir
+par_wd	/home/vagrant/mydir
 par_workdir	### Test --workdir .
 par_workdir	/home/vagrant/mydir

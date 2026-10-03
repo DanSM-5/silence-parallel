@@ -2153,8 +2153,8 @@ clean_output() {
               s/sh\[\d+\]/sh[999]/;
 	      s/.*(tange|zenodo).*//i;
 	      s:/usr/bin:/bin:g;
-	      s:/tmp/par-job-\d+_.....\[\d+\]:script[9]:g;
-	      s!/tmp/par-job-\d+_.....!script!g;
+	      s:/tmp/job-\d+-slot-\d+_.....\[\d+\]:script[9]:g;
+	      s!/tmp/job-\d+-slot-\d+_.....!script!g;
     	      s/script: \d\d+/script: 99/g;
 	      '
 }

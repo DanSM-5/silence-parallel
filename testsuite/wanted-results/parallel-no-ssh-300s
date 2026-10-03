@@ -3,8 +3,8 @@ par__test_build_and_install	make  dist-gzip am__post_remove_distdir='@:'
 par__test_build_and_install	make[0]: Entering directory '~/privat/parallel'
 par__test_build_and_install	make  distdir-am
 par__test_build_and_install	make[0]: Entering directory '~/privat/parallel'
-par__test_build_and_install	if test -d "parallel-00000000"; then find "parallel-00000000" -type d ! -perm -700 -exec chmod u+rwx {} ';' ; rm -rf "parallel-00000000" || { sleep 5 && rm -rf "parallel-00000000"; }; else :; fi
-par__test_build_and_install	/bin/mkdir -p "parallel-00000000"
+par__test_build_and_install	if test -d "parallel-00000000"; then find "parallel-00000000" -type d ! -perm -200 -exec chmod u+w {} ';' && rm -rf "parallel-00000000" || { sleep 5 && rm -rf "parallel-00000000"; }; else :; fi
+par__test_build_and_install	test -d "parallel-00000000" || mkdir "parallel-00000000"
 par__test_build_and_install	 (cd src && make  top_distdir=../parallel-00000000 distdir=../parallel-00000000/src \
 par__test_build_and_install	     am__remove_distdir=: am__skip_length_check=: am__skip_mode_fix=: distdir)
 par__test_build_and_install	make[0]: Entering directory '~/privat/parallel/src'
@@ -20,23 +20,17 @@ par__test_build_and_install	  ! -type d ! -perm -400 -exec chmod a+r {} \; -o \
 par__test_build_and_install	  ! -type d ! -perm -444 -exec /bin/bash ~/privat/parallel/install-sh -c -m a+r {} {} \; \
 par__test_build_and_install	|| chmod -R a+r "parallel-00000000"
 par__test_build_and_install	make[0]: Leaving directory '~/privat/parallel'
-par__test_build_and_install	tardir=parallel-00000000 && tar --format=ustar -chf - "$tardir" | eval GZIP= gzip -9 -c >parallel-00000000.tar.gz
+par__test_build_and_install	tardir=parallel-00000000 && ${TAR-tar} chof - "$tardir" | eval GZIP= gzip --best -c >parallel-00000000.tar.gz
 par__test_build_and_install	make[0]: Leaving directory '~/privat/parallel'
-par__test_build_and_install	if test -d "parallel-00000000"; then find "parallel-00000000" -type d ! -perm -700 -exec chmod u+rwx {} ';' ; rm -rf "parallel-00000000" || { sleep 5 && rm -rf "parallel-00000000"; }; else :; fi
+par__test_build_and_install	if test -d "parallel-00000000"; then find "parallel-00000000" -type d ! -perm -200 -exec chmod u+w {} ';' && rm -rf "parallel-00000000" || { sleep 5 && rm -rf "parallel-00000000"; }; else :; fi
 par__test_build_and_install	make[0]: Leaving directory '~/privat/parallel'
 par__test_build_and_install	### Test normal build and install
 par__test_build_and_install	checking for a BSD-compatible install... /bin/install -c
-par__test_build_and_install	checking whether sleep supports fractional seconds... yes
-par__test_build_and_install	checking filesystem timestamp resolution... 0.01
 par__test_build_and_install	checking whether build environment is sane... yes
 par__test_build_and_install	checking for a race-free mkdir -p... /bin/mkdir -p
 par__test_build_and_install	checking for gawk... gawk
 par__test_build_and_install	checking whether make sets $(MAKE)... yes
 par__test_build_and_install	checking whether make supports nested variables... yes
-par__test_build_and_install	checking xargs -n works... yes
-par__test_build_and_install	checking whether UID '1000' is supported by ustar format... yes
-par__test_build_and_install	checking whether GID '1000' is supported by ustar format... yes
-par__test_build_and_install	checking how to create a ustar tar archive... gnutar
 par__test_build_and_install	checking whether ln -s works... yes
 par__test_build_and_install	checking that generated files are newer than configure... done
 par__test_build_and_install	configure: creating ./config.status
@@ -80,17 +74,11 @@ par__test_build_and_install	make[0]: Leaving directory '/tmp/parallel-00000000'
 par__test_build_and_install	make[0]: Leaving directory '/tmp/parallel-00000000'
 par__test_build_and_install	### Test installation missing pod2*
 par__test_build_and_install	checking for a BSD-compatible install... /bin/install -c
-par__test_build_and_install	checking whether sleep supports fractional seconds... yes
-par__test_build_and_install	checking filesystem timestamp resolution... 0.01
 par__test_build_and_install	checking whether build environment is sane... yes
 par__test_build_and_install	checking for a race-free mkdir -p... /bin/mkdir -p
 par__test_build_and_install	checking for gawk... gawk
 par__test_build_and_install	checking whether make sets $(MAKE)... yes
 par__test_build_and_install	checking whether make supports nested variables... yes
-par__test_build_and_install	checking xargs -n works... yes
-par__test_build_and_install	checking whether UID '1000' is supported by ustar format... yes
-par__test_build_and_install	checking whether GID '1000' is supported by ustar format... yes
-par__test_build_and_install	checking how to create a ustar tar archive... gnutar
 par__test_build_and_install	checking whether ln -s works... yes
 par__test_build_and_install	checking that generated files are newer than configure... done
 par__test_build_and_install	configure: creating ./config.status

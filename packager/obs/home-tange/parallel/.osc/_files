@@ -1,9 +1,11 @@
-<directory name="parallel" rev="434" vrev="3" srcmd5="5371368d07a95beea3b23a49179ad546">
+<directory name="parallel" rev="436" vrev="2" srcmd5="70d442d2fdfe2413726fef28d308f8f3">
   <entry name="Makefile" md5="0115832fdb6c4a22e3c305a2a21bbbf9" size="1359" mtime="1737501886" />
-  <entry name="PKGBUILD" md5="c2e82472cc25cc59cf6c1fb5b80c269c" size="1641" mtime="1782554126" />
-  <entry name="parallel-20260622.tar.bz2" md5="9f93d1f366fff8d588a6e5bb38907b16" size="2733136" mtime="1782554128" />
-  <entry name="parallel-20260622.tar.bz2.sig" md5="427ca261752f82cce107af09b1ff425c" size="2080" mtime="1782554129" />
-  <entry name="parallel.spec" md5="420d64aad1c12c36b68cfb9185d54415" size="6224" mtime="1782553804" />
-  <entry name="parallel_20260622.dsc" md5="e90c7ba262245aaf41d74c4eadd2e969" size="557" mtime="1782553805" />
-  <entry name="parallel_20260622.tar.gz" md5="0bfedbb4a07b20b94d3fa215ba79c8c8" size="3061056" mtime="1782554132" />
+  <entry name="PKGBUILD" md5="22ef370e94e45fcebe087ba577b46fbf" size="1771" mtime="1788123018" />
+  <entry name="parallel-20260722.tar.bz2" md5="7d98f2994641afdf09d6d2824137ef29" size="2733786" mtime="1784645261" />
+  <entry name="parallel-20260722.tar.bz2.sig" md5="dfba6b4bf2b3ddbac7fb12449060f470" size="2080" mtime="1784645268" />
+  <entry name="parallel-20260822.tar.bz2" md5="07b0ffcabeb3dbb5428ca1d49115f5b9" size="2784542" mtime="1788123019" />
+  <entry name="parallel.spec" md5="a5b6c47b4d61bdefccf89c5939280319" size="6224" mtime="1788123019" />
+  <entry name="parallel_20260722.tar.gz" md5="9a9fdea67387e48ceee20d3ca22c52fd" size="3061985" mtime="1784645364" />
+  <entry name="parallel_20260822.dsc" md5="7e77d9f6842e96c6c1a5cbab84cca461" size="557" mtime="1788123019" />
+  <entry name="parallel_20260822.tar.gz" md5="3f49df5d96002e6b37f3094784a89f23" size="3059897" mtime="1788123020" />
 </directory>

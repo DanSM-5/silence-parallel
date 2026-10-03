@@ -8,6 +8,98 @@
 # Each should be taking 1-3s and be possible to run in parallel
 # I.e.: No race conditions, no logins
 
+par_jq() {
+    export PERL_HASH_SEED=9
+    json() {
+	echo Invalid JSON
+	echo '{"type": "other-val-is-null"}'
+	echo '{More garbage'
+	echo '{  "type": "success",  "message": "Operation completed",  "data": {    "id  2": "two  spaces"  }}'
+    }
+    json | parallel -k --plus -j1 echo {%jq:.type%} '{%jq: .data."id  2" %}'
+    echo 'Broken due to space splitting into two tokens (is it important?):'
+    json | parallel -k --plus -j1 echo {%jq: .type%}
+    
+    json2()  {
+	echo '
+	{
+	    "metadata": {
+		"batch": "2026-07-25",
+		"version": "2.3.1"
+	    },
+	    "thelist": [
+		{
+		    "type": "success",
+		    "message": "Operation\ncompleted successfully",
+		    "data": {
+			"id": 123,
+			"customer": { "id": 456, "tier": "premium" },
+			"tags": ["billing", "urgent"],
+			"amount": 299.95,
+			"completed_at": "2026-07-25T06:30:12Z"
+		    },
+		    "metrics": {
+			"duration_ms": 1247,
+			"retries": 0
+		    }
+		},
+		{
+		    "type": "warning",
+		    "message": "Operation completed with issues\u000aCheck field: address",
+		    "data": {
+			"id": 124,
+			"customer": { "id": 457, "tier": "standard" },
+			"tags": ["billing"],
+			"amount": null,
+			"completed_at": null
+		    },
+		    "metrics": {
+			"duration_ms": 3456,
+			"retries": 2
+		    }
+		},
+		{
+		    "type": "error",
+		    "message": "Failed after 3 retries",
+		    "data": {
+			"id": 125,
+			"customer": null,
+			"tags": ["critical", "refund"],
+			"amount": 149.50,
+			"completed_at": "2026-07-25T06:28:45Z"
+		    },
+		    "metrics": {
+			"duration_ms": 8920,
+			"retries": 3,
+			"error_code": "PAYMENT_GATEWAY_TIMEOUT"
+		    }
+		}
+	    ],
+	    "summary": {
+		"total": 3,
+		"success": 1,
+		"warnings": 1,
+		"errors": 1
+	    },
+	    "config": {
+		"timeout": 30,
+		"debug": true
+	    }
+	}'
+    }
+    echo Tags sep=space
+    json2 | jq -c '.thelist[]' |
+    	  parallel --plus --delay 0.1 --tagstring '{%jq:.data.id%}' \
+	  'echo "DataID={%jq:.data.id%} | CustomerID={%jq:.data.customer.id%} | Tags={%jq: .data.tags %}"'
+    echo Tags sep=,
+    json2 | jq -c '.thelist[]' |
+    	  IFS=, parallel --plus --delay 0.1 --tagstring '{%jq:.data.id%}' \
+	  'echo "DataID={%jq:.data.id%} | CustomerID={%jq:.data.customer.id%} | Tags(,)={%jq: .data.tags %}"'
+    echo Syntax error in jq expression
+    json2 | jq -c '.thelist[]' | head -n1 |
+    	  parallel --plus 'echo Good expr {%jq:.%} Syntax error {%jq:syntax)error)%}'
+}
+
 par_--pipe--block-2() {
     echo '### --block -2'
     yes `seq 100` | head -c 100M | parallel -j 5 --block -2 -k --pipe wc

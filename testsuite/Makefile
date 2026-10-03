@@ -12,7 +12,7 @@ all: mem short long polar
 	true
 
 3: ../src/parallel tests-to-run/* wanted-results/* dbstart prereqlocal prereqremote
-	TRIES=3 time bash Start.sh '' mem || true
+	TRIES=3 time bash Start.sh '' 'mem|manual' || true
 	touch ~/.parallel/will-cite
 	make stopvm
 
@@ -62,7 +62,7 @@ test-%:	../src/parallel prereqlocal installparallel
 
 # *local* only
 local:	../src/parallel tests-to-run/*local* wanted-results/*local* prereqlocal installparallel
-	time bash Start.sh local 'mem|ssh'
+	time bash Start.sh local 'mem|ssh|manual'
 
 # short
 short:	 ../src/parallel tests-to-run/* wanted-results/* prereqlocal installparallel
@@ -70,17 +70,17 @@ short:	 ../src/parallel tests-to-run/* wanted-results/* prereqlocal installparal
 
 # Tests not requiring SSH
 no-ssh: ../src/parallel tests-to-run/*no-ssh* wanted-results/*no-ssh* prereqlocal installparallel
-	TRIES=1 time bash Start.sh no-ssh nosuch || true
+	TRIES=1 time bash Start.sh no-ssh manual || true
 	touch ~/.parallel/will-cite
 
 # Tests using SSH to localhost/lo only
 local-ssh: ../src/parallel tests-to-run/*local-ssh* wanted-results/*local-ssh* prereqlocal installparallel
-	TRIES=1 time bash Start.sh local-ssh NONE || true
+	TRIES=1 time bash Start.sh local-ssh manual || true
 	touch ~/.parallel/will-cite
 
 # Tests using SSH to remote servers
 remote-ssh: ../src/parallel tests-to-run/*remote-ssh* wanted-results/*remote-ssh* prereqlocal prereqremote installparallel
-	TRIES=1 time bash Start.sh remote-ssh NONE || true
+	TRIES=1 time bash Start.sh remote-ssh manual || true
 	touch ~/.parallel/will-cite
 
 # Tests not requiring SSH (includes timing/load tests)
@@ -155,13 +155,14 @@ startsnap:
 	parallel -j0 --tagstring {#}-{} -k --timeout 300 bin/vm restoresnapshot ::: ${servers}
 
 checkvm:
-	parallel -j0 --delay 0.2 --plus --tagstring '/|\ {0#} {}' --lb --timeout 400 bin/vm check ::: ${servers}
+	parallel -j0 --delay 0.5 --color-failed --plus --tagstring '/|\ {0#} {}' --timeout 40 bin/vm check ::: ${servers}
 
 startvm:
 	touch vagrant/authorized_keys
 	sort -u ~/.ssh/*.pub vagrant/authorized_keys > vagrant/authorized_keys.
 	mv vagrant/authorized_keys. vagrant/authorized_keys
-	parallel -j0 --delay 0.2 --plus --tagstring '/|\ {0#} {}' --lb --timeout 400 bin/vm start ::: ${servers}
+	bin/vm cleanorphans ${namedservers}
+	parallel -j0 --delay 0.2 --plus --tagstring '/|\ {0#} {}' --lb --timeout 300 bin/vm start ::: ${servers}
 
 stopvm:
 	parallel -vj0 --tag -k bin/vm stop ::: ${namedservers} || true
@@ -206,7 +207,11 @@ dbtestonlocalhost:
 dbstarttunnel:
 	# sql cannot access lo:1521 => Start SSH tunnel for localhost:1521
 	# (bypasses VirtualBox NAT packet corruption of Oracle TNS)
-	pgrep -f "ssh.*-L.*1521:localhost:1521" >/dev/null 2>&1 || \
+	# Must check the actual listening port, not `pgrep -f`: make passes this
+	# whole recipe to `sh -c` as one argument, so a `pgrep -f` pattern that
+	# matches the ssh command below also matches that wrapping shell itself,
+	# making the check always true and the tunnel never start.
+	ss -ltn 'sport = :1521' | grep -q ':1521' || \
 	  (cd vagrant-projects/OracleDatabase/26ai-Free && vagrant ssh-config > /tmp/oracle-ssh-config && \
 	   ssh -f -N -L 127.0.0.1:1521:localhost:1521 -F /tmp/oracle-ssh-config oracle26ai-free-vagrant)
 

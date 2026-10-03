@@ -127,11 +127,11 @@ par_controlmaster_is_faster() {
 par_hostgroup() {
     echo '### --hostgroup force ncpu - 2x parallel, 6x me'
     parallel --delay 0.1 --hgrp -S @g1/1/parallel@lo -S @g2/3/lo \
-	     'whoami;sleep 0.6{}' ::: {1..8} | sort
+	     'whoami;sleep 1.1{}' ::: {1..8} | sort
 
     echo '### --hostgroup two group arg - 2x parallel, 6x me'
     parallel -k --sshdelay 0.1 --hgrp -S @g1/1/parallel@lo -S @g2/3/lo \
-	     'whoami;sleep 0.3{}' ::: {1..8}@g1+g2 | sort
+	     'whoami;sleep 1.1{}' ::: {1..8}@g1+g2 | sort
 
     echo '### --hostgroup one group arg - 8x me'
     parallel --delay 0.2 --hgrp -S @g1/1/parallel@lo -S @g2/3/lo \

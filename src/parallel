@@ -2748,6 +2748,7 @@ sub parse_options(@) {
     ::debug("init","Global::shell $Global::shell\n");
     $Global::cshell = $Global::shell =~ m:(/[-a-z]*)?csh:;
     $Global::fish = $Global::shell =~ m:(/[-a-z]*)?fish:;
+    $::qperl = ::Q($^X);
     if(defined $opt::_parset) { parse_parset(); }
     if(defined $opt::X) { $Global::ContextReplace = 1; }
     if(defined $opt::silent) { $Global::verbose = 0; }
@@ -3319,7 +3320,7 @@ sub init_globals() {
     #   SSH / remote host data structures
     #   Job counters and state flags
     # Defaults:
-    $Global::version = 20260622;
+    $Global::version = 20260822;
     # Deliver perl bootstrap source via stdin pipe (ssh host -- exec perl).
     # Set to 0 to use an alternative delivery mechanism (future option).
     $Global::command_via_pipe = 1;
@@ -3430,6 +3431,22 @@ sub init_globals() {
 	 '{hgrp}' => '1 $_="\${PARALLEL_HOSTGROUPS}";uq()',
 	 # {agrp} = hostgroups of the argument
 	 '{agrp}' => '1 $_="\${PARALLEL_ARGHOSTGROUPS}";uq()',
+	 # {%jq: ... %} = jq expression
+	 # ex. '{%jq:result: [.type]%}' = jq '{result: [.type]}'
+	 '{%jq:(.*?)%}' =>
+	 q{
+	     # Arrays are joined by $IFS
+	     my $ifs = $ENV{IFS} || " ";
+	     my $pid = ::open3(my $in, my $out, my $err, "jq", "-rc",
+			       "$$1 | if type == \"array\" then join(\"$ifs\") else . // \"\" end") or
+		 die "Could not open pipe to jq!";
+	     print $in $_; close $in;
+	     my $jqout = <$out>; chomp $jqout; close $out;
+	     waitpid $pid, 0;
+	     if($?) {
+		 $job->skip() < 1 and warn "jq failed $$1 on: '$_'\n";
+	     } else { $_ = $jqout; }
+	 },
 	);
     # Modifiable copy of %Global::replace
     %Global::rpl = %Global::replace;
@@ -6605,8 +6622,8 @@ sub usage() {
 	 "If you use programs that use GNU Parallel to process data for an article in a",
 	 "scientific publication, please cite:",
 	 "",
-	 "  Tange, O. (2026, June 22). GNU Parallel 20260622 ('Rape Gang Inquiry').",
-	 "  Zenodo. https://doi.org/10.5281/zenodo.20959929",
+	 "  Tange, O. (2026, August 22). GNU Parallel 20260822 ('Ceuta').",
+	 "  Zenodo. https://doi.org/10.5281/zenodo.22180990",
 	 "",
 
 	 # Before changing these lines, please read
@@ -7454,6 +7471,8 @@ sub which(@) {
 	    #	/bin/sh /sbin/sh /opt/csw/sh
 	    # But not: foo.sh sshd crash flush pdflush scosh fsflush ssh
 	    $shell = "(?:".join("|",map { "\Q$_\E" } @shells).")";
+	    $regexp = '^((\[)(-?)('. $shell. ')(\])|' .
+			 '(|\S+/|\S*busybox |\S*rosetta |\S*qemu-\S+ )'.
 	    $regexp = '^((\[)(-?)('. $shell. ')(\])|(|\S+/|\S*busybox |\S*rosetta )'.
 		'(-?)('. $shell. '))( *$| [^(])';
 	    %fakename = (
@@ -7486,9 +7505,11 @@ sub which(@) {
 		if(open(my $fd, "<", "/proc/$testpid/cmdline")) {
 		    local $/="\0";
 		    chomp($shellline = <$fd>);
-		    if($shellline =~ /busybox$|rosetta$/) {
-			# Possibly:  busybox \0 sh  or  .../rosetta \0 /bin/bash
-			# Skip busybox/rosetta
+		    if($shellline =~ /busybox$|rosetta$|qemu-/) {
+			# Possibly:  busybox \0 sh
+			# or  .../rosetta \0 /bin/bash
+			# or  ...qemu-...
+			# Skip busybox/rosetta/qemu-
 			chomp($shellline = <$fd>);
 		    }
 		    if($shellline =~ /$regexp/o) {
@@ -8319,7 +8340,7 @@ sub ssh_perl_cmd($) {
     my $self = shift;
     return(join " ",
            $self->sshcmd(), $self->{'host'}, "--",
-	   "exec", "perl", "-", '$PARALLEL_SEQ');
+	   "exec", "perl", "-", 'job-$PARALLEL_SEQ-slot-$PARALLEL_JOBSLOT');
 }
 
 sub generate_padding() {
@@ -8609,7 +8630,7 @@ sub limit($) {
 		 ((tmp=$(mktemp || tempfile);
 		   LANG=C iostat -x 1 2 > $tmp;
 		   mv $tmp $io_file) </dev/null >/dev/null & );
-		 perl -e '-e $ARGV[0] or exit(1);
+		 ! . $::qperl. q! -e '-e $ARGV[0] or exit(1);
 		   for(reverse <>) {
 		     /Device/ and last;
 		     /(\S+)$/ and $max = $max > $1 ? $max : $1; }
@@ -8634,7 +8655,7 @@ sub limit($) {
 		 ps ax -o state,command |
 		     grep -E '^[DOR].[^[]' |
 		     wc -l |
-		 perl -ne 'exit ('$limit' < $_)';
+			 !.$::qperl.q! -ne 'exit ('$limit' < $_)';
 	     };
 	     load %s
 	     !,
@@ -8924,14 +8945,14 @@ sub loadavg($) {
 	    # svr5 => sysv
 	    # ultrix => ps -ax | awk '{print $3,$5}'
 	    # unixware => ps -el|awk '{print $2,$14,$15}'
-	    my $ps = ::spacefree(1,q{
+	    my $ps = ::spacefree(1,q[
 		$sysv="ps -ef -o s -o comm";
 		$sysv2="ps -ef -o state -o comm";
 		$bsd="ps ax -o state,command";
 		# Treat threads as processes
 		$bsd2="ps axH -o state,command";
 		$psel="ps -el|awk '{ print \$2,\$14,\$15 }'";
-		$cygwin=q{ perl -ne 'close STDERR; /Name/ and print"\n";
+		$cygwin=q{ ].$::qperl.q[ -ne 'close STDERR; /Name/ and print"\n";
 		    /(Name|Pid|Ppid|State):\s+(\S+)/ and print "$2\t";' /proc/*/status |
 		    awk '{print $2,$1}' };
 		$dummy="echo S COMMAND;echo R dummy";
@@ -8960,7 +8981,7 @@ sub loadavg($) {
 		    'MSWin32' => $sysv,
 		    );
 		print `$ps{$^O}`;
-	    });
+	    ]);
 	    # The command is too long for csh, so base64_wrap the command
 	    $Global::loadavg_cmd = $self->hexwrap($ps);
 	}
@@ -9916,7 +9937,7 @@ sub sct_hpux($) {
     $cpu->{'cores'} ||=
 	::qqx(qq{ /usr/bin/mpsched -s 2>&1 | grep 'Locality Domain Count' | awk '{ print \$4 }'});
     $cpu->{'threads'} ||=
-	::qqx(qq{ /usr/bin/mpsched -s 2>&1 | perl -ne '/Processor Count\\D+(\\d+)/ and print "\$1"'});
+	::qqx(qq{ /usr/bin/mpsched -s 2>&1 | $::qperl -ne '/Processor Count\\D+(\\d+)/ and print "\$1"'});
     return $cpu;
 }
 
@@ -10660,7 +10681,7 @@ sub empty_input_wrapper($) {
 		exit ($?&127 ? 128+($?&127) : 1+$?>>8)
 	    }
 		  });
-    ::debug("run",'Empty wrap: perl -e '.::Q($script)."\n");
+    ::debug("run","Empty wrap: $::qperl -e ".::Q($script)."\n");
     if($Global::cshell
        and
        length $command > 499) {
@@ -10668,12 +10689,12 @@ sub empty_input_wrapper($) {
 	# $command = "perl -e '".base64_zip_eval()."' ".
 	# join" ",string_zip_base64(
 	#	  'exec "'.::perl_quote_scalar($command).'"');
-	return 'perl -e '.::Q($script)." ".
+	return "$::qperl -e ".::Q($script)." ".
 	    base64_wrap("exec \"$Global::shell\",'-c',\"".
 				   ::perl_quote_scalar($command).'"');
     } else {
-	return 'perl -e '.::Q($script)." ".
-	    $Global::shell." -c ".::Q($command);
+	return "$::qperl -e ".::Q($script)." ".
+	    ::Q($Global::shell)." -c ".::Q($command);
     }
 }
 
@@ -11066,7 +11087,7 @@ sub total_failed($) {
 	# Command to remove files and dirs (given as args) without
 	# affecting the exit value in $?/$status.
 	if(not $script) {
-	    $script = "perl -e '".
+	    $script = "$::qperl -e '".
 		::spacefree(0,q{
 		    $bash=shift;
 		    $csh=shift;
@@ -11106,7 +11127,7 @@ sub total_failed($) {
 	    # It has been measured on:
 	    # AMD 6376: 4095
 	    # ppar -a big --pipepart --block -1 --test $1 --fifo 'cat {} >/dev/null';
-	    $script = "perl -e '".
+	    $script = "$::qperl -e '".
 		(::spacefree
 		 (0, q{
 		     ($s,$c,$f) = @ARGV;
@@ -11207,7 +11228,7 @@ sub wrapped($) {
 	    #	wait; rm {}
 	    # without affecting $?
 	    $command = fifo_wrap(). " ".
-		$Global::shell. " ". ::Q($command). ' "$PARALLEL_TMP"'. ';';
+		::Q($Global::shell). " ". ::Q($command). ' "$PARALLEL_TMP"'. ';';
 	}
 	# Wrap with ssh + tranferring of files
 	$command = $self->sshlogin_wrap($command);
@@ -11360,7 +11381,7 @@ sub base64_wrap($) {
     #	$shell_command = shell command that runs $eval_string
     my $eval_string = shift;
     return
-	"perl -e ".
+	"$::qperl -e ".
 	::Q(base64_zip_eval())." ".
 	join" ",::shell_quote(string_zip_base64($eval_string));
 }
@@ -11406,7 +11427,7 @@ sub sshlogin_wrap($) {
 	    $monitor_parent_sshd_script =
 		# This will be packed in ', so only use "
 		::spacefree
-		(0,'$shell = "'.($ENV{'PARALLEL_SHELL'} || '$ENV{SHELL}').'";'.
+		(0,'$shell = "'.($ENV{'PARALLEL_SHELL'} || '$ENV{SHELL}').'"||pack("H*","'.unpack("H*",$Global::shell).'");'.
 			    '$tmpdir = $ENV{"TMPDIR"} || "'.
 			    ::perl_quote_scalar($ENV{'PARALLEL_REMOTE_TMPDIR'}).'";'.
 			    '$nice = '.$opt::nice.';'.
@@ -11437,7 +11458,8 @@ sub sshlogin_wrap($) {
 		} while(-e $ENV{PARALLEL_TMP});
 		# Set $script to a non-existent file name in $TMPDIR
 		do {
-		    $script = $tmpdir."/par-job-$ENV{PARALLEL_SEQ}_".
+		    $script = $tmpdir.
+			"/job-$ENV{PARALLEL_SEQ}-slot-$ENV{PARALLEL_JOBSLOT}_".
 			join"", map { (0..9,"a".."z","A".."Z")[rand(62)] } (1..5);
 		} while(-e $script);
 		# Create a script from the hex code
@@ -11567,7 +11589,7 @@ sub sshlogin_wrap($) {
 	    }
 	    $bashfuncset =
 		'@bash_functions=qw('."@bash_functions".");".
-		::spacefree(1,'$shell="'.($ENV{'PARALLEL_SHELL'} || '$ENV{SHELL}').'";'.q{
+		::spacefree(1,'$shell="'.($ENV{'PARALLEL_SHELL'} || '$ENV{SHELL}').'"||pack("H*","'.unpack("H*",$Global::shell).'");'.q{
 		    if($shell=~/csh/) {
 			print STDERR "CSH/TCSH DO NOT SUPPORT newlines IN VARIABLES/FUNCTIONS. Unset @bash_functions\n";
 			exec "false";
@@ -11649,7 +11671,7 @@ sub sshlogin_wrap($) {
 		    # csh does not deal well with $ENV with \n
 		    $self->{'sshlogin_wrap'}{$command} = base64_wrap($perl_code);
 		} else {
-		    $self->{'sshlogin_wrap'}{$command} = "perl -e ".::Q($perl_code);
+		    $self->{'sshlogin_wrap'}{$command} = "$::qperl -e ".::Q($perl_code);
 		}
 	    } else {
 		$self->{'sshlogin_wrap'}{$command} = $command;
@@ -12069,7 +12091,7 @@ sub start($) {
 	my $bash =
 	    ::shell_quote_scalar_default(
 	    "testfun() { rm $name; }; export -f testfun; ".
-	    "perl -MIPC::Open3 -e ".
+	    "$::qperl -MIPC::Open3 -e ".
 	    ::Q(::Q($script))
 	    );
 	my $redefine_eval;
@@ -12364,7 +12386,7 @@ sub interactive_start($) {
 	    (
 	     "(".$actual_command.');'.
 	     # The triple print is needed - otherwise the testsuite fails
-	     q[ perl -e 'while($t++<3){ print $ARGV[0],"\n" }' $?h/$status >> ].
+	     " $::qperl".q[ -e 'while($t++<3){ print $ARGV[0],"\n" }' $?h/$status >> ].
 	     ::Q($tmpfifo)."&".
 	     "echo $title; echo \007Job finished at: `date`;sleep 10"
 	    ).
@@ -12372,7 +12394,7 @@ sub interactive_start($) {
 	    # Read a / separated line: 0h/2 for csh, 2/0 for bash.
 	    # If csh the first will be 0h, so use the second as exit value.
 	    # Otherwise just use the first value as exit value.
-	    q{; exec perl -e '$/="/";$_=<>;$c=<>;unlink $ARGV; }.
+	    "; exec $::qperl ".q{-e '$/="/";$_=<>;$c=<>;unlink $ARGV; }.
 	    q{/(\d+)h/ and exit($1);exit$c' }.::Q($tmpfifo);
     }
 }
@@ -14372,7 +14394,8 @@ sub replace_placeholders($$$$) {
 sub skip($) {
     # Skip this job
     my $self = shift;
-    $self->{'skip'} = 1;
+    # Called this number of times
+    $self->{'skip'}++;
 }
 
 
@@ -15002,7 +15025,9 @@ sub real_max_length() {
     # Find the max_length of a command line
     # Returns:
     #	The maximal command line length with 1 byte arguments
-    # return find_max(" c");
+    #
+    # TODO - Hi MSYS2-maintainer!
+    # Please see if this works now before you hardcode 32000
     return find_max("c");
 }
 
@@ -15046,9 +15071,10 @@ sub binary_find_max($$$) {
         # $lower is +- 1 or within 1%: Don't search more
         return $lower;
     }
-    # Unevenly split binary search which is faster for Microsoft Windows.
-    # Guessing too high is cheap. Guessing too low is expensive.
-    my $split = ($^O eq "cygwin" or $^O eq "msys") ? 0.93 : 0.5;
+    # Unevenly split binary search.
+    # Cygwin: guessing too high is cheap, too low is expensive - bias high.
+    # MSYS: the opposite (huge args can hang the process) - bias low.
+    my $split = ($ENV{MSYSTEM} && 0.08) || ($^O eq "cygwin" && 0.93) || 0.5;
     my $middle = int (($upper-$lower)*$split + $lower);
     ::debug("init", "Maxlen: $lower<$middle<$upper(".($upper-$lower)."): ");
     if (is_acceptable_command_line_length($middle,$string)) {
@@ -15077,7 +15103,62 @@ sub binary_find_max($$$) {
 	}
 	# Force using non-built-in command
 	$prg ||= ::which("echo");
+	if($ENV{MSYSTEM}) {
+	    return is_acceptable_command_line_length_msys($len, $string, $prg);
+	}
 	my $l = length ::qqx("$prg ".${string}x(($len-1-length $prg)/length $string));
+	if($l < $len/2) {
+	    # The command returned OK, but did not output $len chars
+	    # => this failed (Centos3 does this craziness)
+	    return 0
+	}
+	::debug("init", "$len=$?\n");
+	return not $?;
+    }
+
+    sub is_acceptable_command_line_length_msys($$$) {
+	# MSYS: fork()+pipe+exec(LIST)
+	# no shell/open3: both can hang the parent for huge single args.
+	# Resolve winpid via /proc/$pid/winpid right after fork (cygpid != winpid),
+	# hand it to an unconditional background killer
+	# (sleep; taskkill /F /PID - bypasses Cygwin's signal layer).
+	# Blocking read is then safe (EOF on child exit or kill).
+	# no waitpid - reaping is left to parallel's own reaper().
+	my ($len, $string, $prg) = @_;
+	my $arg = ${string}x(($len-1-length $prg)/length $string);
+	pipe(my $rdr, my $wtr) or return 0;
+	my $pid = fork();
+	if(!defined $pid) {
+	    close $rdr; close $wtr;
+	    return 0;
+	}
+	if($pid == 0) {
+	    # Child
+	    close $rdr;
+	    open(STDOUT, '>&', $wtr) or POSIX::_exit(127);
+	    open(STDIN, '<', '/dev/null');
+	    open(STDERR, '>', '/dev/null');
+	    close $wtr;
+	    exec($prg, $arg) or POSIX::_exit(127);
+	}
+	# Parent
+	close $wtr;
+	# Resolve the real Windows pid
+	my $winpid = $pid;
+	if(open(my $wp, "<", "/proc/$pid/winpid")) {
+	    chomp(my $line = <$wp>);
+	    close $wp;
+	    $winpid = $line if $line =~ /^\d+$/;
+	}
+	# Unconditional background killer
+	system("(sleep 0.1; taskkill //F //PID $winpid >/dev/null 2>&1) ".
+	       "</dev/null >/dev/null 2>&1 &");
+	my $l;
+	{
+	    local $/ = undef;
+	    $l = length <$rdr>;
+	}
+	close $rdr;
 	if($l < $len/2) {
 	    # The command returned OK, but did not output $len chars
 	    # => this failed (Centos3 does this craziness)
@@ -17070,7 +17151,7 @@ sub cat_partial {
 		}
 	    }
 	});
-	return "<" . ::Q($file) . " perl -e '$script' @start_len";
+	return "<" . ::Q($file) . " $::qperl -e '$script' @start_len";
     }
 }
 
@@ -17437,4 +17518,3 @@ sub main() {
 }
 
 main();
-__END__

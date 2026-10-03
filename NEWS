@@ -1,3 +1,18 @@
+20260822
+
+* Replacement string: {%jq: jq-expression %}
+
+* Use $^X when calling perl. So if different versions of perl are
+  found in $PATH, we use the same version that started GNU Parallel.
+
+* Bug fixes and man page updates.
+
+
+20260722
+
+* Bug fixes and man page updates.
+
+
 20260622
 
 * testsuite reorganized.

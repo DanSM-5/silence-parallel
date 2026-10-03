@@ -819,7 +819,7 @@ par_eta	16
 par_eta	### Test of --eta with no jobs
 par_eta	
 par_eta	Computers / CPU threads / Max jobs to run
-par_eta	1:local / 9 / 9
+par_eta	1:local / 12 / 12
 par_eta	
 par_eta	Computer:jobs running/jobs completed/%of started jobs/Average seconds to complete
 par_eta	par_eta	ETA: 0s Left: 0 AVG: 0.00s  local:0/0/0%/0.0s [K
@@ -1183,7 +1183,7 @@ par_progress	16
 par_progress	### Test of --progress with no jobs
 par_progress	
 par_progress	Computers / CPU threads / Max jobs to run
-par_progress	1:local / 9 / 9
+par_progress	1:local / 12 / 12
 par_progress	
 par_progress	Computer:jobs running/jobs completed/%of started jobs/Average seconds to complete
 par_progress	par_progress	local:0/0/0%/0.0s [K
@@ -1246,18 +1246,6 @@ par_shebang	gp	C
 par_shebang	oct	A
 par_shebang	oct	B
 par_shebang	oct	C
-par_shebang	oct	Detected locale "C" with character encoding "ANSI_X3.4-1968", which is not UTF-8.
-par_shebang	oct	Qt depends on a UTF-8 locale, and has switched to "C.UTF-8" instead.
-par_shebang	oct	If this causes problems, reconfigure your locale. See the locale(1) manual
-par_shebang	oct	for more information.
-par_shebang	oct	Detected locale "C" with character encoding "ANSI_X3.4-1968", which is not UTF-8.
-par_shebang	oct	Qt depends on a UTF-8 locale, and has switched to "C.UTF-8" instead.
-par_shebang	oct	If this causes problems, reconfigure your locale. See the locale(1) manual
-par_shebang	oct	for more information.
-par_shebang	oct	Detected locale "C" with character encoding "ANSI_X3.4-1968", which is not UTF-8.
-par_shebang	oct	Qt depends on a UTF-8 locale, and has switched to "C.UTF-8" instead.
-par_shebang	oct	If this causes problems, reconfigure your locale. See the locale(1) manual
-par_shebang	oct	for more information.
 par_shebang	pl	A
 par_shebang	pl	B
 par_shebang	pl	C

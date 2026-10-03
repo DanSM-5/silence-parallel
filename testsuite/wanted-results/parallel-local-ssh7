@@ -15,7 +15,7 @@ par_--env_underscore_bash	aliases in and arrays in functions work
 par_--env_underscore_bash	aliases in and arrays in functions work
 par_--env_underscore_bash	aliases in functions work
 par_--env_underscore_bash	aliases in functions work
-par_--env_underscore_bash	/bin/bash: line 99: myecho: command not found
+par_--env_underscore_bash	environment: line 99: myecho: command not found
 par_--env_underscore_bash	OK if no myecho      ^^^^^^^^^^^^^^^^^^^^^^^^^
 par_--env_underscore_bash	script: line 99: myecho: command not found
 par_--env_underscore_bash	OK if no myecho      ^^^^^^^^^^^^^^^^^^^^^^^^^

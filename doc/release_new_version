@@ -281,19 +281,15 @@ from:tange@gnu.org
 to:parallel@gnu.org, bug-parallel@gnu.org
 stable-bcc: Jesse Alama <jessealama@fastmail.fm>
 
-Subject: GNU Parallel 20260622 ('Rape Gang Inquiry') released
+Subject: GNU Parallel 20260722 ('<<Chat Control/Viking row/Lindsey Graham/Citizen Vigilante/Alexander Lunin>>') released
 
-GNU Parallel 20260622 ('Rape Gang Inquiry') has been released. It is available for download at: lbry://@GnuParallel:4
+GNU Parallel 20260722 ('') has been released. It is available for download at: lbry://@GnuParallel:4
 
 Quote of the month:
 
-  GNU Parallel is much nicer than xargs and more powerful ... definitely recommended!
-    -- boomertsfx@reddit
+  <<>>
 
 New in this release:
-
-* --fast rewritten. 1 million jobs in 10 seconds. Try:
-  seq 1000000 | time parallel --fast echo | wc -l 
 
 * Bug fixes and man page updates.
 

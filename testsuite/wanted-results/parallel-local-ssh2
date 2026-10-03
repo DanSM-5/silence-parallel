@@ -19,7 +19,6 @@ par_cat_incorrect_exit_csh	0
 par_csh_newline_var	### bug #42725: csh with \n in variables
 par_csh_newline_var	CSH/TCSH DO NOT SUPPORT newlines IN VARIABLES/FUNCTIONS. Unset not_csh
 par_csh_newline_var	CSH/TCSH DO NOT SUPPORT newlines IN VARIABLES/FUNCTIONS. Unset not_csh
-par_csh_newline_var	parallel: Warning: Could not figure out number of cpus on parallel@lo (). Using 1.
 par_csh_newline_var	This is not csh/tcsh
 par_csh_wd_trc	### --wd ... --trc in csh: exitstatuswrapper must not produce ;;
 par_csh_wd_trc	OK

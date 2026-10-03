@@ -12,10 +12,29 @@ vbox_preflight() {
     lsmod | grep -q vboxdrv    || sudo modprobe vboxdrv
     lsmod | grep -q vboxnetflt || sudo modprobe vboxnetflt
     lsmod | grep -q vboxnetadp || sudo modprobe vboxnetadp
-    # Kill duplicate VBoxSVC processes; multiple instances cause VBoxManage to hang
-    local lockpid
-    lockpid=$(cat /tmp/.vbox-"$USER"-ipc/lock 2>/dev/null)
-    [ -n "$lockpid" ] && pgrep -x VBoxSVC | grep -v "^$lockpid$" | xargs -r kill
+    # Kill duplicate VBoxSVC processes; multiple instances cause VBoxManage to hang.
+    # Always keep the OLDEST instance and kill only newer ones. VBoxSVC runs with
+    # --auto-shutdown (exits when idle, respawns on demand); under concurrent
+    # `bin/vm start` (make startvm runs -j0) the lock file can transiently point to
+    # a freshly-respawned instance while the old one still holds every live VM
+    # session, so trusting the lock file here would kill the wrong one and take
+    # down all running VMs. Preserving the oldest is safe regardless of how many
+    # of these run concurrently.
+    local pids pid age oldest_pid oldest_age
+    pids=$(pgrep -x VBoxSVC)
+    [ "$(printf '%s\n' "$pids" | grep -c .)" -gt 1 ] || return 0
+    oldest_pid=
+    oldest_age=-1
+    for pid in $pids; do
+	age=$(ps -o etimes= -p "$pid" 2>/dev/null | tr -d ' ')
+	if [ -n "$age" ] && [ "$age" -gt "$oldest_age" ]; then
+	    oldest_age=$age
+	    oldest_pid=$pid
+	fi
+    done
+    for pid in $pids; do
+	[ "$pid" = "$oldest_pid" ] || kill "$pid"
+    done
 }
 
 start() {
@@ -24,10 +43,29 @@ start() {
     is_centos3() {
 	echo $vm | grep -q centos3
     }
+    is_freebsd() {
+	echo $vm | grep -q '^freebsd'
+    }
     centos3_configure_eth1() {
-	cat ../../authorized_keys | vagrant ssh -c "cat >>.ssh/authorized_keys"
-	test -f ~/.lsh/identity.pub && lsh-export-key --openssh < ~/.lsh/identity.pub | vagrant ssh -c "cat >>.ssh/authorized_keys"
-	vagrant ssh -c "sudo /sbin/ifconfig eth1 172.27.27.3"
+	cat ../../authorized_keys | DISPLAY= timeout 30 vagrant ssh -c "cat >>.ssh/authorized_keys"
+	test -f ~/.lsh/identity.pub && lsh-export-key --openssh < ~/.lsh/identity.pub | DISPLAY= timeout 30 vagrant ssh -c "cat >>.ssh/authorized_keys"
+	DISPLAY= timeout 30 vagrant ssh -c "sudo /sbin/ifconfig eth1 172.27.27.3"
+    }
+    vagrant_up_racing_ssh() {
+	# vagrant's own boot-detection is unreliable/slow for this box: it
+	# reports a boot_timeout error even though the VM actually finishes
+	# booting fine moments later. Race a backgrounded `vagrant up` against
+	# our own lightweight `vagrant ssh -- true` poll (NAT-based -- doesn't
+	# need eth1's static IP, which centos3_configure_eth1 sets up only
+	# afterward) and return as soon as that succeeds, instead of waiting
+	# on vagrant's own (untrustworthy) up-time boot-wait verdict.
+	( DISPLAY= timeout 300 vagrant up >/dev/null 2>&1 ) &
+	local i
+	for i in $(seq 1 150); do
+	    DISPLAY= timeout 5 vagrant ssh -- true 2>/dev/null && return 0
+	    sleep 2
+	done
+	return 1
     }
     push_authorized_keys() {
 	# VM is up but SSH auth fails - push keys via vagrant's built-in key.
@@ -66,27 +104,44 @@ start() {
     else
 	# Server does not respond to ping
 	if cdvm $vm ; then
-	    if DISPLAY= timeout 60 vagrant ssh -- true 2>/dev/null; then
-		# VM is running but has wrong network IP - fix it
-		if is_centos3; then
-		    centos3_configure_eth1
-		else
-		    ip=$(getent hosts "$vm" | awk '{print $1}')
-		    DISPLAY= timeout 60 vagrant ssh -- "iface=\$(ifconfig -l 2>/dev/null | tr ' ' '\\n' | grep -v '^lo' | sed -n '2p'); [ -z \"\$iface\" ] && iface=\$(ip -o link show 2>/dev/null | awk -F'[ :]+' '\$2!=\"lo\"{a[++n]=\$2}END{print a[2]}'); sudo ifconfig \$iface $ip netmask 255.255.255.0 2>/dev/null || (sudo ip addr flush dev \$iface 2>/dev/null; sudo ip addr add $ip/24 dev \$iface)" 2>/dev/null
-		fi
-	    else
-		echo vagrant up $vm
-		DISPLAY= timeout 300 vagrant up
-		if is_centos3 ; then
-		    centos3_configure_eth1
-		fi
+	    # A killed/crashed VBoxHeadless (e.g. `killall -9 VBoxHeadless`,
+	    # a host reboot, or an unclean shutdown mid network-provision) can
+	    # truncate the guest's /etc/rc.conf to zero bytes - wiping not
+	    # just the vagrant-managed static IP but the box's baked-in
+	    # ifconfig_em0=SYNCDHCP/sshd_enable defaults too. No vagrant
+	    # up/halt cycle can fix a problem that lives on disk, and
+	    # vagrant's own `up` has independently been flaky here (spurious
+	    # forwarded-port collisions) - so for an already-created freebsd
+	    # box, boot/repair it directly instead and skip vagrant's `up`
+	    # entirely. Only falls through to the vagrant-based path below if
+	    # that's not possible (e.g. the box was never created).
+	    if is_freebsd; then
+		repair_freebsd_rcconf $vm
 	    fi
-	    # If still unreachable (e.g. VirtualBox host-only ARP broken on first up), do a clean restart
 	    if ! cleanping $vm; then
-		DISPLAY= timeout 60 vagrant halt
-		DISPLAY= timeout 300 vagrant up
-		if is_centos3 ; then
-		    centos3_configure_eth1
+		if DISPLAY= timeout 60 vagrant ssh -- true 2>/dev/null; then
+		    # VM is running but has wrong network IP - fix it
+		    if is_centos3; then
+			centos3_configure_eth1
+		    else
+			ip=$(getent hosts "$vm" | awk '{print $1}')
+			DISPLAY= timeout 60 vagrant ssh -- "iface=\$(ifconfig -l 2>/dev/null | tr ' ' '\\n' | grep -v '^lo' | sed -n '2p'); [ -z \"\$iface\" ] && iface=\$(ip -o link show 2>/dev/null | awk -F'[ :]+' '\$2!=\"lo\"{a[++n]=\$2}END{print a[2]}'); sudo ifconfig \$iface $ip netmask 255.255.255.0 2>/dev/null || (sudo ip addr flush dev \$iface 2>/dev/null; sudo ip addr add $ip/24 dev \$iface)" 2>/dev/null
+		    fi
+		else
+		    echo vagrant up $vm
+		    if is_centos3; then vagrant_up_racing_ssh; else DISPLAY= timeout 300 vagrant up; fi
+		    if is_centos3 ; then
+			centos3_configure_eth1
+		    fi
+		fi
+		# If still unreachable (e.g. VirtualBox host-only ARP broken on first up), do a clean restart
+		if ! cleanping $vm; then
+		    # zerofill/compress must only run on a manually requested halt, not this internal recovery halt
+		    NO_ZEROFILL=1 DISPLAY= timeout 60 vagrant halt
+		    if is_centos3; then vagrant_up_racing_ssh; else DISPLAY= timeout 300 vagrant up; fi
+		    if is_centos3 ; then
+			centos3_configure_eth1
+		    fi
 		fi
 	    fi
 	    stdout ssh-keygen -R $vm
@@ -122,6 +177,109 @@ snapshot() {
     fi
 }
 
+zerofill() {
+    # Guest-side prep before halt+compress(). Guest must be running.
+    # On ZFS-root guests (illumos/Solaris; no-op elsewhere), destroys
+    # inactive boot environments and their snapshots, since those pin disk
+    # blocks that a plain zero-fill can never reach. Then zero-fills free
+    # space in the mounted filesystems so compress() can reclaim it.
+    vm=$1
+    if cdvm $vm ; then
+	script=$(cat <<'GUESTSCRIPT'
+if command -v zfs >/dev/null 2>&1; then
+    if command -v beadm >/dev/null 2>&1; then
+        beadm list -H | awk -F';' '$3 !~ /N/ {print $1}' | while read -r be; do
+            beadm destroy -F -f "$be"
+        done
+    fi
+    zfs list -H -o name -t snapshot | while read -r snap; do zfs destroy "$snap"; done
+fi
+dd if=/dev/zero of=/zero-fill bs=1M 2>/dev/null; sync; rm -f /zero-fill; sync
+GUESTSCRIPT
+	)
+	DISPLAY= timeout 1800 vagrant ssh -c "echo $(printf '%s' "$script" | base64 -w0) | base64 -d | sudo sh" 2>/dev/null
+    fi
+}
+
+compress() {
+    # Flatten any snapshot chain and reclaim zeroed space by cloning to a
+    # fresh dynamic VMDK. VM must already be powered off (run zerofill()
+    # before halting, then compress() after halting).
+    vm=$1
+    if cdvm $vm ; then
+	uuid=$(cat .vagrant/machines/default/virtualbox/id 2>/dev/null)
+	if [ -z "$uuid" ]; then
+	    echo "$vm: no VBox UUID found, skipping compress"
+	    return 1
+	fi
+
+	state=
+	for i in $(seq 1 30); do
+	    state=$(VBoxManage showvminfo "$uuid" --machinereadable 2>/dev/null | sed -n 's/^VMState="\(.*\)"$/\1/p')
+	    [ "$state" = "poweroff" ] && break
+	    sleep 2
+	done
+	if [ "$state" != "poweroff" ]; then
+	    echo "$vm: VM not powered off (state=$state), skipping compress"
+	    return 1
+	fi
+
+	VBoxManage snapshot "$uuid" list --machinereadable 2>/dev/null |
+	    sed -n 's/^SnapshotUUID[0-9-]*="\(.*\)"$/\1/p' |
+	    while read -r snap; do
+		echo "$vm: deleting snapshot $snap"
+		timeout 600 VBoxManage snapshot "$uuid" delete "$snap"
+	    done
+
+	info=$(VBoxManage showvminfo "$uuid" --machinereadable 2>/dev/null)
+	line=$(echo "$info" | perl -ne 'print "$1\t$2\t$3\t$4\n" if /^"(.+)-(\d+)-(\d+)"="(.+\.vmdk)"$/' | head -1)
+	ctrl=$(echo "$line" | cut -f1)
+	port=$(echo "$line" | cut -f2)
+	device=$(echo "$line" | cut -f3)
+	oldpath=$(echo "$line" | cut -f4)
+	if [ -z "$oldpath" ]; then
+	    echo "$vm: could not determine attached disk, skipping compress"
+	    return 1
+	fi
+	oldmediumuuid=$(echo "$info" | perl -ne "print \"\$1\n\" if /^\"\Q$ctrl\E-ImageUUID-\Q$port\E-\Q$device\E\"=\"(.+)\"\$/")
+
+	tmppath="${oldpath%.vmdk}.tmp.vmdk"
+	rm -f "$tmppath"
+	# A prior interrupted compress() run may have left tmppath registered
+	# under a stale UUID; that alone (independent of the file existing)
+	# makes clonemedium refuse to register a fresh clone at the same path.
+	staleuuid=$(TMPPATH="$tmppath" VBoxManage list hdds 2>/dev/null | perl -ne '
+	    $u=$1 if /^UUID:\s*(\S+)/;
+	    if (/^Location:\s*(.*)$/ && $1 eq $ENV{TMPPATH}) { print "$u\n"; exit }
+	')
+	[ -n "$staleuuid" ] && VBoxManage closemedium disk "$staleuuid" 2>/dev/null
+	cloneout=$(timeout 1800 VBoxManage clonemedium "$oldpath" "$tmppath" --format VMDK --variant Standard 2>&1)
+	if [ $? -ne 0 ] || [ ! -s "$tmppath" ]; then
+	    echo "$vm: compress clone failed, leaving original disk attached"
+	    echo "$cloneout"
+	    rm -f "$tmppath"
+	    return 1
+	fi
+	newmediumuuid=$(echo "$cloneout" | sed -n 's/.*UUID: \([0-9a-f-]*\)/\1/p')
+	# Deregister (not delete) the clone under its temp path so we can move
+	# it to the final filename and reattach by path without a UUID clash.
+	[ -n "$newmediumuuid" ] && VBoxManage closemedium disk "$newmediumuuid"
+
+	VBoxManage storageattach "$uuid" --storagectl "$ctrl" --port "$port" --device "$device" --medium none
+	if [ -n "$oldmediumuuid" ]; then
+	    VBoxManage closemedium disk "$oldmediumuuid" --delete
+	else
+	    rm -f "$oldpath"
+	fi
+	mv "$tmppath" "$oldpath"
+	if ! VBoxManage storageattach "$uuid" --storagectl "$ctrl" --port "$port" --device "$device" --medium "$oldpath" --type hdd; then
+	    echo "$vm: WARNING: reattach of compacted disk failed, VM has no disk attached - needs manual fix"
+	    return 1
+	fi
+	echo "$vm: compress done ($(du -sh "$oldpath" | cut -f1))"
+    fi
+}
+
 restoresnapshot() {
     vm=$1
     if pingsshok ; then
@@ -153,16 +311,115 @@ sync_vagrant_id() {
     printf '%s' "$uuid" > "$idfile"
 }
 
+repair_freebsd_rcconf() {
+    # Recovers a FreeBSD guest whose /etc/rc.conf got zeroed out (see the
+    # comment at the start() call site). Boots the VM directly via
+    # VBoxManage if needed (skipping vagrant's own flaky `up`), then polls
+    # rather than guessing at a wait: a healthy boot reaches a working
+    # sshd in ~30s on this host,
+    # so wait only whatever's left of a 2x-margin budget beyond however
+    # long VBox says the VM has already been running, polling cleanping
+    # the whole time in case rc.conf actually survived this time. Only if
+    # that budget is exhausted do we conclude it's genuinely wiped and
+    # fall back to blind keystroke injection via the console: safe even
+    # if mistakenly typed at an already-active shell (worst case, two
+    # harmless "command not found" lines), and the repair commands
+    # themselves are idempotent. Assumes cwd is already the vm's vagrant
+    # directory (caller is inside `if cdvm $vm`).
+    local vm=$1
+    local uuid ip rc b64 state i running_since now budget remaining
+    uuid=$(cat .vagrant/machines/default/virtualbox/id 2>/dev/null)
+    [ -n "$uuid" ] || return 1
+    ip=$(getent hosts "$vm" | awk '{print $1}')
+    [ -n "$ip" ] || return 1
+
+    state=$(VBoxManage showvminfo "$uuid" --machinereadable 2>/dev/null | sed -n 's/^VMState="\(.*\)"$/\1/p')
+    if [ "$state" != "running" ]; then
+	VBoxManage startvm "$uuid" --type headless >/dev/null 2>&1
+	for i in $(seq 1 15); do
+	    state=$(VBoxManage showvminfo "$uuid" --machinereadable 2>/dev/null | sed -n 's/^VMState="\(.*\)"$/\1/p')
+	    [ "$state" = "running" ] && break
+	    sleep 1
+	done
+	[ "$state" = "running" ] || return 1
+    fi
+
+    running_since=$(VBoxManage showvminfo "$uuid" --machinereadable 2>/dev/null |
+	sed -n 's/^VMStateChangeTime="\(.*\)"$/\1/p' | xargs -I{} date -u -d {} +%s 2>/dev/null)
+    now=$(date +%s)
+    budget=60
+    remaining=$budget
+    [ -n "$running_since" ] && remaining=$(( budget - (now - running_since) ))
+    [ "$remaining" -lt 5 ] && remaining=5
+    i=0
+    while [ "$i" -lt "$remaining" ]; do
+	cleanping $vm >/dev/null 2>&1 && return 0
+	sleep 3
+	i=$(( i + 3 ))
+    done
+
+    rc=$(cat <<-RCCONF
+	ifconfig_DEFAULT="SYNCDHCP"
+	ifconfig_em0="SYNCDHCP"
+	ipv6_network_interfaces="none"
+	sshd_enable="YES"
+	dumpdev="NO"
+	firstboot_growfs_enable="YES"
+	firstboot_pkgs_enable="YES"
+	vboxguest_enable="YES"
+	vboxservice_enable="YES"
+	rpcbind_enable="YES"
+	rpc_lockd_enable="YES"
+	nfs_client_enable="YES"
+	#VAGRANT-BEGIN
+	ifconfig_em1="inet $ip netmask 255.255.255.0"
+	#VAGRANT-END
+	RCCONF
+	)
+    b64=$(printf '%s\n' "$rc" | base64 -w0)
+    VBoxManage controlvm "$uuid" keyboardputstring "vagrant" >/dev/null 2>&1
+    VBoxManage controlvm "$uuid" keyboardputscancode 1c 9c >/dev/null 2>&1
+    sleep 1
+    VBoxManage controlvm "$uuid" keyboardputstring "vagrant" >/dev/null 2>&1
+    VBoxManage controlvm "$uuid" keyboardputscancode 1c 9c >/dev/null 2>&1
+    sleep 2
+    VBoxManage controlvm "$uuid" keyboardputstring \
+	"echo $b64 | openssl base64 -d -out /tmp/rc.conf.repaired && sudo cp /tmp/rc.conf.repaired /etc/rc.conf && sudo service netif restart >/dev/null 2>&1 ; sudo service routing restart >/dev/null 2>&1 ; sudo service sshd restart >/dev/null 2>&1" \
+	>/dev/null 2>&1
+    VBoxManage controlvm "$uuid" keyboardputscancode 1c 9c >/dev/null 2>&1
+
+    for i in $(seq 1 10); do
+	cleanping $vm >/dev/null 2>&1 && return 0
+	sleep 2
+    done
+    return 1
+}
+
+resume_if_paused() {
+    # vagrant up fails outright on a paused VM ("entered an invalid state");
+    # resume it directly via VBoxManage so the normal start flow can proceed.
+    local vm=$1
+    local id
+    id=$(cat ".vagrant/machines/default/virtualbox/id" 2>/dev/null)
+    [ -n "$id" ] || return 0
+    if VBoxManage showvminfo "$id" --machinereadable 2>/dev/null |
+	    grep -q '^VMState="paused"'; then
+	echo "$vm is paused - resuming"
+	VBoxManage controlvm "$id" resume 2>/dev/null
+    fi
+}
+
 cdvm() {
     vm=$1
     if cd vagrant*/*/$vm ; then
 	sync_vagrant_id $vm
+	resume_if_paused $vm
 	true
     else
 	echo $vm dir not found
 	false
     fi
-}    
+}
 
 cleanping() {
     host=$1
@@ -184,6 +441,35 @@ sshok() {
 pingsshok() {
     host=$1
     cleanping $host && sshok $host
+}
+
+cleanorphans() {
+    # Remove stale VirtualBox registrations left behind by earlier startvm
+    # runs. Every `vagrant up` on a box with no prior/matching machine ID
+    # registers a *new* VM (name pattern: <vmname>_default_<timestamp>_<rand>)
+    # instead of replacing the old one, so repeated destroy/recreate cycles
+    # (or vagrant losing track of a machine) pile up orphaned registrations
+    # over time -- these are pure cruft: not referenced by any Vagrantfile,
+    # and can even block a current VM's fixed port (seen with freebsd13).
+    #
+    # For each name passed in, only ever removes a registration that:
+    #   - matches "<name>_default_" (never touches unrelated/manually-made VMs)
+    #   - is NOT the box's current vagrant instance (per .vagrant/.../id)
+    #   - is not currently running/paused/saved (never touches a live VM)
+    local vm current_id line uuid state
+    for vm in "$@"; do
+	current_id=$(cat vagrant*/*/"$vm"/.vagrant/machines/default/virtualbox/id 2>/dev/null)
+	VBoxManage list vms 2>/dev/null | grep "^\"${vm}_default_" | while read -r line; do
+	    uuid=$(echo "$line" | grep -oP '\{[^}]+\}' | tr -d '{}')
+	    [ "$uuid" = "$current_id" ] && continue
+	    state=$(VBoxManage showvminfo "$uuid" --machinereadable 2>/dev/null | grep -oP '^VMState="\K[^"]+')
+	    case "$state" in
+		running|paused|saved) : ;;
+		*) echo "cleanorphans: removing stale $vm registration $uuid ($state)"
+		   VBoxManage unregistervm "$uuid" --delete 2>/dev/null ;;
+	    esac
+	done
+    done
 }
 
 "$@"
